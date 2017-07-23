@@ -2,7 +2,8 @@ package com.taimsoft.dbconnection;
 
 import com.taimsoft.dbconnection.configuration.AppConfig;
 import com.taimsoft.dbconnection.dao.IStaffService;
-import com.taimsoft.dbconnection.dao.StaffServiceImpl;
+import com.taimsoft.dbconnection.model.Staff;
+import org.joda.time.DateTime;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
 
@@ -13,8 +14,15 @@ public class DbConnectionMain {
     public static void main(String[] args){
         AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
         IStaffService userService = (IStaffService) context.getBean("staffService");
-        userService.getAllStaffs().forEach(u -> System.out.println(u.getStaffId()));
 
+        Staff staff = new Staff();
+        staff.setUserName("tjin");
+        staff.setFullName("Tianqi Jin");
+        staff.setPassword("testpassword");
+        staff.setDateCreated(DateTime.now());
+        staff.setDateModified(DateTime.now());
+
+        userService.saveEmployee(staff);
         context.close();
     }
 }

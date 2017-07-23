@@ -7,35 +7,38 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "staff")
-public class Staff {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "StaffID")
-    private int staffId;
-    @Column(name = "UserName", nullable = false)
+public class Staff extends BaseModel{
+
+    public enum Position{
+        SALES("Sales"), MANAGER("Manager"), DISTRIBUTOR("Distributor");
+
+        private String pos;
+
+        Position(String pos){
+            this.pos = pos;
+        }
+
+        public static Position getPosition(String pos){
+            for (Position ppos : Position.values()){
+                if (ppos.name().equalsIgnoreCase(pos)){
+                    return ppos;
+                }
+            }
+            return null;
+        }
+    }
+
+    @Column(name = "username", nullable = false)
     private String userName;
-    @Column(name = "Password", nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
-    @Column(name = "FullName", nullable = false)
+    @Column(name = "fullname", nullable = false)
     private String fullName;
-    @Column(name = "Street", nullable = false)
-    private String street;
-    @Column(name = "PostalCode", nullable = false)
-    private String postalCode;
-    @Column(name = "City", nullable = false)
-    private String city;
-    @Column(name = "Phone", nullable = false)
-    private String phone;
+//    private Organization organization;
+    @Column(name = "deleted", nullable = false)
+    private boolean deleted;
 
     public Staff(){}
-
-    public int getStaffId() {
-        return staffId;
-    }
-
-    public void setStaffId(int staffId) {
-        this.staffId = staffId;
-    }
 
     public String getUserName() {
         return userName;
@@ -61,35 +64,11 @@ public class Staff {
         this.fullName = fullName;
     }
 
-    public String getStreet() {
-        return street;
+    public boolean isDeleted() {
+        return deleted;
     }
 
-    public void setStreet(String street) {
-        this.street = street;
-    }
-
-    public String getPostalCode() {
-        return postalCode;
-    }
-
-    public void setPostalCode(String postalCode) {
-        this.postalCode = postalCode;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }
