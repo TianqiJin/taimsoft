@@ -1,7 +1,7 @@
 package com.taimsoft.dbconnection;
 
 import com.taimsoft.dbconnection.configuration.AppConfig;
-import com.taimsoft.dbconnection.dao.IStaffService;
+import com.taimsoft.dbconnection.service.staff.IStaffService;
 import com.taimsoft.dbconnection.model.Staff;
 import org.joda.time.DateTime;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;

@@ -1,5 +1,7 @@
-package com.taimsoft.dbconnection.dao;
+package com.taimsoft.dbconnection.dao.staff;
 
+import com.taimsoft.dbconnection.dao.AbstractDao;
+import com.taimsoft.dbconnection.dao.staff.IStaffDao;
 import com.taimsoft.dbconnection.model.Staff;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
@@ -20,19 +22,19 @@ public class StaffDaoImpl extends AbstractDao implements IStaffDao {
     }
 
     @Override
-    public void saveEmployee(Staff staff) {
+    public void saveStaff(Staff staff) {
         persist(staff);
     }
 
     @Override
     public Staff findByID(Integer staffID) {
         Criteria criteria = getSession().createCriteria(Staff.class);
-        criteria.add(Restrictions.eq("StaffID", staffID));
+        criteria.add(Restrictions.eq("id", staffID));
         return (Staff) criteria.uniqueResult();
     }
 
     @Override
-    public void updateEmployee(Staff staff) {
+    public void updateStaff(Staff staff) {
         update(staff);
     }
 }

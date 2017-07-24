@@ -34,7 +34,9 @@ public class Staff extends BaseModel{
     private String password;
     @Column(name = "fullname", nullable = false)
     private String fullName;
-//    private Organization organization;
+    @ManyToOne
+    @JoinColumn(name = "organzation_id", nullable = false)
+    private Organization organization;
     @Column(name = "deleted", nullable = false)
     private boolean deleted;
 

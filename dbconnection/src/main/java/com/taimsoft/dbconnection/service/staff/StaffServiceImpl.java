@@ -1,6 +1,8 @@
-package com.taimsoft.dbconnection.dao;
+package com.taimsoft.dbconnection.service.staff;
 
+import com.taimsoft.dbconnection.dao.staff.IStaffDao;
 import com.taimsoft.dbconnection.model.Staff;
+import com.taimsoft.dbconnection.service.staff.IStaffService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,8 +25,8 @@ public class StaffServiceImpl implements IStaffService {
     }
 
     @Override
-    public void saveEmployee(Staff staff) {
-        dao.saveEmployee(staff);
+    public void saveStaff(Staff staff) {
+        dao.saveStaff(staff);
     }
 
 }

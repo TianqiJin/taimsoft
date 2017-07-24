@@ -1,4 +1,4 @@
-package com.taimsoft.dbconnection.dao;
+package com.taimsoft.dbconnection.service.staff;
 
 import com.taimsoft.dbconnection.model.Staff;
 
@@ -9,5 +9,5 @@ import java.util.List;
  */
 public interface IStaffService {
     List<Staff> getAllStaffs();
-    void saveEmployee(Staff staff);
+    void saveStaff(Staff staff);
 }
