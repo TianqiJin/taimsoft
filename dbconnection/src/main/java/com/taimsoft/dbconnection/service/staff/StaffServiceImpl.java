@@ -29,4 +29,9 @@ public class StaffServiceImpl implements IStaffService {
         dao.saveStaff(staff);
     }
 
+    @Override
+    public void updateStaff(Staff staff){
+        dao.updateStaff(staff);
+    }
+
 }

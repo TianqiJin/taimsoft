@@ -1,6 +1,8 @@
 package com.taimsoft.dbconnection;
 
 import com.taimsoft.dbconnection.configuration.AppConfig;
+import com.taimsoft.dbconnection.model.Organization;
+import com.taimsoft.dbconnection.service.organization.IOrganizationService;
 import com.taimsoft.dbconnection.service.staff.IStaffService;
 import com.taimsoft.dbconnection.model.Staff;
 import org.joda.time.DateTime;
@@ -13,16 +15,30 @@ import org.springframework.context.support.AbstractApplicationContext;
 public class DbConnectionMain {
     public static void main(String[] args){
         AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        IStaffService userService = (IStaffService) context.getBean("staffService");
+        IStaffService staffService = (IStaffService) context.getBean("staffService");
+        IOrganizationService organizationService = (IOrganizationService)context.getBean("organizationService");
 
-        Staff staff = new Staff();
-        staff.setUserName("tjin");
-        staff.setFullName("Tianqi Jin");
-        staff.setPassword("testpassword");
-        staff.setDateCreated(DateTime.now());
-        staff.setDateModified(DateTime.now());
+//        Organization organization = new Organization();
+//        organization.setCity("Calgary");
+//        organization.setCountry("Canada");
+//        organization.setPostalCode("T3P0H1");
+//        organization.setStreet("Evanston Drive NW");
+//        organization.setOrgName("Test Org");
+//        organization.setStreetNum("457");
+//        organization.setDateCreated(DateTime.now());
+//        organization.setDateModified(DateTime.now());
+//
+//        organizationService.saveOrganization(organization);
 
-        userService.saveEmployee(staff);
+//        Staff staff = staffService.getAllStaffs().get(0);
+//        System.out.println(staff.getOrganization().getOrgName());
+//        Organization organization = organizationService.getAllOrganizations().get(0);
+//        System.out.println(staff.getFullname());
+//        System.out.println(organization.getOrgName());
+//        staff.setOrganization(organization);
+//
+//        staffService.updateStaff(staff);
+
         context.close();
     }
 }

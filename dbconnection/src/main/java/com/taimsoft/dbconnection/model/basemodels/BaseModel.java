@@ -1,4 +1,4 @@
-package com.taimsoft.dbconnection.model;
+package com.taimsoft.dbconnection.model.basemodels;
 
 
 import org.hibernate.annotations.Type;

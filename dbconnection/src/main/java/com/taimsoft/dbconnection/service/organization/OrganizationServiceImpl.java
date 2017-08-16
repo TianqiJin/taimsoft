@@ -5,12 +5,14 @@ import com.taimsoft.dbconnection.model.Organization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 /**
  * Created by tjin on 2017-07-23.
  */
 @Service("organizationService")
+@Transactional
 public class OrganizationServiceImpl implements IOrganizationService{
     @Autowired
     private OrganizationDaoImpl organizationDao;

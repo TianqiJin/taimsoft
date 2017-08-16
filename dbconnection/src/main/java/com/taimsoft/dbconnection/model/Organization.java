@@ -1,9 +1,8 @@
 package com.taimsoft.dbconnection.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import com.taimsoft.dbconnection.model.basemodels.BaseModel;
+
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,20 +11,20 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "organization")
-public class Organization extends BaseModel{
+public class Organization extends BaseModel {
     @Column(name = "name", nullable = false)
     private String orgName;
     @Column(name = "street_num", nullable = false)
     private String streetNum;
-    @Column(name = "street", nullable = false)
+    @Column(nullable = false)
     private String street;
-    @Column(name = "city", nullable = false)
+    @Column(nullable = false)
     private String city;
-    @Column(name = "country", nullable = false)
+    @Column(nullable = false)
     private String country;
     @Column(name = "postal_code", nullable = false)
     private String postalCode;
-    @OneToMany(mappedBy = "organization")
+    @OneToMany(mappedBy = "organization", fetch = FetchType.LAZY)
     private Set<Staff> staffs;
 
     public Organization(){

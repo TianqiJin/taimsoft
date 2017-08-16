@@ -1,13 +1,17 @@
 package com.taimsoft.dbconnection.model;
 
+import com.taimsoft.dbconnection.model.basemodels.BaseModel;
+import com.taimsoft.dbconnection.model.basemodels.UserBaseModels;
+
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created by Tjin on 7/15/2017.
  */
 @Entity
 @Table(name = "staff")
-public class Staff extends BaseModel{
+public class Staff extends UserBaseModels {
 
     public enum Position{
         SALES("Sales"), MANAGER("Manager"), DISTRIBUTOR("Distributor");
@@ -28,15 +32,15 @@ public class Staff extends BaseModel{
         }
     }
 
-    @Column(name = "username", nullable = false)
+    @Column(nullable = false)
     private String userName;
-    @Column(name = "password", nullable = false)
+    @Column(nullable = false)
     private String password;
-    @Column(name = "fullname", nullable = false)
-    private String fullName;
     @ManyToOne
-    @JoinColumn(name = "organzation_id", nullable = false)
+    @JoinColumn(name = "organization_id")
     private Organization organization;
+    @OneToMany(mappedBy = "staff", fetch = FetchType.LAZY)
+    private List<Transaction> transactionList;
     @Column(name = "deleted", nullable = false)
     private boolean deleted;
 
@@ -58,19 +62,19 @@ public class Staff extends BaseModel{
         this.password = password;
     }
 
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
     public boolean isDeleted() {
         return deleted;
     }
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public Organization getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
     }
 }

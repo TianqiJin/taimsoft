@@ -10,4 +10,5 @@ import java.util.List;
 public interface IStaffService {
     List<Staff> getAllStaffs();
     void saveStaff(Staff staff);
+    void updateStaff(Staff staff);
 }
