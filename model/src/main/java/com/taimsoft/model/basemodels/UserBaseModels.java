@@ -1,4 +1,4 @@
-package com.taimsoft.dbconnection.model.basemodels;
+package com.taimsoft.model.basemodels;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;

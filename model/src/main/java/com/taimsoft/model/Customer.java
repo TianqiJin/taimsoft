@@ -1,7 +1,6 @@
-package com.taimsoft.dbconnection.model;
+package com.taimsoft.model;
 
-import com.taimsoft.dbconnection.model.basemodels.BaseModel;
-import com.taimsoft.dbconnection.model.basemodels.UserBaseModels;
+import com.taimsoft.model.basemodels.UserBaseModels;
 
 import javax.persistence.*;
 import java.util.List;

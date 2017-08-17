@@ -1,8 +1,8 @@
 package com.taimsoft.dbconnection.service.staff;
 
 import com.taimsoft.dbconnection.dao.staff.IStaffDao;
-import com.taimsoft.dbconnection.model.Staff;
 import com.taimsoft.dbconnection.service.staff.IStaffService;
+import com.taimsoft.model.Staff;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

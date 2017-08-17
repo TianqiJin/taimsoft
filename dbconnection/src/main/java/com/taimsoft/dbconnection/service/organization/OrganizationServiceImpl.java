@@ -1,7 +1,7 @@
 package com.taimsoft.dbconnection.service.organization;
 
 import com.taimsoft.dbconnection.dao.organization.OrganizationDaoImpl;
-import com.taimsoft.dbconnection.model.Organization;
+import com.taimsoft.model.Organization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

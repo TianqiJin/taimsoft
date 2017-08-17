@@ -1,6 +1,7 @@
 package com.taimsoft.dbconnection.dao.staff;
 
-import com.taimsoft.dbconnection.model.Staff;
+
+import com.taimsoft.model.Staff;
 
 import java.util.List;
 

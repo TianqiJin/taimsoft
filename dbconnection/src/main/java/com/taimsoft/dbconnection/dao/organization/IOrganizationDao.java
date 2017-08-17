@@ -1,7 +1,7 @@
 package com.taimsoft.dbconnection.dao.organization;
 
-import com.taimsoft.dbconnection.model.Organization;
-import com.taimsoft.dbconnection.model.Staff;
+
+import com.taimsoft.model.Organization;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ public interface IOrganizationDao {
 
     List<Organization> getAllOrganizations();
 
-    Staff findByID(Integer organizationID);
+    Organization findByID(Integer organizationID);
 
     void updateOrganization(Organization organization);
 }

@@ -1,6 +1,6 @@
-package com.taimsoft.dbconnection.model;
+package com.taimsoft.model;
 
-import com.taimsoft.dbconnection.model.basemodels.BaseModel;
+import com.taimsoft.model.basemodels.BaseModel;
 
 import javax.persistence.*;
 import java.util.List;
@@ -49,25 +49,6 @@ public class Transaction extends BaseModel {
         }
     }
 
-    /**
-     * Indicate the delivery status
-     */
-    public enum DeliveryStatus{
-        UNDELIVERED("Undelivered"),
-        DELIVERYING("Delivering"),
-        DELIVERED("Delivered");
-
-        private String value;
-
-        DeliveryStatus(String vvalue){
-            this.value = vvalue;
-        }
-
-        public String getValue() {
-            return value;
-        }
-    }
-
     @Column(name = "sale_amount")
     private double saleAmount;
     @Column
@@ -87,7 +68,8 @@ public class Transaction extends BaseModel {
     private TransactionType transactionType;
     @Column(name = "payment_status")
     private PaymentStatus paymentStatus;
-    @Column(name = "delivery_status")
+    @JoinColumn(name = "delivery_status_id")
+    @OneToOne
     private DeliveryStatus deliveryStatus;
     @OneToMany(mappedBy = "transaction", fetch = FetchType.LAZY)
     private List<TransactionDetail> transactionDetails;

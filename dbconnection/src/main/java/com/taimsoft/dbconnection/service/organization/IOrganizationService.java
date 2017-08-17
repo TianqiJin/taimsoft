@@ -1,7 +1,7 @@
 package com.taimsoft.dbconnection.service.organization;
 
-import com.taimsoft.dbconnection.model.Organization;
-import com.taimsoft.dbconnection.model.Staff;
+
+import com.taimsoft.model.Organization;
 
 import java.util.List;
 

@@ -1,8 +1,9 @@
-package com.taimsoft.dbconnection.model.basemodels;
+package com.taimsoft.model.basemodels;
 
 
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
+
 import javax.persistence.*;
 
 /**

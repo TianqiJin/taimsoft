@@ -1,10 +1,10 @@
 package com.taimsoft.dbconnection;
 
 import com.taimsoft.dbconnection.configuration.AppConfig;
-import com.taimsoft.dbconnection.model.Organization;
 import com.taimsoft.dbconnection.service.organization.IOrganizationService;
 import com.taimsoft.dbconnection.service.staff.IStaffService;
-import com.taimsoft.dbconnection.model.Staff;
+
+import com.taimsoft.model.Organization;
 import org.joda.time.DateTime;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
@@ -18,7 +18,7 @@ public class DbConnectionMain {
         IStaffService staffService = (IStaffService) context.getBean("staffService");
         IOrganizationService organizationService = (IOrganizationService)context.getBean("organizationService");
 
-//        Organization organization = new Organization();
+        Organization organization = new Organization();
 //        organization.setCity("Calgary");
 //        organization.setCountry("Canada");
 //        organization.setPostalCode("T3P0H1");

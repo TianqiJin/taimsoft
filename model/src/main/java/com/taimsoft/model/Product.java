@@ -1,6 +1,6 @@
-package com.taimsoft.dbconnection.model;
+package com.taimsoft.model;
 
-import com.taimsoft.dbconnection.model.basemodels.BaseModel;
+import com.taimsoft.model.basemodels.BaseModel;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

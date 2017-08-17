@@ -2,7 +2,7 @@ package com.taimsoft.dbconnection.dao.staff;
 
 import com.taimsoft.dbconnection.dao.AbstractDao;
 import com.taimsoft.dbconnection.dao.staff.IStaffDao;
-import com.taimsoft.dbconnection.model.Staff;
+import com.taimsoft.model.Staff;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;

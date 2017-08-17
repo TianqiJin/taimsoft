@@ -1,8 +1,7 @@
 package com.taimsoft.dbconnection.dao.organization;
 
 import com.taimsoft.dbconnection.dao.AbstractDao;
-import com.taimsoft.dbconnection.model.Organization;
-import com.taimsoft.dbconnection.model.Staff;
+import com.taimsoft.model.Organization;
 import org.hibernate.Criteria;
 import org.springframework.stereotype.Repository;
 
@@ -26,7 +25,7 @@ public class OrganizationDaoImpl extends AbstractDao implements IOrganizationDao
     }
 
     @Override
-    public Staff findByID(Integer organizationID) {
+    public Organization findByID(Integer organizationID) {
         return null;
     }
 

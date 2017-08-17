@@ -30,7 +30,7 @@ public class HibernateConfiguration {
     public LocalSessionFactoryBean sessionFactory() {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(dataSource());
-        sessionFactory.setPackagesToScan("com.taimsoft.dbconnection.model");
+        sessionFactory.setPackagesToScan("com.taimsoft.model");
         sessionFactory.setHibernateProperties(hibernateProperties());
         return sessionFactory;
     }
