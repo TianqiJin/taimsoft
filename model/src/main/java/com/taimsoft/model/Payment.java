@@ -33,6 +33,8 @@ public class Payment extends BaseModel {
     private double paymentAmount;
     @Column(name = "payment_type")
     private PaymentType paymentType;
+    @Column(name = "is_deposit")
+    private boolean isDeposit;
     @ManyToOne
     @JoinColumn(name = "transaction_id")
     private Transaction transaction;
@@ -61,5 +63,13 @@ public class Payment extends BaseModel {
 
     public void setTransaction(Transaction transaction) {
         this.transaction = transaction;
+    }
+
+    public boolean isDeposit() {
+        return isDeposit;
+    }
+
+    public void setDeposit(boolean deposit) {
+        isDeposit = deposit;
     }
 }

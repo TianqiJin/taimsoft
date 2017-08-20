@@ -1,5 +1,6 @@
 package com.taimsoft.dbconnection.service.organization;
 
+import com.taimsoft.dbconnection.dao.IDao;
 import com.taimsoft.dbconnection.dao.organization.OrganizationDaoImpl;
 import com.taimsoft.model.Organization;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,15 +16,15 @@ import java.util.List;
 @Transactional
 public class OrganizationServiceImpl implements IOrganizationService{
     @Autowired
-    private OrganizationDaoImpl organizationDao;
+    private IDao<Organization> organizationDao;
 
     @Override
     public List<Organization> getAllOrganizations() {
-        return organizationDao.getAllOrganizations();
+        return organizationDao.getAll();
     }
 
     @Override
     public void saveOrganization(Organization organization) {
-        organizationDao.saveOrganization(organization);
+        organizationDao.save(organization);
     }
 }

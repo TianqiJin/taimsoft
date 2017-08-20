@@ -11,6 +11,7 @@
     <modules>
         <module>dbconnection</module>
         <module>model</module>
+        <module>desktopui</module>
     </modules>
 
     <build>

@@ -18,7 +18,7 @@ public class DbConnectionMain {
         IStaffService staffService = (IStaffService) context.getBean("staffService");
         IOrganizationService organizationService = (IOrganizationService)context.getBean("organizationService");
 
-        Organization organization = new Organization();
+//        Organization organization = new Organization();
 //        organization.setCity("Calgary");
 //        organization.setCountry("Canada");
 //        organization.setPostalCode("T3P0H1");

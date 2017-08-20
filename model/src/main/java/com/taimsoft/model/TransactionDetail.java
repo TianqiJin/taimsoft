@@ -21,8 +21,13 @@ public class TransactionDetail extends BaseModel {
     private double quantity;
     @Column(name = "sale_amount")
     private double saleAmount;
+    @Column
+    private int discount;
     @Column(name = "note")
     private String note;
+    @OneToOne
+    @JoinColumn(name = "package_info_id")
+    private PackageInfo packageInfo;
 
     public TransactionDetail(){}
 
@@ -64,5 +69,21 @@ public class TransactionDetail extends BaseModel {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public int getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(int discount) {
+        this.discount = discount;
+    }
+
+    public PackageInfo getPackageInfo() {
+        return packageInfo;
+    }
+
+    public void setPackageInfo(PackageInfo packageInfo) {
+        this.packageInfo = packageInfo;
     }
 }
