@@ -1,0 +1,19 @@
+#!/bin/sh
+
+me=
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+        me=$(readlink -e $0)
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+        me=$(greadlink -e $0)
+fi
+bin=$(dirname $me)
+root=
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+        root=$(readlink -e $bin/..)
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+        root=$(greadlink -e $bin/..)
+fi
+cd $root
+classpath=$(echo lib/* | tr ' ' :)
+
+exec java -cp $classpath -Dlog4j.configurationFile=$bin/../resources/log4j2.xml com.coverity.licensetools.GenerateLicense "$@"

@@ -1,0 +1,4 @@
+{
+  "non-trial":["max-version", "product", "valid-until", "customer", "project", "max-lines-of-code", "hostid", "cov-0"],
+  "trial":["cov-2", "cov-3"]
+}

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--DO NOT MODIFY THE CONTENTS OF THIS FILE-->
+<!--The information contained in this file is the proprietary and confidential
+information of Taim Software. and its licensors, and is supplied subject to,
+and may be used only by Taim Software customers in accordance with the terms and
+conditions of a previously executed license agreement between Taim Software and that
+customer.  Customer acknowledges that the use of Taim Software Licensed Product is
+enabled by authorization keys supplied by Taim Software for a limited licensed period.
+At the end of this period, the authorization key will expire.  You agree not to
+take any action to work around or override these license restrictions or use
+the Licensed Product beyond the licensed period.  Any attempt to do so will be
+considered an infringement of intellectual property rights that may be subject
+to legal action.-->
+
+<!--This is the Jack Spratt license file of 20111228.-->
+<!DOCTYPE taim SYSTEM "license.dtd">
+<taim>
+    <license><!--This is a license comment-->
+        <version>1</version>
+        <product>Taim Desktop</product>
+        <valid-until>2018-Jan-01 08:00:00 UTC</valid-until>
+        <customer>Jack Spratt Weight Loss Centre</customer>
+        <project>Mrs. Spratt</project>
+        <taim-0>404121600</taim-0>
+        <options>
+            <option>
+                <name>max-transactions</name>
+                <value>1000</value>
+            </option>
+            <option>
+                <name>record-id</name>
+                <value>123abc</value>
+            </option>
+            <option>
+                <name>user-count</name>
+                <value>5</value>
+            </option>
+            <option>
+                <name>valid-from</name>
+                <value>20130413</value>
+            </option>
+        </options>
+        <taim-1>IRPsF4AXECjSETKmJPVjxc7jusffY+YGWXCHU7IeZyO90Pkrj7KZIB8jyicmILripmkS5Q/3lTgZ+STADr8u6FmM2baObLh481FnNYdHC9gkyhAG+BuiDdQGTVO3BWUQSCb8PmqS5XXMyOxTwlGicziYu6tH8FZmYJcJOlBoI5g=</taim-1>
+    </license>
+</taim>

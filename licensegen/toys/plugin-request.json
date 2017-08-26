@@ -1,0 +1,22 @@
+{
+    "file-attributes" : {
+        "comment" : "This is the Jack Spratt license file of 20111228.",
+        "record-id" : "123abc"
+    },
+    "license-attributes" : {
+        "customer" : "Jack Spratt Weight Loss Centre",
+        "project" : "Mrs. Spratt",
+        "valid-until" : 20180101
+    },
+    "licenses" : [
+      {
+        "product" : "Taim Desktop",
+        "user-count" : 5,
+        "max-transactions" : 1000,
+        "valid-from": "20130413",
+        "max-version" : 1,
+        "comment" : "This is a license comment"
+      }
+    ]
+}
+
