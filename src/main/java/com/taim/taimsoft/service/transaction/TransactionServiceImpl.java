@@ -25,8 +25,8 @@ public class TransactionServiceImpl implements ITransactionService{
     }
 
     @Override
-    public void saveTransaction(Transaction transaction) {
-        dao.save(transaction);
+    public Transaction saveTransaction(Transaction transaction) {
+        return dao.save(transaction);
     }
 
     @Override
@@ -40,7 +40,8 @@ public class TransactionServiceImpl implements ITransactionService{
     }
 
     @Override
-    public void updateTransaction(Transaction transaction) {
-        dao.updateObject(transaction);
+    public Transaction updateTransaction(Transaction transaction) {
+
+       return dao.updateObject(transaction);
     }
 }

@@ -44,24 +44,26 @@ public class ProductController {
 
     @RequestMapping(value = "/add")
     @ResponseBody
-    public ResponseEntity<String> create(Product product) {
+    public ResponseEntity<Product> create(Product product) {
+        Product product1 = null;
         try {
-            service.saveProduct(product);
+            product1= service.saveProduct(product);
         } catch (Exception ex) {
-            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<Product>(product1, HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<String>("Product successfully saved!", HttpStatus.OK);
+        return new ResponseEntity<Product>(product1, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update")
     @ResponseBody
-    public ResponseEntity<String> update(Product product) {
+    public ResponseEntity<Product> update(Product product) {
+        Product product1 = null;
         try {
-            service.updateProduct(product);
+            product1=service.updateProduct(product);
         } catch (Exception ex) {
-            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<Product>(product1, HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<String>("Product successfully updated!", HttpStatus.OK);
+        return new ResponseEntity<Product>(product1, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/deleteObject")

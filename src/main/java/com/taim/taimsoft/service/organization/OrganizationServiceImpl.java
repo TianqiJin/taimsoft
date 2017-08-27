@@ -24,8 +24,8 @@ public class OrganizationServiceImpl implements IOrganizationService{
     }
 
     @Override
-    public void saveOrganization(Organization organization) {
-        organizationDao.save(organization);
+    public Organization saveOrganization(Organization organization) {
+        return organizationDao.save(organization);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class OrganizationServiceImpl implements IOrganizationService{
     }
 
     @Override
-    public void updateOrganization(Organization organization) {
-        organizationDao.updateObject(organization);
+    public Organization updateOrganization(Organization organization) {
+       return organizationDao.updateObject(organization);
     }
 }

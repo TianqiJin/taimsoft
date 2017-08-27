@@ -17,8 +17,9 @@ import java.util.List;
 public class CustomerDaoImpl extends AbstractDao implements IDao<Customer> {
 
     @Override
-    public void save(Customer object) {
+    public Customer save(Customer object) {
         persist(object);
+        return object;
     }
 
     @Override
@@ -36,8 +37,9 @@ public class CustomerDaoImpl extends AbstractDao implements IDao<Customer> {
     }
 
     @Override
-    public void updateObject(Customer object) {
+    public Customer updateObject(Customer object) {
         update(object);
+        return object;
     }
 
     @Override

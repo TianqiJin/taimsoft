@@ -37,24 +37,26 @@ public class OrganizationController {
 
     @RequestMapping(value = "/add")
     @ResponseBody
-    public ResponseEntity<String> create(Organization organization) {
+    public ResponseEntity<Organization> create(Organization organization) {
+        Organization organization1 = null;
         try {
-            service.saveOrganization(organization);
+            organization1=service.saveOrganization(organization);
         } catch (Exception ex) {
-            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<Organization>(organization1, HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<String>("Organization successfully saved!", HttpStatus.OK);
+        return new ResponseEntity<Organization>(organization1, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update")
     @ResponseBody
-    public ResponseEntity<String> update(Organization organization) {
+    public ResponseEntity<Organization> update(Organization organization) {
+        Organization organization1 = null;
         try {
-            service.updateOrganization(organization);
+            organization1=service.updateOrganization(organization);
         } catch (Exception ex) {
-            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<Organization>(organization1, HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<String>("Organization successfully updated!", HttpStatus.OK);
+        return new ResponseEntity<Organization>(organization1, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/deleteObject")

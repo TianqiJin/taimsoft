@@ -26,8 +26,8 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public void saveProduct(Product product) {
-        dao.save(product);
+    public Product saveProduct(Product product)  {
+       return dao.save(product);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public void updateProduct(Product product) {
-        dao.updateObject(product);
+    public Product updateProduct(Product product) {
+       return dao.updateObject(product);
     }
 }

@@ -6,13 +6,13 @@ import java.util.List;
  * Created by Tjin on 8/19/2017.
  */
 public interface IDao<T> {
-    void save(T object);
+    T save(T object);
 
     List<T> getAll();
 
     T findByID(Integer id);
 
-    void updateObject(T object);
+    T updateObject(T object);
 
     T findByName(String name);
 

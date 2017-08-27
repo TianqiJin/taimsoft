@@ -9,9 +9,9 @@ import java.util.List;
  */
 public interface IProductService {
     List<Product> getAllProducts();
-    void saveProduct(Product Product);
+    Product saveProduct(Product Product);
     Product getProductByTexture(String texture);
     Product getProductById(Integer id);
     void deleteProduct(Product product);
-    void updateProduct(Product product);
+    Product updateProduct(Product product);
 }

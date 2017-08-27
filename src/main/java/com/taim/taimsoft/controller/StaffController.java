@@ -36,24 +36,26 @@ public class StaffController {
 
     @RequestMapping(value = "/add")
     @ResponseBody
-    public ResponseEntity<String> create(Staff staff) {
+    public ResponseEntity<Staff> create(Staff staff) {
+        Staff staff1 = null;
         try {
-            service.saveStaff(staff);
+            staff1=service.saveStaff(staff);
         } catch (Exception ex) {
-            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<Staff>(staff1, HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<String>("Staff successfully saved!", HttpStatus.OK);
+        return new ResponseEntity<Staff>(staff1, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update")
     @ResponseBody
-    public ResponseEntity<String> update(Staff staff) {
+    public ResponseEntity<Staff> update(Staff staff) {
+        Staff staff1 = null;
         try {
-            service.updateStaff(staff);
+            staff1=service.updateStaff(staff);
         } catch (Exception ex) {
-            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<Staff>(staff1, HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<String>("Staff successfully updated!", HttpStatus.OK);
+        return new ResponseEntity<Staff>(staff1, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/deleteObject")

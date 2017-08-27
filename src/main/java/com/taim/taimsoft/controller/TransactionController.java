@@ -40,24 +40,26 @@ public class TransactionController {
 
     @RequestMapping(value = "/add")
     @ResponseBody
-    public ResponseEntity<String> create(Transaction transaction) {
+    public ResponseEntity<Transaction> create(Transaction transaction) {
+        Transaction transaction1=null;
         try {
-            service.saveTransaction(transaction);
+            transaction1 = service.saveTransaction(transaction);
         } catch (Exception ex) {
-            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<Transaction>(transaction1, HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<String>("Transaction successfully saved!", HttpStatus.OK);
+        return new ResponseEntity<Transaction>(transaction1, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update")
     @ResponseBody
-    public ResponseEntity<String> update(Transaction transaction) {
+    public ResponseEntity<Transaction> update(Transaction transaction) {
+        Transaction transaction1=null;
         try {
-            service.updateTransaction(transaction);
+            transaction1=service.updateTransaction(transaction);
         } catch (Exception ex) {
-            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<Transaction>(transaction1, HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<String>("Transaction successfully updated!", HttpStatus.OK);
+        return new ResponseEntity<Transaction>(transaction1, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/deleteObject")

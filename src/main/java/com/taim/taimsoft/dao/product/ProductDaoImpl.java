@@ -17,8 +17,9 @@ import java.util.List;
 public class ProductDaoImpl extends AbstractDao implements IDao<Product> {
 
     @Override
-    public void save(Product object) {
+    public Product save(Product object) {
         persist(object);
+        return object;
     }
 
     @Override
@@ -36,8 +37,9 @@ public class ProductDaoImpl extends AbstractDao implements IDao<Product> {
     }
 
     @Override
-    public void updateObject(Product object) {
+    public Product updateObject(Product object) {
         update(object);
+        return object;
     }
 
     @Override

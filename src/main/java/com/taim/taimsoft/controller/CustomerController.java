@@ -36,24 +36,26 @@ public class CustomerController {
 
     @RequestMapping(value = "/add")
     @ResponseBody
-    public ResponseEntity<String> create(Customer customer) {
+    public ResponseEntity<Customer> create(Customer customer) {
+        Customer customer1 = null;
         try {
-            service.saveCustomer(customer);
+            customer1= service.saveCustomer(customer);
         } catch (Exception ex) {
-            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<Customer>(customer1, HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<String>("Customer successfully saved!", HttpStatus.OK);
+        return new ResponseEntity<Customer>(customer1, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update")
     @ResponseBody
-    public ResponseEntity<String> update(Customer customer) {
+    public ResponseEntity<Customer> update(Customer customer) {
+        Customer customer1 = null;
         try {
-            service.updateCustomer(customer);
+            customer1=service.updateCustomer(customer);
         } catch (Exception ex) {
-            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<Customer>(customer1, HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<String>("Customer successfully updated!", HttpStatus.OK);
+        return new ResponseEntity<Customer>(customer1, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/deleteObject")

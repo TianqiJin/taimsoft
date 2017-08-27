@@ -18,8 +18,9 @@ import java.util.List;
 public class VendorDaoImpl extends AbstractDao implements IDao<Vendor> {
 
     @Override
-    public void save(Vendor object) {
+    public Vendor save(Vendor object) {
         persist(object);
+        return object;
     }
 
     @Override
@@ -37,8 +38,9 @@ public class VendorDaoImpl extends AbstractDao implements IDao<Vendor> {
     }
 
     @Override
-    public void updateObject(Vendor object) {
+    public Vendor updateObject(Vendor object) {
         update(object);
+        return object;
     }
 
     @Override

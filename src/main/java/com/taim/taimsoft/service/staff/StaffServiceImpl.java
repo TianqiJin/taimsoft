@@ -25,13 +25,13 @@ public class StaffServiceImpl implements IStaffService {
     }
 
     @Override
-    public void saveStaff(Staff staff) {
-        dao.save(staff);
+    public Staff saveStaff(Staff staff) {
+        return dao.save(staff);
     }
 
     @Override
-    public void updateStaff(Staff staff){
-        dao.updateObject(staff);
+    public Staff updateStaff(Staff staff){
+        return dao.updateObject(staff);
     }
 
     @Override

@@ -24,8 +24,9 @@ public class CustomerServiceImpl implements ICustomerService{
     }
 
     @Override
-    public void saveCustomer(Customer customer) {
-        dao.save(customer);
+    public Customer saveCustomer(Customer customer) {
+
+       return dao.save(customer);
     }
 
     @Override
@@ -39,7 +40,8 @@ public class CustomerServiceImpl implements ICustomerService{
     }
 
     @Override
-    public void updateCustomer(Customer customer) {
-        dao.updateObject(customer);
+    public Customer updateCustomer(Customer customer) {
+
+       return dao.updateObject(customer);
     }
 }

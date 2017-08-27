@@ -37,24 +37,26 @@ public class VendorController {
 
     @RequestMapping(value = "/add")
     @ResponseBody
-    public ResponseEntity<String> create(Vendor vendor) {
+    public ResponseEntity<Vendor> create(Vendor vendor) {
+        Vendor vendor1 = null;
         try {
-            service.saveVendor(vendor);
+            vendor1 = service.saveVendor(vendor);
         } catch (Exception ex) {
-            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<Vendor>(vendor1, HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<String>("Vendor successfully saved!", HttpStatus.OK);
+        return new ResponseEntity<Vendor>(vendor1, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update")
     @ResponseBody
-    public ResponseEntity<String> update(Vendor vendor) {
+    public ResponseEntity<Vendor> update(Vendor vendor) {
+        Vendor vendor1 = null;
         try {
-            service.updateVendor(vendor);
+            vendor1 = service.updateVendor(vendor);
         } catch (Exception ex) {
-            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<Vendor>(vendor1, HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<String>("Vendor successfully updated!", HttpStatus.OK);
+        return new ResponseEntity<Vendor>(vendor1, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/deleteObject")

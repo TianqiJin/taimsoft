@@ -9,8 +9,8 @@ import java.util.List;
  */
 public interface IVendorService {
     List<Vendor> getAllVendors();
-    void saveVendor(Vendor vendor);
+    Vendor saveVendor(Vendor vendor);
     Vendor getVendorByName(String name);
     void deleteVendor(Vendor vendor);
-    void updateVendor(Vendor vendor);
+    Vendor updateVendor(Vendor vendor);
 }

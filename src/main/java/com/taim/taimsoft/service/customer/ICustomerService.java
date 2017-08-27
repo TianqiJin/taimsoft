@@ -9,8 +9,8 @@ import java.util.List;
  */
 public interface ICustomerService {
     List<Customer> getAllCustomers();
-    void saveCustomer(Customer customer);
+    Customer saveCustomer(Customer customer);
     Customer getCustomerByName(String name);
     void deleteCustomer(Customer customer);
-    void updateCustomer(Customer customer);
+    Customer updateCustomer(Customer customer);
 }

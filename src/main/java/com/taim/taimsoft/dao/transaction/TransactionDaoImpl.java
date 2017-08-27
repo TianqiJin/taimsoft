@@ -18,8 +18,9 @@ import java.util.List;
 public class TransactionDaoImpl extends AbstractDao implements IDao<Transaction> {
 
     @Override
-    public void save(Transaction object) {
+    public Transaction save(Transaction object) {
         persist(object);
+        return object;
     }
 
     @Override
@@ -37,8 +38,9 @@ public class TransactionDaoImpl extends AbstractDao implements IDao<Transaction>
     }
 
     @Override
-    public void updateObject(Transaction object) {
+    public Transaction updateObject(Transaction object) {
         update(object);
+        return object;
     }
 
     @Override

@@ -24,8 +24,9 @@ public class StaffDaoImpl extends AbstractDao implements IDao<Staff> {
     }
 
     @Override
-    public void save(Staff staff) {
+    public Staff save(Staff staff) {
         persist(staff);
+        return staff;
     }
 
     @Override
@@ -36,8 +37,9 @@ public class StaffDaoImpl extends AbstractDao implements IDao<Staff> {
     }
 
     @Override
-    public void updateObject(Staff staff) {
+    public Staff updateObject(Staff staff) {
         update(staff);
+        return staff;
     }
 
     @Override

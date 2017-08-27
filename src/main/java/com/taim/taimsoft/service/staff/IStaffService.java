@@ -11,8 +11,8 @@ import java.util.List;
  */
 public interface IStaffService {
     List<Staff> getAllStaffs();
-    void saveStaff(Staff staff);
-    void updateStaff(Staff staff);
+    Staff saveStaff(Staff staff);
+    Staff updateStaff(Staff staff);
     Staff getStaffByName(String name);
     void deleteStaff(Staff staff);
 }

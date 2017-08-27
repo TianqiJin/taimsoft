@@ -16,8 +16,9 @@ import java.util.List;
 @Repository("organizationDao")
 public class OrganizationDaoImpl extends AbstractDao implements IDao<Organization> {
     @Override
-    public void save(Organization organization) {
+    public Organization save(Organization organization) {
         persist(organization);
+        return organization;
     }
 
     @Override
@@ -33,8 +34,9 @@ public class OrganizationDaoImpl extends AbstractDao implements IDao<Organizatio
     }
 
     @Override
-    public void updateObject(Organization organization) {
+    public Organization updateObject(Organization organization) {
         update(organization);
+        return organization;
     }
 
     @Override

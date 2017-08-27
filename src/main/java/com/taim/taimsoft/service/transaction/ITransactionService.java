@@ -9,8 +9,8 @@ import java.util.List;
  */
 public interface ITransactionService {
     List<Transaction> getAllTransactions();
-    void saveTransaction(Transaction transaction);
+    Transaction saveTransaction(Transaction transaction);
     Transaction getTransactionById(Integer id);
     void deleteTransaction(Transaction transaction);
-    void updateTransaction(Transaction transaction);
+    Transaction updateTransaction(Transaction transaction);
 }

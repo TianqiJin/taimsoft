@@ -11,8 +11,8 @@ import java.util.List;
  */
 public interface IOrganizationService {
     List<Organization> getAllOrganizations();
-    void saveOrganization(Organization organization);
+    Organization saveOrganization(Organization organization);
     Organization getOrganizationByName(String name);
     void deleteOrganization(Organization organization);
-    void updateOrganization(Organization organization);
+    Organization updateOrganization(Organization organization);
 }
