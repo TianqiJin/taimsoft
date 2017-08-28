@@ -29,6 +29,7 @@ public class TaimDesktop extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
+            //Load the fxml file
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/fxml/RootLayout.fxml"));
             BorderPane rootLayout = loader.load();
@@ -36,6 +37,7 @@ public class TaimDesktop extends Application {
             rootLayout.prefHeightProperty().bind(scene.heightProperty());
             rootLayout.prefWidthProperty().bind(scene.widthProperty());
             primaryStage.setTitle(APPLICATION_TITLE);
+            //Set the primaryStage bound to the maximum of the screen
             Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
             primaryStage.setX(bounds.getMinX());
             primaryStage.setY(bounds.getMinY());

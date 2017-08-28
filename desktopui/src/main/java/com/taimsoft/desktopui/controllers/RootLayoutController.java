@@ -15,7 +15,7 @@ public class RootLayoutController {
     @FXML
     private Button menu;
     @FXML
-    private AnchorPane navList;
+    private AnchorPane menuList;
 
     @FXML
     public void initialize() {
@@ -23,14 +23,14 @@ public class RootLayoutController {
     }
 
     private void prepareSlideMenuAnimation() {
-        TranslateTransition openNav = new TranslateTransition(new Duration(350), navList);
+        TranslateTransition openNav = new TranslateTransition(new Duration(350), menuList);
         openNav.setToX(0);
-        TranslateTransition closeNav=new TranslateTransition(new Duration(350), navList);
+        TranslateTransition closeNav=new TranslateTransition(new Duration(350), menuList);
         menu.setOnAction((ActionEvent evt)->{
-            if(navList.getTranslateX()!=0){
+            if(menuList.getTranslateX()!=0){
                 openNav.play();
             }else{
-                closeNav.setToX(-(navList.getWidth()));
+                closeNav.setToX(-(menuList.getWidth()));
                 closeNav.play();
             }
         });
