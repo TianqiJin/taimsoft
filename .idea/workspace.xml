@@ -2,147 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="85bd1f3c-d750-44f7-8512-18e83003afdb" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/compiler.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/encodings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__antlr_antlr_2_7_7.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__aopalliance_aopalliance_1_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__ch_qos_logback_logback_classic_1_1_3.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__ch_qos_logback_logback_core_1_1_3.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_fasterxml_classmate_1_0_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_fasterxml_jackson_core_jackson_annotations_2_4_5.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_fasterxml_jackson_core_jackson_core_2_4_5.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_fasterxml_jackson_core_jackson_databind_2_4_5.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_fasterxml_jackson_datatype_jackson_datatype_joda_2_2_1.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__dom4j_dom4j_1_6_1.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__javax_validation_validation_api_1_1_0_Final.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__joda_time_joda_time_2_5.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__junit_junit_4_9.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__mysql_mysql_connector_java_5_1_34.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_tomcat_embed_tomcat_embed_core_8_0_20.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_tomcat_embed_tomcat_embed_el_8_0_20.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_tomcat_embed_tomcat_embed_logging_juli_8_0_20.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_tomcat_embed_tomcat_embed_websocket_8_0_20.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_hamcrest_hamcrest_core_1_3.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_hibernate_common_hibernate_commons_annotations_4_0_5_Final.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_hibernate_hibernate_core_4_3_6_Final.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_hibernate_hibernate_validator_5_1_3_Final.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_hibernate_javax_persistence_hibernate_jpa_2_1_api_1_0_0_Final.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_jadira_usertype_usertype_core_3_0_0_CR1.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_jadira_usertype_usertype_spi_3_0_0_CR1.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_javassist_javassist_3_18_1_GA.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_jboss_jandex_1_1_0_Final.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_jboss_logging_jboss_logging_3_1_3_GA.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_jboss_logging_jboss_logging_annotations_1_2_0_Beta1.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_jboss_spec_javax_transaction_jboss_transaction_api_1_2_spec_1_0_0_Final.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_joda_joda_money_0_6.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_slf4j_jcl_over_slf4j_1_7_11.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_slf4j_jul_to_slf4j_1_7_11.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_slf4j_log4j_over_slf4j_1_7_11.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_slf4j_slf4j_api_1_7_11.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_1_2_3_RELEASE.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_autoconfigure_1_2_3_RELEASE.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_1_2_3_RELEASE.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_logging_1_2_3_RELEASE.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_tomcat_1_2_3_RELEASE.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_web_1_2_3_RELEASE.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_aop_4_1_6_RELEASE.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_beans_4_1_6_RELEASE.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_context_4_1_6_RELEASE.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_core_4_1_6_RELEASE.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_expression_4_1_6_RELEASE.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_jdbc_4_1_6_RELEASE.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_orm_4_1_6_RELEASE.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_tx_4_1_6_RELEASE.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_web_4_1_6_RELEASE.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_webmvc_4_1_6_RELEASE.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_yaml_snakeyaml_1_14.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__xml_apis_xml_apis_1_0_b2.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/backend/pom.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/backend/src/main/java/com/taim/backend/Application.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/backend/src/main/java/com/taim/backend/configuration/RestConfig.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/backend/src/main/java/com/taim/backend/controller/CustomerController.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/backend/src/main/java/com/taim/backend/controller/OrganizationController.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/backend/src/main/java/com/taim/backend/controller/ProductController.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/backend/src/main/java/com/taim/backend/controller/StaffController.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/backend/src/main/java/com/taim/backend/controller/TransactionController.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/backend/src/main/java/com/taim/backend/controller/VendorController.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/backend/src/main/java/com/taim/backend/dao/organization/OrganizationDaoImpl.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/backend/src/main/java/com/taim/backend/dao/product/ProductDaoImpl.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/backend/src/main/java/com/taim/backend/service/customer/CustomerServiceImpl.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/backend/src/main/java/com/taim/backend/service/customer/ICustomerService.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/backend/src/main/java/com/taim/backend/service/organization/IOrganizationService.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/backend/src/main/java/com/taim/backend/service/organization/OrganizationServiceImpl.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/backend/src/main/java/com/taim/backend/service/product/IProductService.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/backend/src/main/java/com/taim/backend/service/product/ProductServiceImpl.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/backend/src/main/java/com/taim/backend/service/staff/IStaffService.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/backend/src/main/java/com/taim/backend/service/transaction/ITransactionService.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/backend/src/main/java/com/taim/backend/service/transaction/TransactionServiceImpl.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/backend/src/main/java/com/taim/backend/service/vendor/IVendorService.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/backend/src/main/java/com/taim/backend/service/vendor/VendorServiceImpl.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/.gitignore" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/pom.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/src/main/java/com/taim/client/CustomerClient.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/src/main/java/com/taim/client/OrganizationClient.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/src/main/java/com/taim/client/ProductClient.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/src/main/java/com/taim/client/StaffClient.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/src/main/java/com/taim/client/TransactionClient.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/src/main/java/com/taim/client/VendorClient.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/src/main/java/com/taim/client/util/JacksonDateTimeHelper.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/src/main/java/com/taim/client/util/PropertiesProcessor.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/src/main/resources/config" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/src/test/java/com/taim/client/CustomerClientTest.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/src/test/java/com/taim/client/OrganizationClientTest.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/src/test/java/com/taim/client/ProductClientTest.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/src/test/java/com/taim/client/StaffClientTest.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/src/test/java/com/taim/client/TransactionClientTest.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/src/test/java/com/taim/client/VendorClientTest.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/model/.gitignore" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/dbconnection/pom.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/dbconnection/src/main/java/com/taimsoft/dbconnection/DbConnectionMain.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/dbconnection/src/main/java/com/taimsoft/dbconnection/dao/organization/OrganizationDaoImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/dbconnection/src/main/java/com/taimsoft/dbconnection/dao/product/ProductDaoImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/dbconnection/src/main/java/com/taimsoft/dbconnection/service/customer/CustomerServiceImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/dbconnection/src/main/java/com/taimsoft/dbconnection/service/customer/ICustomerService.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/dbconnection/src/main/java/com/taimsoft/dbconnection/service/organization/IOrganizationService.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/dbconnection/src/main/java/com/taimsoft/dbconnection/service/organization/OrganizationServiceImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/dbconnection/src/main/java/com/taimsoft/dbconnection/service/product/IProductService.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/dbconnection/src/main/java/com/taimsoft/dbconnection/service/product/ProductServiceImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/dbconnection/src/main/java/com/taimsoft/dbconnection/service/staff/IStaffService.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/dbconnection/src/main/java/com/taimsoft/dbconnection/service/transaction/ITransactionService.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/dbconnection/src/main/java/com/taimsoft/dbconnection/service/transaction/TransactionServiceImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/dbconnection/src/main/java/com/taimsoft/dbconnection/service/vendor/IVendorService.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/dbconnection/src/main/java/com/taimsoft/dbconnection/service/vendor/VendorServiceImpl.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/desktopui/pom.xml" afterPath="$PROJECT_DIR$/desktopui/pom.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/licensegen/pom.xml" afterPath="$PROJECT_DIR$/licensegen/pom.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/model/pom.xml" afterPath="$PROJECT_DIR$/model/pom.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/backend/.gitignore" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/dbconnection/src/main/java/com/taimsoft/dbconnection/configuration/AppConfig.java" afterPath="$PROJECT_DIR$/backend/src/main/java/com/taim/backend/configuration/AppConfig.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/dbconnection/src/main/java/com/taimsoft/dbconnection/configuration/HibernateConfiguration.java" afterPath="$PROJECT_DIR$/backend/src/main/java/com/taim/backend/configuration/HibernateConfiguration.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/dbconnection/src/main/java/com/taimsoft/dbconnection/dao/AbstractDao.java" afterPath="$PROJECT_DIR$/backend/src/main/java/com/taim/backend/dao/AbstractDao.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/dbconnection/src/main/java/com/taimsoft/dbconnection/dao/IDao.java" afterPath="$PROJECT_DIR$/backend/src/main/java/com/taim/backend/dao/IDao.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/dbconnection/src/main/java/com/taimsoft/dbconnection/dao/customer/CustomerDaoImpl.java" afterPath="$PROJECT_DIR$/backend/src/main/java/com/taim/backend/dao/customer/CustomerDaoImpl.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/dbconnection/src/main/java/com/taimsoft/dbconnection/dao/staff/StaffDaoImpl.java" afterPath="$PROJECT_DIR$/backend/src/main/java/com/taim/backend/dao/staff/StaffDaoImpl.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/dbconnection/src/main/java/com/taimsoft/dbconnection/dao/transaction/TransactionDaoImpl.java" afterPath="$PROJECT_DIR$/backend/src/main/java/com/taim/backend/dao/transaction/TransactionDaoImpl.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/dbconnection/src/main/java/com/taimsoft/dbconnection/dao/vendor/VendorDaoImpl.java" afterPath="$PROJECT_DIR$/backend/src/main/java/com/taim/backend/dao/vendor/VendorDaoImpl.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/dbconnection/src/main/java/com/taimsoft/dbconnection/service/staff/StaffServiceImpl.java" afterPath="$PROJECT_DIR$/backend/src/main/java/com/taim/backend/service/staff/StaffServiceImpl.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/dbconnection/src/main/resources/application.properties" afterPath="$PROJECT_DIR$/backend/src/main/resources/application.properties" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/model/src/main/java/com/taimsoft/model/Customer.java" afterPath="$PROJECT_DIR$/model/src/main/java/com/taim/model/Customer.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/model/src/main/java/com/taimsoft/model/DeliveryStatus.java" afterPath="$PROJECT_DIR$/model/src/main/java/com/taim/model/DeliveryStatus.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/model/src/main/java/com/taimsoft/model/Organization.java" afterPath="$PROJECT_DIR$/model/src/main/java/com/taim/model/Organization.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/model/src/main/java/com/taimsoft/model/PackageInfo.java" afterPath="$PROJECT_DIR$/model/src/main/java/com/taim/model/PackageInfo.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/model/src/main/java/com/taimsoft/model/Payment.java" afterPath="$PROJECT_DIR$/model/src/main/java/com/taim/model/Payment.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/model/src/main/java/com/taimsoft/model/Product.java" afterPath="$PROJECT_DIR$/model/src/main/java/com/taim/model/Product.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/model/src/main/java/com/taimsoft/model/Staff.java" afterPath="$PROJECT_DIR$/model/src/main/java/com/taim/model/Staff.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/model/src/main/java/com/taimsoft/model/Transaction.java" afterPath="$PROJECT_DIR$/model/src/main/java/com/taim/model/Transaction.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/model/src/main/java/com/taimsoft/model/TransactionDetail.java" afterPath="$PROJECT_DIR$/model/src/main/java/com/taim/model/TransactionDetail.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/model/src/main/java/com/taimsoft/model/Vendor.java" afterPath="$PROJECT_DIR$/model/src/main/java/com/taim/model/Vendor.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/model/src/main/java/com/taimsoft/model/basemodels/BaseModel.java" afterPath="$PROJECT_DIR$/model/src/main/java/com/taim/model/basemodels/BaseModel.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/model/src/main/java/com/taimsoft/model/basemodels/UserBaseModels.java" afterPath="$PROJECT_DIR$/model/src/main/java/com/taim/model/basemodels/UserBaseModels.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <ignored path="$PROJECT_DIR$/backend/target/" />
@@ -190,11 +50,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/.gitignore">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="45">
-              <caret line="3" column="0" lean-forward="true" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+            <state relative-caret-position="90">
+              <caret line="6" column="0" lean-forward="true" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="compiler.xml" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.idea/compiler.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="270">
+              <caret line="18" column="41" lean-forward="true" selection-start-line="18" selection-start-column="41" selection-end-line="18" selection-end-column="41" />
               <folding />
             </state>
           </provider>
@@ -215,6 +85,7 @@
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/.idea/compiler.xml" />
       </list>
     </option>
   </component>
@@ -523,6 +394,20 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="taimsoft" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="taimsoft" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value=".idea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
       <pane id="Scratches" />
@@ -535,6 +420,7 @@
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
+    <property name="add_unversioned_files" value="$PROJECT_DIR$/.gitignore" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -940,12 +826,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1504076938101</updated>
-      <workItem from="1504076940564" duration="183000" />
+      <workItem from="1504076940564" duration="312000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="183000" />
+    <option name="totallyTimeSpent" value="312000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -1020,8 +906,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" column="0" lean-forward="true" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+        <state relative-caret-position="90">
+          <caret line="6" column="0" lean-forward="true" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.idea/compiler.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="18" column="41" lean-forward="true" selection-start-line="18" selection-start-column="41" selection-end-line="18" selection-end-column="41" />
           <folding />
         </state>
       </provider>
