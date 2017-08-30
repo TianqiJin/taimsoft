@@ -1,11 +1,18 @@
 package com.taimsoft.desktopui.controllers;
 
+import com.taimsoft.desktopui.util.VistaNavigator;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.util.Duration;
+
+import java.io.IOException;
 
 /**
  * Created by Tjin on 8/25/2017.
@@ -16,10 +23,24 @@ public class RootLayoutController {
     private Button menu;
     @FXML
     private AnchorPane menuList;
+    @FXML
+    private AnchorPane vistaPane;
 
     @FXML
     public void initialize() {
         prepareSlideMenuAnimation();
+    }
+
+    @FXML
+    public void handleTransactionButton(){
+       VistaNavigator.loadVista(VistaNavigator.VISTA_TRANSACTION);
+    }
+
+    public void setVista(Node node){
+        Pane tmpPane = (Pane) node;
+        tmpPane.prefHeightProperty().bind(vistaPane.heightProperty());
+        tmpPane.prefWidthProperty().bind(vistaPane.widthProperty());
+        vistaPane.getChildren().setAll(tmpPane);
     }
 
     private void prepareSlideMenuAnimation() {
