@@ -36,6 +36,18 @@ public class RootLayoutController {
        VistaNavigator.loadVista(VistaNavigator.VISTA_TRANSACTION);
     }
 
+    @FXML
+    public void handleProductButton(){ VistaNavigator.loadVista(VistaNavigator.VISTA_PRODUCT); }
+
+    @FXML
+    public void handleCustomerButton(){ VistaNavigator.loadVista(VistaNavigator.VISTA_CUSTOMER); }
+
+    @FXML
+    public void handleStaffButton(){ VistaNavigator.loadVista(VistaNavigator.VISTA_STAFF); }
+
+    @FXML
+    public void handleVendorButton(){ VistaNavigator.loadVista(VistaNavigator.VISTA_VENDOR); }
+
     public void setVista(Node node){
         Pane tmpPane = (Pane) node;
         tmpPane.prefHeightProperty().bind(vistaPane.heightProperty());

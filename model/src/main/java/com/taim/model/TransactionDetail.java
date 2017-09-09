@@ -86,4 +86,18 @@ public class TransactionDetail extends BaseModel {
     public void setPackageInfo(PackageInfo packageInfo) {
         this.packageInfo = packageInfo;
     }
+
+    @Override
+    public String toString() {
+        return "{\"TransactionDetail\":"
+                + super.toString()
+                + ", \"transaction\":" + transaction
+                + ", \"product\":" + product
+                + ", \"quantity\":\"" + quantity + "\""
+                + ", \"saleAmount\":\"" + saleAmount + "\""
+                + ", \"discount\":\"" + discount + "\""
+                + ", \"note\":\"" + note + "\""
+                + ", \"packageInfo\":" + packageInfo
+                + "}";
+    }
 }

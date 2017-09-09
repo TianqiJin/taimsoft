@@ -38,11 +38,11 @@ public class TaimDesktop extends Application {
         primaryStage.setWidth(bounds.getWidth());
         primaryStage.setHeight(bounds.getHeight());
 
-        primaryStage.setScene(createScene());
+        primaryStage.setScene(createScene(loadMainVista()));
         primaryStage.show();
     }
 
-    public Pane loadMainVista(){
+    private Pane loadMainVista(){
         //Load the fxml file
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/fxml/RootLayout.fxml"));
@@ -58,8 +58,7 @@ public class TaimDesktop extends Application {
         return null;
     }
 
-    public Scene createScene(){
-        Pane rootPane = loadMainVista();
+    private Scene createScene(Pane rootPane){
         Scene scene = new Scene(rootPane);
         rootPane.prefHeightProperty().bind(scene.heightProperty());
         rootPane.prefWidthProperty().bind(scene.widthProperty());

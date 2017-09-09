@@ -15,7 +15,8 @@ public class Payment extends BaseModel {
         CASH("Cash"),
         CREDIT("Credit"),
         DEBIT("Debit"),
-        CHEQUE("Cheque");
+        CHEQUE("Cheque"),
+        STORE_CREDIT("Store Credit");
 
         private String value;
         PaymentType(String vvalue){
@@ -72,5 +73,16 @@ public class Payment extends BaseModel {
 
     public void setDeposit(boolean deposit) {
         isDeposit = deposit;
+    }
+
+    @Override
+    public String toString() {
+        return "{\"Payment\":"
+                + super.toString()
+                + ", \"paymentAmount\":\"" + paymentAmount + "\""
+                + ", \"paymentType\":\"" + paymentType + "\""
+                + ", \"isDeposit\":\"" + isDeposit + "\""
+                + ", \"transaction\":" + transaction
+                + "}";
     }
 }

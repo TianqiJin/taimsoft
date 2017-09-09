@@ -43,11 +43,11 @@ public class UserBaseModels extends BaseModel{
 
     @Override
     public String toString() {
-        return super.toString()+
-                ", UserBaseModels{" +
-                "fullname='" + fullname + '\'' +
-                ", phone='" + phone + '\'' +
-                ", email='" + email + '\'' +
-                '}';
+        return "{\"UserBaseModels\":"
+                + super.toString()
+                + ", \"fullname\":\"" + fullname + "\""
+                + ", \"phone\":\"" + phone + "\""
+                + ", \"email\":\"" + email + "\""
+                + "}";
     }
 }

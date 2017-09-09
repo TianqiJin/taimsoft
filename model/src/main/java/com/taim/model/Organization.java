@@ -29,7 +29,7 @@ public class Organization extends BaseModel {
     private Set<Staff> staffs;
 
     public Organization(){
-        staffs = new HashSet<>();
+        staffs = new HashSet<Staff>();
     }
 
     public String getOrgName() {
@@ -90,15 +90,15 @@ public class Organization extends BaseModel {
 
     @Override
     public String toString() {
-        return super.toString()+
-                ", Organization{" +
-                "orgName='" + orgName + '\'' +
-                ", streetNum='" + streetNum + '\'' +
-                ", street='" + street + '\'' +
-                ", city='" + city + '\'' +
-                ", country='" + country + '\'' +
-                ", postalCode='" + postalCode + '\'' +
-                ", staffs=" + staffs +
-                '}';
+        return "{\"Organization\":"
+                + super.toString()
+                + ", \"orgName\":\"" + orgName + "\""
+                + ", \"streetNum\":\"" + streetNum + "\""
+                + ", \"street\":\"" + street + "\""
+                + ", \"city\":\"" + city + "\""
+                + ", \"country\":\"" + country + "\""
+                + ", \"postalCode\":\"" + postalCode + "\""
+                + ", \"staffs\":" + staffs
+                + "}";
     }
 }

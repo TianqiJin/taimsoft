@@ -36,13 +36,13 @@ public class Staff extends UserBaseModels {
     private String userName;
     @Column(nullable = false)
     private String password;
+    @Column(name = "picture_url")
+    private String picUrl;
     @ManyToOne
     @JoinColumn(name = "organization_id")
     private Organization organization;
     @OneToMany(mappedBy = "staff", fetch = FetchType.LAZY)
     private List<Transaction> transactionList;
-    @Column(name = "deleted", nullable = false)
-    private boolean deleted;
 
     public Staff(){}
 
@@ -62,14 +62,6 @@ public class Staff extends UserBaseModels {
         this.password = password;
     }
 
-    public boolean isDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
-    }
-
     public Organization getOrganization() {
         return organization;
     }
@@ -78,15 +70,31 @@ public class Staff extends UserBaseModels {
         this.organization = organization;
     }
 
+    public String getPicUrl() {
+        return picUrl;
+    }
+
+    public void setPicUrl(String picUrl) {
+        this.picUrl = picUrl;
+    }
+
+    public List<Transaction> getTransactionList() {
+        return transactionList;
+    }
+
+    public void setTransactionList(List<Transaction> transactionList) {
+        this.transactionList = transactionList;
+    }
+
     @Override
     public String toString() {
-        return super.toString()+
-                ", Staff{" +
-                "userName='" + userName + '\'' +
-                ", password='" + password + '\'' +
-                ", organization=" + organization +
-                ", transactionList=" + transactionList +
-                ", deleted=" + deleted +
-                '}';
+        return "{\"Staff\":"
+                + super.toString()
+                + ", \"userName\":\"" + userName + "\""
+                + ", \"password\":\"" + password + "\""
+                + ", \"picUrl\":\"" + picUrl + "\""
+                + ", \"organization\":" + organization
+                + ", \"transactionList\":" + transactionList
+                + "}";
     }
 }

@@ -21,6 +21,8 @@ public class BaseModel {
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     @Column(name = "date_modified" ,nullable = false)
     private DateTime dateModified;
+    @Column(nullable = false)
+    private boolean deleted;
 
     public BaseModel(){}
 
@@ -48,12 +50,21 @@ public class BaseModel {
         this.dateModified = dateModified;
     }
 
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
     @Override
     public String toString() {
-        return "BaseModel{" +
-                "id=" + id +
-                ", dateCreated=" + dateCreated +
-                ", dateModified=" + dateModified +
-                '}';
+        return "{\"BaseModel\":{"
+                + "\"id\":\"" + id + "\""
+                + ", \"dateCreated\":" + dateCreated
+                + ", \"dateModified\":" + dateModified
+                + ", \"deleted\":\"" + deleted + "\""
+                + "}}";
     }
 }

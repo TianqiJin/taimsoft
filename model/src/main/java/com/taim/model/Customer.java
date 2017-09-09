@@ -16,8 +16,6 @@ public class Customer extends UserBaseModels {
     private double storeCredit;
     @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
     private List<Transaction> transactionList;
-    @Column(nullable = false)
-    private boolean deleted;
 
     public Customer(){}
 
@@ -37,21 +35,12 @@ public class Customer extends UserBaseModels {
         this.transactionList = transactionList;
     }
 
-    public boolean isDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
-    }
-
     @Override
     public String toString() {
-        return super.toString()+
-                ", Customer{" +
-                "storeCredit=" + storeCredit +
-                ", transactionList=" + transactionList +
-                ", deleted=" + deleted +
-                '}';
+        return "{\"Customer\":"
+                + super.toString()
+                + ", \"storeCredit\":\"" + storeCredit + "\""
+                + ", \"transactionList\":" + transactionList
+                + "}";
     }
 }

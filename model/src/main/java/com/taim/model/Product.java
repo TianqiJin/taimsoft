@@ -13,12 +13,18 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "product")
 public class Product extends BaseModel {
+    @Column(unique = true)
+    private String sku;
     @Column
     private double length;
     @Column
     private double width;
     @Column
     private double height;
+    @Column(name = "display_name")
+    private String displayName;
+    @Column(name = "picture_url")
+    private String picUrl;
     @Column
     private String texture;
     @Column(name = "total_num")
@@ -76,16 +82,43 @@ public class Product extends BaseModel {
         this.texture = texture;
     }
 
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public String getPicUrl() {
+        return picUrl;
+    }
+
+    public void setPicUrl(String picUrl) {
+        this.picUrl = picUrl;
+    }
+
+    public String getSku() {
+        return sku;
+    }
+
+    public void setSku(String sku) {
+        this.sku = sku;
+    }
+
     @Override
     public String toString() {
-        return super.toString()+
-                ", Product{" +
-                "length=" + length +
-                ", width=" + width +
-                ", height=" + height +
-                ", texture='" + texture + '\'' +
-                ", totalNum=" + totalNum +
-                ", unitPrice=" + unitPrice +
-                '}';
+        return "{\"Product\":"
+                + super.toString()
+                + ", \"sku\":\"" + sku + "\""
+                + ", \"length\":\"" + length + "\""
+                + ", \"width\":\"" + width + "\""
+                + ", \"height\":\"" + height + "\""
+                + ", \"displayName\":\"" + displayName + "\""
+                + ", \"picUrl\":\"" + picUrl + "\""
+                + ", \"texture\":\"" + texture + "\""
+                + ", \"totalNum\":\"" + totalNum + "\""
+                + ", \"unitPrice\":\"" + unitPrice + "\""
+                + "}";
     }
 }

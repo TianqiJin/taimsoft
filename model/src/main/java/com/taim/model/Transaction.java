@@ -77,8 +77,6 @@ public class Transaction extends BaseModel {
     private List<Payment> payments;
     @Column
     private String note;
-    @Column(nullable = false)
-    private boolean deleted;
 
     public Transaction(){}
 
@@ -154,14 +152,6 @@ public class Transaction extends BaseModel {
         this.deliveryStatus = deliveryStatus;
     }
 
-    public boolean isDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
-    }
-
     public String getNote() {
         return note;
     }
@@ -184,5 +174,24 @@ public class Transaction extends BaseModel {
 
     public void setPst(double pst) {
         this.pst = pst;
+    }
+
+    @Override
+    public String toString() {
+        return "{\"Transaction\":"
+                + super.toString()
+                + ", \"saleAmount\":\"" + saleAmount + "\""
+                + ", \"gst\":\"" + gst + "\""
+                + ", \"pst\":\"" + pst + "\""
+                + ", \"staff\":" + staff
+                + ", \"customer\":" + customer
+                + ", \"vendor\":" + vendor
+                + ", \"transactionType\":\"" + transactionType + "\""
+                + ", \"paymentStatus\":\"" + paymentStatus + "\""
+                + ", \"deliveryStatus\":" + deliveryStatus
+                + ", \"transactionDetails\":" + transactionDetails
+                + ", \"payments\":" + payments
+                + ", \"note\":\"" + note + "\""
+                + "}";
     }
 }

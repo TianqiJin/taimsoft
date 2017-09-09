@@ -14,8 +14,6 @@ import java.util.List;
 public class Vendor extends UserBaseModels {
     @OneToMany(mappedBy = "vendor", fetch = FetchType.LAZY)
     private List<Transaction> transactionList;
-    @Column(nullable = false)
-    private boolean deleted;
 
     public Vendor(){}
 
@@ -27,20 +25,11 @@ public class Vendor extends UserBaseModels {
         this.transactionList = transactionList;
     }
 
-    public boolean isDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
-    }
-
     @Override
     public String toString() {
-        return super.toString()+
-                ", Vendor{" +
-                "transactionList=" + transactionList +
-                ", deleted=" + deleted +
-                '}';
+        return "{\"Vendor\":"
+                + super.toString()
+                + ", \"transactionList\":" + transactionList
+                + "}";
     }
 }

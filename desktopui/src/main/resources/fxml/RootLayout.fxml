@@ -39,21 +39,21 @@
                            <padding>
                               <Insets bottom="20.0" top="20.0" />
                            </padding></Button>
-                        <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Product">
+                        <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleProductButton" text="Product">
                            <padding>
                               <Insets bottom="20.0" top="20.0" />
                            </padding></Button>
-                        <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Customer">
+                        <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleCustomerButton" text="Customer">
                            <padding>
                               <Insets bottom="20.0" top="20.0" />
                            </padding>
                         </Button>
-                        <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Vendor">
+                        <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleVendorButton" text="Vendor">
                            <padding>
                               <Insets bottom="20.0" top="20.0" />
                            </padding>
                         </Button>
-                        <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Staff">
+                        <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleStaffButton" text="Staff">
                            <padding>
                               <Insets bottom="20.0" top="20.0" />
                            </padding>
