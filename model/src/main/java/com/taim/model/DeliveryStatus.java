@@ -13,7 +13,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "delivery_status")
 public class DeliveryStatus extends BaseModel {
-    enum Status{
+    public enum Status{
         UNDELIVERED("Undelivered"),
         DELIVERYING("Delivering"),
         DELIVERED("Delivered");

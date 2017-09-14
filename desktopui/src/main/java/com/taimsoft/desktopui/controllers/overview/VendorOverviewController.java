@@ -5,7 +5,7 @@ import javafx.fxml.FXML;
 /**
  * Created by Tjin on 8/30/2017.
  */
-public class VendorOverviewController implements OverviewController{
+public class VendorOverviewController extends OverviewController{
     @FXML
     public void initialize(){}
 

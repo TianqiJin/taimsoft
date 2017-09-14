@@ -1,7 +1,7 @@
 package com.taim.model;
 
 
-import com.taim.model.basemodels.UserBaseModels;
+import com.taim.model.basemodels.UserBaseModel;
 
 import javax.persistence.*;
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "customer")
-public class Customer extends UserBaseModels {
+public class Customer extends UserBaseModel {
     @Column(name = "store_credit")
     private double storeCredit;
     @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)

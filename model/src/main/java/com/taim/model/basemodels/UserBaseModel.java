@@ -7,7 +7,7 @@ import javax.persistence.MappedSuperclass;
  * Created by tjin on 2017-07-31.
  */
 @MappedSuperclass
-public class UserBaseModels extends BaseModel{
+public class UserBaseModel extends BaseModel{
     @Column
     private String fullname;
     @Column
@@ -15,7 +15,7 @@ public class UserBaseModels extends BaseModel{
     @Column
     private String email;
 
-    public UserBaseModels(){}
+    public UserBaseModel(){}
 
     public String getFullname() {
         return fullname;
@@ -43,7 +43,7 @@ public class UserBaseModels extends BaseModel{
 
     @Override
     public String toString() {
-        return "{\"UserBaseModels\":"
+        return "{\"UserBaseModel\":"
                 + super.toString()
                 + ", \"fullname\":\"" + fullname + "\""
                 + ", \"phone\":\"" + phone + "\""

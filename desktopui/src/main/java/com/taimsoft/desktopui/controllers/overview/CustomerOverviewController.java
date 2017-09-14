@@ -5,12 +5,10 @@ import javafx.fxml.FXML;
 /**
  * Created by Tjin on 8/30/2017.
  */
-public class CustomerOverviewController implements OverviewController{
+public class CustomerOverviewController extends OverviewController{
     @FXML
     public void initialize(){}
 
     @Override
-    public void loadData() {
-
-    }
+    public void loadData() {}
 }

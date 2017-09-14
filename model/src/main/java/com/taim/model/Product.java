@@ -1,6 +1,8 @@
 package com.taim.model;
 
 
+
+
 import com.taim.model.basemodels.BaseModel;
 
 import javax.persistence.Column;
@@ -30,7 +32,7 @@ public class Product extends BaseModel {
     @Column(name = "total_num")
     private double totalNum;
     @Column(name = "unit_price")
-    private double unitPrice;
+    private Double unitPrice;
 
     public Product(){}
 

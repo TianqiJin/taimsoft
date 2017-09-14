@@ -1,6 +1,7 @@
 package com.taim.model;
 
 
+
 import com.taim.model.basemodels.BaseModel;
 
 import javax.persistence.*;

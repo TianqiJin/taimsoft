@@ -2,7 +2,7 @@ package com.taim.model;
 
 
 
-import com.taim.model.basemodels.UserBaseModels;
+import com.taim.model.basemodels.UserBaseModel;
 import javax.persistence.*;
 import java.util.List;
 
@@ -11,7 +11,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "staff")
-public class Staff extends UserBaseModels {
+public class Staff extends UserBaseModel {
 
     public enum Position{
         SALES("Sales"), MANAGER("Manager"), DISTRIBUTOR("Distributor");
@@ -38,6 +38,8 @@ public class Staff extends UserBaseModels {
     private String password;
     @Column(name = "picture_url")
     private String picUrl;
+    @Column
+    private Position position;
     @ManyToOne
     @JoinColumn(name = "organization_id")
     private Organization organization;
@@ -86,6 +88,14 @@ public class Staff extends UserBaseModels {
         this.transactionList = transactionList;
     }
 
+    public Position getPosition() {
+        return position;
+    }
+
+    public void setPosition(Position position) {
+        this.position = position;
+    }
+
     @Override
     public String toString() {
         return "{\"Staff\":"
@@ -93,6 +103,7 @@ public class Staff extends UserBaseModels {
                 + ", \"userName\":\"" + userName + "\""
                 + ", \"password\":\"" + password + "\""
                 + ", \"picUrl\":\"" + picUrl + "\""
+                + ", \"position\":\"" + position + "\""
                 + ", \"organization\":" + organization
                 + ", \"transactionList\":" + transactionList
                 + "}";
