@@ -2,10 +2,7 @@ package com.taim.dto;
 
 import com.taim.dto.basedtos.UserBaseModelDTO;
 import com.taim.model.Staff;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +14,7 @@ public class StaffDTO extends UserBaseModelDTO{
     private ObjectProperty<Staff.Position> position;
     private ObjectProperty<OrganizationDTO> organization;
     private List<TransactionDTO> transactionList;
+    private BooleanProperty isChecked;
 
     public StaffDTO(){
         userName = new SimpleStringProperty();
@@ -25,6 +23,7 @@ public class StaffDTO extends UserBaseModelDTO{
         organization = new SimpleObjectProperty<>();
         position = new SimpleObjectProperty<>();
         transactionList = new ArrayList<>();
+        isChecked = new SimpleBooleanProperty();
     }
 
     public String getUserName() {
@@ -93,5 +92,17 @@ public class StaffDTO extends UserBaseModelDTO{
 
     public void setPosition(Staff.Position position) {
         this.position.set(position);
+    }
+
+    public boolean isIsChecked() {
+        return isChecked.get();
+    }
+
+    public BooleanProperty isCheckedProperty() {
+        return isChecked;
+    }
+
+    public void setIsChecked(boolean isChecked) {
+        this.isChecked.set(isChecked);
     }
 }

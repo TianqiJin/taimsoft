@@ -1,10 +1,7 @@
 package com.taim.dto;
 
 import com.taim.dto.basedtos.BaseModelDTO;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 
 public class ProductDTO extends BaseModelDTO{
     private StringProperty sku;
@@ -16,6 +13,7 @@ public class ProductDTO extends BaseModelDTO{
     private StringProperty texture;
     private DoubleProperty totalNum;
     private DoubleProperty unitPrice;
+    private BooleanProperty isChecked;
 
     public ProductDTO(){
         unitPrice = new SimpleDoubleProperty();
@@ -27,6 +25,7 @@ public class ProductDTO extends BaseModelDTO{
         picUrl = new SimpleStringProperty();
         texture = new SimpleStringProperty();
         totalNum = new SimpleDoubleProperty();
+        isChecked = new SimpleBooleanProperty();
     }
 
     public String getSku() {
@@ -135,5 +134,17 @@ public class ProductDTO extends BaseModelDTO{
 
     public void setUnitPrice(double unitPrice) {
         this.unitPrice.set(unitPrice);
+    }
+
+    public boolean isIsChecked() {
+        return isChecked.get();
+    }
+
+    public BooleanProperty isCheckedProperty() {
+        return isChecked;
+    }
+
+    public void setIsChecked(boolean isChecked) {
+        this.isChecked.set(isChecked);
     }
 }

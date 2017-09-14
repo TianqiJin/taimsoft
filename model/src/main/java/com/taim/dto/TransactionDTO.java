@@ -18,8 +18,9 @@ public class TransactionDTO extends BaseModelDTO {
     private ObjectProperty<Transaction.PaymentStatus> paymentStatus;
     private ObjectProperty<DeliveryStatusDTO> deliveryStatus;
     private List<TransactionDetailDTO> transactionDetails;
-    //TODO:L Payments
+    private List<PaymentDTO> payments;
     private StringProperty note;
+    private BooleanProperty isChecked;
     public TransactionDTO(){
         saleAmount = new SimpleDoubleProperty();
         gst = new SimpleDoubleProperty();
@@ -31,7 +32,9 @@ public class TransactionDTO extends BaseModelDTO {
         paymentStatus = new SimpleObjectProperty<>();
         deliveryStatus = new SimpleObjectProperty<>();
         transactionDetails = new ArrayList<>();
+        payments = new ArrayList<>();
         note = new SimpleStringProperty();
+        isChecked = new SimpleBooleanProperty();
     }
 
     public double getSaleAmount() {
@@ -160,5 +163,25 @@ public class TransactionDTO extends BaseModelDTO {
 
     public void setDeliveryStatus(DeliveryStatusDTO deliveryStatus) {
         this.deliveryStatus.set(deliveryStatus);
+    }
+
+    public List<PaymentDTO> getPayments() {
+        return payments;
+    }
+
+    public void setPayments(List<PaymentDTO> payments) {
+        this.payments = payments;
+    }
+
+    public boolean isIsChecked() {
+        return isChecked.get();
+    }
+
+    public BooleanProperty isCheckedProperty() {
+        return isChecked;
+    }
+
+    public void setIsChecked(boolean isChecked) {
+        this.isChecked.set(isChecked);
     }
 }

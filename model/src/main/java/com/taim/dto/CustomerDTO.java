@@ -1,10 +1,7 @@
 package com.taim.dto;
 
 import com.taim.dto.basedtos.UserBaseModelDTO;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.*;
 import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
@@ -12,10 +9,12 @@ import java.util.List;
 
 public class CustomerDTO extends UserBaseModelDTO{
     private DoubleProperty storeCredit;
+    private BooleanProperty isChecked;
     private List<TransactionDTO> transactionList;
 
     public CustomerDTO(){
         storeCredit = new SimpleDoubleProperty();
+        isChecked = new SimpleBooleanProperty();
         transactionList = new ArrayList<TransactionDTO>();
     }
 
@@ -37,5 +36,17 @@ public class CustomerDTO extends UserBaseModelDTO{
 
     public void setTransactionList(List<TransactionDTO> transactionList) {
         this.transactionList = transactionList;
+    }
+
+    public boolean isIsChecked() {
+        return isChecked.get();
+    }
+
+    public BooleanProperty isCheckedProperty() {
+        return isChecked;
+    }
+
+    public void setIsChecked(boolean isChecked) {
+        this.isChecked.set(isChecked);
     }
 }
