@@ -1,6 +1,8 @@
 package com.taim.client;
 
+import com.taim.client.util.BeanMapper;
 import com.taim.client.util.PropertiesProcessor;
+import com.taim.dto.TransactionDTO;
 import com.taim.model.Transaction;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
@@ -15,7 +17,7 @@ import java.util.List;
 public class TransactionClient {
     private static final String TRANSACTION_PATH= PropertiesProcessor.serverUrl+"/transaction";
 
-    public List<Transaction> getTransactionList(){
+    public List<TransactionDTO> getTransactionList(){
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -25,24 +27,24 @@ public class TransactionClient {
 
         ResponseEntity<Transaction[]> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity,Transaction[].class);
         Transaction[] transactions = responseEntity.getBody();
-        List<Transaction> transactionList = new ArrayList<>();
-        Arrays.stream(transactions).forEach(p->transactionList.add(p));
+        List<TransactionDTO> transactionList = new ArrayList<>();
+        Arrays.stream(transactions).forEach(p->transactionList.add(BeanMapper.map(p, TransactionDTO.class)));
 
         return transactionList;
     }
 
 
-    public Transaction addTransaction(Transaction transaction){
+    public TransactionDTO addTransaction(TransactionDTO transactionDTO){
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         RestTemplate restTemplate = new RestTemplate();
         String url = TRANSACTION_PATH+"/add";
-        HttpEntity<Transaction> requestEntity = new HttpEntity<Transaction>(transaction, headers);
+        HttpEntity<Transaction> requestEntity = new HttpEntity<Transaction>(BeanMapper.map(transactionDTO, Transaction.class), headers);
         ResponseEntity<Transaction> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Transaction.class);
-        return responseEntity.getBody();
+        return BeanMapper.map(responseEntity.getBody(), TransactionDTO.class);
     }
 
-    public Transaction getTransactionById(Integer id){
+    public TransactionDTO getTransactionById(Integer id){
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         RestTemplate restTemplate = new RestTemplate();
@@ -50,7 +52,7 @@ public class TransactionClient {
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
         ResponseEntity<Transaction> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity,Transaction.class);
-        return responseEntity.getBody();
+        return BeanMapper.map(responseEntity.getBody(), TransactionDTO.class);
     }
 
     public String deleteTransactionById(Integer id){
@@ -64,13 +66,13 @@ public class TransactionClient {
         return responseEntity.getBody().replace("\"", "");
     }
 
-    public Transaction updateTransaction(Transaction transaction){
+    public TransactionDTO updateTransaction(TransactionDTO transactionDTO){
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         RestTemplate restTemplate = new RestTemplate();
         String url = TRANSACTION_PATH+"/update";
-        HttpEntity<Transaction> requestEntity = new HttpEntity<Transaction>(transaction, headers);
+        HttpEntity<Transaction> requestEntity = new HttpEntity<Transaction>(BeanMapper.map(transactionDTO, Transaction.class), headers);
         ResponseEntity<Transaction> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Transaction.class);
-        return responseEntity.getBody();
+        return BeanMapper.map(responseEntity.getBody(), TransactionDTO.class);
     }
 }

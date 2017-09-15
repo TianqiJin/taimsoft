@@ -1,6 +1,9 @@
 package com.taim.client;
 
+import com.taim.client.util.BeanMapper;
 import com.taim.client.util.PropertiesProcessor;
+import com.taim.dto.ProductDTO;
+import com.taim.dto.StaffDTO;
 import com.taim.model.Staff;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
@@ -15,7 +18,7 @@ import java.util.List;
 public class StaffClient {
     private static final String STAFF_PATH= PropertiesProcessor.serverUrl+"/staff";
 
-    public List<Staff> getStaffList(){
+    public List<StaffDTO> getStaffList(){
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -25,24 +28,24 @@ public class StaffClient {
 
         ResponseEntity<Staff[]> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity,Staff[].class);
         Staff[] staffs = responseEntity.getBody();
-        List<Staff> staffList = new ArrayList<>();
-        Arrays.stream(staffs).forEach(p->staffList.add(p));
+        List<StaffDTO> staffList = new ArrayList<>();
+        Arrays.stream(staffs).forEach(p->staffList.add(BeanMapper.map(p, StaffDTO.class)));
 
         return staffList;
     }
 
 
-    public Staff addStaff(Staff staff){
+    public StaffDTO addStaff(StaffDTO staffDTO){
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         RestTemplate restTemplate = new RestTemplate();
         String url = STAFF_PATH+"/add";
-        HttpEntity<Staff> requestEntity = new HttpEntity<Staff>(staff, headers);
+        HttpEntity<Staff> requestEntity = new HttpEntity<Staff>(BeanMapper.map(staffDTO, Staff.class), headers);
         ResponseEntity<Staff> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Staff.class);
-        return responseEntity.getBody();
+        return BeanMapper.map(responseEntity.getBody(), StaffDTO.class);
     }
 
-    public Staff getStaffByName(String name){
+    public StaffDTO getStaffByName(String name){
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         RestTemplate restTemplate = new RestTemplate();
@@ -50,7 +53,7 @@ public class StaffClient {
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
         ResponseEntity<Staff> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity,Staff.class);
-        return responseEntity.getBody();
+        return BeanMapper.map(responseEntity.getBody(), StaffDTO.class);
     }
 
     public String deleteStaffByName(String name){
@@ -64,13 +67,13 @@ public class StaffClient {
         return responseEntity.getBody().replace("\"", "");
     }
 
-    public Staff updateStaff(Staff staff){
+    public StaffDTO updateStaff(StaffDTO staffDTO){
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         RestTemplate restTemplate = new RestTemplate();
         String url = STAFF_PATH+"/update";
-        HttpEntity<Staff> requestEntity = new HttpEntity<Staff>(staff, headers);
+        HttpEntity<Staff> requestEntity = new HttpEntity<Staff>(BeanMapper.map(staffDTO, Staff.class), headers);
         ResponseEntity<Staff> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Staff.class);
-        return responseEntity.getBody();
+        return BeanMapper.map(responseEntity.getBody(), StaffDTO.class);
     }
 }

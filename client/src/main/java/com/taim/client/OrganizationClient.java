@@ -1,7 +1,10 @@
 package com.taim.client;
 
+import com.taim.client.util.BeanMapper;
 import com.taim.client.util.PropertiesProcessor;
+import com.taim.dto.OrganizationDTO;
 import com.taim.model.Organization;
+import org.apache.commons.beanutils.BeanMap;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -17,7 +20,7 @@ import java.util.List;
 public class OrganizationClient {
     private static final String ORGANIZATION_PATH=PropertiesProcessor.serverUrl+"/organization";
 
-    public List<Organization> getOrganizationList(){
+    public List<OrganizationDTO> getOrganizationList(){
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -27,24 +30,24 @@ public class OrganizationClient {
 
         ResponseEntity<Organization[]> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity,Organization[].class);
         Organization[] organizations = responseEntity.getBody();
-        List<Organization> organizationList = new ArrayList<>();
-        Arrays.stream(organizations).forEach(p->organizationList.add(p));
+        List<OrganizationDTO> organizationList = new ArrayList<>();
+        Arrays.stream(organizations).forEach(p->organizationList.add(BeanMapper.map(p, OrganizationDTO.class)));
 
         return organizationList;
     }
 
 
-    public Organization addOrganization(Organization organization){
+    public OrganizationDTO addOrganization(OrganizationDTO organizationDTO){
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         RestTemplate restTemplate = new RestTemplate();
         String url = ORGANIZATION_PATH+"/add";
-        HttpEntity<Organization> requestEntity = new HttpEntity<Organization>(organization, headers);
+        HttpEntity<Organization> requestEntity = new HttpEntity<Organization>(BeanMapper.map(organizationDTO, Organization.class), headers);
         ResponseEntity<Organization> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Organization.class);
-        return responseEntity.getBody();
+        return BeanMapper.map(responseEntity.getBody(), OrganizationDTO.class);
     }
 
-    public Organization getOrganizationByName(String name){
+    public OrganizationDTO getOrganizationByName(String name){
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         RestTemplate restTemplate = new RestTemplate();
@@ -52,7 +55,7 @@ public class OrganizationClient {
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
         ResponseEntity<Organization> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity,Organization.class);
-        return responseEntity.getBody();
+        return BeanMapper.map(responseEntity.getBody(), OrganizationDTO.class);
     }
 
     public String deleteOrganizationByName(String name){
@@ -66,14 +69,14 @@ public class OrganizationClient {
         return responseEntity.getBody().replace("\"", "");
     }
 
-    public Organization updateOrganization(Organization organization){
+    public OrganizationDTO updateOrganization(OrganizationDTO organizationDTO){
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         RestTemplate restTemplate = new RestTemplate();
         String url = ORGANIZATION_PATH+"/update";
-        HttpEntity<Organization> requestEntity = new HttpEntity<Organization>(organization, headers);
+        HttpEntity<Organization> requestEntity = new HttpEntity<Organization>(BeanMapper.map(organizationDTO, Organization.class), headers);
         ResponseEntity<Organization> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Organization.class);
-        return responseEntity.getBody();
+        return BeanMapper.map(responseEntity.getBody(), OrganizationDTO.class);
     }
 
 }

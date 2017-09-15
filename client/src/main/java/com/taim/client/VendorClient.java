@@ -1,7 +1,10 @@
 package com.taim.client;
 
+import com.taim.client.util.BeanMapper;
 import com.taim.client.util.PropertiesProcessor;
+import com.taim.dto.VendorDTO;
 import com.taim.model.Vendor;
+import org.apache.commons.beanutils.BeanMap;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -15,7 +18,7 @@ import java.util.List;
 public class VendorClient {
     private static final String VENDOR_PATH= PropertiesProcessor.serverUrl+"/vendor";
 
-    public List<Vendor> getVendorList(){
+    public List<VendorDTO> getVendorList(){
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -25,24 +28,24 @@ public class VendorClient {
 
         ResponseEntity<Vendor[]> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity,Vendor[].class);
         Vendor[] vendors = responseEntity.getBody();
-        List<Vendor> vendorList = new ArrayList<>();
-        Arrays.stream(vendors).forEach(p->vendorList.add(p));
+        List<VendorDTO> vendorList = new ArrayList<>();
+        Arrays.stream(vendors).forEach(p->vendorList.add(BeanMapper.map(p, VendorDTO.class)));
 
         return vendorList;
     }
 
 
-    public Vendor addVendor(Vendor vendor){
+    public VendorDTO addVendor(VendorDTO vendorDTO){
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         RestTemplate restTemplate = new RestTemplate();
         String url = VENDOR_PATH+"/add";
-        HttpEntity<Vendor> requestEntity = new HttpEntity<Vendor>(vendor, headers);
+        HttpEntity<Vendor> requestEntity = new HttpEntity<Vendor>(BeanMapper.map(vendorDTO, Vendor.class), headers);
         ResponseEntity<Vendor> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Vendor.class);
-        return responseEntity.getBody();
+        return BeanMapper.map(responseEntity.getBody(), VendorDTO.class);
     }
 
-    public Vendor getVendorByName(String name){
+    public VendorDTO getVendorByName(String name){
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         RestTemplate restTemplate = new RestTemplate();
@@ -50,7 +53,7 @@ public class VendorClient {
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
         ResponseEntity<Vendor> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity,Vendor.class);
-        return responseEntity.getBody();
+        return BeanMapper.map(responseEntity.getBody(), VendorDTO.class);
     }
 
     public String deleteVendorByName(String name){
@@ -64,13 +67,13 @@ public class VendorClient {
         return responseEntity.getBody().replace("\"", "");
     }
 
-    public Vendor updateVendor(Vendor vendor){
+    public VendorDTO updateVendor(VendorDTO vendorDTO){
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         RestTemplate restTemplate = new RestTemplate();
         String url = VENDOR_PATH+"/update";
-        HttpEntity<Vendor> requestEntity = new HttpEntity<Vendor>(vendor, headers);
+        HttpEntity<Vendor> requestEntity = new HttpEntity<Vendor>(BeanMapper.map(vendorDTO, Vendor.class), headers);
         ResponseEntity<Vendor> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Vendor.class);
-        return responseEntity.getBody();
+        return BeanMapper.map(responseEntity.getBody(), VendorDTO.class);
     }
 }

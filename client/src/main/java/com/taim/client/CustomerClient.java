@@ -1,7 +1,10 @@
 package com.taim.client;
 
+import com.taim.client.util.BeanMapper;
 import com.taim.client.util.PropertiesProcessor;
+import com.taim.dto.CustomerDTO;
 import com.taim.model.Customer;
+import org.apache.commons.beanutils.BeanMap;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -15,8 +18,7 @@ import java.util.List;
 public class CustomerClient {
     private static final String CUSTOMER_PATH= PropertiesProcessor.serverUrl+"/customer";
 
-    public List<Customer> getCustomerList(){
-
+    public List<CustomerDTO> getCustomerList(){
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         RestTemplate restTemplate = new RestTemplate();
@@ -25,24 +27,23 @@ public class CustomerClient {
 
         ResponseEntity<Customer[]> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity,Customer[].class);
         Customer[] customers = responseEntity.getBody();
-        List<Customer> customerList = new ArrayList<>();
-        Arrays.stream(customers).forEach(p->customerList.add(p));
+        List<CustomerDTO> customerList = new ArrayList<>();
+        Arrays.stream(customers).forEach(p->customerList.add(BeanMapper.map(p, CustomerDTO.class)));
 
         return customerList;
     }
 
-
-    public Customer addCustomer(Customer customer){
+    public CustomerDTO addCustomer(CustomerDTO customerDTO){
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         RestTemplate restTemplate = new RestTemplate();
         String url = CUSTOMER_PATH+"/add";
-        HttpEntity<Customer> requestEntity = new HttpEntity<Customer>(customer, headers);
+        HttpEntity<Customer> requestEntity = new HttpEntity<Customer>(BeanMapper.map(customerDTO, Customer.class), headers);
         ResponseEntity<Customer> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Customer.class);
-        return responseEntity.getBody();
+        return BeanMapper.map(responseEntity.getBody(), CustomerDTO.class);
     }
 
-    public Customer getCustomerByName(String name){
+    public CustomerDTO getCustomerByName(String name){
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         RestTemplate restTemplate = new RestTemplate();
@@ -50,7 +51,7 @@ public class CustomerClient {
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
         ResponseEntity<Customer> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity,Customer.class);
-        return responseEntity.getBody();
+        return BeanMapper.map(responseEntity.getBody(), CustomerDTO.class);
     }
 
     public String deleteCustomerByName(String name){
@@ -64,13 +65,13 @@ public class CustomerClient {
         return responseEntity.getBody().replace("\"", "");
     }
 
-    public Customer updateCustomer(Customer customer){
+    public CustomerDTO updateCustomer(CustomerDTO customerDTO){
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         RestTemplate restTemplate = new RestTemplate();
         String url = CUSTOMER_PATH+"/update";
-        HttpEntity<Customer> requestEntity = new HttpEntity<Customer>(customer, headers);
+        HttpEntity<Customer> requestEntity = new HttpEntity<Customer>(BeanMapper.map(customerDTO, Customer.class), headers);
         ResponseEntity<Customer> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Customer.class);
-        return responseEntity.getBody();
+        return BeanMapper.map(responseEntity.getBody(), CustomerDTO.class);
     }
 }

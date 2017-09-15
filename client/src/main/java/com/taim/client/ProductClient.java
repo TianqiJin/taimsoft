@@ -1,6 +1,8 @@
 package com.taim.client;
 
+import com.taim.client.util.BeanMapper;
 import com.taim.client.util.PropertiesProcessor;
+import com.taim.dto.ProductDTO;
 import com.taim.model.Product;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
@@ -15,7 +17,7 @@ import java.util.List;
 public class ProductClient {
     private static final String PRODUCT_PATH= PropertiesProcessor.serverUrl+"/product";
 
-    public List<Product> getProductList(){
+    public List<ProductDTO> getProductList(){
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -25,24 +27,24 @@ public class ProductClient {
 
         ResponseEntity<Product[]> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity,Product[].class);
         Product[] products = responseEntity.getBody();
-        List<Product> productList = new ArrayList<>();
-        Arrays.stream(products).forEach(p->productList.add(p));
+        List<ProductDTO> productList = new ArrayList<>();
+        Arrays.stream(products).forEach(p->productList.add(BeanMapper.map(p, ProductDTO.class)));
 
         return productList;
     }
 
 
-    public Product addProduct(Product product){
+    public ProductDTO addProduct(ProductDTO productDTO){
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         RestTemplate restTemplate = new RestTemplate();
         String url = PRODUCT_PATH+"/add";
-        HttpEntity<Product> requestEntity = new HttpEntity<Product>(product, headers);
+        HttpEntity<Product> requestEntity = new HttpEntity<Product>(BeanMapper.map(productDTO, Product.class), headers);
         ResponseEntity<Product> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Product.class);
-        return responseEntity.getBody();
+        return BeanMapper.map(responseEntity.getBody(), ProductDTO.class);
     }
 
-    public Product getProductByTexture(String texture){
+    public ProductDTO getProductByTexture(String texture){
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         RestTemplate restTemplate = new RestTemplate();
@@ -50,10 +52,10 @@ public class ProductClient {
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
         ResponseEntity<Product> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity,Product.class);
-        return responseEntity.getBody();
+        return BeanMapper.map(responseEntity.getBody(), ProductDTO.class);
     }
 
-    public Product getProductById(Integer id){
+    public ProductDTO getProductById(Integer id){
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         RestTemplate restTemplate = new RestTemplate();
@@ -61,7 +63,7 @@ public class ProductClient {
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
         ResponseEntity<Product> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity,Product.class);
-        return responseEntity.getBody();
+        return BeanMapper.map(responseEntity.getBody(), ProductDTO.class);
     }
 
     public String deleteProductById(Integer id){
@@ -75,14 +77,14 @@ public class ProductClient {
         return responseEntity.getBody().replace("\"", "");
     }
 
-    public Product updateProduct(Product product){
+    public ProductDTO updateProduct(ProductDTO productDTO){
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         RestTemplate restTemplate = new RestTemplate();
         String url = PRODUCT_PATH+"/update";
-        HttpEntity<Product> requestEntity = new HttpEntity<Product>(product, headers);
+        HttpEntity<Product> requestEntity = new HttpEntity<Product>(BeanMapper.map(productDTO, Product.class), headers);
         ResponseEntity<Product> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Product.class);
-        return responseEntity.getBody();
+        return BeanMapper.map(responseEntity.getBody(), ProductDTO.class);
     }
 
 }
