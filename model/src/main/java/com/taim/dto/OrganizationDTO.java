@@ -18,7 +18,7 @@ public class OrganizationDTO extends BaseModelDTO {
     private StringProperty postalCode;
     private List<StaffDTO> staff;
 
-    private OrganizationDTO(){
+    public OrganizationDTO(){
         orgName = new SimpleStringProperty();
         streetNum = new SimpleStringProperty();
         street = new SimpleStringProperty();

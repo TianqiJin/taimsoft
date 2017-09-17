@@ -19,12 +19,13 @@ import java.util.List;
 
 public class OrganizationClient {
     private static final String ORGANIZATION_PATH=PropertiesProcessor.serverUrl+"/organization";
+    private static HttpHeaders headers = new HttpHeaders();
+    private static RestTemplate restTemplate = new RestTemplate();
+    static {
+        headers.setContentType(MediaType.APPLICATION_JSON);
+    }
 
     public List<OrganizationDTO> getOrganizationList(){
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        RestTemplate restTemplate = new RestTemplate();
         String url = ORGANIZATION_PATH+"/getAll";
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
@@ -38,9 +39,6 @@ public class OrganizationClient {
 
 
     public OrganizationDTO addOrganization(OrganizationDTO organizationDTO){
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        RestTemplate restTemplate = new RestTemplate();
         String url = ORGANIZATION_PATH+"/add";
         HttpEntity<Organization> requestEntity = new HttpEntity<Organization>(BeanMapper.map(organizationDTO, Organization.class), headers);
         ResponseEntity<Organization> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Organization.class);
@@ -48,9 +46,6 @@ public class OrganizationClient {
     }
 
     public OrganizationDTO getOrganizationByName(String name){
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        RestTemplate restTemplate = new RestTemplate();
         String url = ORGANIZATION_PATH+"/getByName"+"?name="+name;
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
@@ -59,9 +54,6 @@ public class OrganizationClient {
     }
 
     public String deleteOrganizationByName(String name){
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        RestTemplate restTemplate = new RestTemplate();
         String url = ORGANIZATION_PATH+"/deleteObject"+"?name="+name;
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
@@ -70,9 +62,6 @@ public class OrganizationClient {
     }
 
     public OrganizationDTO updateOrganization(OrganizationDTO organizationDTO){
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        RestTemplate restTemplate = new RestTemplate();
         String url = ORGANIZATION_PATH+"/update";
         HttpEntity<Organization> requestEntity = new HttpEntity<Organization>(BeanMapper.map(organizationDTO, Organization.class), headers);
         ResponseEntity<Organization> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Organization.class);

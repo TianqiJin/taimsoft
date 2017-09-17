@@ -1,5 +1,6 @@
 package com.taim.client;
 
+import com.taim.dto.TransactionDTO;
 import com.taim.model.DeliveryStatus;
 import com.taim.model.Transaction;
 import junit.framework.Assert;
@@ -14,20 +15,19 @@ import java.util.List;
  */
 public class TransactionClientTest {
     private TransactionClient client = new TransactionClient();
-    private static Transaction transaction;
+    private static TransactionDTO transaction;
 
     @BeforeClass
     public static void prepareObject(){
         DateTime d1Created = DateTime.now();
         DateTime d1Modified = DateTime.now();
-        transaction = new Transaction();
+        transaction = new TransactionDTO();
         transaction.setSaleAmount(100);
         transaction.setGst(7);
         transaction.setPst(8);
         transaction.setTransactionType(Transaction.TransactionType.SELL);
         transaction.setPaymentStatus(Transaction.PaymentStatus.UNPAID);
         transaction.setNote("sample");
-        transaction.setDeleted(false);
         transaction.setDateCreated(d1Created);
         transaction.setDateModified(d1Modified);
     }
@@ -35,14 +35,13 @@ public class TransactionClientTest {
     @Test
     public void addTransactionTest()throws Exception{
 
-        Transaction tran = client.addTransaction(transaction);
+        TransactionDTO tran = client.addTransaction(transaction);
         Assert.assertEquals(transaction.getSaleAmount(), tran.getSaleAmount());
         Assert.assertEquals(transaction.getGst(),tran.getGst());
         Assert.assertEquals(transaction.getPst(), tran.getPst());
         Assert.assertEquals(transaction.getTransactionType(), tran.getTransactionType());
         Assert.assertEquals(transaction.getPaymentStatus(), tran.getPaymentStatus());
         Assert.assertEquals(transaction.getNote(), tran.getNote());
-        Assert.assertEquals(transaction.isDeleted(),tran.isDeleted());
         Assert.assertEquals(transaction.getDateCreated().getMillis(), tran.getDateCreated().getMillis());
         Assert.assertEquals(transaction.getDateModified().getMillis(), tran.getDateModified().getMillis());
     }
@@ -50,16 +49,15 @@ public class TransactionClientTest {
     @Test
     public void getTransactionListTest()throws Exception{
         Thread.sleep(2000);
-        List<Transaction> trans = client.getTransactionList();
+        List<TransactionDTO> trans = client.getTransactionList();
         Assert.assertEquals(1, trans.size());
-        Transaction tran = trans.get(0);
+        TransactionDTO tran = trans.get(0);
         Assert.assertEquals(transaction.getSaleAmount(), tran.getSaleAmount());
         Assert.assertEquals(transaction.getGst(),tran.getGst());
         Assert.assertEquals(transaction.getPst(), tran.getPst());
         Assert.assertEquals(transaction.getTransactionType(), tran.getTransactionType());
         Assert.assertEquals(transaction.getPaymentStatus(), tran.getPaymentStatus());
         Assert.assertEquals(transaction.getNote(), tran.getNote());
-        Assert.assertEquals(transaction.isDeleted(),tran.isDeleted());
         Assert.assertEquals(transaction.getDateCreated().getMillis(), tran.getDateCreated().getMillis());
         Assert.assertEquals(transaction.getDateModified().getMillis(), tran.getDateModified().getMillis());
     }
@@ -67,14 +65,13 @@ public class TransactionClientTest {
 
     @Test
     public void getTransactionByIdTest()throws Exception{
-        Transaction tran = client.getTransactionById(1);
+        TransactionDTO tran = client.getTransactionById(1);
         Assert.assertEquals(transaction.getSaleAmount(), tran.getSaleAmount());
         Assert.assertEquals(transaction.getGst(),tran.getGst());
         Assert.assertEquals(transaction.getPst(), tran.getPst());
         Assert.assertEquals(transaction.getTransactionType(), tran.getTransactionType());
         Assert.assertEquals(transaction.getPaymentStatus(), tran.getPaymentStatus());
         Assert.assertEquals(transaction.getNote(), tran.getNote());
-        Assert.assertEquals(transaction.isDeleted(),tran.isDeleted());
         Assert.assertEquals(transaction.getDateCreated().getMillis(), tran.getDateCreated().getMillis());
         Assert.assertEquals(transaction.getDateModified().getMillis(), tran.getDateModified().getMillis());
     }
@@ -82,10 +79,10 @@ public class TransactionClientTest {
     @Test
     public void updateTransactionTest()throws Exception{
 
-        Transaction tran = client.getTransactionById(1);
+        TransactionDTO tran = client.getTransactionById(1);
         tran.setPaymentStatus(Transaction.PaymentStatus.PAID);
         tran.setDateModified(DateTime.now());
-        Transaction t1 = client.updateTransaction(tran);
+        TransactionDTO t1 = client.updateTransaction(tran);
 
         Assert.assertEquals(tran.getSaleAmount(), t1.getSaleAmount());
         Assert.assertEquals(tran.getGst(),t1.getGst());
@@ -93,7 +90,6 @@ public class TransactionClientTest {
         Assert.assertEquals(tran.getTransactionType(), t1.getTransactionType());
         Assert.assertEquals(tran.getPaymentStatus(), t1.getPaymentStatus());
         Assert.assertEquals(tran.getNote(), t1.getNote());
-        Assert.assertEquals(tran.isDeleted(),t1.isDeleted());
         Assert.assertEquals(tran.getDateCreated().getMillis(), t1.getDateCreated().getMillis());
         Assert.assertEquals(tran.getDateModified().getMillis(), t1.getDateModified().getMillis());
     }
@@ -104,7 +100,7 @@ public class TransactionClientTest {
         String result = client.deleteTransactionById(1);
         Assert.assertEquals("Deleted!", result);
         Thread.sleep(2000);
-        List<Transaction> trans = client.getTransactionList();
+        List<TransactionDTO> trans = client.getTransactionList();
         Assert.assertEquals(0, trans.size());
     }
 }
