@@ -11,7 +11,5 @@ public class StaffOverviewController extends OverviewController {
     public void initialize(){}
 
     @Override
-    public void loadData() {
-
-    }
+    public void loadData() {}
 }
