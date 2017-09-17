@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 
-<AnchorPane id="AnchorPane" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" prefHeight="1000.0" prefWidth="1000.0" stylesheets="@/css/bootstrap3.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taimsoft.desktopui.controllers.overview.VendorOverviewController">
+<AnchorPane id="AnchorPane" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" prefHeight="1000.0" prefWidth="1000.0" stylesheets="@/css/bootstrap3.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taimsoft.desktopui.controllers.overview.VendorOverviewController">
   <children>
       <ProgressBar fx:id="progressBar" prefWidth="200.0" progress="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="26.0" />
       <SplitPane dividerPositions="0.2" layoutX="10.0" layoutY="10.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -35,16 +35,16 @@
                 <TextField fx:id="filterField" prefWidth="-1.0" HBox.hgrow="ALWAYS" />
               </children>
             </HBox>
-            <TableView fx:id="staffTable" editable="false" prefHeight="200.0" prefWidth="200.0" tableMenuButtonVisible="false" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="70.0">
+            <TableView fx:id="globalTable" editable="false" prefHeight="200.0" prefWidth="200.0" tableMenuButtonVisible="false" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="70.0">
               <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                      </columnResizePolicy>
               <columns>
-                        <TableColumn prefWidth="75.0" />
+                        <TableColumn fx:id="checkedCol" prefWidth="75.0" />
                 <TableColumn fx:id="nameCol" prefWidth="128.0" text="VENDOR" />
-                <TableColumn fx:id="positionCol" prefWidth="128.0" text="PHONE" />
-                        <TableColumn prefWidth="75.0" text="EMAIL" />
-                        <TableColumn prefWidth="75.0" text="ACTION" />
+                <TableColumn fx:id="phoneCol" prefWidth="128.0" text="PHONE" />
+                        <TableColumn fx:id="emailPhone" prefWidth="75.0" text="EMAIL" />
+                        <TableColumn fx:id="actionCol" prefWidth="75.0" text="ACTION" />
               </columns>
             </TableView>
                </children>

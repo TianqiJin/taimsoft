@@ -44,7 +44,6 @@ public class TransactionOverviewController extends OverviewController<Transactio
     @FXML
     @SuppressWarnings("unchecked")
     public void initialize(){
-        getCheckedCol().setCellValueFactory(new PropertyValueFactory<>("isChecked"));
         dateCol.setCellValueFactory(new PropertyValueFactory<>("dateCreated"));
         typeCol.setCellValueFactory(new PropertyValueFactory<>("transactionType"));
         idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -57,8 +56,7 @@ public class TransactionOverviewController extends OverviewController<Transactio
             return new SimpleDoubleProperty(roundedBalance.setScale(2, BigDecimal.ROUND_HALF_EVEN).doubleValue()).asObject();
         });
         statusCol.setCellValueFactory(new PropertyValueFactory<>("paymentStatus"));
-        getActionCol().setCellValueFactory(new PropertyValueFactory<>("action"));
-        getActionCol().setCellFactory(param -> new LiveComboBoxTableCell<>(FXCollections.observableArrayList("Edit", "Delete")));
+        initFunctionalCols();
     }
 
     @Override

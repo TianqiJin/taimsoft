@@ -16,7 +16,7 @@ import javafx.util.Callback;
 /**
  * Created by Tjin on 8/30/2017.
  */
-public class ProductOverviewController extends OverviewController{
+public class ProductOverviewController extends OverviewController<ProductDTO>{
     private ObservableList<ProductDTO> productDTOS;
     private ProductClient productClient;
     @FXML
@@ -48,6 +48,7 @@ public class ProductOverviewController extends OverviewController{
         typeCol.setCellValueFactory(new PropertyValueFactory<>("texture"));
         salesPriceCol.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
         quantityCol.setCellValueFactory(new PropertyValueFactory<>("totalNum"));
+        initFunctionalCols();
     }
 
     public ProductOverviewController(){
