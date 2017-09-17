@@ -17,12 +17,13 @@ import java.util.List;
  */
 public class StaffClient {
     private static final String STAFF_PATH= PropertiesProcessor.serverUrl+"/staff";
+    private static HttpHeaders headers = new HttpHeaders();
+    private static RestTemplate restTemplate = new RestTemplate();
+    static {
+        headers.setContentType(MediaType.APPLICATION_JSON);
+    }
 
     public List<StaffDTO> getStaffList(){
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        RestTemplate restTemplate = new RestTemplate();
         String url = STAFF_PATH+"/getAll";
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
@@ -36,9 +37,6 @@ public class StaffClient {
 
 
     public StaffDTO addStaff(StaffDTO staffDTO){
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        RestTemplate restTemplate = new RestTemplate();
         String url = STAFF_PATH+"/add";
         HttpEntity<Staff> requestEntity = new HttpEntity<Staff>(BeanMapper.map(staffDTO, Staff.class), headers);
         ResponseEntity<Staff> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Staff.class);
@@ -46,9 +44,6 @@ public class StaffClient {
     }
 
     public StaffDTO getStaffByName(String name){
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        RestTemplate restTemplate = new RestTemplate();
         String url = STAFF_PATH+"/getByName"+"?name="+name;
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
@@ -57,9 +52,6 @@ public class StaffClient {
     }
 
     public String deleteStaffByName(String name){
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        RestTemplate restTemplate = new RestTemplate();
         String url = STAFF_PATH+"/deleteObject"+"?name="+name;
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
@@ -68,9 +60,6 @@ public class StaffClient {
     }
 
     public StaffDTO updateStaff(StaffDTO staffDTO){
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        RestTemplate restTemplate = new RestTemplate();
         String url = STAFF_PATH+"/update";
         HttpEntity<Staff> requestEntity = new HttpEntity<Staff>(BeanMapper.map(staffDTO, Staff.class), headers);
         ResponseEntity<Staff> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Staff.class);

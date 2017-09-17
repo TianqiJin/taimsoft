@@ -16,12 +16,14 @@ import java.util.List;
  */
 public class ProductClient {
     private static final String PRODUCT_PATH= PropertiesProcessor.serverUrl+"/product";
+    private static HttpHeaders headers = new HttpHeaders();
+    private static RestTemplate restTemplate = new RestTemplate();
+    static {
+        headers.setContentType(MediaType.APPLICATION_JSON);
+    }
+
 
     public List<ProductDTO> getProductList(){
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        RestTemplate restTemplate = new RestTemplate();
         String url = PRODUCT_PATH+"/getAll";
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
@@ -35,9 +37,6 @@ public class ProductClient {
 
 
     public ProductDTO addProduct(ProductDTO productDTO){
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        RestTemplate restTemplate = new RestTemplate();
         String url = PRODUCT_PATH+"/add";
         HttpEntity<Product> requestEntity = new HttpEntity<Product>(BeanMapper.map(productDTO, Product.class), headers);
         ResponseEntity<Product> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Product.class);
@@ -45,9 +44,6 @@ public class ProductClient {
     }
 
     public ProductDTO getProductByTexture(String texture){
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        RestTemplate restTemplate = new RestTemplate();
         String url = PRODUCT_PATH+"/getByTexture"+"?texture="+texture;
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
@@ -56,9 +52,6 @@ public class ProductClient {
     }
 
     public ProductDTO getProductById(Integer id){
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        RestTemplate restTemplate = new RestTemplate();
         String url = PRODUCT_PATH+"/getById"+"?id="+id;
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
@@ -67,9 +60,6 @@ public class ProductClient {
     }
 
     public String deleteProductById(Integer id){
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        RestTemplate restTemplate = new RestTemplate();
         String url = PRODUCT_PATH+"/deleteObject"+"?id="+id;
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
@@ -78,9 +68,6 @@ public class ProductClient {
     }
 
     public ProductDTO updateProduct(ProductDTO productDTO){
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        RestTemplate restTemplate = new RestTemplate();
         String url = PRODUCT_PATH+"/update";
         HttpEntity<Product> requestEntity = new HttpEntity<Product>(BeanMapper.map(productDTO, Product.class), headers);
         ResponseEntity<Product> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Product.class);
