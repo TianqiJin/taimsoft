@@ -12,8 +12,25 @@ import java.util.List;
 @Entity
 @Table(name = "customer")
 public class Customer extends UserBaseModel {
+    public enum CustomerClass{
+        CLASSA("Class A"),
+        CLASSB("Class B"),
+        CLASSC("Class C");
+
+        CustomerClass(String vvalue){
+            this.value = vvalue;
+        }
+
+        private String value;
+
+        public String getValue() {
+            return value;
+        }
+    }
     @Column(name = "store_credit")
     private double storeCredit;
+    @Column(name = "customer_class")
+    private CustomerClass customerClass;
     @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
     private List<Transaction> transactionList;
 
@@ -35,11 +52,20 @@ public class Customer extends UserBaseModel {
         this.transactionList = transactionList;
     }
 
+    public CustomerClass getCustomerClass() {
+        return customerClass;
+    }
+
+    public void setCustomerClass(CustomerClass customerClass) {
+        this.customerClass = customerClass;
+    }
+
     @Override
     public String toString() {
         return "{\"Customer\":"
                 + super.toString()
                 + ", \"storeCredit\":\"" + storeCredit + "\""
+                + ", \"customerClass\":\"" + customerClass + "\""
                 + ", \"transactionList\":" + transactionList
                 + "}";
     }
