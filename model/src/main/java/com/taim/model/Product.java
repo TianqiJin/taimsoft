@@ -31,6 +31,8 @@ public class Product extends BaseModel {
     private String texture;
     @Column(name = "total_num")
     private double totalNum;
+    @Column(name = "virtual_total_num")
+    private double virtualTotalNum;
     @Column(name = "unit_price")
     private Double unitPrice;
 
@@ -108,6 +110,18 @@ public class Product extends BaseModel {
         this.sku = sku;
     }
 
+    public double getVirtualTotalNum() {
+        return virtualTotalNum;
+    }
+
+    public void setVirtualTotalNum(double virtualTotalNum) {
+        this.virtualTotalNum = virtualTotalNum;
+    }
+
+    public void setUnitPrice(Double unitPrice) {
+        this.unitPrice = unitPrice;
+    }
+
     @Override
     public String toString() {
         return "{\"Product\":"
@@ -120,6 +134,7 @@ public class Product extends BaseModel {
                 + ", \"picUrl\":\"" + picUrl + "\""
                 + ", \"texture\":\"" + texture + "\""
                 + ", \"totalNum\":\"" + totalNum + "\""
+                + ", \"virtualTotalNum\":\"" + virtualTotalNum + "\""
                 + ", \"unitPrice\":\"" + unitPrice + "\""
                 + "}";
     }

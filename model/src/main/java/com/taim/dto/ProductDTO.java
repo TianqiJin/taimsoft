@@ -12,6 +12,7 @@ public class ProductDTO extends BaseModelDTO{
     private StringProperty picUrl;
     private StringProperty texture;
     private DoubleProperty totalNum;
+    private DoubleProperty virtualTotalNum;
     private DoubleProperty unitPrice;
     private BooleanProperty isChecked;
 
@@ -25,6 +26,7 @@ public class ProductDTO extends BaseModelDTO{
         picUrl = new SimpleStringProperty();
         texture = new SimpleStringProperty();
         totalNum = new SimpleDoubleProperty();
+        virtualTotalNum = new SimpleDoubleProperty();
         isChecked = new SimpleBooleanProperty();
     }
 
@@ -146,5 +148,17 @@ public class ProductDTO extends BaseModelDTO{
 
     public void setIsChecked(boolean isChecked) {
         this.isChecked.set(isChecked);
+    }
+
+    public double getVirtualTotalNum() {
+        return virtualTotalNum.get();
+    }
+
+    public DoubleProperty virtualTotalNumProperty() {
+        return virtualTotalNum;
+    }
+
+    public void setVirtualTotalNum(double virtualTotalNum) {
+        this.virtualTotalNum.set(virtualTotalNum);
     }
 }
