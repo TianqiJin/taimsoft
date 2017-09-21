@@ -31,7 +31,7 @@ public class Product extends BaseModel {
     private String texture;
     @Column(name = "total_num")
     private double totalNum;
-    @Column(name = "virtual_total_num")
+    @Column(name = "total_num_virtual")
     private double virtualTotalNum;
     @Column(name = "unit_price")
     private Double unitPrice;
