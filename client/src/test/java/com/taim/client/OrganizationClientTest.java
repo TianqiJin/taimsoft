@@ -1,6 +1,7 @@
 package com.taim.client;
 
 
+import com.taim.dto.OrganizationDTO;
 import com.taim.model.Organization;
 import junit.framework.Assert;
 import org.joda.time.DateTime;
@@ -14,13 +15,13 @@ import java.util.List;
  */
 public class OrganizationClientTest {
     private OrganizationClient client = new OrganizationClient();
-    private static Organization organization;
+    private static OrganizationDTO organization;
 
     @BeforeClass
     public static void prepareObject(){
         DateTime d1Created = DateTime.now();
         DateTime d1Modified = DateTime.now();
-        organization = new Organization();
+        organization = new OrganizationDTO();
         organization.setCity("Toronto");
         organization.setCountry("Canada");
         organization.setPostalCode("M5V4A9");
@@ -35,7 +36,7 @@ public class OrganizationClientTest {
     @Test
     public void addOrganizationTest()throws Exception{
 
-        Organization org = client.addOrganization(organization);
+        OrganizationDTO org = client.addOrganization(organization);
         Assert.assertEquals(organization.getCity(), org.getCity());
         Assert.assertEquals(organization.getCountry(), org.getCountry());
         Assert.assertEquals(organization.getPostalCode(), org.getPostalCode());
@@ -49,9 +50,9 @@ public class OrganizationClientTest {
     @Test
     public void getOrganizationListTest()throws Exception{
         Thread.sleep(2000);
-        List<Organization> orgs = client.getOrganizationList();
+        List<OrganizationDTO> orgs = client.getOrganizationList();
         Assert.assertEquals(1, orgs.size());
-        Organization org = orgs.get(0);
+        OrganizationDTO org = orgs.get(0);
         Assert.assertEquals(organization.getCity(), org.getCity());
         Assert.assertEquals(organization.getCountry(), org.getCountry());
         Assert.assertEquals(organization.getPostalCode(), org.getPostalCode());
@@ -65,7 +66,7 @@ public class OrganizationClientTest {
 
     @Test
     public void getOrganizationByNameTest()throws Exception{
-        Organization org = client.getOrganizationByName("WTF Org");
+        OrganizationDTO org = client.getOrganizationByName("WTF Org");
         Assert.assertEquals(organization.getCity(), org.getCity());
         Assert.assertEquals(organization.getCountry(), org.getCountry());
         Assert.assertEquals(organization.getPostalCode(), org.getPostalCode());
@@ -79,10 +80,10 @@ public class OrganizationClientTest {
     @Test
     public void updateOrganizationTest()throws Exception{
 
-        Organization org = client.getOrganizationByName("WTF Org");
+        OrganizationDTO org = client.getOrganizationByName("WTF Org");
         org.setOrgName("Nvm Org");
         org.setDateModified(DateTime.now());
-        Organization a1 = client.updateOrganization(org);
+        OrganizationDTO a1 = client.updateOrganization(org);
 
         Assert.assertEquals(org.getCity(), a1.getCity());
         Assert.assertEquals(org.getCountry(), a1.getCountry());
@@ -100,7 +101,7 @@ public class OrganizationClientTest {
         String result = client.deleteOrganizationByName("Nvm Org");
         Assert.assertEquals("Deleted!", result);
         Thread.sleep(2000);
-        List<Organization> orgs = client.getOrganizationList();
+        List<OrganizationDTO> orgs = client.getOrganizationList();
         Assert.assertEquals(0, orgs.size());
     }
 

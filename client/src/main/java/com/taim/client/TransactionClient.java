@@ -16,12 +16,14 @@ import java.util.List;
  */
 public class TransactionClient {
     private static final String TRANSACTION_PATH= PropertiesProcessor.serverUrl+"/transaction";
+    private static HttpHeaders headers = new HttpHeaders();
+    private static RestTemplate restTemplate = new RestTemplate();
+    static {
+        headers.setContentType(MediaType.APPLICATION_JSON);
+    }
+
 
     public List<TransactionDTO> getTransactionList(){
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        RestTemplate restTemplate = new RestTemplate();
         String url = TRANSACTION_PATH+"/getAll";
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
@@ -35,9 +37,6 @@ public class TransactionClient {
 
 
     public TransactionDTO addTransaction(TransactionDTO transactionDTO){
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        RestTemplate restTemplate = new RestTemplate();
         String url = TRANSACTION_PATH+"/add";
         HttpEntity<Transaction> requestEntity = new HttpEntity<Transaction>(BeanMapper.map(transactionDTO, Transaction.class), headers);
         ResponseEntity<Transaction> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Transaction.class);
@@ -45,9 +44,6 @@ public class TransactionClient {
     }
 
     public TransactionDTO getTransactionById(Integer id){
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        RestTemplate restTemplate = new RestTemplate();
         String url = TRANSACTION_PATH+"/getById"+"?id="+id;
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
@@ -56,9 +52,6 @@ public class TransactionClient {
     }
 
     public String deleteTransactionById(Integer id){
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        RestTemplate restTemplate = new RestTemplate();
         String url = TRANSACTION_PATH+"/deleteObject"+"?id="+id;
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
@@ -67,9 +60,6 @@ public class TransactionClient {
     }
 
     public TransactionDTO updateTransaction(TransactionDTO transactionDTO){
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        RestTemplate restTemplate = new RestTemplate();
         String url = TRANSACTION_PATH+"/update";
         HttpEntity<Transaction> requestEntity = new HttpEntity<Transaction>(BeanMapper.map(transactionDTO, Transaction.class), headers);
         ResponseEntity<Transaction> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Transaction.class);

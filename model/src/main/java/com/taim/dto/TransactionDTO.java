@@ -19,6 +19,7 @@ public class TransactionDTO extends BaseModelDTO {
     private ObjectProperty<DeliveryStatusDTO> deliveryStatus;
     private List<TransactionDetailDTO> transactionDetails;
     private List<PaymentDTO> payments;
+    private IntegerProperty refId;
     private StringProperty note;
     private BooleanProperty isChecked;
     public TransactionDTO(){
@@ -33,6 +34,7 @@ public class TransactionDTO extends BaseModelDTO {
         deliveryStatus = new SimpleObjectProperty<>();
         transactionDetails = new ArrayList<>();
         payments = new ArrayList<>();
+        refId = new SimpleIntegerProperty();
         note = new SimpleStringProperty();
         isChecked = new SimpleBooleanProperty();
     }
@@ -183,5 +185,17 @@ public class TransactionDTO extends BaseModelDTO {
 
     public void setIsChecked(boolean isChecked) {
         this.isChecked.set(isChecked);
+    }
+
+    public int getRefId() {
+        return refId.get();
+    }
+
+    public IntegerProperty refIdProperty() {
+        return refId;
+    }
+
+    public void setRefId(int refId) {
+        this.refId.set(refId);
     }
 }

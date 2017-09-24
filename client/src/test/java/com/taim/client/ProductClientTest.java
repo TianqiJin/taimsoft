@@ -1,5 +1,6 @@
 package com.taim.client;
 
+import com.taim.dto.ProductDTO;
 import com.taim.model.Product;
 import junit.framework.Assert;
 import org.joda.time.DateTime;
@@ -13,13 +14,13 @@ import java.util.List;
  */
 public class ProductClientTest {
     private ProductClient client = new ProductClient();
-    private static Product product;
+    private static ProductDTO product;
 
     @BeforeClass
     public static void prepareObject(){
         DateTime d1Created = DateTime.now();
         DateTime d1Modified = DateTime.now();
-        product = new Product();
+        product = new ProductDTO();
         product.setLength(100);
         product.setWidth(5);
         product.setHeight(50);
@@ -33,7 +34,7 @@ public class ProductClientTest {
     @Test
     public void addProductTest()throws Exception{
 
-        Product prod = client.addProduct(product);
+        ProductDTO prod = client.addProduct(product);
         Assert.assertEquals(product.getLength(), prod.getLength());
         Assert.assertEquals(product.getHeight(), prod.getHeight());
         Assert.assertEquals(product.getWidth(), prod.getWidth());
@@ -47,9 +48,9 @@ public class ProductClientTest {
     @Test
     public void getProductListTest()throws Exception{
         Thread.sleep(2000);
-        List<Product> prods = client.getProductList();
+        List<ProductDTO> prods = client.getProductList();
         Assert.assertEquals(1, prods.size());
-        Product prod = prods.get(0);
+        ProductDTO prod = prods.get(0);
         Assert.assertEquals(product.getLength(), prod.getLength());
         Assert.assertEquals(product.getHeight(), prod.getHeight());
         Assert.assertEquals(product.getWidth(), prod.getWidth());
@@ -62,7 +63,7 @@ public class ProductClientTest {
 
     @Test
     public void getProductByTextureTest()throws Exception{
-        Product prod = client.getProductByTexture("Smooth");
+        ProductDTO prod = client.getProductByTexture("Smooth");
         Assert.assertEquals(product.getLength(), prod.getLength());
         Assert.assertEquals(product.getHeight(), prod.getHeight());
         Assert.assertEquals(product.getWidth(), prod.getWidth());
@@ -75,7 +76,7 @@ public class ProductClientTest {
 
     @Test
     public void getProductByIdTest()throws Exception{
-        Product prod = client.getProductById(1);
+        ProductDTO prod = client.getProductById(1);
         Assert.assertEquals(product.getLength(), prod.getLength());
         Assert.assertEquals(product.getHeight(), prod.getHeight());
         Assert.assertEquals(product.getWidth(), prod.getWidth());
@@ -89,10 +90,10 @@ public class ProductClientTest {
     @Test
     public void updateProductTest()throws Exception{
 
-        Product prod = client.getProductById(1);
+        ProductDTO prod = client.getProductById(1);
         prod.setTexture("Rough");
         prod.setDateModified(DateTime.now());
-        Product p1 = client.updateProduct(prod);
+        ProductDTO p1 = client.updateProduct(prod);
 
         Assert.assertEquals(prod.getLength(), p1.getLength());
         Assert.assertEquals(prod.getHeight(), p1.getHeight());
@@ -110,7 +111,7 @@ public class ProductClientTest {
         String result = client.deleteProductById(1);
         Assert.assertEquals("Deleted!", result);
         Thread.sleep(2000);
-        List<Product> prods = client.getProductList();
+        List<ProductDTO> prods = client.getProductList();
         Assert.assertEquals(0, prods.size());
     }
 

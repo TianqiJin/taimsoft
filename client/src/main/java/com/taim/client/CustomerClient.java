@@ -17,11 +17,13 @@ import java.util.List;
  */
 public class CustomerClient {
     private static final String CUSTOMER_PATH= PropertiesProcessor.serverUrl+"/customer";
+    private static HttpHeaders headers = new HttpHeaders();
+    private static RestTemplate restTemplate = new RestTemplate();
+    static {
+        headers.setContentType(MediaType.APPLICATION_JSON);
+    }
 
     public List<CustomerDTO> getCustomerList(){
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        RestTemplate restTemplate = new RestTemplate();
         String url = CUSTOMER_PATH+"/getAll";
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
@@ -34,9 +36,6 @@ public class CustomerClient {
     }
 
     public CustomerDTO addCustomer(CustomerDTO customerDTO){
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        RestTemplate restTemplate = new RestTemplate();
         String url = CUSTOMER_PATH+"/add";
         HttpEntity<Customer> requestEntity = new HttpEntity<Customer>(BeanMapper.map(customerDTO, Customer.class), headers);
         ResponseEntity<Customer> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Customer.class);
@@ -44,9 +43,6 @@ public class CustomerClient {
     }
 
     public CustomerDTO getCustomerByName(String name){
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        RestTemplate restTemplate = new RestTemplate();
         String url = CUSTOMER_PATH+"/getByName"+"?name="+name;
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
@@ -55,9 +51,6 @@ public class CustomerClient {
     }
 
     public String deleteCustomerByName(String name){
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        RestTemplate restTemplate = new RestTemplate();
         String url = CUSTOMER_PATH+"/deleteObject"+"?name="+name;
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
@@ -66,9 +59,6 @@ public class CustomerClient {
     }
 
     public CustomerDTO updateCustomer(CustomerDTO customerDTO){
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        RestTemplate restTemplate = new RestTemplate();
         String url = CUSTOMER_PATH+"/update";
         HttpEntity<Customer> requestEntity = new HttpEntity<Customer>(BeanMapper.map(customerDTO, Customer.class), headers);
         ResponseEntity<Customer> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Customer.class);

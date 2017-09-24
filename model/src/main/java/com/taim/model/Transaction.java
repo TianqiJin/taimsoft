@@ -15,7 +15,9 @@ public class Transaction extends BaseModel {
      * Indicate the transaction type
      */
     public enum TransactionType{
-        SELL("Sell"),
+        QUOTATION("Quotation"),
+        PURCHASE_ORDER("Purchase Order"),
+        INVOICE("Invoice"),
         STOCK("Stock"),
         RETURN("Return");
 
@@ -75,6 +77,8 @@ public class Transaction extends BaseModel {
     private List<TransactionDetail> transactionDetails;
     @OneToMany(mappedBy = "transaction", fetch = FetchType.LAZY)
     private List<Payment> payments;
+    @Column(name = "ref_id")
+    private int refId;
     @Column
     private String note;
 
@@ -176,6 +180,14 @@ public class Transaction extends BaseModel {
         this.pst = pst;
     }
 
+    public int getRefId() {
+        return refId;
+    }
+
+    public void setRefId(int refId) {
+        this.refId = refId;
+    }
+
     @Override
     public String toString() {
         return "{\"Transaction\":"
@@ -191,6 +203,7 @@ public class Transaction extends BaseModel {
                 + ", \"deliveryStatus\":" + deliveryStatus
                 + ", \"transactionDetails\":" + transactionDetails
                 + ", \"payments\":" + payments
+                + ", \"refId\":\"" + refId + "\""
                 + ", \"note\":\"" + note + "\""
                 + "}";
     }
