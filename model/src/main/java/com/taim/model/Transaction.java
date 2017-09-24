@@ -2,6 +2,8 @@ package com.taim.model;
 
 
 import com.taim.model.basemodels.BaseModel;
+import org.joda.time.DateTime;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -73,6 +75,10 @@ public class Transaction extends BaseModel {
     @JoinColumn(name = "delivery_status_id")
     @OneToOne
     private DeliveryStatus deliveryStatus;
+    @Column(name = "payment_due_date")
+    private DateTime paymentDueDate;
+    @Column(name = "delivery_due_date")
+    private DateTime deliveryDueDate;
     @OneToMany(mappedBy = "transaction", fetch = FetchType.LAZY)
     private List<TransactionDetail> transactionDetails;
     @OneToMany(mappedBy = "transaction", fetch = FetchType.LAZY)
@@ -180,12 +186,29 @@ public class Transaction extends BaseModel {
         this.pst = pst;
     }
 
+<<<<<<< Updated upstream
     public int getRefId() {
         return refId;
     }
 
     public void setRefId(int refId) {
         this.refId = refId;
+=======
+    public DateTime getPaymentDueDate() {
+        return paymentDueDate;
+    }
+
+    public void setPaymentDueDate(DateTime paymentDueDate) {
+        this.paymentDueDate = paymentDueDate;
+    }
+
+    public DateTime getDeliveryDueDate() {
+        return deliveryDueDate;
+    }
+
+    public void setDeliveryDueDate(DateTime deliveryDueDate) {
+        this.deliveryDueDate = deliveryDueDate;
+>>>>>>> Stashed changes
     }
 
     @Override
@@ -201,6 +224,8 @@ public class Transaction extends BaseModel {
                 + ", \"transactionType\":\"" + transactionType + "\""
                 + ", \"paymentStatus\":\"" + paymentStatus + "\""
                 + ", \"deliveryStatus\":" + deliveryStatus
+                + ", \"paymentDueDate\":" + paymentDueDate
+                + ", \"deliveryDueDate\":" + deliveryDueDate
                 + ", \"transactionDetails\":" + transactionDetails
                 + ", \"payments\":" + payments
                 + ", \"refId\":\"" + refId + "\""

@@ -3,6 +3,7 @@ package com.taim.dto;
 import com.taim.dto.basedtos.BaseModelDTO;
 import com.taim.model.*;
 import javafx.beans.property.*;
+import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,9 @@ public class TransactionDTO extends BaseModelDTO {
     private ObjectProperty<VendorDTO> vendor;
     private ObjectProperty<Transaction.TransactionType> transactionType;
     private ObjectProperty<Transaction.PaymentStatus> paymentStatus;
+    private ObjectProperty<DateTime> paymentDueDate;
     private ObjectProperty<DeliveryStatusDTO> deliveryStatus;
+    private ObjectProperty<DateTime> deliveryDueDate;
     private List<TransactionDetailDTO> transactionDetails;
     private List<PaymentDTO> payments;
     private IntegerProperty refId;
@@ -36,6 +39,8 @@ public class TransactionDTO extends BaseModelDTO {
         payments = new ArrayList<>();
         refId = new SimpleIntegerProperty();
         note = new SimpleStringProperty();
+        deliveryDueDate = new SimpleObjectProperty<>();
+        paymentDueDate = new SimpleObjectProperty<>();
         isChecked = new SimpleBooleanProperty();
     }
 
@@ -197,5 +202,29 @@ public class TransactionDTO extends BaseModelDTO {
 
     public void setRefId(int refId) {
         this.refId.set(refId);
+    }
+
+    public DateTime getPaymentDueDate() {
+        return paymentDueDate.get();
+    }
+
+    public ObjectProperty<DateTime> paymentDueDateProperty() {
+        return paymentDueDate;
+    }
+
+    public void setPaymentDueDate(DateTime paymentDueDate) {
+        this.paymentDueDate.set(paymentDueDate);
+    }
+
+    public DateTime getDeliveryDueDate() {
+        return deliveryDueDate.get();
+    }
+
+    public ObjectProperty<DateTime> deliveryDueDateProperty() {
+        return deliveryDueDate;
+    }
+
+    public void setDeliveryDueDate(DateTime deliveryDueDate) {
+        this.deliveryDueDate.set(deliveryDueDate);
     }
 }
