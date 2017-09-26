@@ -186,14 +186,14 @@ public class Transaction extends BaseModel {
         this.pst = pst;
     }
 
-<<<<<<< Updated upstream
     public int getRefId() {
         return refId;
     }
 
     public void setRefId(int refId) {
         this.refId = refId;
-=======
+    }
+
     public DateTime getPaymentDueDate() {
         return paymentDueDate;
     }
@@ -208,7 +208,6 @@ public class Transaction extends BaseModel {
 
     public void setDeliveryDueDate(DateTime deliveryDueDate) {
         this.deliveryDueDate = deliveryDueDate;
->>>>>>> Stashed changes
     }
 
     @Override

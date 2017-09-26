@@ -38,7 +38,9 @@ public class ProductClient {
 
     public ProductDTO addProduct(ProductDTO productDTO){
         String url = PRODUCT_PATH+"/add";
-        HttpEntity<Product> requestEntity = new HttpEntity<Product>(BeanMapper.map(productDTO, Product.class), headers);
+        Product product = BeanMapper.map(productDTO, Product.class);
+        System.out.println("PRODUCT:" + product.getLength());
+        HttpEntity<Product> requestEntity = new HttpEntity<Product>(product, headers);
         ResponseEntity<Product> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Product.class);
         return BeanMapper.map(responseEntity.getBody(), ProductDTO.class);
     }

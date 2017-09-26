@@ -4,6 +4,7 @@ import com.taim.model.Transaction;
 import com.taim.backend.service.transaction.ITransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,8 @@ public class TransactionController {
     @Autowired
     private ITransactionService service;
 
-    @RequestMapping(value = "/getAll")
+    @RequestMapping(value = "/getAll",
+            produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<List<Transaction>> getAllTransactions() {
         List<Transaction> list = service.getAllTransactions();
@@ -29,7 +31,8 @@ public class TransactionController {
     }
 
 
-    @RequestMapping(value = "/getById")
+    @RequestMapping(value = "/getById",
+            produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Transaction> getTransactionById(@RequestParam Integer id) {
         Transaction transaction = service.getTransactionById(id);
@@ -37,7 +40,10 @@ public class TransactionController {
     }
 
 
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @RequestMapping(value = "/add",
+            method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Transaction> create(@RequestBody Transaction transaction) {
         Transaction transaction1=null;
@@ -49,7 +55,10 @@ public class TransactionController {
         return new ResponseEntity<Transaction>(transaction1, HttpStatus.ACCEPTED);
     }
 
-    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    @RequestMapping(value = "/update",
+            method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Transaction> update(@RequestBody Transaction transaction) {
         Transaction transaction1=null;

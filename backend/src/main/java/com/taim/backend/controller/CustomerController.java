@@ -4,6 +4,7 @@ import com.taim.model.Customer;
 import com.taim.backend.service.customer.ICustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -19,21 +20,26 @@ public class CustomerController {
     @Autowired
     private ICustomerService service;
 
-    @RequestMapping(value = "/getAll")
+    @RequestMapping(value = "/getAll",
+            produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<List<Customer>> getAllCustomers() {
         List<Customer> list = service.getAllCustomers();
         return new ResponseEntity<List<Customer>>(list, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/getByName")
+    @RequestMapping(value = "/getByName",
+            produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Customer> getCustomerByName(@RequestParam String name) {
         Customer customer = service.getCustomerByName(name);
         return new ResponseEntity<Customer>(customer, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @RequestMapping(value = "/add",
+            method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Customer> create(@RequestBody Customer customer) {
         Customer customer1 = null;
@@ -45,7 +51,10 @@ public class CustomerController {
         return new ResponseEntity<Customer>(customer1, HttpStatus.ACCEPTED);
     }
 
-    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    @RequestMapping(value = "/update",
+            method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Customer> update(@RequestBody Customer customer) {
         Customer customer1 = null;

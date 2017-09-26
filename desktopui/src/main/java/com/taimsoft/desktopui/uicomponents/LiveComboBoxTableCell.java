@@ -21,18 +21,6 @@ public class LiveComboBoxTableCell<S,T> extends TableCell<S, T> {
         this.comboBox = new ComboBox<>(items);
         setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         comboBox.prefWidthProperty().bind(this.widthProperty());
-        comboBox.valueProperty().addListener(new ChangeListener<T>() {
-            @Override
-            public void changed(ObservableValue<? extends T> obs, T oldValue, T newValue) {
-                // attempt to update property:
-                ObservableValue<T> property = getTableColumn().getCellObservableValue(getIndex());
-                if (property instanceof WritableValue) {
-                    ((WritableValue<T>) property).setValue(newValue);
-                }
-            }
-        });
-
-
     }
 
     @Override
@@ -44,5 +32,9 @@ public class LiveComboBoxTableCell<S,T> extends TableCell<S, T> {
             comboBox.setValue(item);
             setGraphic(comboBox);
         }
+    }
+
+    public ComboBox<T> getComboBox() {
+        return comboBox;
     }
 }

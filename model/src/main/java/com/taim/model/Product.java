@@ -118,10 +118,6 @@ public class Product extends BaseModel {
         this.virtualTotalNum = virtualTotalNum;
     }
 
-    public void setUnitPrice(Double unitPrice) {
-        this.unitPrice = unitPrice;
-    }
-
     @Override
     public String toString() {
         return "{\"Product\":"
