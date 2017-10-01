@@ -2,6 +2,7 @@ package com.taim.client;
 
 import com.taim.client.util.BeanMapper;
 import com.taim.client.util.PropertiesProcessor;
+import com.taim.client.util.RestTemplateFactory;
 import com.taim.dto.ProductDTO;
 import com.taim.model.Product;
 import org.springframework.http.*;
@@ -17,7 +18,7 @@ import java.util.List;
 public class ProductClient {
     private static final String PRODUCT_PATH= PropertiesProcessor.serverUrl+"/product";
     private static HttpHeaders headers = new HttpHeaders();
-    private static RestTemplate restTemplate = new RestTemplate();
+    private static RestTemplate restTemplate = RestTemplateFactory.getRestTemplate();
     static {
         headers.setContentType(MediaType.APPLICATION_JSON);
     }
@@ -27,7 +28,7 @@ public class ProductClient {
         String url = PRODUCT_PATH+"/getAll";
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
-        ResponseEntity<Product[]> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity,Product[].class);
+        ResponseEntity<Product[]> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, Product[].class);
         Product[] products = responseEntity.getBody();
         List<ProductDTO> productList = new ArrayList<>();
         Arrays.stream(products).forEach(p->productList.add(BeanMapper.map(p, ProductDTO.class)));

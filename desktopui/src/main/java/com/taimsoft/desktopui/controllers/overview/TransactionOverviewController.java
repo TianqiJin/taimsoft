@@ -15,6 +15,7 @@ import javafx.collections.transformation.FilteredList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.StringConverter;
 import org.joda.time.DateTime;
@@ -26,21 +27,13 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
-import static com.taimsoft.desktopui.controllers.overview.TransactionOverviewController.SummaryLabelMode.*;
+import static com.taimsoft.desktopui.controllers.overview.OverviewController.SummaryLabelMode.*;
 
 /**
  * Created by Tjin on 8/28/2017.
  */
 public class TransactionOverviewController implements OverviewController<TransactionDTO> {
-
-    enum SummaryLabelMode{
-        Quoted,
-        Unpaid,
-        Paid;
-    }
-
     private List<TransactionDTO> transactionDTOS;
-    private ObservableList<TransactionDTO> transactionDTOObservableList;
     private TransactionClient transactionClient;
     private Executor executor;
 
@@ -81,8 +74,8 @@ public class TransactionOverviewController implements OverviewController<Transac
 
     public TransactionOverviewController(){
         this.transactionClient = RestClientFactory.getTransactionClient();
-        this.executor = Executors.newCachedThreadPool(r->{
-            Thread t = new Thread();
+        this.executor = Executors.newCachedThreadPool(r -> {
+            Thread t = new Thread(r);
             t.setDaemon(true);
             return t;
         });
@@ -104,6 +97,7 @@ public class TransactionOverviewController implements OverviewController<Transac
         });
         statusCol.setCellValueFactory(new PropertyValueFactory<>("paymentStatus"));
         checkedCol.setCellValueFactory(new PropertyValueFactory<>("isChecked"));
+        checkedCol.setCellFactory(CheckBoxTableCell.forTableColumn(checkedCol));
         actionCol.setCellValueFactory(new PropertyValueFactory<>("action"));
         actionCol.setCellFactory(param -> new LiveComboBoxTableCell<>(FXCollections.observableArrayList("Edit", "Delete")));
 
