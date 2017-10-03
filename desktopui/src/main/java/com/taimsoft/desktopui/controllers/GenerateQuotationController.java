@@ -1,6 +1,7 @@
 package com.taimsoft.desktopui.controllers;
 
 import com.taim.dto.*;
+import com.taim.model.Customer;
 import com.taim.model.Transaction;
 import com.taimsoft.desktopui.TaimDesktop;
 import com.taimsoft.desktopui.util.AlertBuilder;
@@ -23,6 +24,7 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
+import org.joda.time.DateTime;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -241,8 +243,8 @@ public class GenerateQuotationController {
             try{
                 RestClientFactory.getCustomerClient().addCustomer(newCustomer);
 
-            }catch(SQLException e){
-                logger.error(e.getMessage() + "\nThe full stack trace is: ", e);
+            }catch(Exception e){
+                e.printStackTrace();
                 flag = false;
                 new AlertBuilder()
                         .alertType(Alert.AlertType.ERROR)
@@ -294,6 +296,7 @@ public class GenerateQuotationController {
         transaction.setNote(textArea.getText());
         transaction.setCustomer(customer);
         transaction.setStaff(staff);
+        transaction.setTransactionType(Transaction.TransactionType.QUOTATION);
 //        transaction.getTransactionDetails().forEach( p -> {
 //            transaction.getTransactionUpdateRecords().get(transaction.getTransactionUpdateRecords().size() - 1).getProductUpdate().put(p.getProductId(), p.getQuantity());
 //        });
@@ -315,8 +318,8 @@ public class GenerateQuotationController {
     }
 
     private void showTransactionDetails(){
-        typeLabel.setText("QUOTATION");
-        dateLabel.setText(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+        typeLabel.setText(transaction.getTransactionType().getValue());
+        dateLabel.setText(new SimpleDateFormat("yyyy-MM-dd").format(transaction.getDateCreated()));
     }
 
     private void showStaffDetails(){
@@ -341,8 +344,7 @@ public class GenerateQuotationController {
             addItemButton.setDisable(false);
             fullNameLabel.setText(this.customer.getFullname());
             storeCreditLabel.setText(String.valueOf(this.customer.getStoreCredit()));
-            discountLabel.setText("");
-            //discountLabel.setText(this.customer.getUserClass());
+            discountLabel.setText(this.customer.getCustomerClass().getValue());
             emailLabel.setText(this.customer.getEmail());
             phoneLabel.setText(this.customer.getPhone());
         }
@@ -375,9 +377,9 @@ public class GenerateQuotationController {
             if(customer != null && customer.getPstNumber() != null){
                 pstTax = new BigDecimal("0.00");
             }else{
-                pstTax = new BigDecimal(saleSystem.getProperty().getPstRate()).multiply(subTotalAfterDiscount).divide(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_EVEN);
+                pstTax = new BigDecimal(taimDesktop.getProperty().getPstRate()).multiply(subTotalAfterDiscount).divide(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_EVEN);
             }
-            BigDecimal gstTax = new BigDecimal(saleSystem.getProperty().getGstRate()).multiply(subTotalAfterDiscount).divide(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_EVEN);
+            BigDecimal gstTax = new BigDecimal(taimDesktop.getProperty().getGstRate()).multiply(subTotalAfterDiscount).divide(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_EVEN);
 
 
             BigDecimal total = subTotalAfterDiscount.add(pstTax).add(gstTax).setScale(2, BigDecimal.ROUND_HALF_EVEN);
@@ -407,7 +409,15 @@ public class GenerateQuotationController {
     public void setMainClass(TaimDesktop taimDesktop){
         this.taimDesktop = taimDesktop;
         this.staff = this.taimDesktop.getStaff();
-        this.transaction = new TransactionDTO();
+        //either edit or generate new quotation
+        if (taimDesktop.getTransaction()==null) {
+            this.transaction = new TransactionDTO();
+            transaction.setTransactionType(Transaction.TransactionType.QUOTATION);
+            transaction.setStaff(staff);
+            transaction.setDateCreated(DateTime.now());
+        }else{
+            this.transaction = taimDesktop.getTransaction();
+        }
         this.transactionDetailDTOObservableList = FXCollections.observableArrayList(transaction.getTransactionDetails());
         transactionTableView.setItems(transactionDetailDTOObservableList);
         transactionDetailDTOObservableList.addListener(new ListChangeListener<TransactionDetailDTO>() {
@@ -433,7 +443,7 @@ public class GenerateQuotationController {
         transactionTableView.getColumns().get(0).setVisible(true);
     }
 
-    @Override
+    //@Override
     public void initPanelDetails(){
         showTransactionDetails();
         showStaffDetails();
@@ -441,7 +451,7 @@ public class GenerateQuotationController {
         showPaymentDetails();
     }
 
-    @Override
+    //@Override
     public void initDataFromDB(){
         Task<List<CustomerDTO>> customersTask = new Task<List<CustomerDTO>>() {
             @Override
@@ -500,7 +510,7 @@ public class GenerateQuotationController {
             new AutoCompleteComboBoxListener<>(customerPhoneComboBox);
         });
         customersTask.setOnFailed(event -> {
-            logger.error(event.getSource().getMessage());
+            System.out.println((event.getSource().getMessage());
             new AlertBuilder()
                     .alertType(Alert.AlertType.ERROR)
                     .alertHeaderText("Database Error!")
@@ -519,7 +529,7 @@ public class GenerateQuotationController {
             new AutoCompleteComboBoxListener<>(productComboBox);
         });
         productsTask.setOnFailed(event -> {
-            logger.error(event.getSource().getMessage());
+            System.out.println(event.getSource().getMessage());
             new AlertBuilder()
                     .alertType(Alert.AlertType.ERROR)
                     .alertHeaderText("Database Error!")
@@ -533,14 +543,13 @@ public class GenerateQuotationController {
     }
 
 
-    // ????
     private Integer returnDiscount(){
         if(this.customer != null){
-            if(customer.getUserClass().toLowerCase().equals("a")){
-                return this.saleSystem.getProperty().getUserClass().getClassA();
-            }else if(customer.getUserClass().toLowerCase().equals("b")){
+            if(customer.getCustomerClass()== Customer.CustomerClass.CLASSA){
+                return this.taimDesktop.getProperty().getUserClass().getClassA();
+            }else if(customer.getCustomerClass()== Customer.CustomerClass.CLASSB){
                 return this.saleSystem.getProperty().getUserClass().getClassB();
-            }else if(customer.getUserClass().toLowerCase().equals("c")){
+            }else if(customer.getCustomerClass()== Customer.CustomerClass.CLASSC){
                 return this.saleSystem.getProperty().getUserClass().getClassC();
             }
         }
