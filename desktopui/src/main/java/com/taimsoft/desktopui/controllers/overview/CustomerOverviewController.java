@@ -1,7 +1,10 @@
 package com.taimsoft.desktopui.controllers.overview;
 
+import com.sun.org.apache.xpath.internal.operations.Quo;
 import com.taim.client.CustomerClient;
+import com.taim.client.IClient;
 import com.taim.dto.CustomerDTO;
+import com.taim.dto.ProductDTO;
 import com.taim.dto.TransactionDTO;
 import com.taim.model.Customer;
 import com.taim.model.Transaction;
@@ -10,32 +13,23 @@ import com.taimsoft.desktopui.util.RestClientFactory;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-
+import static com.taimsoft.desktopui.controllers.overview.OverviewController.SummaryLabelMode.Paid;
 import static com.taimsoft.desktopui.controllers.overview.OverviewController.SummaryLabelMode.Quoted;
+import static com.taimsoft.desktopui.controllers.overview.OverviewController.SummaryLabelMode.Unpaid;
 
 
 /**
  * Created by Tjin on 8/30/2017.
  */
-public class CustomerOverviewController implements OverviewController<CustomerDTO>{
-    private List<CustomerDTO> customerDTOS;
+public class CustomerOverviewController extends OverviewController<CustomerDTO>{
     private CustomerClient customerClient;
-    private Executor executor;
 
-    @FXML
-    private TableView<CustomerDTO> customerTable;
     @FXML
     private TableColumn<CustomerDTO, String> nameCol;
     @FXML
@@ -57,11 +51,6 @@ public class CustomerOverviewController implements OverviewController<CustomerDT
 
     public CustomerOverviewController(){
         customerClient = RestClientFactory.getCustomerClient();
-        this.executor = Executors.newCachedThreadPool(r -> {
-            Thread t = new Thread(r);
-            t.setDaemon(true);
-            return t;
-        });
     }
 
     @FXML
@@ -73,25 +62,15 @@ public class CustomerOverviewController implements OverviewController<CustomerDT
         checkedCol.setCellValueFactory(new PropertyValueFactory<>("isChecked"));
         checkedCol.setCellFactory(CheckBoxTableCell.forTableColumn(checkedCol));
         actionCol.setCellValueFactory(new PropertyValueFactory<>("action"));
-        actionCol.setCellFactory(param -> new LiveComboBoxTableCell<>(FXCollections.observableArrayList("Edit", "Delete")));
-    }
-
-    @Override
-    public void loadData() {
-        Task<List<CustomerDTO>> customerTask = new Task<List<CustomerDTO>>() {
-            @Override
-            protected List<CustomerDTO> call() throws Exception {
-                return customerClient.getCustomerList();
-            }
-        };
-
-        customerTask.setOnSucceeded(event -> {
-            customerDTOS = customerTask.getValue();
-            customerTable.setItems(FXCollections.observableArrayList(customerDTOS));
-            initSearchField();
+        actionCol.setCellFactory(param -> {
+            LiveComboBoxTableCell<CustomerDTO, String> liveComboBoxTableCell = new LiveComboBoxTableCell<>(
+                    FXCollections.observableArrayList("VIEW DETAILS", "EDIT", "DELETE"));
+            return liveComboBoxTableCell;
         });
 
-        executor.execute(customerTask);
+        bindSummaryLabel(totalPaidLabel, Paid);
+        bindSummaryLabel(totalUnpaidLabel, Unpaid);
+        bindSummaryLabel(totalQuotedLabel, Quoted);
     }
 
     @Override
@@ -99,42 +78,52 @@ public class CustomerOverviewController implements OverviewController<CustomerDT
 
     }
 
+    @Override
+    public IClient<CustomerDTO> getOverviewClient(){
+        return this.customerClient;
+    }
+
     private void bindSummaryLabel(Label label, SummaryLabelMode mode){
         DoubleBinding numberBinding = Bindings.createDoubleBinding(() -> {
                     double totalValue = 0 ;
                     switch(mode){
                         case Quoted:
-                            for (CustomerDTO item : customerTable.getItems()) {
+                            for (CustomerDTO item : getOverviewTable().getItems()) {
                                 for(TransactionDTO transactionDTO : item.getTransactionList()){
-                                    if(transactionDTO.getTransactionType().equals(Transaction.TransactionType.QUOTATION)){
-                                        totalValue += transactionDTO.getSaleAmount();
+                                    if(transactionDTO.getTransactionType().equals(Transaction.TransactionType.QUOTATION)
+                                            && !transactionDTO.isFinalized()){
+                                        totalValue = totalValue + transactionDTO.getSaleAmount();
                                     }
                                 }
                             }
                             break;
                         case Paid:
-//                            for (CustomerDTO item : customerTable.getItems()) {
-//                                for(TransactionDTO transactionDTO : item.getTransactionList()){
-//                                    if(transactionDTO.getTransactionType().equals(Transaction.TransactionType.PURCHASE_ORDER)){
-//                                        totalValue += transactionDTO.getSaleAmount();
-//                                    }
-//                                }
-//                            }
-//                            break;
+                            for (CustomerDTO item : getOverviewTable().getItems()) {
+                                for(TransactionDTO transactionDTO : item.getTransactionList()){
+                                    if(transactionDTO.getTransactionType().equals(Transaction.TransactionType.INVOICE) &&
+                                            transactionDTO.getPaymentStatus().equals(Transaction.PaymentStatus.PAID)){
+                                        totalValue = totalValue + transactionDTO.getSaleAmount();
+                                    }
+                                }
+                            }
+                            break;
                         case Unpaid:
-//                            for (CustomerDTO item : customerTable.getItems()) {
-//                                if(item.getPaymentStatus().equals(Transaction.PaymentStatus.UNPAID)){
-//                                    totalValue = totalValue + item.getSaleAmount();
-//                                }
-//                            }
-//                            break;
+                            for (CustomerDTO item : getOverviewTable().getItems()) {
+                                for(TransactionDTO transactionDTO : item.getTransactionList()){
+                                    if(transactionDTO.getTransactionType().equals(Transaction.TransactionType.INVOICE) &&
+                                            transactionDTO.getPaymentStatus().equals(Transaction.PaymentStatus.UNPAID)){
+                                        totalValue = totalValue + transactionDTO.getSaleAmount();
+                                    }
+                                }
+                            }
+                            break;
                         default:
                             break;
                     }
 
                     return totalValue ;
                 },
-                customerTable.getItems());
+                getOverviewTable().getItems());
         label.textProperty().bind(Bindings.format("%.2f", numberBinding));
     }
 }

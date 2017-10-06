@@ -1,8 +1,11 @@
 package com.taimsoft.desktopui.controllers.overview;
 
+import com.taim.client.IClient;
 import com.taim.client.StaffClient;
 import com.taim.dto.CustomerDTO;
+import com.taim.dto.ProductDTO;
 import com.taim.dto.StaffDTO;
+import com.taim.dto.TransactionDTO;
 import com.taim.model.Staff;
 import com.taimsoft.desktopui.controllers.overview.OverviewController;
 import com.taimsoft.desktopui.uicomponents.LiveComboBoxTableCell;
@@ -23,10 +26,8 @@ import java.util.concurrent.Executors;
 /**
  * Created by Tjin on 8/30/2017.
  */
-public class StaffOverviewController implements OverviewController<StaffDTO> {
-    private List<StaffDTO> staffDTOS;
+public class StaffOverviewController extends OverviewController<StaffDTO> {
     private StaffClient staffClient;
-    private Executor executor;
 
     @FXML
     private TableView<StaffDTO> staffTable;
@@ -47,11 +48,6 @@ public class StaffOverviewController implements OverviewController<StaffDTO> {
 
     public StaffOverviewController(){
         this.staffClient = RestClientFactory.getStaffClient();
-        this.executor = Executors.newCachedThreadPool(r -> {
-            Thread t = new Thread(r);
-            t.setDaemon(true);
-            return t;
-        });
     }
 
     @FXML
@@ -64,29 +60,20 @@ public class StaffOverviewController implements OverviewController<StaffDTO> {
         checkedCol.setCellValueFactory(new PropertyValueFactory<>("isChecked"));
         checkedCol.setCellFactory(CheckBoxTableCell.forTableColumn(checkedCol));
         actionCol.setCellValueFactory(new PropertyValueFactory<>("action"));
-        actionCol.setCellFactory(param -> new LiveComboBoxTableCell<>(FXCollections.observableArrayList("Edit", "Delete")));
-    }
-
-    @Override
-    public void loadData() {
-        Task<List<StaffDTO>> staffTask = new Task<List<StaffDTO>>() {
-            @Override
-            protected List<StaffDTO> call() throws Exception {
-                return staffClient.getStaffList();
-            }
-        };
-
-        staffTask.setOnSucceeded(event -> {
-            staffDTOS = staffTask.getValue();
-            staffTable.setItems(FXCollections.observableArrayList(staffDTOS));
-            initSearchField();
+        actionCol.setCellFactory(param -> {
+            LiveComboBoxTableCell<StaffDTO, String> liveComboBoxTableCell = new LiveComboBoxTableCell<>(
+                    FXCollections.observableArrayList("VIEW DETAILS", "EDIT", "DELETE"));
+            return liveComboBoxTableCell;
         });
-
-        executor.execute(staffTask);
     }
 
     @Override
     public void initSearchField() {
 
+    }
+
+    @Override
+    public IClient<StaffDTO> getOverviewClient(){
+        return this.staffClient;
     }
 }

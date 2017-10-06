@@ -36,7 +36,7 @@ public class OrganizationClientTest {
     @Test
     public void addOrganizationTest()throws Exception{
 
-        OrganizationDTO org = client.addOrganization(organization);
+        OrganizationDTO org = client.add(organization);
         Assert.assertEquals(organization.getCity(), org.getCity());
         Assert.assertEquals(organization.getCountry(), org.getCountry());
         Assert.assertEquals(organization.getPostalCode(), org.getPostalCode());
@@ -50,7 +50,7 @@ public class OrganizationClientTest {
     @Test
     public void getOrganizationListTest()throws Exception{
         Thread.sleep(2000);
-        List<OrganizationDTO> orgs = client.getOrganizationList();
+        List<OrganizationDTO> orgs = client.getList();
         Assert.assertEquals(1, orgs.size());
         OrganizationDTO org = orgs.get(0);
         Assert.assertEquals(organization.getCity(), org.getCity());
@@ -66,7 +66,7 @@ public class OrganizationClientTest {
 
     @Test
     public void getOrganizationByNameTest()throws Exception{
-        OrganizationDTO org = client.getOrganizationByName("WTF Org");
+        OrganizationDTO org = client.getByName("WTF Org");
         Assert.assertEquals(organization.getCity(), org.getCity());
         Assert.assertEquals(organization.getCountry(), org.getCountry());
         Assert.assertEquals(organization.getPostalCode(), org.getPostalCode());
@@ -80,10 +80,10 @@ public class OrganizationClientTest {
     @Test
     public void updateOrganizationTest()throws Exception{
 
-        OrganizationDTO org = client.getOrganizationByName("WTF Org");
+        OrganizationDTO org = client.getByName("WTF Org");
         org.setOrgName("Nvm Org");
         org.setDateModified(DateTime.now());
-        OrganizationDTO a1 = client.updateOrganization(org);
+        OrganizationDTO a1 = client.update(org);
 
         Assert.assertEquals(org.getCity(), a1.getCity());
         Assert.assertEquals(org.getCountry(), a1.getCountry());
@@ -98,10 +98,10 @@ public class OrganizationClientTest {
 
     @Test
     public void deleteOrganizationByNameTest()throws Exception{
-        String result = client.deleteOrganizationByName("Nvm Org");
+        String result = client.deleteByName("Nvm Org");
         Assert.assertEquals("Deleted!", result);
         Thread.sleep(2000);
-        List<OrganizationDTO> orgs = client.getOrganizationList();
+        List<OrganizationDTO> orgs = client.getList();
         Assert.assertEquals(0, orgs.size());
     }
 

@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Created by dragonliu on 2017/8/30.
  */
-public class TransactionClient {
+public class TransactionClient implements IClient<TransactionDTO>{
     private static final String TRANSACTION_PATH= PropertiesProcessor.serverUrl+"/transaction";
     private static HttpHeaders headers = new HttpHeaders();
     private static RestTemplate restTemplate = RestTemplateFactory.getRestTemplate();
@@ -24,7 +24,7 @@ public class TransactionClient {
     }
 
 
-    public List<TransactionDTO> getTransactionList(){
+    public List<TransactionDTO> getList(){
         String url = TRANSACTION_PATH+"/getAll";
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
@@ -37,14 +37,14 @@ public class TransactionClient {
     }
 
 
-    public TransactionDTO addTransaction(TransactionDTO transactionDTO){
+    public TransactionDTO add(TransactionDTO transactionDTO){
         String url = TRANSACTION_PATH+"/add";
         HttpEntity<Transaction> requestEntity = new HttpEntity<Transaction>(BeanMapper.map(transactionDTO, Transaction.class), headers);
         ResponseEntity<Transaction> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Transaction.class);
         return BeanMapper.map(responseEntity.getBody(), TransactionDTO.class);
     }
 
-    public TransactionDTO getTransactionById(Integer id){
+    public TransactionDTO getById(Integer id){
         String url = TRANSACTION_PATH+"/getById"+"?id="+id;
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
@@ -52,7 +52,7 @@ public class TransactionClient {
         return BeanMapper.map(responseEntity.getBody(), TransactionDTO.class);
     }
 
-    public String deleteTransactionById(Integer id){
+    public String deleteById(Integer id){
         String url = TRANSACTION_PATH+"/deleteObject"+"?id="+id;
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
@@ -60,7 +60,7 @@ public class TransactionClient {
         return responseEntity.getBody().replace("\"", "");
     }
 
-    public TransactionDTO updateTransaction(TransactionDTO transactionDTO){
+    public TransactionDTO update(TransactionDTO transactionDTO){
         String url = TRANSACTION_PATH+"/update";
         HttpEntity<Transaction> requestEntity = new HttpEntity<Transaction>(BeanMapper.map(transactionDTO, Transaction.class), headers);
         ResponseEntity<Transaction> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Transaction.class);

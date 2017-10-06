@@ -1,6 +1,6 @@
 package com.taim.client.configuration;
 
-import com.taim.client.ClientException;
+import com.taim.client.IClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -17,12 +17,12 @@ public class ClientResponseErrorHandler implements ResponseErrorHandler {
 
     @Override
     public boolean hasError(ClientHttpResponse clientHttpResponse) throws IOException {
-        return (clientHttpResponse.getStatusCode() != HttpStatus.OK);
+        return (!clientHttpResponse.getStatusCode().is2xxSuccessful());
     }
 
     @Override
     public void handleError(ClientHttpResponse clientHttpResponse) throws IOException {
-        throw new ClientException(getBody(clientHttpResponse.getBody()));
+        throw new IClient.ClientException(getBody(clientHttpResponse.getBody()));
     }
 
     private String getBody(InputStream inputStream){

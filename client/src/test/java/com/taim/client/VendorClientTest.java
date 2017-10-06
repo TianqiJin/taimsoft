@@ -32,7 +32,7 @@ public class VendorClientTest {
     @Test
     public void addVendorTest()throws Exception{
 
-        VendorDTO cc = client.addVendor(vendor);
+        VendorDTO cc = client.add(vendor);
         Assert.assertEquals(vendor.getEmail(), cc.getEmail());
         Assert.assertEquals(vendor.getFullname(), cc.getFullname());
         Assert.assertEquals(vendor.getPhone(), cc.getPhone());
@@ -43,7 +43,7 @@ public class VendorClientTest {
     @Test
     public void getVendorListTest()throws Exception{
         Thread.sleep(2000);
-        List<VendorDTO> ccs = client.getVendorList();
+        List<VendorDTO> ccs = client.getList();
         Assert.assertEquals(1, ccs.size());
         VendorDTO cc = ccs.get(0);
         Assert.assertEquals(vendor.getEmail(), cc.getEmail());
@@ -55,7 +55,7 @@ public class VendorClientTest {
 
     @Test
     public void getVendorByNameTest()throws Exception{
-        VendorDTO cc = client.getVendorByName("dummy dumb");
+        VendorDTO cc = client.getByName("dummy dumb");
         Assert.assertEquals(vendor.getEmail(), cc.getEmail());
         Assert.assertEquals(vendor.getFullname(), cc.getFullname());
         Assert.assertEquals(vendor.getPhone(), cc.getPhone());
@@ -66,9 +66,9 @@ public class VendorClientTest {
     @Test
     public void updateVendorTest()throws Exception{
 
-        VendorDTO cc = client.getVendorByName("dummy dumb");
+        VendorDTO cc = client.getByName("dummy dumb");
         cc.setDateModified(DateTime.now());
-        VendorDTO c1 = client.updateVendor(cc);
+        VendorDTO c1 = client.update(cc);
 
         Assert.assertEquals(cc.getEmail(), c1.getEmail());
         Assert.assertEquals(cc.getFullname(), c1.getFullname());
@@ -80,10 +80,10 @@ public class VendorClientTest {
 
     @Test
     public void deleteVendorByNameTest()throws Exception{
-        String result = client.deleteVendorByName("dummy dumb");
+        String result = client.deleteByName("dummy dumb");
         Assert.assertEquals("Deleted!", result);
         Thread.sleep(2000);
-        List<VendorDTO> ccs = client.getVendorList();
+        List<VendorDTO> ccs = client.getList();
         Assert.assertEquals(0, ccs.size());
     }
 }

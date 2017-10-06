@@ -1,21 +1,27 @@
 package com.taimsoft.desktopui.controllers.overview;
 
+import com.taim.client.IClient;
 import com.taim.client.ProductClient;
 import com.taim.client.TransactionClient;
 import com.taim.dto.ProductDTO;
 import com.taim.dto.StaffDTO;
 import com.taim.dto.TransactionDTO;
+import com.taim.model.Product;
 import com.taimsoft.desktopui.uicomponents.LiveComboBoxTableCell;
 import com.taimsoft.desktopui.util.RestClientFactory;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
 
@@ -27,9 +33,7 @@ import java.util.concurrent.Executors;
 /**
  * Created by Tjin on 8/30/2017.
  */
-public class ProductOverviewController implements OverviewController<ProductDTO>{
-    private List<ProductDTO> productDTOS;
-    private Executor executor;
+public class ProductOverviewController extends OverviewController<ProductDTO>{
     private ProductClient productClient;
 
     @FXML
@@ -70,36 +74,31 @@ public class ProductOverviewController implements OverviewController<ProductDTO>
         checkedCol.setCellValueFactory(new PropertyValueFactory<>("isChecked"));
         checkedCol.setCellFactory(CheckBoxTableCell.forTableColumn(checkedCol));
         actionCol.setCellValueFactory(new PropertyValueFactory<>("action"));
-        actionCol.setCellFactory(param -> new LiveComboBoxTableCell<>(FXCollections.observableArrayList("Edit", "Delete")));
+        actionCol.setCellFactory(param -> {
+            LiveComboBoxTableCell<ProductDTO, String> liveComboBoxTableCell = new LiveComboBoxTableCell<>(
+                    FXCollections.observableArrayList("VIEW DETAILS", "EDIT", "DELETE"));
+            return liveComboBoxTableCell;
+        });
     }
 
     public ProductOverviewController(){
         this.productClient = RestClientFactory.getProductClient();
-        this.executor = Executors.newCachedThreadPool(r -> {
-            Thread t = new Thread(r);
-            t.setDaemon(true);
-            return t;
-        });
-    }
-
-    @Override
-    public void loadData() {
-        Task<List<ProductDTO>> productTask = new Task<List<ProductDTO>>() {
-            @Override
-            protected List<ProductDTO> call() throws Exception {
-                return productClient.getProductList();
-            }
-        };
-
-        productTask.setOnSucceeded(event -> {
-            productDTOS = productTask.getValue();
-            productTable.setItems(FXCollections.observableArrayList(productDTOS));
-            initSearchField();
-        });
-
-        executor.execute(productTask);
     }
 
     @Override
     public void initSearchField() {}
+
+    @Override
+    public IClient<ProductDTO> getOverviewClient(){
+        return this.productClient;
+    }
+
+    private ComboBox<String> initActionCombox(ProductDTO productDTO){
+        System.out.println(productDTO.getId());
+        if(productDTO.getId() == 0){
+            return new ComboBox<>(FXCollections.observableArrayList("Edit", "Print", "Delete"));
+        }else{
+            return new ComboBox<>(FXCollections.observableArrayList("Edit", "Print", "Delete2"));
+        }
+    }
 }

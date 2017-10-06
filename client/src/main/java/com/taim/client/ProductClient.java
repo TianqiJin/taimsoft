@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Created by dragonliu on 2017/8/30.
  */
-public class ProductClient {
+public class ProductClient implements IClient<ProductDTO>{
     private static final String PRODUCT_PATH= PropertiesProcessor.serverUrl+"/product";
     private static HttpHeaders headers = new HttpHeaders();
     private static RestTemplate restTemplate = RestTemplateFactory.getRestTemplate();
@@ -24,7 +24,7 @@ public class ProductClient {
     }
 
 
-    public List<ProductDTO> getProductList(){
+    public List<ProductDTO> getList(){
         String url = PRODUCT_PATH+"/getAll";
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
@@ -37,7 +37,7 @@ public class ProductClient {
     }
 
 
-    public ProductDTO addProduct(ProductDTO productDTO){
+    public ProductDTO add(ProductDTO productDTO){
         String url = PRODUCT_PATH+"/add";
         Product product = BeanMapper.map(productDTO, Product.class);
         System.out.println("PRODUCT:" + product.getLength());
@@ -46,7 +46,7 @@ public class ProductClient {
         return BeanMapper.map(responseEntity.getBody(), ProductDTO.class);
     }
 
-    public ProductDTO getProductByTexture(String texture){
+    public ProductDTO getByTexture(String texture){
         String url = PRODUCT_PATH+"/getByTexture"+"?texture="+texture;
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
@@ -54,7 +54,7 @@ public class ProductClient {
         return BeanMapper.map(responseEntity.getBody(), ProductDTO.class);
     }
 
-    public ProductDTO getProductById(Integer id){
+    public ProductDTO getById(Integer id){
         String url = PRODUCT_PATH+"/getById"+"?id="+id;
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
@@ -62,7 +62,7 @@ public class ProductClient {
         return BeanMapper.map(responseEntity.getBody(), ProductDTO.class);
     }
 
-    public String deleteProductById(Integer id){
+    public String deleteById(Integer id){
         String url = PRODUCT_PATH+"/deleteObject"+"?id="+id;
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
@@ -70,7 +70,7 @@ public class ProductClient {
         return responseEntity.getBody().replace("\"", "");
     }
 
-    public ProductDTO updateProduct(ProductDTO productDTO){
+    public ProductDTO update(ProductDTO productDTO){
         String url = PRODUCT_PATH+"/update";
         HttpEntity<Product> requestEntity = new HttpEntity<Product>(BeanMapper.map(productDTO, Product.class), headers);
         ResponseEntity<Product> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Product.class);

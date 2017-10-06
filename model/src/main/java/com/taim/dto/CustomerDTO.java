@@ -10,13 +10,13 @@ import java.util.List;
 
 public class CustomerDTO extends UserBaseModelDTO{
     private DoubleProperty storeCredit;
-    private BooleanProperty isChecked;
+    private BooleanProperty checked;
     private ObjectProperty<Customer.CustomerClass> customerClass;
     private List<TransactionDTO> transactionList;
 
     public CustomerDTO(){
         storeCredit = new SimpleDoubleProperty();
-        isChecked = new SimpleBooleanProperty();
+        checked = new SimpleBooleanProperty();
         transactionList = new ArrayList<TransactionDTO>();
         customerClass = new SimpleObjectProperty<>();
     }
@@ -41,16 +41,16 @@ public class CustomerDTO extends UserBaseModelDTO{
         this.transactionList = transactionList;
     }
 
-    public boolean isIsChecked() {
-        return isChecked.get();
+    public boolean isChecked() {
+        return checked.get();
     }
 
-    public BooleanProperty isCheckedProperty() {
-        return isChecked;
+    public BooleanProperty checkedProperty() {
+        return checked;
     }
 
-    public void setIsChecked(boolean isChecked) {
-        this.isChecked.set(isChecked);
+    public void setChecked(boolean checked) {
+        this.checked.set(checked);
     }
 
     public Customer.CustomerClass getCustomerClass() {

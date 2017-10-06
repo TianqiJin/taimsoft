@@ -34,7 +34,7 @@ public class StaffClientTest {
     @Test
     public void addStaffTest()throws Exception{
 
-        StaffDTO sf = client.addStaff(staff);
+        StaffDTO sf = client.add(staff);
         Assert.assertEquals(staff.getUserName(), sf.getUserName());
         Assert.assertEquals(staff.getPassword(), sf.getPassword());
         Assert.assertEquals(staff.getEmail(), sf.getEmail());
@@ -47,7 +47,7 @@ public class StaffClientTest {
     @Test
     public void getStaffListTest()throws Exception{
         Thread.sleep(2000);
-        List<StaffDTO> sfs = client.getStaffList();
+        List<StaffDTO> sfs = client.getList();
         Assert.assertEquals(1, sfs.size());
         StaffDTO sf = sfs.get(0);
         Assert.assertEquals(staff.getUserName(), sf.getUserName());
@@ -61,7 +61,7 @@ public class StaffClientTest {
 
     @Test
     public void getStaffByNameTest()throws Exception{
-        StaffDTO sf = client.getStaffByName("dummy dumb");
+        StaffDTO sf = client.getByName("dummy dumb");
         Assert.assertEquals(staff.getUserName(), sf.getUserName());
         Assert.assertEquals(staff.getPassword(), sf.getPassword());
         Assert.assertEquals(staff.getEmail(), sf.getEmail());
@@ -74,9 +74,9 @@ public class StaffClientTest {
     @Test
     public void updateStaffTest()throws Exception{
 
-        StaffDTO sf = client.getStaffByName("dummy dumb");
+        StaffDTO sf = client.getByName("dummy dumb");
         sf.setDateModified(DateTime.now());
-        StaffDTO s1 = client.updateStaff(sf);
+        StaffDTO s1 = client.update(sf);
 
         Assert.assertEquals(sf.getUserName(), s1.getUserName());
         Assert.assertEquals(sf.getPassword(), s1.getPassword());
@@ -90,10 +90,10 @@ public class StaffClientTest {
 
     @Test
     public void deleteStaffByNameTest()throws Exception{
-        String result = client.deleteStaffByName("dummy dumb");
+        String result = client.deleteByName("dummy dumb");
         Assert.assertEquals("Deleted!", result);
         Thread.sleep(2000);
-        List<StaffDTO> sfs = client.getStaffList();
+        List<StaffDTO> sfs = client.getList();
         Assert.assertEquals(0, sfs.size());
     }
 }

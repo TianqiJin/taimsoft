@@ -18,7 +18,7 @@ import java.util.List;
  * Created by dragonliu on 2017/8/27.
  */
 
-public class OrganizationClient {
+public class OrganizationClient implements IClient<OrganizationDTO> {
     private static final String ORGANIZATION_PATH=PropertiesProcessor.serverUrl+"/organization";
     private static HttpHeaders headers = new HttpHeaders();
     private static RestTemplate restTemplate = RestTemplateFactory.getRestTemplate();;
@@ -26,7 +26,7 @@ public class OrganizationClient {
         headers.setContentType(MediaType.APPLICATION_JSON);
     }
 
-    public List<OrganizationDTO> getOrganizationList(){
+    public List<OrganizationDTO> getList(){
         String url = ORGANIZATION_PATH+"/getAll";
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
@@ -39,14 +39,14 @@ public class OrganizationClient {
     }
 
 
-    public OrganizationDTO addOrganization(OrganizationDTO organizationDTO){
+    public OrganizationDTO add(OrganizationDTO organizationDTO){
         String url = ORGANIZATION_PATH+"/add";
         HttpEntity<Organization> requestEntity = new HttpEntity<Organization>(BeanMapper.map(organizationDTO, Organization.class), headers);
         ResponseEntity<Organization> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Organization.class);
         return BeanMapper.map(responseEntity.getBody(), OrganizationDTO.class);
     }
 
-    public OrganizationDTO getOrganizationByName(String name){
+    public OrganizationDTO getByName(String name){
         String url = ORGANIZATION_PATH+"/getByName"+"?name="+name;
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
@@ -54,7 +54,7 @@ public class OrganizationClient {
         return BeanMapper.map(responseEntity.getBody(), OrganizationDTO.class);
     }
 
-    public String deleteOrganizationByName(String name){
+    public String deleteByName(String name){
         String url = ORGANIZATION_PATH+"/deleteObject"+"?name="+name;
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
@@ -62,7 +62,7 @@ public class OrganizationClient {
         return responseEntity.getBody().replace("\"", "");
     }
 
-    public OrganizationDTO updateOrganization(OrganizationDTO organizationDTO){
+    public OrganizationDTO update(OrganizationDTO organizationDTO){
         String url = ORGANIZATION_PATH+"/update";
         HttpEntity<Organization> requestEntity = new HttpEntity<Organization>(BeanMapper.map(organizationDTO, Organization.class), headers);
         ResponseEntity<Organization> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Organization.class);

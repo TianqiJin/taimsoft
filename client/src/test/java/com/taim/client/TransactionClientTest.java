@@ -1,8 +1,10 @@
 package com.taim.client;
 
 import com.taim.dto.TransactionDTO;
+import com.taim.dto.TransactionDetailDTO;
 import com.taim.model.DeliveryStatus;
 import com.taim.model.Transaction;
+import com.taim.model.TransactionDetail;
 import junit.framework.Assert;
 import org.joda.time.DateTime;
 import org.junit.BeforeClass;
@@ -34,8 +36,12 @@ public class TransactionClientTest {
 
     @Test
     public void addTransactionTest()throws Exception{
-
-        TransactionDTO tran = client.addTransaction(transaction);
+        TransactionDetailDTO transactionDetail = new TransactionDetailDTO();
+        transactionDetail.setDateCreated(DateTime.now());
+        transactionDetail.setDateModified(DateTime.now());
+        transactionDetail.setNote("No quote");
+        transaction.getTransactionDetails().add(transactionDetail);
+        TransactionDTO tran = client.add(transaction);
         Assert.assertEquals(transaction.getSaleAmount(), tran.getSaleAmount());
         Assert.assertEquals(transaction.getGst(),tran.getGst());
         Assert.assertEquals(transaction.getPst(), tran.getPst());
@@ -49,7 +55,7 @@ public class TransactionClientTest {
     @Test
     public void getTransactionListTest()throws Exception{
         Thread.sleep(2000);
-        List<TransactionDTO> trans = client.getTransactionList();
+        List<TransactionDTO> trans = client.getList();
         Assert.assertEquals(1, trans.size());
         TransactionDTO tran = trans.get(0);
         Assert.assertEquals(transaction.getSaleAmount(), tran.getSaleAmount());
@@ -65,7 +71,7 @@ public class TransactionClientTest {
 
     @Test
     public void getTransactionByIdTest()throws Exception{
-        TransactionDTO tran = client.getTransactionById(1);
+        TransactionDTO tran = client.getById(1);
         Assert.assertEquals(transaction.getSaleAmount(), tran.getSaleAmount());
         Assert.assertEquals(transaction.getGst(),tran.getGst());
         Assert.assertEquals(transaction.getPst(), tran.getPst());
@@ -79,10 +85,10 @@ public class TransactionClientTest {
     @Test
     public void updateTransactionTest()throws Exception{
 
-        TransactionDTO tran = client.getTransactionById(1);
+        TransactionDTO tran = client.getById(1);
         tran.setPaymentStatus(Transaction.PaymentStatus.PAID);
         tran.setDateModified(DateTime.now());
-        TransactionDTO t1 = client.updateTransaction(tran);
+        TransactionDTO t1 = client.update(tran);
 
         Assert.assertEquals(tran.getSaleAmount(), t1.getSaleAmount());
         Assert.assertEquals(tran.getGst(),t1.getGst());
@@ -97,10 +103,10 @@ public class TransactionClientTest {
 
     @Test
     public void deleteTransactionByIdTest()throws Exception{
-        String result = client.deleteTransactionById(1);
+        String result = client.deleteById(1);
         Assert.assertEquals("Deleted!", result);
         Thread.sleep(2000);
-        List<TransactionDTO> trans = client.getTransactionList();
+        List<TransactionDTO> trans = client.getList();
         Assert.assertEquals(0, trans.size());
     }
 }

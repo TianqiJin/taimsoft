@@ -19,6 +19,7 @@ public class LiveComboBoxTableCell<S,T> extends TableCell<S, T> {
 
     public LiveComboBoxTableCell(ObservableList<T> items) {
         this.comboBox = new ComboBox<>(items);
+        this.comboBox.setPromptText("SELECT ACTION");
         setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         comboBox.prefWidthProperty().bind(this.widthProperty());
     }
