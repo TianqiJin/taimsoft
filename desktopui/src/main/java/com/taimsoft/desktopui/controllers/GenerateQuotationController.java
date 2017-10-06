@@ -2,16 +2,14 @@ package com.taimsoft.desktopui.controllers;
 
 import com.taim.dto.*;
 import com.taim.model.Customer;
+import com.taim.model.Staff;
 import com.taim.model.Transaction;
-import com.taimsoft.desktopui.TaimDesktop;
-import com.taimsoft.desktopui.util.AlertBuilder;
-import com.taimsoft.desktopui.util.AutoCompleteComboBoxListener;
-import com.taimsoft.desktopui.util.ButtonCell;
-import com.taimsoft.desktopui.util.RestClientFactory;
+import com.taimsoft.desktopui.util.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleFloatProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -36,13 +34,19 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
+
 /**
  * Created by jiawei.liu on 9/17/17.
  */
+//HardCoded several stuff here for now:
+    // Discount mapping A: 0-30
+    //                  B: 0-20
+    //                  C: 0-10
+    // PST:   7%
+    // GST:   5%
 public class GenerateQuotationController {
 
     private Stage dialogStage;
-    private TaimDesktop taimDesktop;
 
     private CustomerDTO customer;
     private StaffDTO staff;
@@ -55,11 +59,12 @@ public class GenerateQuotationController {
     private BooleanBinding confimButtonBinding;
     private int discount;
     private Executor executor;
+    private Mode mode;
 
     @FXML
     private TableView<TransactionDetailDTO> transactionTableView;
     @FXML
-    private TableColumn<TransactionDetailDTO, Number> productIdCol;
+    private TableColumn<TransactionDetailDTO, String> productIdCol;
     @FXML
     private TableColumn<TransactionDetailDTO, Number> unitPriceCol;
     @FXML
@@ -140,14 +145,25 @@ public class GenerateQuotationController {
     private void initialize(){
         confimButtonBinding = Bindings.size(transactionTableView.getItems()).greaterThan(0);
         confirmButton.disableProperty().bind(confimButtonBinding);
-        productIdCol.setCellValueFactory(new PropertyValueFactory<>("productId"));
-        unitPriceCol.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
+        productIdCol.setCellValueFactory(p->new SimpleStringProperty(p.getValue().getProduct().getSku()));
+        unitPriceCol.setCellValueFactory(u->new SimpleFloatProperty(new BigDecimal(u.getValue().getProduct().getUnitPrice()).floatValue()));
         qtyCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        sizeCol.setCellValueFactory(new PropertyValueFactory<>("size"));
+        sizeCol.setCellValueFactory(s->new SimpleStringProperty(SizeHelper.getSizeString(s.getValue().getProduct())));
         discountCol.setCellValueFactory(new PropertyValueFactory<>("discount"));
+        discountCol.setCellFactory(TextFieldTableCell.forTableColumn(new StringConverter<Number>() {
+            @Override
+            public String toString(Number object) {
+                return String.valueOf(object);
+            }
+
+            @Override
+            public Float fromString(String string) {
+                return Float.valueOf(string);
+            }
+        }));
         remarkCol.setCellValueFactory(new PropertyValueFactory<>("note"));
         remarkCol.setOnEditCommit(event ->
-                (event.getTableView().getItems().get(event.getTablePosition().getRow())).setNote(event.getNewValue()));
+            (event.getTableView().getItems().get(event.getTablePosition().getRow())).setNote(event.getNewValue()));
 
         remarkCol.setCellFactory(TextFieldTableCell.forTableColumn());
         qtyCol.setCellFactory(TextFieldTableCell.forTableColumn(new StringConverter<Number>() {
@@ -173,9 +189,15 @@ public class GenerateQuotationController {
         subTotalCol.setCellValueFactory(param ->
                 new SimpleFloatProperty(new BigDecimal(param.getValue().getSaleAmount()).floatValue()));
 
-        //Add constrain around discount field ??
-        discountCol.setOnEditCommit(event ->
-                (event.getTableView().getItems().get(event.getTablePosition().getRow())).setDiscount(event.getNewValue().intValue()));
+        discountCol.setOnEditCommit(event ->{
+            TransactionDetailDTO p = event.getTableView().getItems().get(event.getTablePosition().getRow());
+            int newDiscount=validateDiscountEntered(event.getOldValue().intValue(),event.getNewValue().intValue());
+            p.setDiscount(newDiscount);
+            showPaymentDetails();
+            refreshTable();
+
+            (event.getTableView().getItems().get(event.getTablePosition().getRow())).setDiscount(event.getNewValue().intValue());
+            });
 
         totalCol.setCellValueFactory(param ->
                 new SimpleFloatProperty(new BigDecimal(param.getValue().getSaleAmount()* (100 - param.getValue().getDiscount()) / 100)
@@ -228,7 +250,9 @@ public class GenerateQuotationController {
         }else{
             TransactionDetailDTO newProductTransaction = new TransactionDetailDTO();
             newProductTransaction.setProduct(selectedProduct);
-
+            newProductTransaction.setDiscount(0);
+            newProductTransaction.setQuantity(0);
+            newProductTransaction.setSaleAmount(selectedProduct.getUnitPrice()*newProductTransaction.getQuantity());
             transactionDetailDTOObservableList.add(newProductTransaction);
         }
     }
@@ -236,12 +260,20 @@ public class GenerateQuotationController {
     @FXML
     public void handleAddCustomer(){
         CustomerDTO newCustomer = new CustomerDTO();
-        boolean okClicked = taimDesktop.showCustomerEditDialog(newCustomer);
+        boolean okClicked = TransactionPanelLoader.showCustomerEditor(newCustomer);
         if(okClicked){
-            //newCustomer.setUserName();
             boolean flag = true;
             try{
+                newCustomer.setDateCreated(DateTime.now());
+                newCustomer.setDateModified(DateTime.now());
                 RestClientFactory.getCustomerClient().addCustomer(newCustomer);
+                new AlertBuilder()
+                        .alertHeaderText("Customer Created successfully!")
+                        .alertType(Alert.AlertType.INFORMATION)
+                        .alertTitle("Customer")
+                        .alertContentText(newCustomer.getFullname())
+                        .build()
+                        .showAndWait();
 
             }catch(Exception e){
                 e.printStackTrace();
@@ -286,137 +318,23 @@ public class GenerateQuotationController {
     }
 
 
-
-    private void generateTransaction() throws IOException, SQLException{
-        transaction.getTransactionDetails().clear();
-        transaction.getTransactionDetails().addAll(transactionDetailDTOObservableList);
-        transaction.setSaleAmount(Double.valueOf(totalLabel.getText()));
-        transaction.setGst(Double.valueOf(gstTaxLabel.getText()));
-        transaction.setPst(Double.valueOf(pstTaxLabel.getText()));
-        transaction.setNote(textArea.getText());
-        transaction.setCustomer(customer);
-        transaction.setStaff(staff);
-        transaction.setTransactionType(Transaction.TransactionType.QUOTATION);
-//        transaction.getTransactionDetails().forEach( p -> {
-//            transaction.getTransactionUpdateRecords().get(transaction.getTransactionUpdateRecords().size() - 1).getProductUpdate().put(p.getProductId(), p.getQuantity());
-//        });
-
-        Optional<ButtonType> result = new AlertBuilder()
-                .alertType(Alert.AlertType.CONFIRMATION)
-                .alertTitle("Transaction Confirmation")
-                .alertContentText("Are you sure you want to submit this transaction?\n")
-                .alertHeaderText(null)
-                .build()
-                .showAndWait();
-        if(result.isPresent() && result.get() == ButtonType.OK){
-            RestClientFactory.getTransactionClient().addTransaction(transaction);
-            confirmedClicked = true;
-        }else{
-            //transaction = generateNewTransaction(Transaction.TransactionType.QUOTATION, this.staff.getStaffId(), dateLabel.getText());
-            transaction = new TransactionDTO();
-        }
-    }
-
-    private void showTransactionDetails(){
-        typeLabel.setText(transaction.getTransactionType().getValue());
-        dateLabel.setText(new SimpleDateFormat("yyyy-MM-dd").format(transaction.getDateCreated()));
-    }
-
-    private void showStaffDetails(){
-        if(this.staff != null){
-            staffFullNameLabel.setText(this.staff.getFullname());
-            staffPhoneLabel.setText(this.staff.getPhone());
-            staffPositionLabel.setText(this.staff.getPosition().toString());
-            staffEmail.setText(this.staff.getEmail());
-        }else{
-            staffFullNameLabel.setText("");
-            staffPhoneLabel.setText("");
-            staffPositionLabel.setText("");
-            staffEmail.setText("");
-        }
-    }
-
-    /**
-     * Show customer details grid pane
-     */
-    private void showCustomerDetails(){
-        if(this.customer != null){
-            addItemButton.setDisable(false);
-            fullNameLabel.setText(this.customer.getFullname());
-            storeCreditLabel.setText(String.valueOf(this.customer.getStoreCredit()));
-            discountLabel.setText(this.customer.getCustomerClass().getValue());
-            emailLabel.setText(this.customer.getEmail());
-            phoneLabel.setText(this.customer.getPhone());
-        }
-        else{
-            addItemButton.setDisable(true);
-            fullNameLabel.setText("");
-            storeCreditLabel.setText("");
-            discountLabel.setText("");
-            emailLabel.setText("");
-            phoneLabel.setText("");
-        }
-    }
-    /**
-     * Show payment details grid pane
-     */
-    private void showPaymentDetails(){
-        if(this.transactionDetailDTOObservableList != null ){
-            Iterator<TransactionDetailDTO> iterator = this.transactionDetailDTOObservableList.iterator();
-            BigDecimal subTotalAfterDiscount = new BigDecimal(0.00);
-            BigDecimal subTotalBeforeDiscount = new BigDecimal(0.00);
-            while(iterator.hasNext()){
-                TransactionDetailDTO tmp = iterator.next();
-                subTotalBeforeDiscount = subTotalBeforeDiscount.add(new BigDecimal(tmp.getSaleAmount()));
-                subTotalAfterDiscount = subTotalAfterDiscount.add(new BigDecimal(tmp.getSaleAmount()* (100 - tmp.getDiscount()) / 100));
-            }
-            BigDecimal paymentDiscount = subTotalBeforeDiscount.subtract(subTotalAfterDiscount).setScale(2, BigDecimal.ROUND_HALF_EVEN);
-            BigDecimal pstTax;
-
-            //PST+GST HANDLE??
-            if(customer != null && customer.getPstNumber() != null){
-                pstTax = new BigDecimal("0.00");
-            }else{
-                pstTax = new BigDecimal(taimDesktop.getProperty().getPstRate()).multiply(subTotalAfterDiscount).divide(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_EVEN);
-            }
-            BigDecimal gstTax = new BigDecimal(taimDesktop.getProperty().getGstRate()).multiply(subTotalAfterDiscount).divide(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_EVEN);
-
-
-            BigDecimal total = subTotalAfterDiscount.add(pstTax).add(gstTax).setScale(2, BigDecimal.ROUND_HALF_EVEN);
-            subTotalBeforeDiscount.setScale(2, RoundingMode.HALF_EVEN);
-
-            itemsCountLabel.setText(String.valueOf(this.transactionDetailDTOObservableList.size()));
-            subTotalLabel.setText(String.valueOf(subTotalBeforeDiscount.floatValue()));
-            paymentDiscountLabel.setText(String.valueOf(paymentDiscount.floatValue()));
-            pstTaxLabel.setText(String.valueOf(pstTax.floatValue()));
-            gstTaxLabel.setText(String.valueOf(gstTax.floatValue()));
-            totalLabel.setText(String.valueOf(total.floatValue()));
-        }
-        else{
-            itemsCountLabel.setText("");
-            subTotalLabel.setText("");
-            paymentDiscountLabel.setText("");
-            pstTaxLabel.setText("");
-            gstTaxLabel.setText("");
-            totalLabel.setText("");
-        }
-    }
-
     /**
      * Initialize the main class for this class
-     * @param taimDesktop
      */
-    public void setMainClass(TaimDesktop taimDesktop){
-        this.taimDesktop = taimDesktop;
-        this.staff = this.taimDesktop.getStaff();
+
+    public void setMainClass(TransactionDTO transactionFromAbove, StaffDTO staff){
+
         //either edit or generate new quotation
-        if (taimDesktop.getTransaction()==null) {
+        if (transactionFromAbove==null) {
+            this.mode=Mode.CREATE;
             this.transaction = new TransactionDTO();
             transaction.setTransactionType(Transaction.TransactionType.QUOTATION);
+            transaction.setIsFinalized(false);
             transaction.setStaff(staff);
             transaction.setDateCreated(DateTime.now());
         }else{
-            this.transaction = taimDesktop.getTransaction();
+            this.mode=Mode.EDIT;
+            this.transaction = transactionFromAbove;
         }
         this.transactionDetailDTOObservableList = FXCollections.observableArrayList(transaction.getTransactionDetails());
         transactionTableView.setItems(transactionDetailDTOObservableList);
@@ -430,29 +348,14 @@ public class GenerateQuotationController {
                 }
             }
         });
-        showStaffDetails();
+        this.staff = staff;
     }
 
-
-    public boolean isConfirmedClicked(){
-        return this.confirmedClicked;
-    }
-
-    private void refreshTable(){
-        transactionTableView.getColumns().get(0).setVisible(false);
-        transactionTableView.getColumns().get(0).setVisible(true);
-    }
-
-    //@Override
-    public void initPanelDetails(){
-        showTransactionDetails();
-        showStaffDetails();
-        showCustomerDetails();
-        showPaymentDetails();
-    }
-
-    //@Override
+    /**
+     * Load Data From DB (Customer and Product)
+     */
     public void initDataFromDB(){
+        //load list of products and customers
         Task<List<CustomerDTO>> customersTask = new Task<List<CustomerDTO>>() {
             @Override
             protected List<CustomerDTO> call() throws Exception {
@@ -465,9 +368,11 @@ public class GenerateQuotationController {
                 return RestClientFactory.getProductClient().getProductList();
             }
         };
+
         customersTask.setOnSucceeded(event ->{
             this.customerList = customersTask.getValue();
-            if(this.transaction.getCustomer().getFullname() != null){
+
+            if(this.transaction.getCustomer()!=null && this.transaction.getCustomer().getFullname() != null){
                 Optional<CustomerDTO> customer =  customerList.stream().filter(p -> p.getFullname().equals(transaction.getCustomer().getFullname())).findFirst();
                 if(customer.isPresent()){
                     this.customer = customer.get();
@@ -509,8 +414,9 @@ public class GenerateQuotationController {
             new AutoCompleteComboBoxListener<>(customerComboBox);
             new AutoCompleteComboBoxListener<>(customerPhoneComboBox);
         });
+
         customersTask.setOnFailed(event -> {
-            System.out.println((event.getSource().getMessage());
+            System.out.println((event.getSource().getMessage()));
             new AlertBuilder()
                     .alertType(Alert.AlertType.ERROR)
                     .alertHeaderText("Database Error!")
@@ -519,6 +425,7 @@ public class GenerateQuotationController {
                     .showAndWait();
             dialogStage.close();
         });
+        //product
         productsTask.setOnSucceeded(event ->{
             this.productList = productsTask.getValue();
             List<String> tmpProductList = productList
@@ -542,19 +449,180 @@ public class GenerateQuotationController {
         executor.execute(productsTask);
     }
 
-
-    private Integer returnDiscount(){
-        if(this.customer != null){
-            if(customer.getCustomerClass()== Customer.CustomerClass.CLASSA){
-                return this.taimDesktop.getProperty().getUserClass().getClassA();
-            }else if(customer.getCustomerClass()== Customer.CustomerClass.CLASSB){
-                return this.saleSystem.getProperty().getUserClass().getClassB();
-            }else if(customer.getCustomerClass()== Customer.CustomerClass.CLASSC){
-                return this.saleSystem.getProperty().getUserClass().getClassC();
-            }
-        }
-        return null;
+    /**
+     * Initial Panel Details
+     */
+    public void initPanelDetails(){
+        showTransactionDetails();
+        showStaffDetails();
+        showCustomerDetails();
+        showPaymentDetails();
     }
 
 
+    private void showTransactionDetails(){
+        typeLabel.setText(transaction.getTransactionType().getValue());
+        dateLabel.setText(new SimpleDateFormat("yyyy-MM-dd").format(transaction.getDateCreated().toDate()));
+    }
+
+    private void showStaffDetails(){
+        if(this.staff != null){
+            staffFullNameLabel.setText(this.staff.getFullname());
+            staffPhoneLabel.setText(this.staff.getPhone());
+            staffPositionLabel.setText(this.staff.getPosition().toString());
+            staffEmail.setText(this.staff.getEmail());
+        }else{
+            staffFullNameLabel.setText("");
+            staffPhoneLabel.setText("");
+            staffPositionLabel.setText("");
+            staffEmail.setText("");
+        }
+    }
+
+
+    /**
+     * Show customer details grid pane
+     */
+
+    private void showCustomerDetails(){
+        if(this.customer != null){
+            addItemButton.setDisable(false);
+            fullNameLabel.setText(this.customer.getFullname());
+            storeCreditLabel.setText(String.valueOf(this.customer.getStoreCredit()));
+            discountLabel.setText(this.customer.getCustomerClass().getValue());
+            emailLabel.setText(this.customer.getEmail());
+            phoneLabel.setText(this.customer.getPhone());
+        }
+        else{
+            addItemButton.setDisable(true);
+            fullNameLabel.setText("");
+            storeCreditLabel.setText("");
+            discountLabel.setText("");
+            emailLabel.setText("");
+            phoneLabel.setText("");
+        }
+    }
+
+/**
+     * Show payment details grid pane
+     */
+
+    private void showPaymentDetails(){
+        if(this.transactionDetailDTOObservableList != null ){
+            Iterator<TransactionDetailDTO> iterator = this.transactionDetailDTOObservableList.iterator();
+            BigDecimal subTotalAfterDiscount = new BigDecimal(0.00);
+            BigDecimal subTotalBeforeDiscount = new BigDecimal(0.00);
+            while(iterator.hasNext()){
+                TransactionDetailDTO tmp = iterator.next();
+                subTotalBeforeDiscount = subTotalBeforeDiscount.add(new BigDecimal(tmp.getSaleAmount()));
+                subTotalAfterDiscount = subTotalAfterDiscount.add(new BigDecimal(tmp.getSaleAmount()* (100 - tmp.getDiscount()) / 100));
+            }
+            BigDecimal paymentDiscount = subTotalBeforeDiscount.subtract(subTotalAfterDiscount).setScale(2, BigDecimal.ROUND_HALF_EVEN);
+
+            BigDecimal pstTax = new BigDecimal("7").multiply(subTotalAfterDiscount).divide(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_EVEN);
+            BigDecimal gstTax = new BigDecimal("5").multiply(subTotalAfterDiscount).divide(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_EVEN);
+
+            BigDecimal total = subTotalAfterDiscount.add(pstTax).add(gstTax).setScale(2, BigDecimal.ROUND_HALF_EVEN);
+            subTotalBeforeDiscount.setScale(2, RoundingMode.HALF_EVEN);
+
+            itemsCountLabel.setText(String.valueOf(this.transactionDetailDTOObservableList.size()));
+            subTotalLabel.setText(String.valueOf(subTotalBeforeDiscount.floatValue()));
+            paymentDiscountLabel.setText(String.valueOf(paymentDiscount.floatValue()));
+            pstTaxLabel.setText(String.valueOf(pstTax.floatValue()));
+            gstTaxLabel.setText(String.valueOf(gstTax.floatValue()));
+            totalLabel.setText(String.valueOf(total.floatValue()));
+        }
+        else{
+            itemsCountLabel.setText("");
+            subTotalLabel.setText("");
+            paymentDiscountLabel.setText("");
+            pstTaxLabel.setText("");
+            gstTaxLabel.setText("");
+            totalLabel.setText("");
+        }
+    }
+
+
+    private void generateTransaction() throws IOException, SQLException{
+        transaction.getTransactionDetails().clear();
+        transaction.getTransactionDetails().addAll(transactionDetailDTOObservableList);
+        transaction.setSaleAmount(Double.valueOf(totalLabel.getText()));
+        transaction.setGst(Double.valueOf(gstTaxLabel.getText()));
+        transaction.setPst(Double.valueOf(pstTaxLabel.getText()));
+        transaction.setNote(textArea.getText());
+        transaction.setCustomer(customer);
+        transaction.setStaff(staff);
+        transaction.setDateModified(DateTime.now());
+
+
+        Optional<ButtonType> result = new AlertBuilder()
+                .alertType(Alert.AlertType.CONFIRMATION)
+                .alertTitle("Transaction Confirmation")
+                .alertContentText("Are you sure you want to submit this transaction?\n")
+                .alertHeaderText(null)
+                .build()
+                .showAndWait();
+        if(result.isPresent() && result.get() == ButtonType.OK){
+            RestClientFactory.getTransactionClient().addTransaction(transaction);
+
+            updateProduct();
+
+            confirmedClicked = true;
+        }/*else{
+            transaction = new TransactionDTO();
+            transaction.setTransactionType(Transaction.TransactionType.QUOTATION);
+            transaction.setIsFinalized(false);
+            transaction.setStaff(staff);
+            transaction.setDateCreated(DateTime.now());
+        }*/
+    }
+
+
+    private void updateProduct(){
+        transaction.getTransactionDetails().forEach(p->{
+            double newVirtualNum = p.getProduct().getTotalNum()-p.getQuantity();
+            p.getProduct().setVirtualTotalNum(newVirtualNum);
+            RestClientFactory.getProductClient().updateProduct(p.getProduct());
+        });
+
+    }
+
+    public boolean isConfirmedClicked(){
+        return this.confirmedClicked;
+    }
+
+    private void refreshTable(){
+        transactionTableView.getColumns().get(0).setVisible(false);
+        transactionTableView.getColumns().get(0).setVisible(true);
+    }
+
+
+    public TransactionDTO getTransaction(){return this.transaction;}
+
+    private enum Mode{
+        CREATE,EDIT;
+    }
+
+
+
+    private int validateDiscountEntered(int oldValue, int newValue){
+        if (this.customer!=null) {
+            if (customer.getCustomerClass() == Customer.CustomerClass.CLASSA) {
+                if (newValue >= 0 && newValue <= 30) {
+                    return newValue;
+                }
+            } else if (customer.getCustomerClass() == Customer.CustomerClass.CLASSB) {
+                if (newValue >= 0 && newValue <= 20) {
+                    return newValue;
+                }
+            } else if (customer.getCustomerClass() == Customer.CustomerClass.CLASSC) {
+                if (newValue >= 0 && newValue <= 10) {
+                    return newValue;
+                }
+            }
+        }
+        return oldValue;
+    }
+
 }
+

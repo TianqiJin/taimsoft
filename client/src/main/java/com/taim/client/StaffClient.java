@@ -2,6 +2,7 @@ package com.taim.client;
 
 import com.taim.client.util.BeanMapper;
 import com.taim.client.util.PropertiesProcessor;
+import com.taim.client.util.RestTemplateFactory;
 import com.taim.dto.ProductDTO;
 import com.taim.dto.StaffDTO;
 import com.taim.model.Staff;
@@ -18,7 +19,7 @@ import java.util.List;
 public class StaffClient {
     private static final String STAFF_PATH= PropertiesProcessor.serverUrl+"/staff";
     private static HttpHeaders headers = new HttpHeaders();
-    private static RestTemplate restTemplate = new RestTemplate();
+    private static RestTemplate restTemplate = RestTemplateFactory.getRestTemplate();
     static {
         headers.setContentType(MediaType.APPLICATION_JSON);
     }

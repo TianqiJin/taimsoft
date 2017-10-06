@@ -2,6 +2,7 @@ package com.taim.client;
 
 import com.taim.client.util.BeanMapper;
 import com.taim.client.util.PropertiesProcessor;
+import com.taim.client.util.RestTemplateFactory;
 import com.taim.dto.OrganizationDTO;
 import com.taim.model.Organization;
 import org.apache.commons.beanutils.BeanMap;
@@ -20,7 +21,7 @@ import java.util.List;
 public class OrganizationClient {
     private static final String ORGANIZATION_PATH=PropertiesProcessor.serverUrl+"/organization";
     private static HttpHeaders headers = new HttpHeaders();
-    private static RestTemplate restTemplate = new RestTemplate();
+    private static RestTemplate restTemplate = RestTemplateFactory.getRestTemplate();;
     static {
         headers.setContentType(MediaType.APPLICATION_JSON);
     }

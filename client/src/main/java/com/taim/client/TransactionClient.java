@@ -2,6 +2,7 @@ package com.taim.client;
 
 import com.taim.client.util.BeanMapper;
 import com.taim.client.util.PropertiesProcessor;
+import com.taim.client.util.RestTemplateFactory;
 import com.taim.dto.TransactionDTO;
 import com.taim.model.Transaction;
 import org.springframework.http.*;
@@ -17,7 +18,7 @@ import java.util.List;
 public class TransactionClient {
     private static final String TRANSACTION_PATH= PropertiesProcessor.serverUrl+"/transaction";
     private static HttpHeaders headers = new HttpHeaders();
-    private static RestTemplate restTemplate = new RestTemplate();
+    private static RestTemplate restTemplate = RestTemplateFactory.getRestTemplate();
     static {
         headers.setContentType(MediaType.APPLICATION_JSON);
     }

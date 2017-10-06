@@ -6,6 +6,7 @@ import com.taim.dto.TransactionDTO;
 import com.taim.model.Transaction;
 import com.taimsoft.desktopui.uicomponents.LiveComboBoxTableCell;
 import com.taimsoft.desktopui.util.RestClientFactory;
+import com.taimsoft.desktopui.util.TransactionPanelLoader;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -13,8 +14,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.StringConverter;
 import org.joda.time.DateTime;
@@ -26,21 +30,13 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
-import static com.taimsoft.desktopui.controllers.overview.TransactionOverviewController.SummaryLabelMode.*;
+import static com.taimsoft.desktopui.controllers.overview.OverviewController.SummaryLabelMode.*;
 
 /**
  * Created by Tjin on 8/28/2017.
  */
 public class TransactionOverviewController implements OverviewController<TransactionDTO> {
-
-    enum SummaryLabelMode{
-        Quoted,
-        Unpaid,
-        Paid;
-    }
-
     private List<TransactionDTO> transactionDTOS;
-    private ObservableList<TransactionDTO> transactionDTOObservableList;
     private TransactionClient transactionClient;
     private Executor executor;
 
@@ -81,8 +77,8 @@ public class TransactionOverviewController implements OverviewController<Transac
 
     public TransactionOverviewController(){
         this.transactionClient = RestClientFactory.getTransactionClient();
-        this.executor = Executors.newCachedThreadPool(r->{
-            Thread t = new Thread();
+        this.executor = Executors.newCachedThreadPool(r -> {
+            Thread t = new Thread(r);
             t.setDaemon(true);
             return t;
         });
@@ -104,6 +100,7 @@ public class TransactionOverviewController implements OverviewController<Transac
         });
         statusCol.setCellValueFactory(new PropertyValueFactory<>("paymentStatus"));
         checkedCol.setCellValueFactory(new PropertyValueFactory<>("isChecked"));
+        checkedCol.setCellFactory(CheckBoxTableCell.forTableColumn(checkedCol));
         actionCol.setCellValueFactory(new PropertyValueFactory<>("action"));
         actionCol.setCellFactory(param -> new LiveComboBoxTableCell<>(FXCollections.observableArrayList("Edit", "Delete")));
 
@@ -112,6 +109,25 @@ public class TransactionOverviewController implements OverviewController<Transac
         bindSummaryLabel(totalUnpaidLabel, Unpaid);
 
         createNewTransactionComboBox.setItems(FXCollections.observableArrayList(Transaction.TransactionType.values()));
+        createNewTransactionComboBox.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                switch (createNewTransactionComboBox.getSelectionModel().getSelectedItem()){
+                    case QUOTATION:
+                        TransactionDTO transactionDTO = TransactionPanelLoader.loadQuotation(null,null);
+                        if (transactionDTO!=null){
+                            transactionDTOS.add(transactionDTO);
+                        }
+                        break;
+                    case INVOICE:
+                        break;
+                    case STOCK:
+                        break;
+                    case RETURN:
+                        break;
+                }
+            }
+        });
         transactionTypeComboBox.setItems(FXCollections.observableArrayList(Transaction.TransactionType.values()));
         transactionTypeComboBox.setConverter(new StringConverter<Transaction.TransactionType>() {
             @Override

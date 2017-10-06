@@ -18,7 +18,7 @@ public class Transaction extends BaseModel {
      */
     public enum TransactionType{
         QUOTATION("Quotation"),
-        PURCHASE_ORDER("Purchase Order"),
+        //PURCHASE_ORDER("Purchase Order"),
         INVOICE("Invoice"),
         STOCK("Stock"),
         RETURN("Return");
@@ -85,6 +85,8 @@ public class Transaction extends BaseModel {
     private List<Payment> payments;
     @Column(name = "ref_id")
     private int refId;
+    @Column(name = "is_finalized")
+    private boolean isFinalized;
     @Column
     private String note;
 
@@ -210,6 +212,14 @@ public class Transaction extends BaseModel {
         this.deliveryDueDate = deliveryDueDate;
     }
 
+    public boolean isFinalized() {
+        return isFinalized;
+    }
+
+    public void setFinalized(boolean finalized) {
+        isFinalized = finalized;
+    }
+
     @Override
     public String toString() {
         return "{\"Transaction\":"
@@ -228,6 +238,7 @@ public class Transaction extends BaseModel {
                 + ", \"transactionDetails\":" + transactionDetails
                 + ", \"payments\":" + payments
                 + ", \"refId\":\"" + refId + "\""
+                + ", \"isFinalized\":\"" + isFinalized + "\""
                 + ", \"note\":\"" + note + "\""
                 + "}";
     }

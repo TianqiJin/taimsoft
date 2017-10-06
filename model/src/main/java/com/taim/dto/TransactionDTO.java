@@ -23,8 +23,10 @@ public class TransactionDTO extends BaseModelDTO {
     private List<TransactionDetailDTO> transactionDetails;
     private List<PaymentDTO> payments;
     private IntegerProperty refId;
+    private BooleanProperty isFinalized;
     private StringProperty note;
     private BooleanProperty isChecked;
+
     public TransactionDTO(){
         saleAmount = new SimpleDoubleProperty();
         gst = new SimpleDoubleProperty();
@@ -38,6 +40,7 @@ public class TransactionDTO extends BaseModelDTO {
         transactionDetails = new ArrayList<>();
         payments = new ArrayList<>();
         refId = new SimpleIntegerProperty();
+        isFinalized = new SimpleBooleanProperty();
         note = new SimpleStringProperty();
         deliveryDueDate = new SimpleObjectProperty<>();
         paymentDueDate = new SimpleObjectProperty<>();
@@ -226,5 +229,17 @@ public class TransactionDTO extends BaseModelDTO {
 
     public void setDeliveryDueDate(DateTime deliveryDueDate) {
         this.deliveryDueDate.set(deliveryDueDate);
+    }
+
+    public boolean isIsFinalized() {
+        return isFinalized.get();
+    }
+
+    public BooleanProperty isFinalizedProperty() {
+        return isFinalized;
+    }
+
+    public void setIsFinalized(boolean isFinalized) {
+        this.isFinalized.set(isFinalized);
     }
 }

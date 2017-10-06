@@ -2,6 +2,7 @@ package com.taim.client;
 
 import com.taim.client.util.BeanMapper;
 import com.taim.client.util.PropertiesProcessor;
+import com.taim.client.util.RestTemplateFactory;
 import com.taim.dto.VendorDTO;
 import com.taim.model.Vendor;
 import org.apache.commons.beanutils.BeanMap;
@@ -18,7 +19,7 @@ import java.util.List;
 public class VendorClient {
     private static final String VENDOR_PATH= PropertiesProcessor.serverUrl+"/vendor";
     private static HttpHeaders headers = new HttpHeaders();
-    private static RestTemplate restTemplate = new RestTemplate();
+    private static RestTemplate restTemplate = RestTemplateFactory.getRestTemplate();
     static {
         headers.setContentType(MediaType.APPLICATION_JSON);
     }

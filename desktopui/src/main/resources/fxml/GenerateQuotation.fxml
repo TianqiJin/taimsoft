@@ -226,7 +226,7 @@
                     <columns>
                         <TableColumn fx:id="productIdCol" prefWidth="98.99996948242188" text="Product ID" />
                         <TableColumn fx:id="unitPriceCol" prefWidth="65.0" text="Price" />
-                        <TableColumn fx:id="sizeCol" prefWidth="75.0" text="Size (per piece)" />
+                        <TableColumn fx:id="sizeCol" prefWidth="75.0" text="Size (per piece)LxWxH" />
                         <TableColumn fx:id="qtyCol" editable="true" prefWidth="65.0" text="Purchased" />
                         <TableColumn fx:id="subTotalCol" prefWidth="75.0" text="SubTotal" />
                         <TableColumn fx:id="discountCol" prefWidth="75.0" text="Discount" />
