@@ -8,24 +8,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VendorDTO extends UserBaseModelDTO {
-    private BooleanProperty isChecked;
+    private BooleanProperty checked;
     private List<TransactionDTO> transactionList;
 
     public VendorDTO(){
         transactionList = new ArrayList<>();
-        isChecked = new SimpleBooleanProperty();
+        checked = new SimpleBooleanProperty();
     }
 
-    public boolean isIsChecked() {
-        return isChecked.get();
+    public boolean isChecked() {
+        return checked.get();
     }
 
-    public BooleanProperty isCheckedProperty() {
-        return isChecked;
+    public BooleanProperty checkedProperty() {
+        return checked;
     }
 
-    public void setIsChecked(boolean isChecked) {
-        this.isChecked.set(isChecked);
+    public void setChecked(boolean checked) {
+        this.checked.set(checked);
     }
 
     public List<TransactionDTO> getTransactionList() {

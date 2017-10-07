@@ -14,7 +14,7 @@ public class ProductDTO extends BaseModelDTO{
     private DoubleProperty totalNum;
     private DoubleProperty virtualTotalNum;
     private DoubleProperty unitPrice;
-    private BooleanProperty isChecked;
+    private BooleanProperty checked;
 
     public ProductDTO(){
         unitPrice = new SimpleDoubleProperty();
@@ -27,7 +27,7 @@ public class ProductDTO extends BaseModelDTO{
         texture = new SimpleStringProperty();
         totalNum = new SimpleDoubleProperty();
         virtualTotalNum = new SimpleDoubleProperty();
-        isChecked = new SimpleBooleanProperty();
+        checked = new SimpleBooleanProperty();
     }
 
     public String getSku() {
@@ -138,16 +138,16 @@ public class ProductDTO extends BaseModelDTO{
         this.unitPrice.set(unitPrice);
     }
 
-    public boolean isIsChecked() {
-        return isChecked.get();
+    public boolean isChecked() {
+        return checked.get();
     }
 
-    public BooleanProperty isCheckedProperty() {
-        return isChecked;
+    public BooleanProperty checkedProperty() {
+        return checked;
     }
 
-    public void setIsChecked(boolean isChecked) {
-        this.isChecked.set(isChecked);
+    public void setChecked(boolean checked) {
+        this.checked.set(checked);
     }
 
     public double getVirtualTotalNum() {

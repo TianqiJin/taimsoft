@@ -37,10 +37,7 @@ public class Payment extends BaseModel {
     @Column(name = "payment_type")
     private PaymentType paymentType;
     @Column(name = "is_deposit")
-    private boolean isDeposit;
-    @ManyToOne
-    @JoinColumn(name = "transaction_id")
-    private Transaction transaction;
+    private boolean deposit;
 
     public Payment(){}
 
@@ -60,20 +57,12 @@ public class Payment extends BaseModel {
         this.paymentType = paymentType;
     }
 
-    public Transaction getTransaction() {
-        return transaction;
-    }
-
-    public void setTransaction(Transaction transaction) {
-        this.transaction = transaction;
-    }
-
     public boolean isDeposit() {
-        return isDeposit;
+        return deposit;
     }
 
     public void setDeposit(boolean deposit) {
-        isDeposit = deposit;
+        this.deposit = deposit;
     }
 
     @Override
@@ -82,8 +71,7 @@ public class Payment extends BaseModel {
                 + super.toString()
                 + ", \"paymentAmount\":\"" + paymentAmount + "\""
                 + ", \"paymentType\":\"" + paymentType + "\""
-                + ", \"isDeposit\":\"" + isDeposit + "\""
-                + ", \"transaction\":" + transaction
+                + ", \"deposit\":\"" + deposit + "\""
                 + "}";
     }
 }

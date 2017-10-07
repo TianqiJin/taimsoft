@@ -266,7 +266,7 @@ public class GenerateQuotationController {
             try{
                 newCustomer.setDateCreated(DateTime.now());
                 newCustomer.setDateModified(DateTime.now());
-                RestClientFactory.getCustomerClient().addCustomer(newCustomer);
+                RestClientFactory.getCustomerClient().add(newCustomer);
                 new AlertBuilder()
                         .alertHeaderText("Customer Created successfully!")
                         .alertType(Alert.AlertType.INFORMATION)
@@ -303,6 +303,9 @@ public class GenerateQuotationController {
     @FXML
     public TransactionDTO handleConfirmButton() throws IOException, SQLException {
         generateTransaction();
+        if(isConfirmedClicked()) {
+            dialogStage.close();
+        }
         return this.transaction;
     }
 
@@ -329,12 +332,13 @@ public class GenerateQuotationController {
             this.mode=Mode.CREATE;
             this.transaction = new TransactionDTO();
             transaction.setTransactionType(Transaction.TransactionType.QUOTATION);
-            transaction.setIsFinalized(false);
+            transaction.setFinalized(false);
             transaction.setStaff(staff);
             transaction.setDateCreated(DateTime.now());
         }else{
             this.mode=Mode.EDIT;
             this.transaction = transactionFromAbove;
+            this.customer = transactionFromAbove.getCustomer();
         }
         this.transactionDetailDTOObservableList = FXCollections.observableArrayList(transaction.getTransactionDetails());
         transactionTableView.setItems(transactionDetailDTOObservableList);
@@ -359,13 +363,13 @@ public class GenerateQuotationController {
         Task<List<CustomerDTO>> customersTask = new Task<List<CustomerDTO>>() {
             @Override
             protected List<CustomerDTO> call() throws Exception {
-                return RestClientFactory.getCustomerClient().getCustomerList();
+                return RestClientFactory.getCustomerClient().getList();
             }
         };
         Task<List<ProductDTO>> productsTask = new Task<List<ProductDTO>>() {
             @Override
             protected List<ProductDTO> call() throws Exception {
-                return RestClientFactory.getProductClient().getProductList();
+                return RestClientFactory.getProductClient().getList();
             }
         };
 
@@ -545,6 +549,12 @@ public class GenerateQuotationController {
 
     private void generateTransaction() throws IOException, SQLException{
         transaction.getTransactionDetails().clear();
+        transactionDetailDTOObservableList.forEach(t->{
+            if (t.getDateCreated()==null){
+                t.setDateCreated(DateTime.now());
+            }
+            t.setDateModified(DateTime.now());
+        });
         transaction.getTransactionDetails().addAll(transactionDetailDTOObservableList);
         transaction.setSaleAmount(Double.valueOf(totalLabel.getText()));
         transaction.setGst(Double.valueOf(gstTaxLabel.getText()));
@@ -563,7 +573,7 @@ public class GenerateQuotationController {
                 .build()
                 .showAndWait();
         if(result.isPresent() && result.get() == ButtonType.OK){
-            RestClientFactory.getTransactionClient().addTransaction(transaction);
+            RestClientFactory.getTransactionClient().add(transaction);
 
             updateProduct();
 
@@ -582,7 +592,7 @@ public class GenerateQuotationController {
         transaction.getTransactionDetails().forEach(p->{
             double newVirtualNum = p.getProduct().getTotalNum()-p.getQuantity();
             p.getProduct().setVirtualTotalNum(newVirtualNum);
-            RestClientFactory.getProductClient().updateProduct(p.getProduct());
+            RestClientFactory.getProductClient().update(p.getProduct());
         });
 
     }

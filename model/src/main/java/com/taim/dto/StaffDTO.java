@@ -14,7 +14,7 @@ public class StaffDTO extends UserBaseModelDTO{
     private ObjectProperty<Staff.Position> position;
     private ObjectProperty<OrganizationDTO> organization;
     private List<TransactionDTO> transactionList;
-    private BooleanProperty isChecked;
+    private BooleanProperty checked;
 
     public StaffDTO(){
         userName = new SimpleStringProperty();
@@ -23,7 +23,7 @@ public class StaffDTO extends UserBaseModelDTO{
         organization = new SimpleObjectProperty<>();
         position = new SimpleObjectProperty<>();
         transactionList = new ArrayList<>();
-        isChecked = new SimpleBooleanProperty();
+        checked = new SimpleBooleanProperty();
     }
 
     public String getUserName() {
@@ -94,15 +94,15 @@ public class StaffDTO extends UserBaseModelDTO{
         this.position.set(position);
     }
 
-    public boolean isIsChecked() {
-        return isChecked.get();
+    public boolean isChecked() {
+        return checked.get();
     }
 
-    public BooleanProperty isCheckedProperty() {
-        return isChecked;
+    public BooleanProperty checkedProperty() {
+        return checked;
     }
 
-    public void setIsChecked(boolean isChecked) {
-        this.isChecked.set(isChecked);
+    public void setChecked(boolean checked) {
+        this.checked.set(checked);
     }
 }

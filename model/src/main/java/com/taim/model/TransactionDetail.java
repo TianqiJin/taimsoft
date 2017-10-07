@@ -11,9 +11,6 @@ import javax.persistence.*;
 @Entity
 @Table(name = "transaction_detail")
 public class TransactionDetail extends BaseModel {
-    @ManyToOne
-    @JoinColumn(name = "transaction_id")
-    private Transaction transaction;
     @OneToOne
     @JoinColumn(name = "product_id")
     private Product product;
@@ -30,14 +27,6 @@ public class TransactionDetail extends BaseModel {
     private PackageInfo packageInfo;
 
     public TransactionDetail(){}
-
-    public Transaction getTransaction() {
-        return transaction;
-    }
-
-    public void setTransaction(Transaction transaction) {
-        this.transaction = transaction;
-    }
 
     public Product getProduct() {
         return product;
@@ -91,7 +80,6 @@ public class TransactionDetail extends BaseModel {
     public String toString() {
         return "{\"TransactionDetail\":"
                 + super.toString()
-                + ", \"transaction\":" + transaction
                 + ", \"product\":" + product
                 + ", \"quantity\":\"" + quantity + "\""
                 + ", \"saleAmount\":\"" + saleAmount + "\""

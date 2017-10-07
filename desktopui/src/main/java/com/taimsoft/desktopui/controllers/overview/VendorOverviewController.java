@@ -1,6 +1,8 @@
 package com.taimsoft.desktopui.controllers.overview;
 
+import com.taim.client.IClient;
 import com.taim.client.VendorClient;
+import com.taim.dto.ProductDTO;
 import com.taim.dto.TransactionDTO;
 import com.taim.dto.VendorDTO;
 import com.taim.model.Transaction;
@@ -26,10 +28,8 @@ import static com.taimsoft.desktopui.controllers.overview.OverviewController.Sum
 /**
  * Created by Tjin on 8/30/2017.
  */
-public class VendorOverviewController implements OverviewController<VendorDTO>{
-    private List<VendorDTO> vendorDTOS;
+public class VendorOverviewController extends OverviewController<VendorDTO>{
     private VendorClient vendorClient;
-    private Executor executor;
 
     @FXML
     private TableView<VendorDTO> vendorTable;
@@ -44,17 +44,12 @@ public class VendorOverviewController implements OverviewController<VendorDTO>{
     @FXML
     private TableColumn<VendorDTO, Boolean> checkedCol;
     @FXML
-    private Label unpaidLabel;
+    private Label totalUnpaidLabel;
     @FXML
-    private Label paidLabel;
+    private Label totalPaidLabel;
 
     public VendorOverviewController(){
         this.vendorClient = RestClientFactory.getVendorClient();
-        this.executor = Executors.newCachedThreadPool(r -> {
-            Thread t = new Thread(r);
-            t.setDaemon(true);
-            return t;
-        });
     }
 
     @FXML
@@ -65,32 +60,23 @@ public class VendorOverviewController implements OverviewController<VendorDTO>{
         checkedCol.setCellValueFactory(new PropertyValueFactory<>("isChecked"));
         checkedCol.setCellFactory(CheckBoxTableCell.forTableColumn(checkedCol));
         actionCol.setCellValueFactory(new PropertyValueFactory<>("action"));
-        actionCol.setCellFactory(param -> new LiveComboBoxTableCell<>(FXCollections.observableArrayList("Edit", "Delete")));
-        bindSummaryLabel(unpaidLabel, Unpaid);
-        bindSummaryLabel(paidLabel, Paid);
-    }
-
-    @Override
-    public void loadData() {
-        Task<List<VendorDTO>> vendorTask = new Task<List<VendorDTO>>() {
-            @Override
-            protected List<VendorDTO> call() throws Exception {
-                return vendorClient.getVendorList();
-            }
-        };
-
-        vendorTask.setOnSucceeded(event -> {
-            vendorDTOS = vendorTask.getValue();
-            vendorTable.setItems(FXCollections.observableArrayList(vendorDTOS));
-            initSearchField();
+        actionCol.setCellFactory(param -> {
+            LiveComboBoxTableCell<VendorDTO, String> liveComboBoxTableCell = new LiveComboBoxTableCell<>(
+                    FXCollections.observableArrayList("VIEW DETAILS", "EDIT", "DELETE"));
+            return liveComboBoxTableCell;
         });
-
-        executor.execute(vendorTask);
+        bindSummaryLabel(totalUnpaidLabel, Unpaid);
+        bindSummaryLabel(totalPaidLabel, Paid);
     }
 
     @Override
     public void initSearchField() {
 
+    }
+
+    @Override
+    public IClient<VendorDTO> getOverviewClient(){
+        return this.vendorClient;
     }
 
     private void bindSummaryLabel(Label label, SummaryLabelMode mode){
@@ -100,7 +86,8 @@ public class VendorOverviewController implements OverviewController<VendorDTO>{
                         case Paid:
                             for (VendorDTO item : vendorTable.getItems()) {
                                 for(TransactionDTO transactionDTO: item.getTransactionList()){
-                                    if(transactionDTO.getPaymentStatus().equals(Transaction.PaymentStatus.PAID)){
+                                    if(transactionDTO.getTransactionType().equals(Transaction.TransactionType.STOCK) &&
+                                            transactionDTO.getPaymentStatus().equals(Transaction.PaymentStatus.PAID)){
                                         totalValue += transactionDTO.getSaleAmount();
                                     }
                                 }
@@ -109,7 +96,8 @@ public class VendorOverviewController implements OverviewController<VendorDTO>{
                         case Unpaid:
                             for (VendorDTO item : vendorTable.getItems()) {
                                 for(TransactionDTO transactionDTO: item.getTransactionList()){
-                                    if(transactionDTO.getPaymentStatus().equals(Transaction.PaymentStatus.UNPAID)){
+                                    if(transactionDTO.getTransactionType().equals(Transaction.TransactionType.STOCK) &&
+                                            transactionDTO.getPaymentStatus().equals(Transaction.PaymentStatus.UNPAID)){
                                         totalValue += transactionDTO.getSaleAmount();
                                     }
                                 }

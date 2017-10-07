@@ -27,7 +27,7 @@ public class VistaNavigator {
         try {
             rootLayoutController.setVista(loader.load());
             OverviewController controller = loader.getController();
-            controller.loadData();
+            controller.initOverviewData(controller.getOverviewClient());
         } catch (IOException e) {
             e.printStackTrace();
         }

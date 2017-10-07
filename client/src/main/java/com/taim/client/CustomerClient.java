@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by dragonliu on 2017/8/30.
  */
-public class CustomerClient {
+public class CustomerClient implements IClient<CustomerDTO> {
     private static final String CUSTOMER_PATH= PropertiesProcessor.serverUrl+"/customer";
     private static HttpHeaders headers = new HttpHeaders();
     private static RestTemplate restTemplate = RestTemplateFactory.getRestTemplate();
@@ -24,7 +24,7 @@ public class CustomerClient {
         headers.setContentType(MediaType.APPLICATION_JSON);
     }
 
-    public List<CustomerDTO> getCustomerList(){
+    public List<CustomerDTO> getList(){
         String url = CUSTOMER_PATH+"/getAll";
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
@@ -36,14 +36,14 @@ public class CustomerClient {
         return customerList;
     }
 
-    public CustomerDTO addCustomer(CustomerDTO customerDTO){
+    public CustomerDTO add(CustomerDTO customerDTO){
         String url = CUSTOMER_PATH+"/add";
         HttpEntity<Customer> requestEntity = new HttpEntity<Customer>(BeanMapper.map(customerDTO, Customer.class), headers);
         ResponseEntity<Customer> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Customer.class);
         return BeanMapper.map(responseEntity.getBody(), CustomerDTO.class);
     }
 
-    public CustomerDTO getCustomerByName(String name){
+    public CustomerDTO getByName(String name){
         String url = CUSTOMER_PATH+"/getByName"+"?name="+name;
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
@@ -51,7 +51,7 @@ public class CustomerClient {
         return BeanMapper.map(responseEntity.getBody(), CustomerDTO.class);
     }
 
-    public String deleteCustomerByName(String name){
+    public String deleteByName(String name){
         String url = CUSTOMER_PATH+"/deleteObject"+"?name="+name;
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
@@ -59,7 +59,7 @@ public class CustomerClient {
         return responseEntity.getBody().replace("\"", "");
     }
 
-    public CustomerDTO updateCustomer(CustomerDTO customerDTO){
+    public CustomerDTO update(CustomerDTO customerDTO){
         String url = CUSTOMER_PATH+"/update";
         HttpEntity<Customer> requestEntity = new HttpEntity<Customer>(BeanMapper.map(customerDTO, Customer.class), headers);
         ResponseEntity<Customer> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Customer.class);

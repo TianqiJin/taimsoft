@@ -23,9 +23,9 @@ public class TransactionDTO extends BaseModelDTO {
     private List<TransactionDetailDTO> transactionDetails;
     private List<PaymentDTO> payments;
     private IntegerProperty refId;
-    private BooleanProperty isFinalized;
+    private BooleanProperty finalized;
     private StringProperty note;
-    private BooleanProperty isChecked;
+    private BooleanProperty checked;
 
     public TransactionDTO(){
         saleAmount = new SimpleDoubleProperty();
@@ -40,11 +40,11 @@ public class TransactionDTO extends BaseModelDTO {
         transactionDetails = new ArrayList<>();
         payments = new ArrayList<>();
         refId = new SimpleIntegerProperty();
-        isFinalized = new SimpleBooleanProperty();
+        finalized = new SimpleBooleanProperty();
         note = new SimpleStringProperty();
         deliveryDueDate = new SimpleObjectProperty<>();
         paymentDueDate = new SimpleObjectProperty<>();
-        isChecked = new SimpleBooleanProperty();
+        checked = new SimpleBooleanProperty();
     }
 
     public double getSaleAmount() {
@@ -183,18 +183,6 @@ public class TransactionDTO extends BaseModelDTO {
         this.payments = payments;
     }
 
-    public boolean isIsChecked() {
-        return isChecked.get();
-    }
-
-    public BooleanProperty isCheckedProperty() {
-        return isChecked;
-    }
-
-    public void setIsChecked(boolean isChecked) {
-        this.isChecked.set(isChecked);
-    }
-
     public int getRefId() {
         return refId.get();
     }
@@ -231,15 +219,27 @@ public class TransactionDTO extends BaseModelDTO {
         this.deliveryDueDate.set(deliveryDueDate);
     }
 
-    public boolean isIsFinalized() {
-        return isFinalized.get();
+    public boolean isFinalized() {
+        return finalized.get();
     }
 
-    public BooleanProperty isFinalizedProperty() {
-        return isFinalized;
+    public BooleanProperty finalizedProperty() {
+        return finalized;
     }
 
-    public void setIsFinalized(boolean isFinalized) {
-        this.isFinalized.set(isFinalized);
+    public void setFinalized(boolean finalized) {
+        this.finalized.set(finalized);
+    }
+
+    public boolean isChecked() {
+        return checked.get();
+    }
+
+    public BooleanProperty checkedProperty() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked.set(checked);
     }
 }

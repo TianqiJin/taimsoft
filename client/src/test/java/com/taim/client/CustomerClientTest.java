@@ -21,7 +21,7 @@ public class CustomerClientTest {
         DateTime d1Created = DateTime.now();
         DateTime d1Modified = DateTime.now();
         customer = new CustomerDTO();
-        customer.setIsChecked(true);
+        customer.setChecked(true);
         customer.setStoreCredit(6.66);
         customer.setEmail("lameass@gmail.com");
         customer.setFullname("dummy dumb");
@@ -33,7 +33,7 @@ public class CustomerClientTest {
 
     @Test
     public void addCustomerTest()throws Exception{
-        CustomerDTO cc = client.addCustomer(customer);
+        CustomerDTO cc = client.add(customer);
         Assert.assertEquals(customer.getStoreCredit(),cc.getStoreCredit());
         Assert.assertEquals(customer.getEmail(), cc.getEmail());
         Assert.assertEquals(customer.getFullname(), cc.getFullname());
@@ -45,7 +45,7 @@ public class CustomerClientTest {
     @Test
     public void getCustomerListTest()throws Exception{
         Thread.sleep(2000);
-        List<CustomerDTO> ccs = client.getCustomerList();
+        List<CustomerDTO> ccs = client.getList();
         Assert.assertEquals(1, ccs.size());
         CustomerDTO cc = ccs.get(0);
         Assert.assertEquals(customer.getStoreCredit(),cc.getStoreCredit());
@@ -58,7 +58,7 @@ public class CustomerClientTest {
 
     @Test
     public void getCustomerByNameTest()throws Exception{
-        CustomerDTO cc = client.getCustomerByName("dummy dumb");
+        CustomerDTO cc = client.getByName("dummy dumb");
         Assert.assertEquals(customer.getStoreCredit(),cc.getStoreCredit());
         Assert.assertEquals(customer.getEmail(), cc.getEmail());
         Assert.assertEquals(customer.getFullname(), cc.getFullname());
@@ -70,9 +70,9 @@ public class CustomerClientTest {
     @Test
     public void updateCustomerTest()throws Exception{
 
-        CustomerDTO cc = client.getCustomerByName("dummy dumb");
+        CustomerDTO cc = client.getByName("dummy dumb");
         cc.setDateModified(DateTime.now());
-        CustomerDTO c1 = client.updateCustomer(cc);
+        CustomerDTO c1 = client.update(cc);
 
         Assert.assertEquals(cc.getStoreCredit(),c1.getStoreCredit());
         Assert.assertEquals(cc.getEmail(), c1.getEmail());
@@ -85,10 +85,10 @@ public class CustomerClientTest {
 
     @Test
     public void deleteCustomerByNameTest()throws Exception{
-        String result = client.deleteCustomerByName("dummy dumb");
+        String result = client.deleteByName("dummy dumb");
         Assert.assertEquals("Deleted!", result);
         Thread.sleep(2000);
-        List<CustomerDTO> ccs = client.getCustomerList();
+        List<CustomerDTO> ccs = client.getList();
         Assert.assertEquals(0, ccs.size());
     }
 

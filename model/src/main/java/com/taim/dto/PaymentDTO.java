@@ -7,14 +7,12 @@ import javafx.beans.property.*;
 public class PaymentDTO extends BaseModelDTO {
     private DoubleProperty paymentAmount;
     private ObjectProperty<Payment.PaymentType> paymentType;
-    private BooleanProperty isDeposit;
-    private ObjectProperty<TransactionDTO> transaction;
+    private BooleanProperty deposit;
 
     public PaymentDTO(){
         paymentAmount = new SimpleDoubleProperty();
         paymentType = new SimpleObjectProperty<>();
-        isDeposit = new SimpleBooleanProperty();
-        transaction = new SimpleObjectProperty<>();
+        deposit = new SimpleBooleanProperty();
     }
 
     public double getPaymentAmount() {
@@ -41,27 +39,15 @@ public class PaymentDTO extends BaseModelDTO {
         this.paymentType.set(paymentType);
     }
 
-    public boolean isIsDeposit() {
-        return isDeposit.get();
+    public boolean isDeposit() {
+        return deposit.get();
     }
 
-    public BooleanProperty isDepositProperty() {
-        return isDeposit;
+    public BooleanProperty depositProperty() {
+        return deposit;
     }
 
-    public void setIsDeposit(boolean isDeposit) {
-        this.isDeposit.set(isDeposit);
-    }
-
-    public TransactionDTO getTransaction() {
-        return transaction.get();
-    }
-
-    public ObjectProperty<TransactionDTO> transactionProperty() {
-        return transaction;
-    }
-
-    public void setTransaction(TransactionDTO transaction) {
-        this.transaction.set(transaction);
+    public void setDeposit(boolean deposit) {
+        this.deposit.set(deposit);
     }
 }

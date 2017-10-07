@@ -1,9 +1,10 @@
 package com.taim.dto;
 
+import com.taim.dto.basedtos.BaseModelDTO;
 import com.taim.model.PackageInfo;
 import javafx.beans.property.*;
 
-public class TransactionDetailDTO {
+public class TransactionDetailDTO extends BaseModelDTO{
     private ObjectProperty<ProductDTO> product;
     private DoubleProperty quantity;
     private DoubleProperty saleAmount;

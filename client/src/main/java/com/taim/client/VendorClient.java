@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by dragonliu on 2017/8/30.
  */
-public class VendorClient {
+public class VendorClient implements IClient<VendorDTO>{
     private static final String VENDOR_PATH= PropertiesProcessor.serverUrl+"/vendor";
     private static HttpHeaders headers = new HttpHeaders();
     private static RestTemplate restTemplate = RestTemplateFactory.getRestTemplate();
@@ -24,7 +24,7 @@ public class VendorClient {
         headers.setContentType(MediaType.APPLICATION_JSON);
     }
 
-    public List<VendorDTO> getVendorList(){
+    public List<VendorDTO> getList(){
         String url = VENDOR_PATH+"/getAll";
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
@@ -37,14 +37,14 @@ public class VendorClient {
     }
 
 
-    public VendorDTO addVendor(VendorDTO vendorDTO){
+    public VendorDTO add(VendorDTO vendorDTO){
         String url = VENDOR_PATH+"/add";
         HttpEntity<Vendor> requestEntity = new HttpEntity<Vendor>(BeanMapper.map(vendorDTO, Vendor.class), headers);
         ResponseEntity<Vendor> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Vendor.class);
         return BeanMapper.map(responseEntity.getBody(), VendorDTO.class);
     }
 
-    public VendorDTO getVendorByName(String name){
+    public VendorDTO getByName(String name){
         String url = VENDOR_PATH+"/getByName"+"?name="+name;
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
@@ -52,7 +52,7 @@ public class VendorClient {
         return BeanMapper.map(responseEntity.getBody(), VendorDTO.class);
     }
 
-    public String deleteVendorByName(String name){
+    public String deleteByName(String name){
         String url = VENDOR_PATH+"/deleteObject"+"?name="+name;
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
@@ -60,7 +60,7 @@ public class VendorClient {
         return responseEntity.getBody().replace("\"", "");
     }
 
-    public VendorDTO updateVendor(VendorDTO vendorDTO){
+    public VendorDTO update(VendorDTO vendorDTO){
         String url = VENDOR_PATH+"/update";
         HttpEntity<Vendor> requestEntity = new HttpEntity<Vendor>(BeanMapper.map(vendorDTO, Vendor.class), headers);
         ResponseEntity<Vendor> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Vendor.class);

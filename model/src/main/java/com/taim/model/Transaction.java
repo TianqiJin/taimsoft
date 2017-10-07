@@ -1,6 +1,10 @@
 package com.taim.model;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.taim.model.basemodels.BaseModel;
 import org.joda.time.DateTime;
 
@@ -12,13 +16,15 @@ import java.util.List;
  */
 @Entity
 @Table(name = "transaction")
+//@JsonIdentityInfo(scope = Transaction.class,
+//        generator = ObjectIdGenerators.PropertyGenerator.class,
+//        property = "id")
 public class Transaction extends BaseModel {
     /**
      * Indicate the transaction type
      */
     public enum TransactionType{
         QUOTATION("Quotation"),
-        //PURCHASE_ORDER("Purchase Order"),
         INVOICE("Invoice"),
         STOCK("Stock"),
         RETURN("Return");
@@ -64,6 +70,7 @@ public class Transaction extends BaseModel {
     private Staff staff;
     @ManyToOne
     @JoinColumn(name = "customer_id")
+    @JsonBackReference
     private Customer customer;
     @ManyToOne
     @JoinColumn(name = "vendor_id")
@@ -73,20 +80,22 @@ public class Transaction extends BaseModel {
     @Column(name = "payment_status")
     private PaymentStatus paymentStatus;
     @JoinColumn(name = "delivery_status_id")
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private DeliveryStatus deliveryStatus;
     @Column(name = "payment_due_date")
     private DateTime paymentDueDate;
     @Column(name = "delivery_due_date")
     private DateTime deliveryDueDate;
-    @OneToMany(mappedBy = "transaction", fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "transaction_id")
     private List<TransactionDetail> transactionDetails;
-    @OneToMany(mappedBy = "transaction", fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "transaction_id")
     private List<Payment> payments;
     @Column(name = "ref_id")
     private int refId;
     @Column(name = "is_finalized")
-    private boolean isFinalized;
+    private boolean finalized;
     @Column
     private String note;
 
@@ -213,11 +222,11 @@ public class Transaction extends BaseModel {
     }
 
     public boolean isFinalized() {
-        return isFinalized;
+        return finalized;
     }
 
     public void setFinalized(boolean finalized) {
-        isFinalized = finalized;
+        this.finalized = finalized;
     }
 
     @Override
@@ -238,7 +247,7 @@ public class Transaction extends BaseModel {
                 + ", \"transactionDetails\":" + transactionDetails
                 + ", \"payments\":" + payments
                 + ", \"refId\":\"" + refId + "\""
-                + ", \"isFinalized\":\"" + isFinalized + "\""
+                + ", \"finalized\":\"" + finalized + "\""
                 + ", \"note\":\"" + note + "\""
                 + "}";
     }

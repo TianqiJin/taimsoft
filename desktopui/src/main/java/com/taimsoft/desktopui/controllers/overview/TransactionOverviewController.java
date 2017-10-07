@@ -1,8 +1,10 @@
 package com.taimsoft.desktopui.controllers.overview;
 
+import com.taim.client.IClient;
 import com.taim.client.TransactionClient;
 import com.taim.dto.PaymentDTO;
 import com.taim.dto.TransactionDTO;
+import com.taim.dto.VendorDTO;
 import com.taim.model.Transaction;
 import com.taimsoft.desktopui.uicomponents.LiveComboBoxTableCell;
 import com.taimsoft.desktopui.util.RestClientFactory;
@@ -20,6 +22,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.Callback;
 import javafx.util.StringConverter;
 import org.joda.time.DateTime;
 
@@ -35,13 +38,9 @@ import static com.taimsoft.desktopui.controllers.overview.OverviewController.Sum
 /**
  * Created by Tjin on 8/28/2017.
  */
-public class TransactionOverviewController implements OverviewController<TransactionDTO> {
-    private List<TransactionDTO> transactionDTOS;
+public class TransactionOverviewController extends OverviewController<TransactionDTO> {
     private TransactionClient transactionClient;
-    private Executor executor;
 
-    @FXML
-    private TableView<TransactionDTO> transactionTable;
     @FXML
     private TableColumn<TransactionDTO, String> dateCol;
     @FXML
@@ -76,12 +75,8 @@ public class TransactionOverviewController implements OverviewController<Transac
     private ComboBox<Transaction.TransactionType> createNewTransactionComboBox;
 
     public TransactionOverviewController(){
+        super();
         this.transactionClient = RestClientFactory.getTransactionClient();
-        this.executor = Executors.newCachedThreadPool(r -> {
-            Thread t = new Thread(r);
-            t.setDaemon(true);
-            return t;
-        });
     }
 
     @FXML
@@ -102,7 +97,49 @@ public class TransactionOverviewController implements OverviewController<Transac
         checkedCol.setCellValueFactory(new PropertyValueFactory<>("isChecked"));
         checkedCol.setCellFactory(CheckBoxTableCell.forTableColumn(checkedCol));
         actionCol.setCellValueFactory(new PropertyValueFactory<>("action"));
-        actionCol.setCellFactory(param -> new LiveComboBoxTableCell<>(FXCollections.observableArrayList("Edit", "Delete")));
+        actionCol.setCellFactory(new Callback<TableColumn<TransactionDTO, String>, TableCell<TransactionDTO, String>>() {
+            @Override
+            public TableCell<TransactionDTO, String> call(TableColumn<TransactionDTO, String> param) {
+                return new TableCell<TransactionDTO, String>(){
+                    ComboBox<String> comboBox = new ComboBox<>();
+                    @Override
+                    public void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            comboBox.setPromptText("SET ACTION");
+                            comboBox.prefWidthProperty().bind(this.widthProperty());
+                            TransactionDTO transactionDTO = getTableView().getItems().get(getIndex());
+                            switch (transactionDTO.getTransactionType()){
+                                case STOCK:
+                                    comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "EDIT", "PRINT", "DELETE"));
+                                    break;
+                                case RETURN:
+                                    comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "EDIT", "PRINT", "DELETE"));
+                                    break;
+                                case INVOICE:
+                                    comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "EDIT", "PRINT", "DELETE"));
+                                    break;
+                                case QUOTATION:
+                                    comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "CONVERT TO INVOICE", "EDIT", "PRINT", "DELETE"));
+                                    comboBox.setOnAction(new EventHandler<ActionEvent>() {
+                                        @Override
+                                        public void handle(ActionEvent event) {
+                                            TransactionDTO newTran = TransactionPanelLoader.loadQuotation(transactionDTO,null);
+                                        }
+                                    });
+                                    break;
+                            }
+                            comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "EDIT", "DELETE"));
+                            comboBox.setValue(item);
+                            setGraphic(comboBox);
+                        }
+                    }
+
+                };
+            }
+        });
 
         bindSummaryLabel(totalQuotedLabel, Quoted);
         bindSummaryLabel(totalPaidLabel, Paid);
@@ -115,9 +152,9 @@ public class TransactionOverviewController implements OverviewController<Transac
                 switch (createNewTransactionComboBox.getSelectionModel().getSelectedItem()){
                     case QUOTATION:
                         TransactionDTO transactionDTO = TransactionPanelLoader.loadQuotation(null,null);
-                        if (transactionDTO!=null){
-                            transactionDTOS.add(transactionDTO);
-                        }
+//                        if (transactionDTO!=null){
+//                            transactionDTOS.add(transactionDTO);
+//                        }
                         break;
                     case INVOICE:
                         break;
@@ -154,7 +191,7 @@ public class TransactionOverviewController implements OverviewController<Transac
         LocalDate toDate = toDatePicker.getValue();
         Transaction.TransactionType type = transactionTypeComboBox.getValue();
 
-        ObservableList<TransactionDTO> subList = FXCollections.observableArrayList(transactionDTOS);
+        ObservableList<TransactionDTO> subList = FXCollections.observableArrayList(getOverviewDTOList());
         if(type != null){
             subList = subList.stream().filter(transaction -> transaction.getTransactionType().equals(type)).collect(Collectors.toCollection(FXCollections::observableArrayList));
         }
@@ -165,7 +202,7 @@ public class TransactionOverviewController implements OverviewController<Transac
             subList = subList.stream().filter(transaction -> transaction.getDateCreated().isBefore(new DateTime(toDate))).collect(Collectors.toCollection(FXCollections::observableArrayList));
         }
 
-        transactionTable.setItems(subList);
+        getOverviewTable().setItems(subList);
     }
 
     @FXML
@@ -173,30 +210,12 @@ public class TransactionOverviewController implements OverviewController<Transac
         transactionTypeComboBox.getEditor().clear();
         fromDatePicker.getEditor().clear();
         toDatePicker.getEditor().clear();
-        transactionTable.setItems(FXCollections.observableArrayList(transactionDTOS));
-    }
-
-    @Override
-    public void loadData(){
-        Task<List<TransactionDTO>> transactionTask = new Task<List<TransactionDTO>>() {
-            @Override
-            protected List<TransactionDTO> call() throws Exception {
-                return transactionClient.getTransactionList();
-            }
-        };
-
-        transactionTask.setOnSucceeded(event -> {
-            transactionDTOS = transactionTask.getValue();
-            transactionTable.setItems(FXCollections.observableArrayList(transactionDTOS));
-            initSearchField();
-        });
-
-        executor.execute(transactionTask);
+        getOverviewTable().setItems(FXCollections.observableArrayList(getOverviewDTOList()));
     }
 
     @Override
     public void initSearchField() {
-        FilteredList<TransactionDTO> filteredData = new FilteredList<TransactionDTO>(FXCollections.observableArrayList(transactionDTOS), p->true);
+        FilteredList<TransactionDTO> filteredData = new FilteredList<TransactionDTO>(FXCollections.observableArrayList(getOverviewDTOList()), p->true);
         searchField.textProperty().addListener((observable,oldVal,newVal)->{
             filteredData.setPredicate(transactionDTO -> {
                 if (newVal == null || newVal.isEmpty()){
@@ -225,8 +244,13 @@ public class TransactionOverviewController implements OverviewController<Transac
 
                 return false;
             });
-            transactionTable.setItems(filteredData);
+            getOverviewTable().setItems(filteredData);
         });
+    }
+
+    @Override
+    public IClient<TransactionDTO> getOverviewClient(){
+        return this.transactionClient;
     }
 
     private void bindSummaryLabel(Label label, SummaryLabelMode mode){
@@ -234,22 +258,24 @@ public class TransactionOverviewController implements OverviewController<Transac
                     double totalValue = 0 ;
                     switch(mode){
                         case Quoted:
-                            for (TransactionDTO item : transactionTable.getItems()) {
-                                if(item.getTransactionType().equals(Transaction.TransactionType.QUOTATION)){
+                            for (TransactionDTO item : getOverviewTable().getItems()) {
+                                if(item.getTransactionType().equals(Transaction.TransactionType.QUOTATION) && !item.isFinalized()){
                                     totalValue = totalValue + item.getSaleAmount();
                                 }
                             }
                             break;
                         case Paid:
-                            for (TransactionDTO item : transactionTable.getItems()) {
-                                if(item.getPaymentStatus().equals(Transaction.PaymentStatus.PAID)){
+                            for (TransactionDTO item : getOverviewTable().getItems()) {
+                                if(item.getTransactionType().equals(Transaction.TransactionType.INVOICE) &&
+                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.PAID)){
                                     totalValue = totalValue + item.getSaleAmount();
                                 }
                             }
                             break;
                         case Unpaid:
-                            for (TransactionDTO item : transactionTable.getItems()) {
-                                if(item.getPaymentStatus().equals(Transaction.PaymentStatus.UNPAID)){
+                            for (TransactionDTO item : getOverviewTable().getItems()) {
+                                if(item.getTransactionType().equals(Transaction.TransactionType.INVOICE) &&
+                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.UNPAID)){
                                     totalValue = totalValue + item.getSaleAmount();
                                 }
                             }
@@ -260,7 +286,7 @@ public class TransactionOverviewController implements OverviewController<Transac
 
                     return totalValue ;
         },
-                transactionTable.getItems());
+                getOverviewTable().getItems());
         label.textProperty().bind(Bindings.format("%.2f", numberBinding));
     }
 }
