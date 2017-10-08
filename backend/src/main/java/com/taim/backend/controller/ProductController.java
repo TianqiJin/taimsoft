@@ -51,12 +51,7 @@ public class ProductController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Product> create(@RequestBody Product product) {
-        Product product1 = null;
-        try {
-            product1= service.saveProduct(product);
-        } catch (Exception ex) {
-            return new ResponseEntity<Product>(product1, HttpStatus.BAD_REQUEST);
-        }
+        Product product1 = service.saveProduct(product);
         return new ResponseEntity<Product>(product1, HttpStatus.ACCEPTED);
     }
 
@@ -66,12 +61,7 @@ public class ProductController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Product> update(@RequestBody Product product) {
-        Product product1 = null;
-        try {
-            product1=service.updateProduct(product);
-        } catch (Exception ex) {
-            return new ResponseEntity<Product>(product1, HttpStatus.BAD_REQUEST);
-        }
+        Product product1 = service.updateProduct(product);
         return new ResponseEntity<Product>(product1, HttpStatus.ACCEPTED);
     }
 

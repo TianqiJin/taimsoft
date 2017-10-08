@@ -1,5 +1,6 @@
 package com.taim.client;
 
+import com.taim.dto.CustomerDTO;
 import com.taim.dto.TransactionDTO;
 import com.taim.dto.TransactionDetailDTO;
 import com.taim.model.DeliveryStatus;
@@ -17,6 +18,7 @@ import java.util.List;
  */
 public class TransactionClientTest {
     private TransactionClient client = new TransactionClient();
+    private CustomerClient customerClient = new CustomerClient();
     private static TransactionDTO transaction;
 
     @BeforeClass
@@ -36,11 +38,10 @@ public class TransactionClientTest {
 
     @Test
     public void addTransactionTest()throws Exception{
-        TransactionDetailDTO transactionDetail = new TransactionDetailDTO();
-        transactionDetail.setDateCreated(DateTime.now());
-        transactionDetail.setDateModified(DateTime.now());
-        transactionDetail.setNote("No quote");
-        transaction.getTransactionDetails().add(transactionDetail);
+        CustomerDTO customerDTO = customerClient.getByName("dummy dumb");
+        System.out.println(customerDTO.getTransactionList().size());
+        transaction.setCustomer(customerDTO);
+        customerDTO.getTransactionList().add(transaction);
         TransactionDTO tran = client.add(transaction);
         Assert.assertEquals(transaction.getSaleAmount(), tran.getSaleAmount());
         Assert.assertEquals(transaction.getGst(),tran.getGst());

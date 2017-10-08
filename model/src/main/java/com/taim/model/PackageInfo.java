@@ -36,12 +36,4 @@ public class PackageInfo extends BaseModel {
         this.pieces = pieces;
     }
 
-    @Override
-    public String toString() {
-        return "{\"PackageInfo\":"
-                + super.toString()
-                + ", \"box\":\"" + box + "\""
-                + ", \"pieces\":\"" + pieces + "\""
-                + "}";
-    }
 }

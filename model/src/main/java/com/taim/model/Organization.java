@@ -1,6 +1,8 @@
 package com.taim.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.taim.model.basemodels.BaseModel;
 
 import javax.persistence.*;
@@ -12,6 +14,9 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "organization")
+@JsonIdentityInfo(scope = Organization.class,
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Organization extends BaseModel {
     @Column(name = "name", nullable = false)
     private String orgName;
@@ -25,7 +30,7 @@ public class Organization extends BaseModel {
     private String country;
     @Column(name = "postal_code", nullable = false)
     private String postalCode;
-    @OneToMany(mappedBy = "organization", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "organization", fetch = FetchType.EAGER)
     private Set<Staff> staffs;
 
     public Organization(){
@@ -88,17 +93,4 @@ public class Organization extends BaseModel {
         this.staffs = staffs;
     }
 
-    @Override
-    public String toString() {
-        return "{\"Organization\":"
-                + super.toString()
-                + ", \"orgName\":\"" + orgName + "\""
-                + ", \"streetNum\":\"" + streetNum + "\""
-                + ", \"street\":\"" + street + "\""
-                + ", \"city\":\"" + city + "\""
-                + ", \"country\":\"" + country + "\""
-                + ", \"postalCode\":\"" + postalCode + "\""
-                + ", \"staffs\":" + staffs
-                + "}";
-    }
 }

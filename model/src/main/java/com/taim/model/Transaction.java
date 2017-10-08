@@ -3,7 +3,6 @@ package com.taim.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.taim.model.basemodels.BaseModel;
 import org.joda.time.DateTime;
@@ -16,11 +15,12 @@ import java.util.List;
  */
 @Entity
 @Table(name = "transaction")
-//@JsonIdentityInfo(scope = Transaction.class,
-//        generator = ObjectIdGenerators.PropertyGenerator.class,
-//        property = "id")
+@JsonIdentityInfo(scope = Transaction.class,
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Transaction extends BaseModel {
     /**
+     *
      * Indicate the transaction type
      */
     public enum TransactionType{
@@ -65,14 +65,13 @@ public class Transaction extends BaseModel {
     private double gst;
     @Column
     private double pst;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "staff_id")
     private Staff staff;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_id")
-    @JsonBackReference
     private Customer customer;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "vendor_id")
     private Vendor vendor;
     @Column(name = "transaction_type")
@@ -80,16 +79,16 @@ public class Transaction extends BaseModel {
     @Column(name = "payment_status")
     private PaymentStatus paymentStatus;
     @JoinColumn(name = "delivery_status_id")
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private DeliveryStatus deliveryStatus;
     @Column(name = "payment_due_date")
     private DateTime paymentDueDate;
     @Column(name = "delivery_due_date")
     private DateTime deliveryDueDate;
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "transaction_id")
     private List<TransactionDetail> transactionDetails;
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "transaction_id")
     private List<Payment> payments;
     @Column(name = "ref_id")
@@ -229,26 +228,4 @@ public class Transaction extends BaseModel {
         this.finalized = finalized;
     }
 
-    @Override
-    public String toString() {
-        return "{\"Transaction\":"
-                + super.toString()
-                + ", \"saleAmount\":\"" + saleAmount + "\""
-                + ", \"gst\":\"" + gst + "\""
-                + ", \"pst\":\"" + pst + "\""
-                + ", \"staff\":" + staff
-                + ", \"customer\":" + customer
-                + ", \"vendor\":" + vendor
-                + ", \"transactionType\":\"" + transactionType + "\""
-                + ", \"paymentStatus\":\"" + paymentStatus + "\""
-                + ", \"deliveryStatus\":" + deliveryStatus
-                + ", \"paymentDueDate\":" + paymentDueDate
-                + ", \"deliveryDueDate\":" + deliveryDueDate
-                + ", \"transactionDetails\":" + transactionDetails
-                + ", \"payments\":" + payments
-                + ", \"refId\":\"" + refId + "\""
-                + ", \"finalized\":\"" + finalized + "\""
-                + ", \"note\":\"" + note + "\""
-                + "}";
-    }
 }

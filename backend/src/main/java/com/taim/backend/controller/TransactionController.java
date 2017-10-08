@@ -46,12 +46,7 @@ public class TransactionController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Transaction> create(@RequestBody Transaction transaction) {
-        Transaction transaction1=null;
-        try {
-            transaction1 = service.saveTransaction(transaction);
-        } catch (Exception ex) {
-            return new ResponseEntity<Transaction>(transaction1, HttpStatus.BAD_REQUEST);
-        }
+        Transaction transaction1 = service.saveTransaction(transaction);
         return new ResponseEntity<Transaction>(transaction1, HttpStatus.ACCEPTED);
     }
 
@@ -61,12 +56,7 @@ public class TransactionController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Transaction> update(@RequestBody Transaction transaction) {
-        Transaction transaction1=null;
-        try {
-            transaction1=service.updateTransaction(transaction);
-        } catch (Exception ex) {
-            return new ResponseEntity<Transaction>(transaction1, HttpStatus.BAD_REQUEST);
-        }
+        Transaction transaction1 = service.updateTransaction(transaction);
         return new ResponseEntity<Transaction>(transaction1, HttpStatus.ACCEPTED);
     }
 

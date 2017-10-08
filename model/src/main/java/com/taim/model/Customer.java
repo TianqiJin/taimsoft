@@ -12,10 +12,10 @@ import java.util.List;
  */
 @Entity
 @Table(name = "customer")
-//@JsonIdentityInfo(
-//        scope = Customer.class,
-//        generator = ObjectIdGenerators.PropertyGenerator.class,
-//        property = "id")
+@JsonIdentityInfo(
+        scope = Customer.class,
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Customer extends UserBaseModel {
     public enum CustomerClass{
         CLASSA("Class A"),
@@ -36,8 +36,7 @@ public class Customer extends UserBaseModel {
     private double storeCredit;
     @Column(name = "customer_class")
     private CustomerClass customerClass;
-    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
-    @JsonManagedReference
+    @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Transaction> transactionList;
 
     public Customer(){}
@@ -64,15 +63,5 @@ public class Customer extends UserBaseModel {
 
     public void setCustomerClass(CustomerClass customerClass) {
         this.customerClass = customerClass;
-    }
-
-    @Override
-    public String toString() {
-        return "{\"Customer\":"
-                + super.toString()
-                + ", \"storeCredit\":\"" + storeCredit + "\""
-                + ", \"customerClass\":\"" + customerClass + "\""
-                + ", \"transactionList\":" + transactionList
-                + "}";
     }
 }

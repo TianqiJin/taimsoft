@@ -1,6 +1,8 @@
 package com.taim.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.taim.model.basemodels.UserBaseModel;
 import javax.persistence.*;
 
@@ -11,8 +13,11 @@ import java.util.List;
  */
 @Entity
 @Table(name = "vendor")
+@JsonIdentityInfo(scope = Vendor.class,
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Vendor extends UserBaseModel {
-    @OneToMany(mappedBy = "vendor", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "vendor", fetch = FetchType.EAGER)
     private List<Transaction> transactionList;
 
     public Vendor(){}
@@ -25,11 +30,4 @@ public class Vendor extends UserBaseModel {
         this.transactionList = transactionList;
     }
 
-    @Override
-    public String toString() {
-        return "{\"Vendor\":"
-                + super.toString()
-                + ", \"transactionList\":" + transactionList
-                + "}";
-    }
 }

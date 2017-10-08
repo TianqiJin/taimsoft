@@ -65,13 +65,4 @@ public class Payment extends BaseModel {
         this.deposit = deposit;
     }
 
-    @Override
-    public String toString() {
-        return "{\"Payment\":"
-                + super.toString()
-                + ", \"paymentAmount\":\"" + paymentAmount + "\""
-                + ", \"paymentType\":\"" + paymentType + "\""
-                + ", \"deposit\":\"" + deposit + "\""
-                + "}";
-    }
 }

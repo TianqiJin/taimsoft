@@ -118,20 +118,4 @@ public class Product extends BaseModel {
         this.virtualTotalNum = virtualTotalNum;
     }
 
-    @Override
-    public String toString() {
-        return "{\"Product\":"
-                + super.toString()
-                + ", \"sku\":\"" + sku + "\""
-                + ", \"length\":\"" + length + "\""
-                + ", \"width\":\"" + width + "\""
-                + ", \"height\":\"" + height + "\""
-                + ", \"displayName\":\"" + displayName + "\""
-                + ", \"picUrl\":\"" + picUrl + "\""
-                + ", \"texture\":\"" + texture + "\""
-                + ", \"totalNum\":\"" + totalNum + "\""
-                + ", \"virtualTotalNum\":\"" + virtualTotalNum + "\""
-                + ", \"unitPrice\":\"" + unitPrice + "\""
-                + "}";
-    }
 }

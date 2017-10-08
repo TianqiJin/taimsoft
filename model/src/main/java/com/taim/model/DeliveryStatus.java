@@ -42,11 +42,4 @@ public class DeliveryStatus extends BaseModel {
         this.status = status;
     }
 
-    @Override
-    public String toString() {
-        return "{\"DeliveryStatus\":"
-                + super.toString()
-                + ", \"status\":\"" + status + "\""
-                + "}";
-    }
 }

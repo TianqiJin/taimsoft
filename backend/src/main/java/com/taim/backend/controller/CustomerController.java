@@ -42,12 +42,7 @@ public class CustomerController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Customer> create(@RequestBody Customer customer) {
-        Customer customer1 = null;
-        try {
-            customer1= service.saveCustomer(customer);
-        } catch (Exception ex) {
-            return new ResponseEntity<Customer>(customer1, HttpStatus.BAD_REQUEST);
-        }
+        Customer customer1 = service.saveCustomer(customer);
         return new ResponseEntity<Customer>(customer1, HttpStatus.ACCEPTED);
     }
 
@@ -57,12 +52,7 @@ public class CustomerController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Customer> update(@RequestBody Customer customer) {
-        Customer customer1 = null;
-        try {
-            customer1=service.updateCustomer(customer);
-        } catch (Exception ex) {
-            return new ResponseEntity<Customer>(customer1, HttpStatus.BAD_REQUEST);
-        }
+        Customer customer1 = service.updateCustomer(customer);
         return new ResponseEntity<Customer>(customer1, HttpStatus.ACCEPTED);
     }
 
