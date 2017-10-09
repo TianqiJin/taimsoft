@@ -3,6 +3,8 @@ package com.taim.model;
 
 import com.fasterxml.jackson.annotation.*;
 import com.taim.model.basemodels.UserBaseModel;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.List;
@@ -37,6 +39,7 @@ public class Customer extends UserBaseModel {
     @Column(name = "customer_class")
     private CustomerClass customerClass;
     @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @Fetch(FetchMode.SUBSELECT)
     private List<Transaction> transactionList;
 
     public Customer(){}

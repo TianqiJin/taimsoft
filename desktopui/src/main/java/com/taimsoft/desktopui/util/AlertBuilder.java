@@ -1,6 +1,6 @@
 package com.taimsoft.desktopui.util;
 
-import com.taimsoft.desktopui.Constants.Constant;
+import com.taimsoft.desktopui.constants.Constant;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;

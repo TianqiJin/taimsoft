@@ -15,6 +15,7 @@ import javafx.beans.binding.DoubleBinding;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -42,6 +43,8 @@ public class CustomerOverviewController extends OverviewController<CustomerDTO>{
     private TableColumn<CustomerDTO, String> actionCol;
     @FXML
     private TableColumn<CustomerDTO, Boolean> checkedCol;
+    @FXML
+    private SplitPane summarySplitPane;
     @FXML
     private Label totalQuotedLabel;
     @FXML

@@ -15,6 +15,7 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
@@ -32,8 +33,6 @@ public class VendorOverviewController extends OverviewController<VendorDTO>{
     private VendorClient vendorClient;
 
     @FXML
-    private TableView<VendorDTO> vendorTable;
-    @FXML
     private TableColumn<VendorDTO, String> nameCol;
     @FXML
     private TableColumn<VendorDTO, String> phoneCol;
@@ -43,6 +42,8 @@ public class VendorOverviewController extends OverviewController<VendorDTO>{
     private TableColumn<VendorDTO, String> actionCol;
     @FXML
     private TableColumn<VendorDTO, Boolean> checkedCol;
+    @FXML
+    private SplitPane summarySplitPane;
     @FXML
     private Label totalUnpaidLabel;
     @FXML
@@ -84,7 +85,7 @@ public class VendorOverviewController extends OverviewController<VendorDTO>{
                     double totalValue = 0 ;
                     switch(mode){
                         case Paid:
-                            for (VendorDTO item : vendorTable.getItems()) {
+                            for (VendorDTO item : getOverviewTable().getItems()) {
                                 for(TransactionDTO transactionDTO: item.getTransactionList()){
                                     if(transactionDTO.getTransactionType().equals(Transaction.TransactionType.STOCK) &&
                                             transactionDTO.getPaymentStatus().equals(Transaction.PaymentStatus.PAID)){
@@ -94,7 +95,7 @@ public class VendorOverviewController extends OverviewController<VendorDTO>{
                             }
                             break;
                         case Unpaid:
-                            for (VendorDTO item : vendorTable.getItems()) {
+                            for (VendorDTO item : getOverviewTable().getItems()) {
                                 for(TransactionDTO transactionDTO: item.getTransactionList()){
                                     if(transactionDTO.getTransactionType().equals(Transaction.TransactionType.STOCK) &&
                                             transactionDTO.getPaymentStatus().equals(Transaction.PaymentStatus.UNPAID)){
@@ -108,7 +109,7 @@ public class VendorOverviewController extends OverviewController<VendorDTO>{
 
                     return totalValue ;
                 },
-                vendorTable.getItems());
+                getOverviewTable().getItems());
         label.textProperty().bind(Bindings.format("%.2f", numberBinding));
     }
 }

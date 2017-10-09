@@ -4,6 +4,8 @@ package com.taim.model;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.taim.model.basemodels.BaseModel;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -31,6 +33,7 @@ public class Organization extends BaseModel {
     @Column(name = "postal_code", nullable = false)
     private String postalCode;
     @OneToMany(mappedBy = "organization", fetch = FetchType.EAGER)
+    @Fetch(FetchMode.SUBSELECT)
     private Set<Staff> staffs;
 
     public Organization(){

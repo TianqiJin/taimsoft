@@ -16,10 +16,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -54,6 +51,8 @@ public class ProductOverviewController extends OverviewController<ProductDTO>{
     private TableColumn<ProductDTO, String> actionCol;
     @FXML
     private TableColumn<ProductDTO, Boolean> checkedCol;
+    @FXML
+    private SplitPane summarySplitPane;
 
     @FXML
     public void initialize(){

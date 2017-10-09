@@ -4,6 +4,9 @@ package com.taim.model;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.taim.model.basemodels.UserBaseModel;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
 
 import java.util.List;
@@ -18,6 +21,7 @@ import java.util.List;
         property = "id")
 public class Vendor extends UserBaseModel {
     @OneToMany(mappedBy = "vendor", fetch = FetchType.EAGER)
+    @Fetch(FetchMode.SUBSELECT)
     private List<Transaction> transactionList;
 
     public Vendor(){}
