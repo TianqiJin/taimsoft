@@ -38,4 +38,5 @@ public class LiveComboBoxTableCell<S,T> extends TableCell<S, T> {
     public ComboBox<T> getComboBox() {
         return comboBox;
     }
+
 }

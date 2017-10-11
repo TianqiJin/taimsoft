@@ -1,5 +1,5 @@
 package com.taimsoft.desktopui.controllers.details;
 
-public interface DetailController<T> {
+public interface IDetailController<T> {
         void initDetailData(T obj);
 }

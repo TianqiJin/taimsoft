@@ -9,7 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by dragonliu on 2017/8/23.
@@ -37,6 +39,16 @@ public class TransactionController {
     public ResponseEntity<Transaction> getTransactionById(@RequestParam Integer id) {
         Transaction transaction = service.getTransactionById(id);
         return new ResponseEntity<Transaction>(transaction, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/getByProductId",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<List<Transaction>> getTransactionByProductId(@RequestParam Integer id) {
+        List<Transaction> list = service.getAllTransactions();
+        List<Transaction> realList = list.stream().filter(t -> t.getTransactionDetails().stream()
+                .anyMatch(td -> td.getProduct().getId() == id)).collect(Collectors.toList());
+        return new ResponseEntity<List<Transaction>>(realList, HttpStatus.OK);
     }
 
 
@@ -72,7 +84,4 @@ public class TransactionController {
             return new ResponseEntity<String>("No such transaction found!", HttpStatus.OK);
         }
     }
-
-
-
 }

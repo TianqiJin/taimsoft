@@ -34,46 +34,46 @@
                         </Label>
                         <Label text="Vendor / Customer" GridPane.columnIndex="2">
                         </Label>
-                        <Label fx:id="transactionIdLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                        <Label fx:id="transactionIdLabel" GridPane.columnIndex="1" GridPane.rowIndex="0">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
                         </Label>
-                        <Label fx:id="dateCreatedLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <Label fx:id="dateCreatedLabel" GridPane.columnIndex="1" GridPane.rowIndex="1">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
                         </Label>
-                        <Label fx:id="paymentLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="7">
+                        <Label fx:id="paymentLabel" GridPane.columnIndex="1" GridPane.rowIndex="7">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
                         </Label>
-                        <Label fx:id="staffLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                        <Label fx:id="staffLabel" GridPane.columnIndex="1" GridPane.rowIndex="2">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
                         </Label>
-                        <Label fx:id="transactionTypeLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                        <Label fx:id="transactionTypeLabel" GridPane.columnIndex="1" GridPane.rowIndex="3">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
                         </Label>
-                        <Label fx:id="cuVeLabel" text="Label" GridPane.columnIndex="3">
+                        <Label fx:id="cuVeLabel" GridPane.columnIndex="3">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
                         </Label>
                         <Label text="Sale Amount" GridPane.rowIndex="6">
                         </Label>
-                        <Label fx:id="saleAmountLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                        <Label fx:id="saleAmountLabel" GridPane.columnIndex="1" GridPane.rowIndex="6">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
                         </Label>
                         <Label text="Note" GridPane.rowIndex="9">
                         </Label>
-                        <Label fx:id="noteLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="9">
+                        <Label fx:id="noteLabel" GridPane.columnIndex="1" GridPane.rowIndex="9">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
@@ -86,29 +86,29 @@
                         </Label>
                         <Label text="Delivery Status" GridPane.columnIndex="2" GridPane.rowIndex="4">
                         </Label>
-                        <Label fx:id="paymentDueDateLabel" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                        <Label fx:id="paymentDueDateLabel" GridPane.columnIndex="3" GridPane.rowIndex="1">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
                         </Label>
-                        <Label fx:id="paymentStatusLabel" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                        <Label fx:id="paymentStatusLabel" GridPane.columnIndex="3" GridPane.rowIndex="2">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
                         </Label>
-                        <Label fx:id="deliveryDueDateLabel" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="3">
+                        <Label fx:id="deliveryDueDateLabel" GridPane.columnIndex="3" GridPane.rowIndex="3">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
                         </Label>
-                        <Label fx:id="deliveryStatusLabel" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="4">
+                        <Label fx:id="deliveryStatusLabel" GridPane.columnIndex="3" GridPane.rowIndex="4">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
                         </Label>
                         <Label text="Finalized" GridPane.columnIndex="2" GridPane.rowIndex="5">
                         </Label>
-                        <Label fx:id="finalizedLabel" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="5">
+                        <Label fx:id="finalizedLabel" GridPane.columnIndex="3" GridPane.rowIndex="5">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
@@ -117,12 +117,12 @@
                         </Label>
                         <Label text="PST" GridPane.rowIndex="5">
                         </Label>
-                        <Label fx:id="gstLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                        <Label fx:id="gstLabel" GridPane.columnIndex="1" GridPane.rowIndex="4">
                             <font>
                                 <Font name="System Bold" size="12.0" />
                             </font>
                         </Label>
-                        <Label fx:id="pstLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                        <Label fx:id="pstLabel" GridPane.columnIndex="1" GridPane.rowIndex="5">
                             <font>
                                 <Font name="System Bold" size="12.0" />
                             </font>

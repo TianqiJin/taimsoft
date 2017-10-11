@@ -3,31 +3,21 @@ package com.taimsoft.desktopui.controllers.details;
 import com.taim.dto.PaymentDTO;
 import com.taim.dto.TransactionDTO;
 import com.taim.dto.TransactionDetailDTO;
-import com.taim.model.PackageInfo;
-import com.taim.model.Payment;
-import com.taim.model.TransactionDetail;
 import javafx.beans.binding.Bindings;
-import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.StringBinding;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.*;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.util.Callback;
-import org.fxmisc.easybind.EasyBind;
 
 import java.math.BigDecimal;
 
-public class TransactionDetailsController implements DetailController<TransactionDTO>{
+public class TransactionDetailsController implements IDetailController<TransactionDTO> {
     private TransactionDTO transactionDTO;
 
     @FXML

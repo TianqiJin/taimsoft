@@ -1,12 +1,9 @@
 package com.taimsoft.desktopui.controllers.overview;
 
-import com.sun.org.apache.xpath.internal.operations.Quo;
 import com.taim.client.CustomerClient;
 import com.taim.client.IClient;
 import com.taim.dto.CustomerDTO;
-import com.taim.dto.ProductDTO;
 import com.taim.dto.TransactionDTO;
-import com.taim.model.Customer;
 import com.taim.model.Transaction;
 import com.taimsoft.desktopui.uicomponents.LiveComboBoxTableCell;
 import com.taimsoft.desktopui.util.RestClientFactory;
@@ -20,15 +17,15 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-import static com.taimsoft.desktopui.controllers.overview.OverviewController.SummaryLabelMode.Paid;
-import static com.taimsoft.desktopui.controllers.overview.OverviewController.SummaryLabelMode.Quoted;
-import static com.taimsoft.desktopui.controllers.overview.OverviewController.SummaryLabelMode.Unpaid;
+import static com.taimsoft.desktopui.controllers.overview.IOverviewController.SummaryLabelMode.Paid;
+import static com.taimsoft.desktopui.controllers.overview.IOverviewController.SummaryLabelMode.Quoted;
+import static com.taimsoft.desktopui.controllers.overview.IOverviewController.SummaryLabelMode.Unpaid;
 
 
 /**
  * Created by Tjin on 8/30/2017.
  */
-public class CustomerOverviewController extends OverviewController<CustomerDTO>{
+public class CustomerIOverviewController extends IOverviewController<CustomerDTO> {
     private CustomerClient customerClient;
 
     @FXML
@@ -52,7 +49,7 @@ public class CustomerOverviewController extends OverviewController<CustomerDTO>{
     @FXML
     private Label totalPaidLabel;
 
-    public CustomerOverviewController(){
+    public CustomerIOverviewController(){
         customerClient = RestClientFactory.getCustomerClient();
     }
 

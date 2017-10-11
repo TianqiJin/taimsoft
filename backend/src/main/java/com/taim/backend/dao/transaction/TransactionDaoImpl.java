@@ -5,6 +5,7 @@ import com.taim.backend.dao.AbstractDao;
 import com.taim.backend.dao.IDao;
 import com.taim.model.Transaction;
 import org.hibernate.Criteria;
+import org.hibernate.SQLQuery;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 

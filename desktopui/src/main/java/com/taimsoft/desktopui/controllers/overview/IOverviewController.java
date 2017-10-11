@@ -16,7 +16,7 @@ import java.util.concurrent.Executors;
 /**
  * Created by Tjin on 9/5/2017.
  */
-public abstract class OverviewController<T>{
+public abstract class IOverviewController<T>{
     private Executor executor;
     private List<T> overviewDTOList;
     @FXML
@@ -28,7 +28,7 @@ public abstract class OverviewController<T>{
         Paid;
     }
 
-    public OverviewController(){
+    public IOverviewController(){
         executor = Executors.newCachedThreadPool(r -> {
             Thread t = new Thread(r);
             t.setDaemon(true);

@@ -2,31 +2,21 @@ package com.taimsoft.desktopui.controllers.overview;
 
 import com.taim.client.IClient;
 import com.taim.client.StaffClient;
-import com.taim.dto.CustomerDTO;
-import com.taim.dto.ProductDTO;
 import com.taim.dto.StaffDTO;
-import com.taim.dto.TransactionDTO;
 import com.taim.model.Staff;
-import com.taimsoft.desktopui.controllers.overview.OverviewController;
 import com.taimsoft.desktopui.uicomponents.LiveComboBoxTableCell;
 import com.taimsoft.desktopui.util.RestClientFactory;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-
 /**
  * Created by Tjin on 8/30/2017.
  */
-public class StaffOverviewController extends OverviewController<StaffDTO> {
+public class StaffIOverviewController extends IOverviewController<StaffDTO> {
     private StaffClient staffClient;
 
     @FXML
@@ -46,7 +36,7 @@ public class StaffOverviewController extends OverviewController<StaffDTO> {
     @FXML
     private TableColumn<StaffDTO, Boolean> checkedCol;
 
-    public StaffOverviewController(){
+    public StaffIOverviewController(){
         this.staffClient = RestClientFactory.getStaffClient();
     }
 

@@ -4,9 +4,7 @@ import com.taim.client.IClient;
 import com.taim.client.TransactionClient;
 import com.taim.dto.PaymentDTO;
 import com.taim.dto.TransactionDTO;
-import com.taim.dto.VendorDTO;
 import com.taim.model.Transaction;
-import com.taimsoft.desktopui.uicomponents.LiveComboBoxTableCell;
 import com.taimsoft.desktopui.util.RestClientFactory;
 import com.taimsoft.desktopui.util.TransactionPanelLoader;
 import com.taimsoft.desktopui.util.VistaNavigator;
@@ -16,7 +14,6 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -29,17 +26,14 @@ import org.joda.time.DateTime;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
-import static com.taimsoft.desktopui.controllers.overview.OverviewController.SummaryLabelMode.*;
+import static com.taimsoft.desktopui.controllers.overview.IOverviewController.SummaryLabelMode.*;
 
 /**
  * Created by Tjin on 8/28/2017.
  */
-public class TransactionOverviewController extends OverviewController<TransactionDTO> {
+public class TransactionIOverviewController extends IOverviewController<TransactionDTO> {
     private TransactionClient transactionClient;
 
     @FXML
@@ -77,7 +71,7 @@ public class TransactionOverviewController extends OverviewController<Transactio
     @FXML
     private ComboBox<Transaction.TransactionType> createNewTransactionComboBox;
 
-    public TransactionOverviewController(){
+    public TransactionIOverviewController(){
         super();
         this.transactionClient = RestClientFactory.getTransactionClient();
     }
