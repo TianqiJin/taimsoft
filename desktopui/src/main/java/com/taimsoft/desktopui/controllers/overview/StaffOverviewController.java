@@ -16,7 +16,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 /**
  * Created by Tjin on 8/30/2017.
  */
-public class StaffIOverviewController extends IOverviewController<StaffDTO> {
+public class StaffOverviewController extends IOverviewController<StaffDTO> {
     private StaffClient staffClient;
 
     @FXML
@@ -36,7 +36,7 @@ public class StaffIOverviewController extends IOverviewController<StaffDTO> {
     @FXML
     private TableColumn<StaffDTO, Boolean> checkedCol;
 
-    public StaffIOverviewController(){
+    public StaffOverviewController(){
         this.staffClient = RestClientFactory.getStaffClient();
     }
 

@@ -22,7 +22,7 @@ import static com.taimsoft.desktopui.controllers.overview.IOverviewController.Su
 /**
  * Created by Tjin on 8/30/2017.
  */
-public class VendorIOverviewController extends IOverviewController<VendorDTO> {
+public class VendorOverviewController extends IOverviewController<VendorDTO> {
     private VendorClient vendorClient;
 
     @FXML
@@ -42,7 +42,7 @@ public class VendorIOverviewController extends IOverviewController<VendorDTO> {
     @FXML
     private Label totalPaidLabel;
 
-    public VendorIOverviewController(){
+    public VendorOverviewController(){
         this.vendorClient = RestClientFactory.getVendorClient();
     }
 

@@ -33,7 +33,7 @@ import static com.taimsoft.desktopui.controllers.overview.IOverviewController.Su
 /**
  * Created by Tjin on 8/28/2017.
  */
-public class TransactionIOverviewController extends IOverviewController<TransactionDTO> {
+public class TransactionOverviewController extends IOverviewController<TransactionDTO> {
     private TransactionClient transactionClient;
 
     @FXML
@@ -71,7 +71,7 @@ public class TransactionIOverviewController extends IOverviewController<Transact
     @FXML
     private ComboBox<Transaction.TransactionType> createNewTransactionComboBox;
 
-    public TransactionIOverviewController(){
+    public TransactionOverviewController(){
         super();
         this.transactionClient = RestClientFactory.getTransactionClient();
     }

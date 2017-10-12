@@ -16,7 +16,6 @@ public class OrganizationDTO extends BaseModelDTO {
     private StringProperty city;
     private StringProperty country;
     private StringProperty postalCode;
-    private List<StaffDTO> staff;
 
     public OrganizationDTO(){
         orgName = new SimpleStringProperty();
@@ -25,7 +24,6 @@ public class OrganizationDTO extends BaseModelDTO {
         city = new SimpleStringProperty();
         country = new SimpleStringProperty();
         postalCode = new SimpleStringProperty();
-        staff = new ArrayList<>();
     }
 
     public String getOrgName() {
@@ -98,13 +96,5 @@ public class OrganizationDTO extends BaseModelDTO {
 
     public void setPostalCode(String postalCode) {
         this.postalCode.set(postalCode);
-    }
-
-    public List<StaffDTO> getStaff() {
-        return staff;
-    }
-
-    public void setStaff(List<StaffDTO> staff) {
-        this.staff = staff;
     }
 }

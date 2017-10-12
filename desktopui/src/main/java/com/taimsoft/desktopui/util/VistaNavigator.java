@@ -18,6 +18,7 @@ public class VistaNavigator {
     public static final String VISTA_VENDOR = "overview/VendorOverview.fxml";
     public static final String VISTA_TRANSACTION_DETAIL = "details/TransactionDetails.fxml";
     public static final String VISTA_PRODUCT_DETAIL = "details/ProductDetails.fxml";
+    public static final String VISTA_CUSTOMER_DETAIL = "details/CustomerDetails.fxml";
 
     private static RootLayoutController rootLayoutController;
 

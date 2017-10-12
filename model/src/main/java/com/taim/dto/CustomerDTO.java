@@ -3,6 +3,7 @@ package com.taim.dto;
 import com.taim.dto.basedtos.UserBaseModelDTO;
 import com.taim.model.Customer;
 import javafx.beans.property.*;
+import org.hibernate.usertype.UserType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +12,8 @@ public class CustomerDTO extends UserBaseModelDTO{
     private DoubleProperty storeCredit;
     private BooleanProperty checked;
     private ObjectProperty<Customer.CustomerClass> customerClass;
+    private ObjectProperty<UserType> userType;
+    private ObjectProperty<OrganizationDTO> organization;
     private List<TransactionDTO> transactionList;
 
     public CustomerDTO(){
@@ -18,6 +21,8 @@ public class CustomerDTO extends UserBaseModelDTO{
         checked = new SimpleBooleanProperty();
         transactionList = new ArrayList<TransactionDTO>();
         customerClass = new SimpleObjectProperty<>();
+        userType = new SimpleObjectProperty<>();
+        organization = new SimpleObjectProperty<>();
     }
 
     public double getStoreCredit() {
@@ -62,5 +67,29 @@ public class CustomerDTO extends UserBaseModelDTO{
 
     public void setCustomerClass(Customer.CustomerClass customerClass) {
         this.customerClass.set(customerClass);
+    }
+
+    public UserType getUserType() {
+        return userType.get();
+    }
+
+    public ObjectProperty<UserType> userTypeProperty() {
+        return userType;
+    }
+
+    public void setUserType(UserType userType) {
+        this.userType.set(userType);
+    }
+
+    public OrganizationDTO getOrganization() {
+        return organization.get();
+    }
+
+    public ObjectProperty<OrganizationDTO> organizationProperty() {
+        return organization;
+    }
+
+    public void setOrganization(OrganizationDTO organization) {
+        this.organization.set(organization);
     }
 }

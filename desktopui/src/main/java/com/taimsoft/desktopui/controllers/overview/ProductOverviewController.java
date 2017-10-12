@@ -17,7 +17,7 @@ import javafx.util.Callback;
 /**
  * Created by Tjin on 8/30/2017.
  */
-public class ProductIOverviewController extends IOverviewController<ProductDTO> {
+public class ProductOverviewController extends IOverviewController<ProductDTO> {
     private ProductClient productClient;
 
     @FXML
@@ -89,7 +89,7 @@ public class ProductIOverviewController extends IOverviewController<ProductDTO> 
         });
     }
 
-    public ProductIOverviewController(){
+    public ProductOverviewController(){
         this.productClient = RestClientFactory.getProductClient();
     }
 

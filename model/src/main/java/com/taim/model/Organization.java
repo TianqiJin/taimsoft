@@ -32,13 +32,8 @@ public class Organization extends BaseModel {
     private String country;
     @Column(name = "postal_code", nullable = false)
     private String postalCode;
-    @OneToMany(mappedBy = "organization", fetch = FetchType.EAGER)
-    @Fetch(FetchMode.SUBSELECT)
-    private Set<Staff> staffs;
 
-    public Organization(){
-        staffs = new HashSet<Staff>();
-    }
+    public Organization(){}
 
     public String getOrgName() {
         return orgName;
@@ -86,14 +81,6 @@ public class Organization extends BaseModel {
 
     public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
-    }
-
-    public Set<Staff> getStaffs() {
-        return staffs;
-    }
-
-    public void setStaffs(Set<Staff> staffs) {
-        this.staffs = staffs;
     }
 
 }
