@@ -1,13 +1,13 @@
-package com.coverity.licensetools.model.licensever;
+package com.taimsoft.licensetools.model.licensever;
 
-import com.coverity.licensetools.model.LicenseFile;
-import com.coverity.licensetools.model.LicenseXML;
+import com.taimsoft.licensetools.model.LicenseFile;
+import com.taimsoft.licensetools.model.LicenseXML;
+import com.taimsoft.licensetools.util.XmlProperty;
 import org.json.JSONArray;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import com.coverity.licensetools.util.XmlOrderManual;
-import com.coverity.licensetools.util.XmlProperty;
+import com.taimsoft.licensetools.util.XmlOrderManual;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;

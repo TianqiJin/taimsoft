@@ -1,6 +1,6 @@
-package com.coverity.licensetools.model;
+package com.taimsoft.licensetools.model;
 
-import com.coverity.licensetools.constant.CryptSession;
+import com.taimsoft.licensetools.constant.CryptSession;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;

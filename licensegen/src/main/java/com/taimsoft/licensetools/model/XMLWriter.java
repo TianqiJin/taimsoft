@@ -1,8 +1,7 @@
-package com.coverity.licensetools.model;
+package com.taimsoft.licensetools.model;
 
 import com.sun.xml.txw2.output.IndentingXMLStreamWriter;
-import com.coverity.licensetools.model.licensever.License;
-import com.coverity.licensetools.model.licensever.LicenseBase;
+import com.taimsoft.licensetools.model.licensever.License;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.xml.bind.JAXBContext;

@@ -1,4 +1,4 @@
-package com.coverity.licensetools.util;
+package com.taimsoft.licensetools.util;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

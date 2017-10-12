@@ -1,6 +1,6 @@
-package com.coverity.licensetools.model.licensever;
+package com.taimsoft.licensetools.model.licensever;
 
-import com.coverity.licensetools.model.LicenseFile;
+import com.taimsoft.licensetools.model.LicenseFile;
 
 /**
  * Created by tjin on 2017-02-09.

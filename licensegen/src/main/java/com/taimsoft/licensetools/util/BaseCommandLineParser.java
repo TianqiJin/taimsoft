@@ -1,4 +1,4 @@
-package com.coverity.licensetools.util;
+package com.taimsoft.licensetools.util;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;

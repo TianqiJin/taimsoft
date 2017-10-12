@@ -1,4 +1,4 @@
-package com.coverity.licensetools.util;
+package com.taimsoft.licensetools.util;
 
 import org.bouncycastle.crypto.BufferedBlockCipher;
 import org.bouncycastle.crypto.CryptoException;

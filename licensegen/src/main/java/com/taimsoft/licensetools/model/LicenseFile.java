@@ -1,10 +1,10 @@
-package com.coverity.licensetools.model;
+package com.taimsoft.licensetools.model;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import com.coverity.licensetools.util.AsciiConvert;
-import com.coverity.licensetools.util.XmlProperty;
+import com.taimsoft.licensetools.util.AsciiConvert;
+import com.taimsoft.licensetools.util.XmlProperty;
 
 import java.util.ArrayList;
 import java.util.List;

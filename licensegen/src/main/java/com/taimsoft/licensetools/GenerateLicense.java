@@ -1,11 +1,15 @@
-package com.coverity.licensetools;
+package com.taimsoft.licensetools;
 
-import com.coverity.licensetools.model.CryptKey;
-import com.coverity.licensetools.model.LicenseFile;
-import com.coverity.licensetools.model.LicenseXML;
-import com.coverity.licensetools.model.XMLWriter;
+import com.taimsoft.licensetools.model.CryptKey;
+import com.taimsoft.licensetools.model.LicenseFile;
+import com.taimsoft.licensetools.model.LicenseXML;
+import com.taimsoft.licensetools.model.XMLWriter;
 import com.coverity.licensetools.model.licensever.*;
-import com.coverity.licensetools.util.ToolCommandLineParser;
+import com.taimsoft.licensetools.model.licensever.LicenseV1;
+import com.taimsoft.licensetools.util.ToolCommandLineParser;
+import com.taimsoft.licensetools.model.licensever.License;
+import com.taimsoft.licensetools.model.licensever.LicenseBase;
+import com.taimsoft.licensetools.util.XmlProperty;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -15,7 +19,6 @@ import org.joda.time.DateTimeZone;
 import org.joda.time.Seconds;
 import org.joda.time.format.DateTimeFormat;
 import org.json.JSONObject;
-import com.coverity.licensetools.util.XmlProperty;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;

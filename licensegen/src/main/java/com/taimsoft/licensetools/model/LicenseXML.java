@@ -1,4 +1,4 @@
-package com.coverity.licensetools.model;
+package com.taimsoft.licensetools.model;
 
 import org.json.JSONObject;
 

@@ -1,4 +1,4 @@
-package com.coverity.licensetools.constant;
+package com.taimsoft.licensetools.constant;
 
 /**
  * Created by tjin on 2017-01-31.

@@ -1,7 +1,6 @@
 package com.taimsoft.desktopui.controllers.details;
 
 import com.taim.dto.TransactionDTO;
-import com.taim.dto.TransactionDetailDTO;
 import com.taim.model.Transaction;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;

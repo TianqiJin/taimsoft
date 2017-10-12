@@ -1,4 +1,4 @@
-package com.coverity.licensetools.util;
+package com.taimsoft.licensetools.util;
 
 /**
  * Created by tjin on 2016-12-02.

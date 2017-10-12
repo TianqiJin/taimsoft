@@ -1,11 +1,11 @@
-package com.coverity.licensetools.model.licensever;
+package com.taimsoft.licensetools.model.licensever;
 
-import com.coverity.licensetools.model.LicenseFile;
-import com.coverity.licensetools.model.LicenseXML;
+import com.taimsoft.licensetools.model.LicenseFile;
+import com.taimsoft.licensetools.model.LicenseXML;
+import com.taimsoft.licensetools.util.XmlProperty;
 import org.eclipse.persistence.jaxb.JAXBContext;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import com.coverity.licensetools.util.XmlProperty;
 
 
 import javax.xml.bind.JAXBElement;

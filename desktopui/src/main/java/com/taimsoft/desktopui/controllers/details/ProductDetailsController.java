@@ -3,32 +3,24 @@ package com.taimsoft.desktopui.controllers.details;
 import com.taim.client.TransactionClient;
 import com.taim.dto.ProductDTO;
 import com.taim.dto.TransactionDTO;
-import com.taim.dto.TransactionDetailDTO;
 import com.taim.model.Transaction;
 import com.taimsoft.desktopui.util.RestClientFactory;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableBooleanValue;
 import javafx.beans.value.ObservableStringValue;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
@@ -105,7 +97,7 @@ public class ProductDetailsController implements IDetailController<ProductDTO> {
             quotationList = list.stream().filter(t -> t.getTransactionType().equals(Transaction.TransactionType.QUOTATION)).collect(Collectors.toList());
             returnList = list.stream().filter(t -> t.getTransactionType().equals(Transaction.TransactionType.RETURN)).collect(Collectors.toList());
             initTransactionTabPane();
-            bindTransactionInfoLabels();
+            bindProductInfoLabels();
         });
 
         executor.execute(listTask);
@@ -137,7 +129,7 @@ public class ProductDetailsController implements IDetailController<ProductDTO> {
         transactionTabPane.getSelectionModel().selectFirst();
     }
 
-    private void bindTransactionInfoLabels(){
+    private void bindProductInfoLabels(){
         if(productDTO != null) {
             skuLabel.textProperty().bind(initStringBinding(productDTO.skuProperty().isNull(),
                     "", productDTO.skuProperty()));

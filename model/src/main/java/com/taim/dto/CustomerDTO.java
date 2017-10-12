@@ -3,7 +3,6 @@ package com.taim.dto;
 import com.taim.dto.basedtos.UserBaseModelDTO;
 import com.taim.model.Customer;
 import javafx.beans.property.*;
-import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 import java.util.List;

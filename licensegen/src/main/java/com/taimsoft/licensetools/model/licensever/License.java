@@ -1,5 +1,5 @@
-package com.coverity.licensetools.model.licensever;
-import com.coverity.licensetools.model.LicenseFile;
+package com.taimsoft.licensetools.model.licensever;
+import com.taimsoft.licensetools.model.LicenseFile;
 import org.eclipse.persistence.jaxb.JAXBContext;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
