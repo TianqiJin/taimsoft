@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="1000.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taimsoft.desktopui.controllers.details.VendorDetailsController">
+    <children>
+        <SplitPane dividerPositions="0.35" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="100.0">
+            <items>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                    <children>
+                        <GridPane AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+                            <children>
+                                <Label text="Vendorr Name" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                                <Label text="Date Created" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                                <Label text="Phone Number" GridPane.rowIndex="2" />
+                                <Label text="Email Address" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                                <Label fx:id="fullNameLabel" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                                    <font>
+                                        <Font name="System Bold" size="12.0" />
+                                    </font>
+                                </Label>
+                                <Label fx:id="dateCreatedLabel" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                    <font>
+                                        <Font name="System Bold" size="12.0" />
+                                    </font>
+                                </Label>
+                                <Label fx:id="phoneLabel" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                    <font>
+                                        <Font name="System Bold" size="12.0" />
+                                    </font>
+                                </Label>
+                                <Label fx:id="emailLabel" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                    <font>
+                                        <Font name="System Bold" size="12.0" />
+                                    </font>
+                                </Label>
+                                <Label text="Vendor Type" GridPane.rowIndex="4" />
+                                <Label fx:id="vendorTypeLabel" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                    <font>
+                                        <Font name="System Bold" size="12.0" />
+                                    </font>
+                                </Label>
+                                <Label text="Organization Name" GridPane.columnIndex="2" />
+                                <Label text="Street #" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                <Label text="Street" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                                <Label text="City" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                                <Label text="Country" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                                <Label text="Postal Code" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                                <Label fx:id="orgNameLabel" GridPane.columnIndex="3">
+                                    <font>
+                                        <Font name="System Bold" size="12.0" />
+                                    </font>
+                                </Label>
+                                <Label fx:id="streetNumLabel" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                                    <font>
+                                        <Font name="System Bold" size="12.0" />
+                                    </font>
+                                </Label>
+                                <Label fx:id="streetLabel" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                                    <font>
+                                        <Font name="System Bold" size="12.0" />
+                                    </font>
+                                </Label>
+                                <Label fx:id="cityLabel" GridPane.columnIndex="3" GridPane.rowIndex="3">
+                                    <font>
+                                        <Font name="System Bold" size="12.0" />
+                                    </font>
+                                </Label>
+                                <Label fx:id="countryLabel" GridPane.columnIndex="3" GridPane.rowIndex="4">
+                                    <font>
+                                        <Font name="System Bold" size="12.0" />
+                                    </font>
+                                </Label>
+                                <Label fx:id="postalCodeLabel" GridPane.columnIndex="3" GridPane.rowIndex="5">
+                                    <font>
+                                        <Font name="System Bold" size="12.0" />
+                                    </font>
+                                </Label>
+                            </children>
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" />
+                                <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" />
+                                <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" />
+                                <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" />
+                                <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            </rowConstraints>
+                        </GridPane>
+                    </children>
+                </AnchorPane>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                    <children>
+                        <TabPane fx:id="transactionTabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                            <tabs>
+                                <Tab text="Stock Transactions">
+                                    <content>
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                    </content>
+                                </Tab>
+                            </tabs>
+                        </TabPane>
+                    </children>
+                </AnchorPane>
+            </items>
+        </SplitPane>
+        <HBox layoutX="14.0" layoutY="23.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="30.0">
+            <children>
+                <Label text="Vendor Information">
+                    <font>
+                        <Font name="System Bold" size="18.0" />
+                    </font>
+                </Label>
+            </children>
+        </HBox>
+        <HBox layoutX="786.0" layoutY="-13.0" spacing="20.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="30.0">
+            <children>
+                <ComboBox fx:id="actionComboBox" prefWidth="150.0" promptText="SELECT ACTION" />
+            </children>
+        </HBox>
+    </children>
+</AnchorPane>

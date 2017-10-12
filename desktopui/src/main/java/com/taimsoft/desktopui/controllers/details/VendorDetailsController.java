@@ -1,6 +1,5 @@
 package com.taimsoft.desktopui.controllers.details;
 
-import com.taim.dto.CustomerDTO;
 import com.taim.dto.TransactionDTO;
 import com.taim.dto.VendorDTO;
 import com.taim.model.Transaction;
@@ -34,6 +33,20 @@ public class VendorDetailsController implements IDetailController<VendorDTO> {
     private Label emailLabel;
     @FXML
     private Label dateCreatedLabel;
+    @FXML
+    private Label vendorTypeLabel;
+    @FXML
+    private Label orgNameLabel;
+    @FXML
+    private Label streetNumLabel;
+    @FXML
+    private Label streetLabel;
+    @FXML
+    private Label cityLabel;
+    @FXML
+    private Label countryLabel;
+    @FXML
+    private Label postalCodeLabel;
     @FXML
     private ComboBox<String> actionComboBox;
     @FXML
@@ -85,6 +98,22 @@ public class VendorDetailsController implements IDetailController<VendorDTO> {
                     "", vendorDTO.emailProperty()));
             phoneLabel.textProperty().bind(initStringBinding(vendorDTO.phoneProperty().isNull(),
                     "", vendorDTO.phoneProperty()));
+            vendorTypeLabel.textProperty().bind(initStringBinding(vendorDTO.userTypeProperty().isNull(),
+                    "", vendorDTO.userTypeProperty().asString()));
+            if(vendorDTO.getOrganization() != null){
+                orgNameLabel.textProperty().bind(initStringBinding(vendorDTO.getOrganization().orgNameProperty().isNull(),
+                        "", vendorDTO.getOrganization().orgNameProperty()));
+                streetNumLabel.textProperty().bind(initStringBinding(vendorDTO.getOrganization().streetNumProperty().isNull(),
+                        "", vendorDTO.getOrganization().streetNumProperty()));
+                streetLabel.textProperty().bind(initStringBinding(vendorDTO.getOrganization().streetProperty().isNull(),
+                        "", vendorDTO.getOrganization().streetProperty()));
+                cityLabel.textProperty().bind(initStringBinding(vendorDTO.getOrganization().cityProperty().isNull(),
+                        "", vendorDTO.getOrganization().cityProperty()));
+                countryLabel.textProperty().bind(initStringBinding(vendorDTO.getOrganization().countryProperty().isNull(),
+                        "", vendorDTO.getOrganization().countryProperty()));
+                postalCodeLabel.textProperty().bind(initStringBinding(vendorDTO.getOrganization().postalCodeProperty().isNull(),
+                        "", vendorDTO.getOrganization().postalCodeProperty()));
+            }
         }
     }
 

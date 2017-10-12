@@ -8,7 +8,7 @@ import javax.persistence.MappedSuperclass;
  */
 @MappedSuperclass
 public class UserBaseModel extends BaseModel{
-    enum UserType{
+    public enum UserType{
         INDIVIDUAL("Individual"),
         COMPANY("Company");
 

@@ -51,8 +51,6 @@ public class ProductDetailsController implements IDetailController<ProductDTO> {
     @FXML
     private Label unitPriceLabel;
     @FXML
-    private Label piecesPerBoxLabel;
-    @FXML
     private Label displayNameLabel;
     @FXML
     private ComboBox<String> actionComboBox;

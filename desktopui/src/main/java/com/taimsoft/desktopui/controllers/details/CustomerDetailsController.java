@@ -37,6 +37,20 @@ public class CustomerDetailsController implements IDetailController<CustomerDTO>
     @FXML
     private Label emailLabel;
     @FXML
+    private Label customerTypeLabel;
+    @FXML
+    private Label orgNameLabel;
+    @FXML
+    private Label streetNumLabel;
+    @FXML
+    private Label streetLabel;
+    @FXML
+    private Label cityLabel;
+    @FXML
+    private Label countryLabel;
+    @FXML
+    private Label postalCodeLabel;
+    @FXML
     private Label dateCreatedLabel;
     @FXML
     private ComboBox<String> actionComboBox;
@@ -103,6 +117,22 @@ public class CustomerDetailsController implements IDetailController<CustomerDTO>
                     "", customerDTO.emailProperty()));
             phoneLabel.textProperty().bind(initStringBinding(customerDTO.phoneProperty().isNull(),
                     "", customerDTO.phoneProperty()));
+            customerTypeLabel.textProperty().bind(initStringBinding(customerDTO.userTypeProperty().isNull(),
+                    "", customerDTO.userTypeProperty().asString()));
+            if(customerDTO.getOrganization() != null){
+                orgNameLabel.textProperty().bind(initStringBinding(customerDTO.getOrganization().orgNameProperty().isNull(),
+                        "", customerDTO.getOrganization().orgNameProperty()));
+                streetNumLabel.textProperty().bind(initStringBinding(customerDTO.getOrganization().streetNumProperty().isNull(),
+                        "", customerDTO.getOrganization().streetNumProperty()));
+                streetLabel.textProperty().bind(initStringBinding(customerDTO.getOrganization().streetProperty().isNull(),
+                        "", customerDTO.getOrganization().streetProperty()));
+                cityLabel.textProperty().bind(initStringBinding(customerDTO.getOrganization().cityProperty().isNull(),
+                        "", customerDTO.getOrganization().cityProperty()));
+                countryLabel.textProperty().bind(initStringBinding(customerDTO.getOrganization().countryProperty().isNull(),
+                        "", customerDTO.getOrganization().countryProperty()));
+                postalCodeLabel.textProperty().bind(initStringBinding(customerDTO.getOrganization().postalCodeProperty().isNull(),
+                        "", customerDTO.getOrganization().postalCodeProperty()));
+            }
         }
     }
 
