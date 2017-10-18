@@ -43,12 +43,7 @@ public class OrganizationController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Organization> create(@RequestBody Organization organization) {
-        Organization organization1 = null;
-        try {
-            organization1=service.saveOrganization(organization);
-        } catch (Exception ex) {
-            return new ResponseEntity<Organization>(organization1, HttpStatus.BAD_REQUEST);
-        }
+        Organization organization1 = service.saveOrganization(organization);
         return new ResponseEntity<Organization>(organization1, HttpStatus.ACCEPTED);
     }
 
@@ -58,12 +53,7 @@ public class OrganizationController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Organization> update(@RequestBody Organization organization) {
-        Organization organization1 = null;
-        try {
-            organization1=service.updateOrganization(organization);
-        } catch (Exception ex) {
-            return new ResponseEntity<Organization>(organization1, HttpStatus.BAD_REQUEST);
-        }
+        Organization organization1 = service.updateOrganization(organization);
         return new ResponseEntity<Organization>(organization1, HttpStatus.ACCEPTED);
     }
 

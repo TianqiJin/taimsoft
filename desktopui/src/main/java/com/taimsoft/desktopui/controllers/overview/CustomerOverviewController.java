@@ -1,33 +1,31 @@
 package com.taimsoft.desktopui.controllers.overview;
 
-import com.sun.org.apache.xpath.internal.operations.Quo;
 import com.taim.client.CustomerClient;
 import com.taim.client.IClient;
 import com.taim.dto.CustomerDTO;
-import com.taim.dto.ProductDTO;
 import com.taim.dto.TransactionDTO;
-import com.taim.model.Customer;
 import com.taim.model.Transaction;
 import com.taimsoft.desktopui.uicomponents.LiveComboBoxTableCell;
 import com.taimsoft.desktopui.util.RestClientFactory;
+import com.taimsoft.desktopui.util.VistaNavigator;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.Callback;
 
-import static com.taimsoft.desktopui.controllers.overview.OverviewController.SummaryLabelMode.Paid;
-import static com.taimsoft.desktopui.controllers.overview.OverviewController.SummaryLabelMode.Quoted;
-import static com.taimsoft.desktopui.controllers.overview.OverviewController.SummaryLabelMode.Unpaid;
+import static com.taimsoft.desktopui.controllers.overview.IOverviewController.SummaryLabelMode.Paid;
+import static com.taimsoft.desktopui.controllers.overview.IOverviewController.SummaryLabelMode.Quoted;
+import static com.taimsoft.desktopui.controllers.overview.IOverviewController.SummaryLabelMode.Unpaid;
 
 
 /**
  * Created by Tjin on 8/30/2017.
  */
-public class CustomerOverviewController extends OverviewController<CustomerDTO>{
+public class CustomerOverviewController extends IOverviewController<CustomerDTO> {
     private CustomerClient customerClient;
 
     @FXML
@@ -42,6 +40,8 @@ public class CustomerOverviewController extends OverviewController<CustomerDTO>{
     private TableColumn<CustomerDTO, String> actionCol;
     @FXML
     private TableColumn<CustomerDTO, Boolean> checkedCol;
+    @FXML
+    private SplitPane summarySplitPane;
     @FXML
     private Label totalQuotedLabel;
     @FXML
@@ -62,11 +62,34 @@ public class CustomerOverviewController extends OverviewController<CustomerDTO>{
         checkedCol.setCellValueFactory(new PropertyValueFactory<>("isChecked"));
         checkedCol.setCellFactory(CheckBoxTableCell.forTableColumn(checkedCol));
         actionCol.setCellValueFactory(new PropertyValueFactory<>("action"));
-        actionCol.setCellFactory(param -> {
-            LiveComboBoxTableCell<CustomerDTO, String> liveComboBoxTableCell = new LiveComboBoxTableCell<>(
-                    FXCollections.observableArrayList("VIEW DETAILS", "EDIT", "DELETE"));
-            return liveComboBoxTableCell;
-        });
+        actionCol.setCellFactory(new Callback<TableColumn<CustomerDTO, String>, TableCell<CustomerDTO, String>>() {
+            @Override
+            public TableCell<CustomerDTO, String> call(TableColumn<CustomerDTO, String> param) {
+                return new TableCell<CustomerDTO, String>(){
+                    ComboBox<String> comboBox = new ComboBox<>();
+                    @Override
+                    public void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            comboBox.setPromptText("SET ACTION");
+                            comboBox.prefWidthProperty().bind(this.widthProperty());
+                            CustomerDTO customerDTO = getTableView().getItems().get(getIndex());
+                            comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "EDIT", "DELETE"));
+                            comboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+                                if(newValue.equals("VIEW DETAILS")){
+                                    VistaNavigator.loadDetailVista(VistaNavigator.VISTA_CUSTOMER_DETAIL, customerDTO);
+                                }
+                            });
+                            comboBox.setValue(item);
+                            setGraphic(comboBox);
+                        }
+                    }
+                };
+            }
+        }
+    );
 
         bindSummaryLabel(totalPaidLabel, Paid);
         bindSummaryLabel(totalUnpaidLabel, Unpaid);

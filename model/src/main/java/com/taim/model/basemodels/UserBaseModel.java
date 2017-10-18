@@ -8,6 +8,17 @@ import javax.persistence.MappedSuperclass;
  */
 @MappedSuperclass
 public class UserBaseModel extends BaseModel{
+    public enum UserType{
+        INDIVIDUAL("Individual"),
+        COMPANY("Company");
+
+        private String value;
+
+        UserType(String vvalue){
+            this.value = vvalue;
+        }
+    }
+
     @Column
     private String fullname;
     @Column

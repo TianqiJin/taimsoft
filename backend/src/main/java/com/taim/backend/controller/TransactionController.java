@@ -9,7 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by dragonliu on 2017/8/23.
@@ -39,6 +41,16 @@ public class TransactionController {
         return new ResponseEntity<Transaction>(transaction, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/getByProductId",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<List<Transaction>> getTransactionByProductId(@RequestParam Integer id) {
+        List<Transaction> list = service.getAllTransactions();
+        List<Transaction> realList = list.stream().filter(t -> t.getTransactionDetails().stream()
+                .anyMatch(td -> td.getProduct().getId() == id)).collect(Collectors.toList());
+        return new ResponseEntity<List<Transaction>>(realList, HttpStatus.OK);
+    }
+
 
     @RequestMapping(value = "/add",
             method = RequestMethod.POST,
@@ -46,12 +58,7 @@ public class TransactionController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Transaction> create(@RequestBody Transaction transaction) {
-        Transaction transaction1=null;
-        try {
-            transaction1 = service.saveTransaction(transaction);
-        } catch (Exception ex) {
-            return new ResponseEntity<Transaction>(transaction1, HttpStatus.BAD_REQUEST);
-        }
+        Transaction transaction1 = service.saveTransaction(transaction);
         return new ResponseEntity<Transaction>(transaction1, HttpStatus.ACCEPTED);
     }
 
@@ -61,12 +68,7 @@ public class TransactionController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Transaction> update(@RequestBody Transaction transaction) {
-        Transaction transaction1=null;
-        try {
-            transaction1=service.updateTransaction(transaction);
-        } catch (Exception ex) {
-            return new ResponseEntity<Transaction>(transaction1, HttpStatus.BAD_REQUEST);
-        }
+        Transaction transaction1 = service.updateTransaction(transaction);
         return new ResponseEntity<Transaction>(transaction1, HttpStatus.ACCEPTED);
     }
 
@@ -82,7 +84,4 @@ public class TransactionController {
             return new ResponseEntity<String>("No such transaction found!", HttpStatus.OK);
         }
     }
-
-
-
 }

@@ -4,18 +4,16 @@ import com.taim.client.IClient;
 import com.taim.client.TransactionClient;
 import com.taim.dto.PaymentDTO;
 import com.taim.dto.TransactionDTO;
-import com.taim.dto.VendorDTO;
 import com.taim.model.Transaction;
-import com.taimsoft.desktopui.uicomponents.LiveComboBoxTableCell;
 import com.taimsoft.desktopui.util.RestClientFactory;
 import com.taimsoft.desktopui.util.TransactionPanelLoader;
+import com.taimsoft.desktopui.util.VistaNavigator;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -28,17 +26,14 @@ import org.joda.time.DateTime;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
-import static com.taimsoft.desktopui.controllers.overview.OverviewController.SummaryLabelMode.*;
+import static com.taimsoft.desktopui.controllers.overview.IOverviewController.SummaryLabelMode.*;
 
 /**
  * Created by Tjin on 8/28/2017.
  */
-public class TransactionOverviewController extends OverviewController<TransactionDTO> {
+public class TransactionOverviewController extends IOverviewController<TransactionDTO> {
     private TransactionClient transactionClient;
 
     @FXML
@@ -57,6 +52,8 @@ public class TransactionOverviewController extends OverviewController<Transactio
     private TableColumn<TransactionDTO, String> actionCol;
     @FXML
     private TableColumn<TransactionDTO, Boolean> checkedCol;
+    @FXML
+    private SplitPane summarySplitPane;
     @FXML
     private Label totalQuotedLabel;
     @FXML
@@ -123,15 +120,15 @@ public class TransactionOverviewController extends OverviewController<Transactio
                                     break;
                                 case QUOTATION:
                                     comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "CONVERT TO INVOICE", "EDIT", "PRINT", "DELETE"));
-                                    comboBox.setOnAction(new EventHandler<ActionEvent>() {
-                                        @Override
-                                        public void handle(ActionEvent event) {
-                                            TransactionDTO newTran = TransactionPanelLoader.loadQuotation(transactionDTO,null);
-                                        }
-                                    });
+                                    break;
+                                default:
                                     break;
                             }
-                            comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "EDIT", "DELETE"));
+                            comboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+                                if(newValue.equals("VIEW DETAILS")){
+                                    VistaNavigator.loadDetailVista(VistaNavigator.VISTA_TRANSACTION_DETAIL, transactionDTO);
+                                }
+                            });
                             comboBox.setValue(item);
                             setGraphic(comboBox);
                         }
@@ -222,22 +219,22 @@ public class TransactionOverviewController extends OverviewController<Transactio
                     return true;
                 }
                 String lowerCase = newVal.toLowerCase();
-                if(transactionDTO.getDateCreated().toString().toLowerCase().equals(lowerCase)){
+                if(transactionDTO.getDateCreated().toString().toLowerCase().contains(lowerCase)){
                     return true;
-                }else if(transactionDTO.getTransactionType().getValue().toLowerCase().equals(lowerCase)){
+                }else if(transactionDTO.getTransactionType().name().toLowerCase().contains(lowerCase)){
                     return true;
                 }else if(String.valueOf(transactionDTO.getId()).equals(lowerCase)){
                     return true;
-                }else if(String.valueOf(transactionDTO.getSaleAmount()).equals(lowerCase)){
+                }else if(String.valueOf(transactionDTO.getSaleAmount()).contains(lowerCase)){
                     return true;
-                }else if(transactionDTO.getPaymentStatus().getValue().toLowerCase().equals(lowerCase)){
+                }else if(transactionDTO.getPaymentStatus().getValue().toLowerCase().contains(lowerCase)){
                     return true;
                 }else{
                     BigDecimal roundedBalance = new BigDecimal(transactionDTO.getSaleAmount());
                     for(PaymentDTO payment: transactionDTO.getPayments()){
                         roundedBalance = roundedBalance.subtract(new BigDecimal(payment.getPaymentAmount()));
                     }
-                    if(roundedBalance.setScale(2, BigDecimal.ROUND_HALF_EVEN).toString().equals(lowerCase)){
+                    if(roundedBalance.setScale(2, BigDecimal.ROUND_HALF_EVEN).toString().contains(lowerCase)){
                         return true;
                     }
                 }

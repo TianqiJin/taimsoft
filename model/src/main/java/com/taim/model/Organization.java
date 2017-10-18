@@ -1,7 +1,11 @@
 package com.taim.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.taim.model.basemodels.BaseModel;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -12,6 +16,9 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "organization")
+@JsonIdentityInfo(scope = Organization.class,
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Organization extends BaseModel {
     @Column(name = "name", nullable = false)
     private String orgName;
@@ -25,12 +32,8 @@ public class Organization extends BaseModel {
     private String country;
     @Column(name = "postal_code", nullable = false)
     private String postalCode;
-    @OneToMany(mappedBy = "organization", fetch = FetchType.LAZY)
-    private Set<Staff> staffs;
 
-    public Organization(){
-        staffs = new HashSet<Staff>();
-    }
+    public Organization(){}
 
     public String getOrgName() {
         return orgName;
@@ -80,25 +83,4 @@ public class Organization extends BaseModel {
         this.postalCode = postalCode;
     }
 
-    public Set<Staff> getStaffs() {
-        return staffs;
-    }
-
-    public void setStaffs(Set<Staff> staffs) {
-        this.staffs = staffs;
-    }
-
-    @Override
-    public String toString() {
-        return "{\"Organization\":"
-                + super.toString()
-                + ", \"orgName\":\"" + orgName + "\""
-                + ", \"streetNum\":\"" + streetNum + "\""
-                + ", \"street\":\"" + street + "\""
-                + ", \"city\":\"" + city + "\""
-                + ", \"country\":\"" + country + "\""
-                + ", \"postalCode\":\"" + postalCode + "\""
-                + ", \"staffs\":" + staffs
-                + "}";
-    }
 }

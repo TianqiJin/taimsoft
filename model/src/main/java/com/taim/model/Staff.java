@@ -2,7 +2,12 @@ package com.taim.model;
 
 
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.taim.model.basemodels.UserBaseModel;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -11,6 +16,9 @@ import java.util.List;
  */
 @Entity
 @Table(name = "staff")
+@JsonIdentityInfo(scope = Staff.class,
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Staff extends UserBaseModel {
 
     public enum Position{
@@ -40,10 +48,11 @@ public class Staff extends UserBaseModel {
     private String picUrl;
     @Column
     private Position position;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "organization_id")
     private Organization organization;
-    @OneToMany(mappedBy = "staff", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "staff", fetch = FetchType.EAGER)
+    @Fetch(FetchMode.SUBSELECT)
     private List<Transaction> transactionList;
 
     public Staff(){}
@@ -96,16 +105,4 @@ public class Staff extends UserBaseModel {
         this.position = position;
     }
 
-    @Override
-    public String toString() {
-        return "{\"Staff\":"
-                + super.toString()
-                + ", \"userName\":\"" + userName + "\""
-                + ", \"password\":\"" + password + "\""
-                + ", \"picUrl\":\"" + picUrl + "\""
-                + ", \"position\":\"" + position + "\""
-                + ", \"organization\":" + organization
-                + ", \"transactionList\":" + transactionList
-                + "}";
-    }
 }

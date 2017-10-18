@@ -2,7 +2,6 @@ package com.taimsoft.desktopui.controllers.overview;
 
 import com.taim.client.IClient;
 import com.taim.client.VendorClient;
-import com.taim.dto.ProductDTO;
 import com.taim.dto.TransactionDTO;
 import com.taim.dto.VendorDTO;
 import com.taim.model.Transaction;
@@ -11,28 +10,21 @@ import com.taimsoft.desktopui.util.RestClientFactory;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-import static com.taimsoft.desktopui.controllers.overview.OverviewController.SummaryLabelMode.*;
+import static com.taimsoft.desktopui.controllers.overview.IOverviewController.SummaryLabelMode.*;
 
 /**
  * Created by Tjin on 8/30/2017.
  */
-public class VendorOverviewController extends OverviewController<VendorDTO>{
+public class VendorOverviewController extends IOverviewController<VendorDTO> {
     private VendorClient vendorClient;
 
-    @FXML
-    private TableView<VendorDTO> vendorTable;
     @FXML
     private TableColumn<VendorDTO, String> nameCol;
     @FXML
@@ -43,6 +35,8 @@ public class VendorOverviewController extends OverviewController<VendorDTO>{
     private TableColumn<VendorDTO, String> actionCol;
     @FXML
     private TableColumn<VendorDTO, Boolean> checkedCol;
+    @FXML
+    private SplitPane summarySplitPane;
     @FXML
     private Label totalUnpaidLabel;
     @FXML
@@ -84,7 +78,7 @@ public class VendorOverviewController extends OverviewController<VendorDTO>{
                     double totalValue = 0 ;
                     switch(mode){
                         case Paid:
-                            for (VendorDTO item : vendorTable.getItems()) {
+                            for (VendorDTO item : getOverviewTable().getItems()) {
                                 for(TransactionDTO transactionDTO: item.getTransactionList()){
                                     if(transactionDTO.getTransactionType().equals(Transaction.TransactionType.STOCK) &&
                                             transactionDTO.getPaymentStatus().equals(Transaction.PaymentStatus.PAID)){
@@ -94,7 +88,7 @@ public class VendorOverviewController extends OverviewController<VendorDTO>{
                             }
                             break;
                         case Unpaid:
-                            for (VendorDTO item : vendorTable.getItems()) {
+                            for (VendorDTO item : getOverviewTable().getItems()) {
                                 for(TransactionDTO transactionDTO: item.getTransactionList()){
                                     if(transactionDTO.getTransactionType().equals(Transaction.TransactionType.STOCK) &&
                                             transactionDTO.getPaymentStatus().equals(Transaction.PaymentStatus.UNPAID)){
@@ -108,7 +102,7 @@ public class VendorOverviewController extends OverviewController<VendorDTO>{
 
                     return totalValue ;
                 },
-                vendorTable.getItems());
+                getOverviewTable().getItems());
         label.textProperty().bind(Bindings.format("%.2f", numberBinding));
     }
 }

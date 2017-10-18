@@ -52,6 +52,18 @@ public class TransactionClient implements IClient<TransactionDTO>{
         return BeanMapper.map(responseEntity.getBody(), TransactionDTO.class);
     }
 
+    public List<TransactionDTO> getListByProductID(Integer id){
+        String url = TRANSACTION_PATH+"/getByProductId"+"?id="+id;
+        HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
+
+        ResponseEntity<Transaction[]> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity,Transaction[].class);
+        Transaction[] transactions = responseEntity.getBody();
+        List<TransactionDTO> transactionList = new ArrayList<>();
+        Arrays.stream(transactions).forEach(p->transactionList.add(BeanMapper.map(p, TransactionDTO.class)));
+
+        return transactionList;
+    }
+
     public String deleteById(Integer id){
         String url = TRANSACTION_PATH+"/deleteObject"+"?id="+id;
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);

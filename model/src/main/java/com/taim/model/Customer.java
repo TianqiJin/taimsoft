@@ -1,7 +1,12 @@
 package com.taim.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.taim.model.basemodels.UserBaseModel;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 
 import javax.persistence.*;
 import java.util.List;
@@ -11,6 +16,10 @@ import java.util.List;
  */
 @Entity
 @Table(name = "customer")
+@JsonIdentityInfo(
+        scope = Customer.class,
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Customer extends UserBaseModel {
     public enum CustomerClass{
         CLASSA("Class A"),
@@ -31,7 +40,13 @@ public class Customer extends UserBaseModel {
     private double storeCredit;
     @Column(name = "customer_class")
     private CustomerClass customerClass;
-    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
+    @Column(name = "user_type")
+    private UserType userType;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "organization_id")
+    private Organization organization;
+    @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @Fetch(FetchMode.SUBSELECT)
     private List<Transaction> transactionList;
 
     public Customer(){}
@@ -60,13 +75,19 @@ public class Customer extends UserBaseModel {
         this.customerClass = customerClass;
     }
 
-    @Override
-    public String toString() {
-        return "{\"Customer\":"
-                + super.toString()
-                + ", \"storeCredit\":\"" + storeCredit + "\""
-                + ", \"customerClass\":\"" + customerClass + "\""
-                + ", \"transactionList\":" + transactionList
-                + "}";
+    public UserType getUserType() {
+        return userType;
+    }
+
+    public void setUserType(UserType userType) {
+        this.userType = userType;
+    }
+
+    public Organization getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
     }
 }

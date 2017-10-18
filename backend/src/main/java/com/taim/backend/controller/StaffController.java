@@ -42,12 +42,7 @@ public class StaffController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Staff> create(@RequestBody Staff staff) {
-        Staff staff1 = null;
-        try {
-            staff1=service.saveStaff(staff);
-        } catch (Exception ex) {
-            return new ResponseEntity<Staff>(staff1, HttpStatus.BAD_REQUEST);
-        }
+        Staff staff1 = service.saveStaff(staff);
         return new ResponseEntity<Staff>(staff1, HttpStatus.ACCEPTED);
     }
 
@@ -57,12 +52,7 @@ public class StaffController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Staff> update(@RequestBody Staff staff) {
-        Staff staff1 = null;
-        try {
-            staff1=service.updateStaff(staff);
-        } catch (Exception ex) {
-            return new ResponseEntity<Staff>(staff1, HttpStatus.BAD_REQUEST);
-        }
+        Staff staff1 = service.updateStaff(staff);
         return new ResponseEntity<Staff>(staff1, HttpStatus.ACCEPTED);
     }
 

@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "transaction_detail")
 public class TransactionDetail extends BaseModel {
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id")
     private Product product;
     @Column
@@ -22,7 +22,7 @@ public class TransactionDetail extends BaseModel {
     private int discount;
     @Column(name = "note")
     private String note;
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "package_info_id")
     private PackageInfo packageInfo;
 
@@ -76,16 +76,4 @@ public class TransactionDetail extends BaseModel {
         this.packageInfo = packageInfo;
     }
 
-    @Override
-    public String toString() {
-        return "{\"TransactionDetail\":"
-                + super.toString()
-                + ", \"product\":" + product
-                + ", \"quantity\":\"" + quantity + "\""
-                + ", \"saleAmount\":\"" + saleAmount + "\""
-                + ", \"discount\":\"" + discount + "\""
-                + ", \"note\":\"" + note + "\""
-                + ", \"packageInfo\":" + packageInfo
-                + "}";
-    }
 }

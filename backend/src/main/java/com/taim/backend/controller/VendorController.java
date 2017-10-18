@@ -43,12 +43,7 @@ public class VendorController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Vendor> create(@RequestBody Vendor vendor) {
-        Vendor vendor1 = null;
-        try {
-            vendor1 = service.saveVendor(vendor);
-        } catch (Exception ex) {
-            return new ResponseEntity<Vendor>(vendor1, HttpStatus.BAD_REQUEST);
-        }
+        Vendor vendor1 = service.saveVendor(vendor);
         return new ResponseEntity<Vendor>(vendor1, HttpStatus.ACCEPTED);
     }
 
@@ -58,12 +53,7 @@ public class VendorController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Vendor> update(@RequestBody Vendor vendor) {
-        Vendor vendor1 = null;
-        try {
-            vendor1 = service.updateVendor(vendor);
-        } catch (Exception ex) {
-            return new ResponseEntity<Vendor>(vendor1, HttpStatus.BAD_REQUEST);
-        }
+        Vendor vendor1 = service.updateVendor(vendor);
         return new ResponseEntity<Vendor>(vendor1, HttpStatus.ACCEPTED);
     }
 
@@ -79,7 +69,4 @@ public class VendorController {
             return new ResponseEntity<String>("No such vendor found!", HttpStatus.OK);
         }
     }
-
-
-
 }

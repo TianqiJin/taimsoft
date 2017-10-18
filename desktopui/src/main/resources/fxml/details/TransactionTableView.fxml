@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taimsoft.desktopui.controllers.details.TransactionTableViewController">
+   <children>
+      <TableView fx:id="transactionTableView" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <columns>
+            <TableColumn fx:id="transactionIDCol" prefWidth="75.0" text="Transaction ID" />
+            <TableColumn fx:id="dateCreatedCol" prefWidth="75.0" text="Date Created" />
+            <TableColumn fx:id="staffCol" prefWidth="75.0" text="Created By" />
+            <TableColumn fx:id="cuVeCol" prefWidth="75.0" text="Customer" />
+            <TableColumn fx:id="saleAmountCol" prefWidth="75.0" text="Sale Amount" />
+            <TableColumn fx:id="paymentCol" prefWidth="75.0" text="Payment" />
+            <TableColumn fx:id="deliveryStatusCol" prefWidth="75.0" text="Delivery Status" />
+            <TableColumn fx:id="paymentStatusCol" prefWidth="75.0" text="Payment Status" />
+            <TableColumn fx:id="finalizedCol" prefWidth="75.0" text="Finalized" />
+         </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
+      </TableView>
+   </children>
+</AnchorPane>
