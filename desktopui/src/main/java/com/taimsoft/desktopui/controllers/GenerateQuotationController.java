@@ -493,7 +493,7 @@ public class GenerateQuotationController {
             addItemButton.setDisable(false);
             fullNameLabel.setText(this.customer.getFullname());
             storeCreditLabel.setText(String.valueOf(this.customer.getStoreCredit()));
-            discountLabel.setText(this.customer.getCustomerClass().getValue());
+            discountLabel.setText(this.customer.getCustomerClass().getCustomerClassName());
             emailLabel.setText(this.customer.getEmail());
             phoneLabel.setText(this.customer.getPhone());
         }
@@ -617,18 +617,8 @@ public class GenerateQuotationController {
 
     private int validateDiscountEntered(int oldValue, int newValue){
         if (this.customer!=null) {
-            if (customer.getCustomerClass() == Customer.CustomerClass.CLASSA) {
-                if (newValue >= 0 && newValue <= 30) {
-                    return newValue;
-                }
-            } else if (customer.getCustomerClass() == Customer.CustomerClass.CLASSB) {
-                if (newValue >= 0 && newValue <= 20) {
-                    return newValue;
-                }
-            } else if (customer.getCustomerClass() == Customer.CustomerClass.CLASSC) {
-                if (newValue >= 0 && newValue <= 10) {
-                    return newValue;
-                }
+            if(newValue <= this.customer.getCustomerClass().getCustomerDiscount()){
+                return newValue;
             }
         }
         return oldValue;

@@ -6,12 +6,13 @@ import com.taim.dto.StaffDTO;
 import com.taim.model.Staff;
 import com.taimsoft.desktopui.uicomponents.LiveComboBoxTableCell;
 import com.taimsoft.desktopui.util.RestClientFactory;
+import com.taimsoft.desktopui.util.VistaNavigator;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.Callback;
 
 /**
  * Created by Tjin on 8/30/2017.
@@ -19,8 +20,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 public class StaffOverviewController extends IOverviewController<StaffDTO> {
     private StaffClient staffClient;
 
-    @FXML
-    private TableView<StaffDTO> staffTable;
     @FXML
     private TableColumn<StaffDTO, String> nameCol;
     @FXML
@@ -35,6 +34,8 @@ public class StaffOverviewController extends IOverviewController<StaffDTO> {
     private TableColumn<StaffDTO, String> actionCol;
     @FXML
     private TableColumn<StaffDTO, Boolean> checkedCol;
+    @FXML
+    private SplitPane summarySplitPane;
 
     public StaffOverviewController(){
         this.staffClient = RestClientFactory.getStaffClient();
@@ -50,17 +51,40 @@ public class StaffOverviewController extends IOverviewController<StaffDTO> {
         checkedCol.setCellValueFactory(new PropertyValueFactory<>("isChecked"));
         checkedCol.setCellFactory(CheckBoxTableCell.forTableColumn(checkedCol));
         actionCol.setCellValueFactory(new PropertyValueFactory<>("action"));
-        actionCol.setCellFactory(param -> {
-            LiveComboBoxTableCell<StaffDTO, String> liveComboBoxTableCell = new LiveComboBoxTableCell<>(
-                    FXCollections.observableArrayList("VIEW DETAILS", "EDIT", "DELETE"));
-            return liveComboBoxTableCell;
+        actionCol.setCellFactory(new Callback<TableColumn<StaffDTO, String>, TableCell<StaffDTO, String>>() {
+            @Override
+            public TableCell<StaffDTO, String> call(TableColumn<StaffDTO, String> param) {
+                return new TableCell<StaffDTO, String>(){
+                    ComboBox<String> comboBox = new ComboBox<>();
+                    @Override
+                    public void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            comboBox.setPromptText("SET ACTION");
+                            comboBox.prefWidthProperty().bind(this.widthProperty());
+                            StaffDTO staffDTO = getTableView().getItems().get(getIndex());
+                            comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "EDIT", "DELETE"));
+                            comboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+                                if(newValue.equals("VIEW DETAILS")){
+                                    VistaNavigator.loadDetailVista(VistaNavigator.VISTA_STAFF_DETAIL, staffDTO);
+                                }
+                            });
+                            comboBox.setValue(item);
+                            setGraphic(comboBox);
+                        }
+                    }
+                };
+            }
         });
     }
 
     @Override
-    public void initSearchField() {
+    public void initSearchField() {}
 
-    }
+    @Override
+    public void initSummaryLabel() {}
 
     @Override
     public IClient<StaffDTO> getOverviewClient(){

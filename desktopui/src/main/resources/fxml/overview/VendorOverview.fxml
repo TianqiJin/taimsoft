@@ -28,7 +28,7 @@
                                        <children>
                                           <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
                                              <children>
-                                                <Label fx:id="totalUnpaidLabel" text="Label">
+                                                <Label fx:id="totalUnpaidLabel">
                                                    <font>
                                                       <Font name="System Bold" size="18.0" />
                                                    </font>
@@ -49,7 +49,7 @@
                                        <children>
                                           <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
                                              <children>
-                                                <Label fx:id="totalPaidLabel" text="Label">
+                                                <Label fx:id="totalPaidLabel">
                                                    <font>
                                                       <Font name="System Bold" size="18.0" />
                                                    </font>

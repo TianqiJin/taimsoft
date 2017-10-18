@@ -23,9 +23,13 @@ public abstract class IOverviewController<T>{
     private TableView<T> overviewTable;
 
     enum SummaryLabelMode{
-        Quoted,
-        Unpaid,
-        Paid;
+        QUOTED,
+        INVOICE_UNPAID,
+        INVOICE_PAID,
+        STOCK_UNPAID,
+        STOCK_PAID,
+        RETURN_UNPAID,
+        RETURN_PAID;
     }
 
     public IOverviewController(){
@@ -36,9 +40,11 @@ public abstract class IOverviewController<T>{
         });
     }
 
-    abstract void initSearchField();
+    public abstract void initSearchField();
 
     public abstract IClient<T> getOverviewClient();
+
+    public abstract void initSummaryLabel();
 
     public void initOverviewData(IClient<T> client){
         Task<List<T>> task = new Task<List<T>>() {
@@ -52,6 +58,7 @@ public abstract class IOverviewController<T>{
             overviewDTOList = task.getValue();
             overviewTable.setItems(FXCollections.observableArrayList(overviewDTOList));
             initSearchField();
+            initSummaryLabel();
         });
 
         executor.execute(task);

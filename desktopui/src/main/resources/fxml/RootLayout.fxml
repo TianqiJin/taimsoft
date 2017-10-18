@@ -59,7 +59,7 @@
                            </padding>
                         </Button>
                         <Separator prefWidth="200.0" />
-                        <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Settings">
+                        <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleSettingButton" text="Settings">
                            <padding>
                               <Insets bottom="20.0" top="20.0" />
                            </padding>

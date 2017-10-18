@@ -103,7 +103,7 @@ public class dummyTest {
         customer1.setEmail("tm@gmail.com");
         customer1.setFullname("Tim Hortons");
         customer1.setPhone("5698974624");
-        customer1.setCustomerClass(Customer.CustomerClass.CLASSB);
+//        customer1.setCustomerClass(Customer.CustomerClass.CLASSB);
 
         CustomerDTO customer2 = new CustomerDTO();
         customer2.setDateCreated(DateTime.now());
@@ -111,7 +111,7 @@ public class dummyTest {
         customer2.setEmail("dummyDum@hotmail.com");
         customer2.setFullname("Dummy dum");
         customer2.setPhone("1234698712");
-        customer2.setCustomerClass(Customer.CustomerClass.CLASSC);
+//        customer2.setCustomerClass(Customer.CustomerClass.CLASSC);
 
         RestClientFactory.getCustomerClient().add(customer1);
         RestClientFactory.getCustomerClient().add(customer2);

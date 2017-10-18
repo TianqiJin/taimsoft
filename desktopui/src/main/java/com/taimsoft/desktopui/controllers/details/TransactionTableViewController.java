@@ -38,10 +38,16 @@ public class TransactionTableViewController {
         staffCol.setCellValueFactory(param -> param.getValue().getStaff().fullnameProperty());
         cuVeCol.setCellValueFactory(param -> {
             if(param.getValue().getTransactionType().equals(Transaction.TransactionType.INVOICE)){
-                return param.getValue().getVendor().fullnameProperty();
+                if(param.getValue().getVendor() != null){
+                    return param.getValue().getVendor().fullnameProperty();
+                }
+
             }else{
-                return param.getValue().getCustomer().fullnameProperty();
+                if(param.getValue().getCustomer() != null){
+                    return param.getValue().getCustomer().fullnameProperty();
+                }
             }
+            return new SimpleStringProperty();
         });
         saleAmountCol.setCellValueFactory(new PropertyValueFactory<>("saleAmount"));
         deliveryStatusCol.setCellValueFactory(new PropertyValueFactory<>("deliveryStatus"));

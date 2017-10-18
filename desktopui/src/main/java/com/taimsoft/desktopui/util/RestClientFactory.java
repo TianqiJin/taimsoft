@@ -1,6 +1,7 @@
 package com.taimsoft.desktopui.util;
 
 import com.taim.client.*;
+import com.taim.model.Property;
 
 /**
  * Created by Tjin on 9/9/2017.
@@ -11,6 +12,7 @@ public class RestClientFactory {
     private static VendorClient vendorClient;
     private static ProductClient productClient;
     private static StaffClient staffClient;
+    private static PropertyClient propertyClient;
 
     public static TransactionClient getTransactionClient(){
         if(transactionClient == null){
@@ -65,5 +67,16 @@ public class RestClientFactory {
             }
         }
         return staffClient;
+    }
+
+    public static PropertyClient getPropertyClient(){
+        if(propertyClient == null){
+            synchronized (RestClientFactory.class){
+                if(propertyClient == null){
+                    propertyClient = new PropertyClient();
+                }
+            }
+        }
+        return propertyClient;
     }
 }
