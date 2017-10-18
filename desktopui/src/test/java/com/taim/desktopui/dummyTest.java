@@ -128,6 +128,7 @@ public class dummyTest {
     @Test
     public void addCustomerTransactionDTOTest()throws Exception{
         TransactionDetailDTO detail1 = new TransactionDetailDTO();
+
         detail1.setProduct(RestClientFactory.getProductClient().getById(1));
         detail1.setQuantity(2);
         detail1.setSaleAmount(20);
@@ -146,10 +147,13 @@ public class dummyTest {
         transaction.setDateModified(DateTime.now());
         transaction.setDateCreated(DateTime.now());
 
-        transaction.setCustomer(RestClientFactory.getCustomerClient().getByName("Tim Hortons"));
+        CustomerDTO customer = RestClientFactory.getCustomerClient().getByName("Tim Hortons");
 
+        transaction.setCustomer(customer);
+        customer.getTransactionList().add(transaction);
+
+        RestClientFactory.getCustomerClient().update(customer);
         RestClientFactory.getTransactionClient().add(transaction);
-
 
     }
 }

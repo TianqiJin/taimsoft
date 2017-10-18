@@ -1,7 +1,6 @@
 package com.taim.model;
 
 
-import com.fasterxml.jackson.annotation.*;
 import com.taim.model.basemodels.UserBaseModel;
 
 import javax.persistence.*;
@@ -12,10 +11,6 @@ import java.util.List;
  */
 @Entity
 @Table(name = "customer")
-//@JsonIdentityInfo(
-//        scope = Customer.class,
-//        generator = ObjectIdGenerators.PropertyGenerator.class,
-//        property = "id")
 public class Customer extends UserBaseModel {
     public enum CustomerClass{
         CLASSA("Class A"),
@@ -37,7 +32,6 @@ public class Customer extends UserBaseModel {
     @Column(name = "customer_class")
     private CustomerClass customerClass;
     @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
-    @JsonManagedReference
     private List<Transaction> transactionList;
 
     public Customer(){}

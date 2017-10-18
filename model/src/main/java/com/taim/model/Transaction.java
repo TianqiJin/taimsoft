@@ -229,26 +229,26 @@ public class Transaction extends BaseModel {
         this.finalized = finalized;
     }
 
-    @Override
-    public String toString() {
-        return "{\"Transaction\":"
-                + super.toString()
-                + ", \"saleAmount\":\"" + saleAmount + "\""
-                + ", \"gst\":\"" + gst + "\""
-                + ", \"pst\":\"" + pst + "\""
-                + ", \"staff\":" + staff
-                + ", \"customer\":" + customer
-                + ", \"vendor\":" + vendor
-                + ", \"transactionType\":\"" + transactionType + "\""
-                + ", \"paymentStatus\":\"" + paymentStatus + "\""
-                + ", \"deliveryStatus\":" + deliveryStatus
-                + ", \"paymentDueDate\":" + paymentDueDate
-                + ", \"deliveryDueDate\":" + deliveryDueDate
-                + ", \"transactionDetails\":" + transactionDetails
-                + ", \"payments\":" + payments
-                + ", \"refId\":\"" + refId + "\""
-                + ", \"finalized\":\"" + finalized + "\""
-                + ", \"note\":\"" + note + "\""
-                + "}";
-    }
+//    @Override
+//    public String toString() {
+//        return "{\"Transaction\":"
+//                + super.toString()
+//                + ", \"saleAmount\":\"" + saleAmount + "\""
+//                + ", \"gst\":\"" + gst + "\""
+//                + ", \"pst\":\"" + pst + "\""
+//                + ", \"staff\":" + staff
+//                + ", \"customer\":" + customer
+//                + ", \"vendor\":" + vendor
+//                + ", \"transactionType\":\"" + transactionType + "\""
+//                + ", \"paymentStatus\":\"" + paymentStatus + "\""
+//                + ", \"deliveryStatus\":" + deliveryStatus
+//                + ", \"paymentDueDate\":" + paymentDueDate
+//                + ", \"deliveryDueDate\":" + deliveryDueDate
+//                + ", \"transactionDetails\":" + transactionDetails
+//                + ", \"payments\":" + payments
+//                + ", \"refId\":\"" + refId + "\""
+//                + ", \"finalized\":\"" + finalized + "\""
+//                + ", \"note\":\"" + note + "\""
+//                + "}";
+//    }
 }

@@ -58,13 +58,13 @@ public class BaseModel {
         this.deleted = deleted;
     }
 
-    @Override
-    public String toString() {
-        return "{\"BaseModel\":{"
-                + "\"id\":\"" + id + "\""
-                + ", \"dateCreated\":" + dateCreated
-                + ", \"dateModified\":" + dateModified
-                + ", \"deleted\":\"" + deleted + "\""
-                + "}}";
-    }
+//    @Override
+//    public String toString() {
+//        return "{\"BaseModel\":{"
+//                + "\"id\":\"" + id + "\""
+//                + ", \"dateCreated\":" + dateCreated
+//                + ", \"dateModified\":" + dateModified
+//                + ", \"deleted\":\"" + deleted + "\""
+//                + "}}";
+//    }
 }
