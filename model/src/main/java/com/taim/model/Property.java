@@ -5,6 +5,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -23,7 +24,7 @@ public class Property extends BaseModel{
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @Fetch(FetchMode.SUBSELECT)
     @JoinColumn(name = "property_id")
-    private Set<CustomerClass> customerClasses;
+    private List<CustomerClass> customerClasses;
 
     @Entity
     @Table(name = "customer_class")
@@ -84,11 +85,11 @@ public class Property extends BaseModel{
         this.gstNumber = gstNumber;
     }
 
-    public Set<CustomerClass> getCustomerClasses() {
+    public List<CustomerClass> getCustomerClasses() {
         return customerClasses;
     }
 
-    public void setCustomerClasses(Set<CustomerClass> customerClasses) {
+    public void setCustomerClasses(List<CustomerClass> customerClasses) {
         this.customerClasses = customerClasses;
     }
 

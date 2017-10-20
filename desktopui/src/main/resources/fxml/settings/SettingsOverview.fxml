@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="1000.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taimsoft.desktopui.controllers.settings.SettingsOverviewController">
+<AnchorPane fx:id="rootPane" prefHeight="1000.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taimsoft.desktopui.controllers.settings.SettingsOverviewController">
    <children>
       <Label layoutX="30.0" layoutY="14.0" text="Settings" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
          <font>
@@ -41,6 +41,7 @@
                                                   <columnConstraints>
                                                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                   </columnConstraints>
                                                   <rowConstraints>
                                                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -90,9 +91,34 @@
                                                          <padding>
                                                             <Insets bottom="5.0" />
                                                          </padding></TextField>
+                                                      <Label fx:id="companyNameErrorLabel" GridPane.columnIndex="2">
+                                                         <padding>
+                                                            <Insets left="5.0" />
+                                                         </padding>
+                                                      </Label>
+                                                      <Label fx:id="productWarnLimitErrorLabel" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                                         <padding>
+                                                            <Insets left="5.0" />
+                                                         </padding>
+                                                      </Label>
+                                                      <Label fx:id="gstNumErrorLabel" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                                                         <padding>
+                                                            <Insets left="5.0" />
+                                                         </padding>
+                                                      </Label>
+                                                      <Label fx:id="gstRateErrorLabel" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                                                         <padding>
+                                                            <Insets left="5.0" />
+                                                         </padding>
+                                                      </Label>
+                                                      <Label fx:id="pstRateErrorLabel" GridPane.columnIndex="2" GridPane.rowIndex="4">
+                                                         <padding>
+                                                            <Insets left="5.0" />
+                                                         </padding>
+                                                      </Label>
                                                    </children>
                                                 </GridPane>
-                                                <Button layoutX="868.0" layoutY="203.0" mnemonicParsing="false" text="Save" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                                                <Button layoutX="868.0" layoutY="203.0" mnemonicParsing="false" onAction="#handleSavePropertyButton" text="Save" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
                                              </children>
                                           </AnchorPane>
                                       </content>
@@ -105,7 +131,7 @@
                                       <content>
                                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                              <children>
-                                                <TableView fx:id="customerClassTable" layoutX="108.0" layoutY="-49.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                <TableView fx:id="customerClassTable" editable="true" layoutX="108.0" layoutY="-49.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                   <columns>
                                                     <TableColumn fx:id="customerClassCol" prefWidth="75.0" text="Customer Class" />
                                                     <TableColumn fx:id="discountCol" prefWidth="75.0" text="Discount" />
@@ -115,7 +141,7 @@
                                                       <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                                    </columnResizePolicy>
                                                 </TableView>
-                                                <Button layoutX="890.0" layoutY="152.0" mnemonicParsing="false" text="Save" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                                                <Button layoutX="890.0" layoutY="152.0" mnemonicParsing="false" onAction="#handleSaveCustomerClassButton" text="Save" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
                                              </children>
                                           </AnchorPane>
                                       </content>
@@ -177,7 +203,98 @@
           </Tab>
           <Tab text="Account Settings">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TitledPane animated="false" collapsible="false" text="General Information" AnchorPane.bottomAnchor="500.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+                           <content>
+                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <GridPane layoutX="357.0" layoutY="44.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="300.0" AnchorPane.topAnchor="20.0">
+                                       <columnConstraints>
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                       </columnConstraints>
+                                       <rowConstraints>
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                       </rowConstraints>
+                                       <children>
+                                          <Label text="Username" />
+                                          <TextField fx:id="companyNameField1" GridPane.columnIndex="1">
+                                             <GridPane.margin>
+                                                <Insets />
+                                             </GridPane.margin>
+                                             <padding>
+                                                <Insets bottom="5.0" />
+                                             </padding>
+                                          </TextField>
+                                          <Label text="Position" GridPane.rowIndex="2" />
+                                          <Label text="Password" GridPane.rowIndex="1" />
+                                          <TextField fx:id="gstRateField1" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                             <GridPane.margin>
+                                                <Insets bottom="5.0" top="5.0" />
+                                             </GridPane.margin>
+                                             <padding>
+                                                <Insets bottom="5.0" />
+                                             </padding>
+                                          </TextField>
+                                          <Label text="Full Name" GridPane.rowIndex="3" />
+                                          <Label text="Phone" GridPane.rowIndex="4" />
+                                          <TextField fx:id="pstRateField1" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                             <GridPane.margin>
+                                                <Insets bottom="5.0" top="5.0" />
+                                             </GridPane.margin>
+                                             <padding>
+                                                <Insets bottom="5.0" />
+                                             </padding>
+                                          </TextField>
+                                          <Label fx:id="companyNameErrorLabel1" GridPane.columnIndex="2">
+                                             <padding>
+                                                <Insets left="5.0" />
+                                             </padding>
+                                          </Label>
+                                          <Label fx:id="productWarnLimitErrorLabel1" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                             <padding>
+                                                <Insets left="5.0" />
+                                             </padding>
+                                          </Label>
+                                          <Label fx:id="gstNumErrorLabel1" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                                             <padding>
+                                                <Insets left="5.0" />
+                                             </padding>
+                                          </Label>
+                                          <Label fx:id="gstRateErrorLabel1" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                                             <padding>
+                                                <Insets left="5.0" />
+                                             </padding>
+                                          </Label>
+                                          <Label fx:id="pstRateErrorLabel1" GridPane.columnIndex="2" GridPane.rowIndex="4">
+                                             <padding>
+                                                <Insets left="5.0" />
+                                             </padding>
+                                          </Label>
+                                          <Label text="Email" GridPane.rowIndex="5" />
+                                          <TextField GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                          <Label GridPane.columnIndex="2" GridPane.rowIndex="5">
+                                             <padding>
+                                                <Insets left="5.0" />
+                                             </padding>
+                                          </Label>
+                                          <Button mnemonicParsing="false" text="Change Password" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                          <Label text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                       </children>
+                                    </GridPane>
+                                    <Button layoutX="868.0" layoutY="203.0" mnemonicParsing="false" onAction="#handleSavePropertyButton" text="Save" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                                 </children>
+                              </AnchorPane>
+                           </content>
+                        </TitledPane>
+                     </children></AnchorPane>
             </content>
           </Tab>
         </tabs>

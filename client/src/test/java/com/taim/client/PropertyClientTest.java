@@ -7,7 +7,9 @@ import org.joda.time.DateTime;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class PropertyClientTest {
@@ -18,7 +20,7 @@ public class PropertyClientTest {
     public static void prepareObject(){
         DateTime d1Created = DateTime.now();
         DateTime d1Modified = DateTime.now();
-        Set<PropertyDTO.CustomerClassDTO> customerClassDTOS = new HashSet<>();
+        List<PropertyDTO.CustomerClassDTO> customerClassDTOS = new ArrayList<>();
         PropertyDTO.CustomerClassDTO customerClassDTO1 = new PropertyDTO.CustomerClassDTO();
         customerClassDTO1.setCustomerClassName("Class 1");
         customerClassDTO1.setCustomerDiscount(20);
