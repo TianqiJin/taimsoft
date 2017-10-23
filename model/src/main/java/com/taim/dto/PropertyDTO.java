@@ -3,7 +3,9 @@ package com.taim.dto;
 import com.taim.dto.basedtos.BaseModelDTO;
 import javafx.beans.property.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class PropertyDTO extends BaseModelDTO {
@@ -12,7 +14,7 @@ public class PropertyDTO extends BaseModelDTO {
     private IntegerProperty gstRate;
     private StringProperty gstNumber;
     private StringProperty companyName;
-    private Set<CustomerClassDTO> customerClasses;
+    private List<CustomerClassDTO> customerClasses;
 
     public PropertyDTO(){
         productWarnLimit = new SimpleIntegerProperty();
@@ -20,7 +22,7 @@ public class PropertyDTO extends BaseModelDTO {
         gstRate = new SimpleIntegerProperty();
         gstNumber = new SimpleStringProperty();
         companyName = new SimpleStringProperty();
-        customerClasses = new HashSet<>();
+        customerClasses = new ArrayList<>();
     }
 
     public static class CustomerClassDTO extends BaseModelDTO{
@@ -105,11 +107,11 @@ public class PropertyDTO extends BaseModelDTO {
         this.gstNumber.set(gstNumber);
     }
 
-    public Set<CustomerClassDTO> getCustomerClasses() {
+    public List<CustomerClassDTO> getCustomerClasses() {
         return customerClasses;
     }
 
-    public void setCustomerClasses(Set<CustomerClassDTO> customerClasses) {
+    public void setCustomerClasses(List<CustomerClassDTO> customerClasses) {
         this.customerClasses = customerClasses;
     }
 

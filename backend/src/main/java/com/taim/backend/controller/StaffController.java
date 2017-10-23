@@ -68,6 +68,4 @@ public class StaffController {
             return new ResponseEntity<String>("No such staff found!", HttpStatus.OK);
         }
     }
-
-
 }

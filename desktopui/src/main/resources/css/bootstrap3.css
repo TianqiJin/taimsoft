@@ -423,7 +423,7 @@ VBox > .split-menu-button.last > .arrow-button {
 
 .text-field:focused{
     -fx-border-color: #66afe9;
-    -fx-effect: dropshadow(gaussian, #66afe9, 0, 0, 0, 1);
+    -fx-effect: dropshadow(gaussian, transparent, 0, 0, 0, 1);
 }
 
 .text-area:focused {

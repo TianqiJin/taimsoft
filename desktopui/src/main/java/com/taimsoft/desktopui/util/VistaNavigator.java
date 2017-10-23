@@ -1,6 +1,7 @@
 package com.taimsoft.desktopui.util;
 
 import com.taim.dto.PropertyDTO;
+import com.taim.dto.StaffDTO;
 import com.taimsoft.desktopui.controllers.RootLayoutController;
 import com.taimsoft.desktopui.controllers.details.IDetailController;
 import com.taimsoft.desktopui.controllers.overview.IOverviewController;
@@ -27,6 +28,7 @@ public class VistaNavigator {
 
     private static RootLayoutController rootLayoutController;
     private static PropertyDTO globalProperty;
+    private static StaffDTO globalStaff;
 
     public static void setRootLayoutController(RootLayoutController rootLayoutController){
         VistaNavigator.rootLayoutController = rootLayoutController;
@@ -64,7 +66,6 @@ public class VistaNavigator {
         try {
             rootLayoutController.setVista(loader.load());
             SettingsOverviewController controller = loader.getController();
-            controller.initPropertyData();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -76,5 +77,13 @@ public class VistaNavigator {
 
     public static synchronized void setGlobalProperty(PropertyDTO globalProperty) {
         VistaNavigator.globalProperty = globalProperty;
+    }
+
+    public static StaffDTO getGlobalStaff() {
+        return globalStaff;
+    }
+
+    public static synchronized void setGlobalStaff(StaffDTO globalStaff) {
+        VistaNavigator.globalStaff = globalStaff;
     }
 }

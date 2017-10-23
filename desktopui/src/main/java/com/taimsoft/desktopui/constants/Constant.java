@@ -29,5 +29,8 @@ public class Constant {
         public static final String companyName = "GREENTOWN Building Supplies LTD.";
         public static final String companyCountry = "Canada";
     }
+    public static class FXStyle{
+        public static final String FX_ERROR_LABEL_COLOR = "-fx-text-fill: indianred";
+    }
 
 }

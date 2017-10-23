@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.SplitPane?>
@@ -14,7 +15,6 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
-
 
 <AnchorPane prefHeight="1000.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taimsoft.desktopui.controllers.settings.SettingsOverviewController">
    <children>
@@ -41,6 +41,7 @@
                                                   <columnConstraints>
                                                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                   </columnConstraints>
                                                   <rowConstraints>
                                                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -60,6 +61,31 @@
                                                       <Label text="GST Rate" GridPane.rowIndex="3" />
                                                       <Label text="PST Rate" GridPane.rowIndex="4" />
                                                       <TextField fx:id="pstRateField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                                      <Label fx:id="companyNameErrorLabel" GridPane.columnIndex="2">
+                                                         <padding>
+                                                            <Insets left="5.0" />
+                                                         </padding>
+                                                      </Label>
+                                                      <Label fx:id="productWarnLimitField" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                                         <padding>
+                                                            <Insets left="5.0" />
+                                                         </padding>
+                                                      </Label>
+                                                      <Label fx:id="gstNumErrorLabel" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                                                         <padding>
+                                                            <Insets left="5.0" />
+                                                         </padding>
+                                                      </Label>
+                                                      <Label fx:id="gstRateErrorLabel" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                                                         <padding>
+                                                            <Insets left="5.0" />
+                                                         </padding>
+                                                      </Label>
+                                                      <Label fx:id="pstRateErrorLabel" GridPane.columnIndex="2" GridPane.rowIndex="4">
+                                                         <padding>
+                                                            <Insets left="5.0" />
+                                                         </padding>
+                                                      </Label>
                                                    </children>
                                                 </GridPane>
                                                 <Button layoutX="868.0" layoutY="203.0" mnemonicParsing="false" text="Save" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />

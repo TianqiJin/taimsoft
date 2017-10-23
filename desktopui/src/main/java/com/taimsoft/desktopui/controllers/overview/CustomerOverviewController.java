@@ -62,14 +62,13 @@ public class CustomerOverviewController extends IOverviewController<CustomerDTO>
             @Override
             public TableCell<CustomerDTO, String> call(TableColumn<CustomerDTO, String> param) {
                 return new TableCell<CustomerDTO, String>() {
-                    ComboBox<String> comboBox = new ComboBox<>();
-
                     @Override
                     public void updateItem(String item, boolean empty) {
                         super.updateItem(item, empty);
                         if (empty) {
                             setGraphic(null);
                         } else {
+                            ComboBox<String> comboBox = new ComboBox<>();
                             comboBox.setPromptText("SET ACTION");
                             comboBox.prefWidthProperty().bind(this.widthProperty());
                             CustomerDTO customerDTO = getTableView().getItems().get(getIndex());

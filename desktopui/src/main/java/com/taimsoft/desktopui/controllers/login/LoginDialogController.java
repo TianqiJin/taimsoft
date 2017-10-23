@@ -4,6 +4,7 @@ import com.taim.client.PropertyClient;
 import com.taim.client.StaffClient;
 import com.taim.dto.PropertyDTO;
 import com.taim.dto.StaffDTO;
+import com.taimsoft.desktopui.constants.Constant;
 import com.taimsoft.desktopui.util.RestClientFactory;
 import com.taimsoft.desktopui.util.VistaNavigator;
 import javafx.beans.value.ChangeListener;
@@ -11,10 +12,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import java.sql.SQLException;
 import java.util.List;
@@ -26,6 +24,7 @@ public class LoginDialogController {
     private StaffClient staffClient;
     private PropertyClient propertyClient;
     private Executor executor;
+    private boolean successful;
 
     @FXML
     private TextField userNameField;
@@ -33,6 +32,8 @@ public class LoginDialogController {
     private PasswordField passwordField;
     @FXML
     private Button loginButton;
+    @FXML
+    private Label errorLMsgLabel;
 
     @FXML
     private void initialize(){
@@ -47,6 +48,16 @@ public class LoginDialogController {
                 }
             }
         });
+        userNameField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue) { // we only care about loosing focus
+               errorLMsgLabel.setText("");
+            }
+        });
+        passwordField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue) { // we only care about loosing focus
+                errorLMsgLabel.setText("");
+            }
+        });
     }
 
     @FXML
@@ -55,19 +66,44 @@ public class LoginDialogController {
         String userName = userNameField.getText();
         String password = passwordField.getText();
 
+        Task<StaffDTO> staffDTOTask = new Task<StaffDTO>() {
+            @Override
+            protected StaffDTO call() throws Exception {
+                return staffClient.getByName(userName);
+            }
+        };
         Task<List<PropertyDTO>> propertyTask = new Task<List<PropertyDTO>>() {
             @Override
             protected List<PropertyDTO> call() throws Exception {
                 return propertyClient.getList();
             }
         };
+
         propertyTask.setOnSucceeded(event -> {
             if(propertyTask.getValue().size() != 0){
                 VistaNavigator.setGlobalProperty(propertyTask.getValue().get(0));
+                successful = true;
+                dialogStage.close();
             }
         });
 
-        executor.execute(propertyTask);
+        staffDTOTask.setOnSucceeded(event -> {
+            StaffDTO staffDTO = staffDTOTask.getValue();
+            if(staffDTO.getPassword().equals(password)){
+                VistaNavigator.setGlobalStaff(staffDTO);
+                executor.execute(propertyTask);
+            }else{
+                errorLMsgLabel.setText("Username/Password is incorrect");
+                errorLMsgLabel.setStyle(Constant.FXStyle.FX_ERROR_LABEL_COLOR);
+            }
+        });
+
+        staffDTOTask.setOnFailed(event -> {
+            errorLMsgLabel.setText("Username does not exist");
+            errorLMsgLabel.setStyle(Constant.FXStyle.FX_ERROR_LABEL_COLOR);
+        });
+
+        executor.execute(staffDTOTask);
     }
 
     @FXML
@@ -89,4 +125,7 @@ public class LoginDialogController {
         this.dialogStage = dialogStage;
     }
 
+    public boolean isSuccessful() {
+        return successful;
+    }
 }

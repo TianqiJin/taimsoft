@@ -64,13 +64,13 @@ public class ProductOverviewController extends IOverviewController<ProductDTO> {
             @Override
             public TableCell<ProductDTO, String> call(TableColumn<ProductDTO, String> param) {
                 return new TableCell<ProductDTO, String>(){
-                    ComboBox<String> comboBox = new ComboBox<>();
                     @Override
                     public void updateItem(String item, boolean empty) {
                         super.updateItem(item, empty);
                         if (empty) {
                             setGraphic(null);
                         } else {
+                            ComboBox<String> comboBox = new ComboBox<>();
                             comboBox.setPromptText("SET ACTION");
                             comboBox.prefWidthProperty().bind(this.widthProperty());
                             ProductDTO productDTO = getTableView().getItems().get(getIndex());

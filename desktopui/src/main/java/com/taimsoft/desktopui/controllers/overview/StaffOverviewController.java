@@ -47,7 +47,13 @@ public class StaffOverviewController extends IOverviewController<StaffDTO> {
         phoneCol.setCellValueFactory(new PropertyValueFactory<>("phone"));
         emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
         titleCol.setCellValueFactory(new PropertyValueFactory<>("position"));
-        orgCol.setCellValueFactory(param-> param.getValue().getOrganization().orgNameProperty());
+        orgCol.setCellValueFactory(param-> {
+            if(param.getValue().getOrganization() != null){
+                return param.getValue().getOrganization().orgNameProperty();
+            }else{
+                return null;
+            }
+        });
         checkedCol.setCellValueFactory(new PropertyValueFactory<>("isChecked"));
         checkedCol.setCellFactory(CheckBoxTableCell.forTableColumn(checkedCol));
         actionCol.setCellValueFactory(new PropertyValueFactory<>("action"));
@@ -55,13 +61,13 @@ public class StaffOverviewController extends IOverviewController<StaffDTO> {
             @Override
             public TableCell<StaffDTO, String> call(TableColumn<StaffDTO, String> param) {
                 return new TableCell<StaffDTO, String>(){
-                    ComboBox<String> comboBox = new ComboBox<>();
                     @Override
                     public void updateItem(String item, boolean empty) {
                         super.updateItem(item, empty);
                         if (empty) {
                             setGraphic(null);
                         } else {
+                            ComboBox<String> comboBox = new ComboBox<>();
                             comboBox.setPromptText("SET ACTION");
                             comboBox.prefWidthProperty().bind(this.widthProperty());
                             StaffDTO staffDTO = getTableView().getItems().get(getIndex());

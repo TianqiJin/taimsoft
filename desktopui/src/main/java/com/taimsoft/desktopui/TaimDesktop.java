@@ -32,17 +32,19 @@ public class TaimDesktop extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setTitle(APPLICATION_TITLE);
+        if(initLoginDialog()){
+            primaryStage.setTitle(APPLICATION_TITLE);
 
-        //Set the primaryStage bound to the maximum of the screen
-        Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
-        primaryStage.setX(bounds.getMinX());
-        primaryStage.setY(bounds.getMinY());
-        primaryStage.setWidth(bounds.getWidth());
-        primaryStage.setHeight(bounds.getHeight());
+            //Set the primaryStage bound to the maximum of the screen
+            Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
+            primaryStage.setX(bounds.getMinX());
+            primaryStage.setY(bounds.getMinY());
+            primaryStage.setWidth(bounds.getWidth());
+            primaryStage.setHeight(bounds.getHeight());
 
-        primaryStage.setScene(createScene(loadMainVista()));
-        primaryStage.show();
+            primaryStage.setScene(createScene(loadMainVista()));
+            primaryStage.show();
+        }
     }
 
     private Pane loadMainVista(){
@@ -69,10 +71,10 @@ public class TaimDesktop extends Application {
         return scene;
     }
 
-    private void initLoginDialog(){
+    private boolean initLoginDialog(){
         try{
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(TaimDesktop.class.getResource("/fxml/LoginDialog.fxml"));
+            loader.setLocation(TaimDesktop.class.getResource("/fxml/login/LoginDialog.fxml"));
             AnchorPane page = loader.load();
 
             Stage dialogStage = new Stage();
@@ -87,9 +89,11 @@ public class TaimDesktop extends Application {
             dialogStage.setResizable(false);
             dialogStage.showAndWait();
 
+            return controller.isSuccessful();
 
         }catch(IOException e){
             e.printStackTrace();
+            return false;
         }
     }
 
