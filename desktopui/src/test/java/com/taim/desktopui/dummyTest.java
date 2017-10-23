@@ -1,10 +1,8 @@
 package com.taim.desktopui;
 
-import com.taim.dto.CustomerDTO;
-import com.taim.dto.ProductDTO;
-import com.taim.dto.TransactionDTO;
-import com.taim.dto.TransactionDetailDTO;
+import com.taim.dto.*;
 import com.taim.model.Customer;
+import com.taim.model.Staff;
 import com.taimsoft.desktopui.util.RestClientFactory;
 import com.taimsoft.desktopui.util.TransactionPanelLoader;
 import de.saxsys.javafx.test.JfxRunner;
@@ -19,6 +17,20 @@ import java.util.List;
  */
 
 public class dummyTest {
+
+    @Test
+    public void addAdmin()throws Exception{
+        StaffDTO admin = new StaffDTO();
+        admin.setDateCreated(DateTime.now());
+        admin.setDateModified(DateTime.now());
+        admin.setPhone("911");
+        admin.setEmail("whyme@gmail.com");
+        admin.setPosition(Staff.Position.MANAGER);
+        admin.setFullname("wormhole");
+        admin.setUserName("admin");
+        admin.setPassword("123");
+        RestClientFactory.getStaffClient().add(admin);
+    }
 
     @Test
     public void addFewProducts()throws Exception{

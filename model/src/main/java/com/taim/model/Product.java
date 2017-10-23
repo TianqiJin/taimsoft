@@ -34,7 +34,7 @@ public class Product extends BaseModel {
     @Column(name = "total_num_virtual")
     private double virtualTotalNum;
     @Column(name = "unit_price")
-    private Double unitPrice;
+    private double unitPrice;
     @Column(name = "piece_per_box")
     private int piecePerBox;
 
@@ -118,10 +118,6 @@ public class Product extends BaseModel {
 
     public void setVirtualTotalNum(double virtualTotalNum) {
         this.virtualTotalNum = virtualTotalNum;
-    }
-
-    public void setUnitPrice(Double unitPrice) {
-        this.unitPrice = unitPrice;
     }
 
     public int getPiecePerBox() {

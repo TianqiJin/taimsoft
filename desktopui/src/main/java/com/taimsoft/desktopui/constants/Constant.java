@@ -1,4 +1,4 @@
-package com.taimsoft.desktopui.constants;
+package com.taimsoft.desktopui.Constants;
 
 /**
  * Created by jiawei.liu on 9/18/17.

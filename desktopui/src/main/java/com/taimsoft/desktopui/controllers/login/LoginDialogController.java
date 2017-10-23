@@ -4,7 +4,7 @@ import com.taim.client.PropertyClient;
 import com.taim.client.StaffClient;
 import com.taim.dto.PropertyDTO;
 import com.taim.dto.StaffDTO;
-import com.taimsoft.desktopui.constants.Constant;
+import com.taimsoft.desktopui.Constants.Constant;
 import com.taimsoft.desktopui.util.RestClientFactory;
 import com.taimsoft.desktopui.util.VistaNavigator;
 import javafx.beans.value.ChangeListener;
