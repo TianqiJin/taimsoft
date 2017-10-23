@@ -1,15 +1,14 @@
 package com.taimsoft.desktopui.controllers;
 
 import com.taim.dto.*;
-import com.taim.model.Customer;
-import com.taim.model.Staff;
-import com.taim.model.Transaction;
+import com.taim.model.*;
 import com.taimsoft.desktopui.util.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -23,17 +22,25 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
+//TODO:  1. fix product Num update logic
+//TODO:  2. DatePicker
+//TODO:  3. In + Return Transaction
 
 /**
  * Created by jiawei.liu on 9/17/17.
@@ -44,7 +51,7 @@ import java.util.stream.Collectors;
     //                  C: 0-10
     // PST:   7%
     // GST:   5%
-public class GenerateQuotationController {
+public class GenerateInvoiceController {
 
     private Stage dialogStage;
 
@@ -54,6 +61,8 @@ public class GenerateQuotationController {
     private List<ProductDTO> productList;
     private ObservableList<TransactionDetailDTO> transactionDetailDTOObservableList;
     private TransactionDTO transaction;
+    private TransactionDTO oldTransaction;
+    private PaymentDTO payment;
     private StringBuffer errorMsgBuilder;
     private boolean confirmedClicked;
     private BooleanBinding confimButtonBinding;
@@ -78,6 +87,10 @@ public class GenerateQuotationController {
     @FXML
     private TableColumn<TransactionDetailDTO, String> sizeCol;
     @FXML
+    private TableColumn<TransactionDetailDTO, Number> pkgBoxCol;
+    @FXML
+    private TableColumn<TransactionDetailDTO, Number> pkgPieceCol;
+    @FXML
     private TableColumn deleteCol;
     @FXML
     private TableColumn<TransactionDetailDTO, String> remarkCol;
@@ -88,6 +101,16 @@ public class GenerateQuotationController {
     private Label typeLabel;
     @FXML
     private Label dateLabel;
+
+    //transaction payment/delivery due Labels
+    @FXML
+    private Label paymentDueLabel;
+    @FXML
+    private Label deliveryDueLabel;
+    @FXML
+    private ChoiceBox<String> deliveryStatusChoiceBox;
+    @FXML
+    private Label paymentStatusLabel;
 
     //Staff Information Labels
     @FXML
@@ -111,6 +134,18 @@ public class GenerateQuotationController {
     @FXML
     private Label phoneLabel;
 
+    //payment details
+    @FXML
+    private Label balanceLabel;
+    @FXML
+    private ChoiceBox<String> paymentTypeChoiceBox;
+    @FXML
+    private TextField paymentField;
+    @FXML
+    private Label paidAmountLabel;
+    @FXML
+    private CheckBox isDepositCheckBox;
+
     //Items Information Labels
     @FXML
     private Label itemsCountLabel;
@@ -131,10 +166,7 @@ public class GenerateQuotationController {
     private Button confirmButton;
     @FXML
     private Button cancelButton;
-    @FXML
-    private ComboBox<String> customerComboBox;
-    @FXML
-    private ComboBox<String> customerPhoneComboBox;
+
     @FXML
     private ComboBox<String> productComboBox;
     @FXML
@@ -149,6 +181,8 @@ public class GenerateQuotationController {
         unitPriceCol.setCellValueFactory(u->new SimpleFloatProperty(new BigDecimal(u.getValue().getProduct().getUnitPrice()).floatValue()));
         qtyCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         sizeCol.setCellValueFactory(s->new SimpleStringProperty(SizeHelper.getSizeString(s.getValue().getProduct())));
+        pkgBoxCol.setCellValueFactory(u->new SimpleFloatProperty(new BigDecimal(u.getValue().getPackageInfo().getBox()).floatValue()));
+        pkgPieceCol.setCellValueFactory(u->new SimpleFloatProperty(new BigDecimal(u.getValue().getPackageInfo().getPieces()).floatValue()));
         discountCol.setCellValueFactory(new PropertyValueFactory<>("discount"));
         discountCol.setCellFactory(TextFieldTableCell.forTableColumn(new StringConverter<Number>() {
             @Override
@@ -220,6 +254,27 @@ public class GenerateQuotationController {
                     }
 
                 });
+        deliveryStatusChoiceBox.getSelectionModel().selectFirst();
+        deliveryStatusChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,String newValue) {
+                transaction.getDeliveryStatus().setStatus(DeliveryStatus.getStatus(newValue));
+                transaction.getDeliveryStatus().setDateModified(DateTime.now());
+            }
+        });
+        paymentField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                showBalanceDetails();
+            }
+        });
+        paymentTypeChoiceBox.getSelectionModel().selectFirst();
+        paymentTypeChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                payment.setPaymentType(Payment.PaymentType.getValue(newValue));
+            }
+        });
         executor = Executors.newCachedThreadPool(r -> {
             Thread t = new Thread(r);
             t.setDaemon(true);
@@ -253,47 +308,11 @@ public class GenerateQuotationController {
             newProductTransaction.setDiscount(0);
             newProductTransaction.setQuantity(0);
             newProductTransaction.setSaleAmount(selectedProduct.getUnitPrice()*newProductTransaction.getQuantity());
+            newProductTransaction.setPackageInfo(initiatePkgInfo(newProductTransaction));
             transactionDetailDTOObservableList.add(newProductTransaction);
         }
     }
 
-    @FXML
-    public void handleAddCustomer(){
-        CustomerDTO newCustomer = new CustomerDTO();
-        boolean okClicked = TransactionPanelLoader.showCustomerEditor(newCustomer);
-        if(okClicked){
-            boolean flag = true;
-            try{
-                newCustomer.setDateCreated(DateTime.now());
-                newCustomer.setDateModified(DateTime.now());
-                RestClientFactory.getCustomerClient().add(newCustomer);
-                new AlertBuilder()
-                        .alertHeaderText("Customer Created successfully!")
-                        .alertType(Alert.AlertType.INFORMATION)
-                        .alertTitle("Customer")
-                        .alertContentText(newCustomer.getFullname())
-                        .build()
-                        .showAndWait();
-
-            }catch(Exception e){
-                e.printStackTrace();
-                flag = false;
-                new AlertBuilder()
-                        .alertType(Alert.AlertType.ERROR)
-                        .alertTitle("Error")
-                        .alertHeaderText("Add New Customer Error")
-                        .alertContentText("Unable To Add New Customer" + newCustomer.getFullname() )
-                        .build()
-                        .showAndWait();
-            }finally{
-                if(flag){
-                    this.customer = newCustomer;
-                    customerList.add(this.customer);
-                    showCustomerDetails();
-                }
-            }
-        }
-    }
 
     @FXML
     public void handleCancelButton(){
@@ -310,7 +329,7 @@ public class GenerateQuotationController {
     }
 
 
-    public GenerateQuotationController(){
+    public GenerateInvoiceController(){
         confirmedClicked = false;
         discount = 100;
     }
@@ -327,19 +346,27 @@ public class GenerateQuotationController {
 
     public void setMainClass(TransactionDTO transactionFromAbove, StaffDTO staff){
 
-        //either edit or generate new quotation
-        if (transactionFromAbove==null) {
-            this.mode=Mode.CREATE;
-            this.transaction = new TransactionDTO();
-            transaction.setTransactionType(Transaction.TransactionType.QUOTATION);
-            transaction.setFinalized(false);
-            transaction.setStaff(staff);
-            transaction.setDateCreated(DateTime.now());
+        //either edit existing invoice or generate new invoice from transaction
+        if (transactionFromAbove.getTransactionType()== Transaction.TransactionType.QUOTATION) {
+            this.mode= Mode.CREATE;
+            this.oldTransaction = transactionFromAbove;
+            this.transaction = copyTransaction(transactionFromAbove);
+            DeliveryStatusDTO currentDeliveryStatus = new DeliveryStatusDTO();
+            currentDeliveryStatus.setStatus(DeliveryStatus.Status.UNDELIVERED);
+            currentDeliveryStatus.setDateCreated(DateTime.now());
+            currentDeliveryStatus.setDateModified(DateTime.now());
+            this.transaction.setDeliveryStatus(currentDeliveryStatus);
+            this.transaction.setPaymentDueDate(transaction.getDateCreated().plusDays(30));
+            this.transaction.setDeliveryDueDate(transaction.getDateCreated().plusDays(30));
+            this.transaction.setPayments(new ArrayList<>());
+            this.transaction.setPaymentStatus(Transaction.PaymentStatus.UNPAID);
+
         }else{
-            this.mode=Mode.EDIT;
+            this.mode= Mode.EDIT;
             this.transaction = transactionFromAbove;
-            this.customer = transactionFromAbove.getCustomer();
         }
+        this.payment = new PaymentDTO();
+        this.customer = transactionFromAbove.getCustomer();
         this.transactionDetailDTOObservableList = FXCollections.observableArrayList(transaction.getTransactionDetails());
         transactionTableView.setItems(transactionDetailDTOObservableList);
         transactionDetailDTOObservableList.addListener(new ListChangeListener<TransactionDetailDTO>() {
@@ -359,13 +386,7 @@ public class GenerateQuotationController {
      * Load Data From DB (Customer and Product)
      */
     public void initDataFromDB(){
-        //load list of products and customers
-        Task<List<CustomerDTO>> customersTask = new Task<List<CustomerDTO>>() {
-            @Override
-            protected List<CustomerDTO> call() throws Exception {
-                return RestClientFactory.getCustomerClient().getList();
-            }
-        };
+        //load list of products
         Task<List<ProductDTO>> productsTask = new Task<List<ProductDTO>>() {
             @Override
             protected List<ProductDTO> call() throws Exception {
@@ -373,62 +394,6 @@ public class GenerateQuotationController {
             }
         };
 
-        customersTask.setOnSucceeded(event ->{
-            this.customerList = customersTask.getValue();
-
-            if(this.transaction.getCustomer()!=null && this.transaction.getCustomer().getFullname() != null){
-                Optional<CustomerDTO> customer =  customerList.stream().filter(p -> p.getFullname().equals(transaction.getCustomer().getFullname())).findFirst();
-                if(customer.isPresent()){
-                    this.customer = customer.get();
-                    showCustomerDetails();
-                }
-            }
-            List<String> tmpCustomerList = new ArrayList<>();
-            for(CustomerDTO customer: this.customerList){
-//                customer.constructCustomerInfo();
-//                tmpCustomerList.add(customer.getCustomerInfo());
-                tmpCustomerList.add(customer.getFullname());
-            }
-            customerComboBox.setItems(FXCollections.observableArrayList(tmpCustomerList));
-            customerComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-                for(CustomerDTO tmpCustomer: this.customerList){
-                    if(tmpCustomer.getFullname().equals(newValue)){
-                        customer = tmpCustomer;
-                        showCustomerDetails();
-                        break;
-                    }
-                }
-            });
-            List<String> tmpCustomerPhoneList = new ArrayList<>();
-            for(CustomerDTO customer: this.customerList){
-//                customer.constructCustomerPhoneInfo();
-//                tmpCustomerPhoneList.add(customer.getCustomerPhoneInfo());
-                tmpCustomerPhoneList.add(customer.getPhone());
-            }
-            customerPhoneComboBox.setItems(FXCollections.observableArrayList(tmpCustomerPhoneList));
-            customerPhoneComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-                for(CustomerDTO tmpCustomer: this.customerList){
-                    if(tmpCustomer.getPhone() != null && tmpCustomer.getPhone().equals(newValue)){
-                        customer = tmpCustomer;
-                        showCustomerDetails();
-                        break;
-                    }
-                }
-            });
-            new AutoCompleteComboBoxListener<>(customerComboBox);
-            new AutoCompleteComboBoxListener<>(customerPhoneComboBox);
-        });
-
-        customersTask.setOnFailed(event -> {
-            System.out.println((event.getSource().getMessage()));
-            new AlertBuilder()
-                    .alertType(Alert.AlertType.ERROR)
-                    .alertHeaderText("Database Error!")
-                    .alertContentText("Unable to fetch customer information from the database!")
-                    .build()
-                    .showAndWait();
-            dialogStage.close();
-        });
         //product
         productsTask.setOnSucceeded(event ->{
             this.productList = productsTask.getValue();
@@ -449,7 +414,6 @@ public class GenerateQuotationController {
                     .showAndWait();
             dialogStage.close();
         });
-        executor.execute(customersTask);
         executor.execute(productsTask);
     }
 
@@ -461,6 +425,8 @@ public class GenerateQuotationController {
         showStaffDetails();
         showCustomerDetails();
         showPaymentDetails();
+        showPaymentDeliveryDetail();
+
     }
 
 
@@ -483,6 +449,12 @@ public class GenerateQuotationController {
         }
     }
 
+    private void showPaymentDeliveryDetail(){
+        paymentDueLabel.setText(this.transaction.getPaymentDueDate().toString());
+        deliveryDueLabel.setText(this.transaction.getDeliveryDueDate().toString());
+        deliveryStatusChoiceBox.getSelectionModel().select(transaction.getDeliveryStatus().getStatus().getValue());
+        paymentStatusLabel.setText(this.transaction.getPaymentStatus().getValue());
+    }
 
     /**
      * Show customer details grid pane
@@ -535,6 +507,7 @@ public class GenerateQuotationController {
             pstTaxLabel.setText(String.valueOf(pstTax.floatValue()));
             gstTaxLabel.setText(String.valueOf(gstTax.floatValue()));
             totalLabel.setText(String.valueOf(total.floatValue()));
+            showBalanceDetails();
         }
         else{
             itemsCountLabel.setText("");
@@ -543,7 +516,25 @@ public class GenerateQuotationController {
             pstTaxLabel.setText("");
             gstTaxLabel.setText("");
             totalLabel.setText("");
+            balanceLabel.setText("");
         }
+    }
+
+    private void showBalanceDetails(){
+        BigDecimal balance = new BigDecimal(totalLabel.getText()).setScale(2, BigDecimal.ROUND_HALF_EVEN);
+        BigDecimal paid = new BigDecimal(BigInteger.ZERO);
+        for (PaymentDTO prevPayment : transaction.getPayments()){
+            paid= paid.add(new BigDecimal(prevPayment.getPaymentAmount()));
+        }
+        balance = balance.subtract(paid);
+        paidAmountLabel.setText(paid.toString());
+
+        if((payment.getPaymentType()== Payment.PaymentType.STORE_CREDIT && !paymentField.getText().trim().isEmpty() && isStoreCreditValidNoCustomer())){
+            balance = balance.subtract(new BigDecimal(paymentField.getText()));
+        } else if(payment.getPaymentType()!= Payment.PaymentType.STORE_CREDIT && !paymentField.getText().trim().isEmpty() && isPaymentValid()){
+            balance = balance.subtract(new BigDecimal(paymentField.getText()));
+        }
+        balanceLabel.setText(balance.toString());
     }
 
 
@@ -555,6 +546,17 @@ public class GenerateQuotationController {
             }
             t.setDateModified(DateTime.now());
         });
+
+        if(!paymentField.getText().trim().isEmpty()){
+            if(payment.getPaymentType()== Payment.PaymentType.STORE_CREDIT){
+                customer.setStoreCredit(new BigDecimal(customer.getStoreCredit()).setScale(2,BigDecimal.ROUND_HALF_EVEN).subtract(new BigDecimal(paymentField.getText())).doubleValue());
+                RestClientFactory.getCustomerClient().update(customer);
+            }
+            payment.setDateCreated(DateTime.now());
+            payment.setDateModified(DateTime.now());
+            payment.setPaymentAmount(new BigDecimal(paymentField.getText()).doubleValue());
+            payment.setDeposit(isDepositCheckBox.isSelected());
+        }
         transaction.getTransactionDetails().addAll(transactionDetailDTOObservableList);
         transaction.setSaleAmount(Double.valueOf(totalLabel.getText()));
         transaction.setGst(Double.valueOf(gstTaxLabel.getText()));
@@ -563,6 +565,18 @@ public class GenerateQuotationController {
         transaction.setCustomer(customer);
         transaction.setStaff(staff);
         transaction.setDateModified(DateTime.now());
+        if (this.payment.getPaymentAmount()!=0){
+            transaction.getPayments().add(payment);
+            double paid = 0.0;
+            for (PaymentDTO p : transaction.getPayments()){
+                paid+=p.getPaymentAmount();
+            }
+            if (paid >= transaction.getSaleAmount()){
+                transaction.setPaymentStatus(Transaction.PaymentStatus.PAID);
+            }else if (paid >0){
+                transaction.setPaymentStatus(Transaction.PaymentStatus.PARTIALLY_PAID);
+            }
+        }
 
 
         Optional<ButtonType> result = new AlertBuilder()
@@ -573,8 +587,12 @@ public class GenerateQuotationController {
                 .build()
                 .showAndWait();
         if(result.isPresent() && result.get() == ButtonType.OK){
-            if(mode==Mode.CREATE) {
-                RestClientFactory.getTransactionClient().add(transaction);
+            if(mode== Mode.CREATE) {
+                transaction.setRefId(oldTransaction.getId());
+                int refNum = RestClientFactory.getTransactionClient().add(transaction).getId();
+                oldTransaction.setRefId(refNum);
+                oldTransaction.setDateModified(DateTime.now());
+                RestClientFactory.getTransactionClient().update(oldTransaction);
             }else{
                 updateCustomer();
                 RestClientFactory.getTransactionClient().update(transaction);
@@ -582,27 +600,22 @@ public class GenerateQuotationController {
             updateProduct();
 
             confirmedClicked = true;
-        }/*else{
-            transaction = new TransactionDTO();
-            transaction.setTransactionType(Transaction.TransactionType.QUOTATION);
-            transaction.setIsFinalized(false);
-            transaction.setStaff(staff);
-            transaction.setDateCreated(DateTime.now());
-        }*/
+        }
     }
 
 
     private void updateProduct(){
         transaction.getTransactionDetails().forEach(p->{
-            double newVirtualNum = p.getProduct().getTotalNum()-p.getQuantity();
-            p.getProduct().setVirtualTotalNum(newVirtualNum);
+            double newActualNum = p.getProduct().getTotalNum()-p.getQuantity();
+            p.getProduct().setTotalNum(newActualNum);
+            p.getProduct().setVirtualTotalNum(p.getProduct().getVirtualTotalNum()-p.getQuantity());
             RestClientFactory.getProductClient().update(p.getProduct());
         });
 
     }
 
     private void updateCustomer(){
-        if (this.mode==Mode.EDIT){
+        if (this.mode== Mode.EDIT){
             customer.getTransactionList().removeIf(t->t.getId()==transaction.getId());
         }
 //       customer.getTransactionList().add(transaction);
@@ -635,6 +648,68 @@ public class GenerateQuotationController {
             }
         }
         return oldValue;
+    }
+
+    private PackageInfoDTO initiatePkgInfo(TransactionDetailDTO detailDTO){
+        PackageInfoDTO pkgInfo = new PackageInfoDTO();
+        pkgInfo.setDateCreated(DateTime.now());
+        pkgInfo.setDateModified(DateTime.now());
+        pkgInfo.setBox((int)detailDTO.getQuantity()/detailDTO.getProduct().getPiecePerBox());
+        pkgInfo.setPieces((int)detailDTO.getQuantity()-detailDTO.getProduct().getPiecePerBox()* pkgInfo.getBox());
+        return pkgInfo;
+    }
+
+    private TransactionDetailDTO copyDetails(TransactionDetailDTO oldDetail){
+        TransactionDetailDTO transactionDetailDTO = new TransactionDetailDTO();
+        transactionDetailDTO.setDateCreated(DateTime.now());
+        transactionDetailDTO.setDateModified(DateTime.now());
+        transactionDetailDTO.setPackageInfo(initiatePkgInfo(oldDetail));
+        transactionDetailDTO.setProduct(oldDetail.getProduct());
+        transactionDetailDTO.setNote(oldDetail.getNote());
+        transactionDetailDTO.setSaleAmount(oldDetail.getSaleAmount());
+        transactionDetailDTO.setQuantity(oldDetail.getQuantity());
+        transactionDetailDTO.setDiscount(oldDetail.getDiscount());
+        return transactionDetailDTO;
+    }
+
+
+    private TransactionDTO copyTransaction(TransactionDTO oldTransaction){
+        TransactionDTO newTransaction = new TransactionDTO();
+        newTransaction.setDateCreated(DateTime.now());
+        newTransaction.setTransactionType(Transaction.TransactionType.INVOICE);
+        newTransaction.setCustomer(oldTransaction.getCustomer());
+        newTransaction.setFinalized(false);
+        newTransaction.setTransactionDetails(oldTransaction.getTransactionDetails().stream().map(d->copyDetails(d)).collect(Collectors.toList()));
+        newTransaction.setSaleAmount(oldTransaction.getSaleAmount());
+        newTransaction.setPst(oldTransaction.getPst());
+        newTransaction.setGst(oldTransaction.getGst());
+        newTransaction.setStaff(oldTransaction.getStaff());
+        newTransaction.setVendor(oldTransaction.getVendor());
+        newTransaction.setNote(oldTransaction.getNote());
+
+        return newTransaction;
+    }
+
+
+    private boolean isStoreCreditValidNoCustomer(){
+        try{
+            double credit  = Double.parseDouble(paymentField.getText());
+            if(credit > customer.getStoreCredit()){
+                return false;
+            }
+        }catch(NumberFormatException e){
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isPaymentValid(){
+        try{
+            Double.parseDouble(paymentField.getText());
+        }catch(NumberFormatException e){
+            return false;
+        }
+        return true;
     }
 
 }

@@ -1,5 +1,8 @@
 package com.taimsoft.desktopui.controllers;
 
+import com.taim.client.PropertyClient;
+import com.taim.dto.PropertyDTO;
+import com.taimsoft.desktopui.util.RestClientFactory;
 import com.taimsoft.desktopui.util.VistaNavigator;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
@@ -13,11 +16,16 @@ import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 
 import java.io.IOException;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 /**
  * Created by Tjin on 8/25/2017.
  */
 public class RootLayoutController {
+    private PropertyClient propertyClient;
+    private Executor executor;
+    private PropertyDTO property;
 
     @FXML
     private Button menu;
@@ -29,6 +37,15 @@ public class RootLayoutController {
     @FXML
     public void initialize() {
         prepareSlideMenuAnimation();
+    }
+
+    public RootLayoutController(){
+        this.propertyClient = RestClientFactory.getPropertyClient();
+        this.executor = Executors.newCachedThreadPool(r -> {
+            Thread t = new Thread(r);
+            t.setDaemon(true);
+            return t;
+        });
     }
 
     @FXML
@@ -47,6 +64,11 @@ public class RootLayoutController {
 
     @FXML
     public void handleVendorButton(){ VistaNavigator.loadVista(VistaNavigator.VISTA_VENDOR); }
+
+    @FXML
+    public void handleSettingButton(){
+        VistaNavigator.loadSettingVista(VistaNavigator.VISTA_SETTINGS);
+    }
 
     public void setVista(Node node){
         Pane tmpPane = (Pane) node;

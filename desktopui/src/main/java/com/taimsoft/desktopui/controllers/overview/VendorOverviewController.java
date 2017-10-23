@@ -5,17 +5,18 @@ import com.taim.client.VendorClient;
 import com.taim.dto.TransactionDTO;
 import com.taim.dto.VendorDTO;
 import com.taim.model.Transaction;
+import com.taim.model.Vendor;
 import com.taimsoft.desktopui.uicomponents.LiveComboBoxTableCell;
 import com.taimsoft.desktopui.util.RestClientFactory;
+import com.taimsoft.desktopui.util.VistaNavigator;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.TableColumn;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.Callback;
 
 import static com.taimsoft.desktopui.controllers.overview.IOverviewController.SummaryLabelMode.*;
 
@@ -54,31 +55,55 @@ public class VendorOverviewController extends IOverviewController<VendorDTO> {
         checkedCol.setCellValueFactory(new PropertyValueFactory<>("isChecked"));
         checkedCol.setCellFactory(CheckBoxTableCell.forTableColumn(checkedCol));
         actionCol.setCellValueFactory(new PropertyValueFactory<>("action"));
-        actionCol.setCellFactory(param -> {
-            LiveComboBoxTableCell<VendorDTO, String> liveComboBoxTableCell = new LiveComboBoxTableCell<>(
-                    FXCollections.observableArrayList("VIEW DETAILS", "EDIT", "DELETE"));
-            return liveComboBoxTableCell;
+        actionCol.setCellFactory(new Callback<TableColumn<VendorDTO, String>, TableCell<VendorDTO, String>>() {
+            @Override
+            public TableCell<VendorDTO, String> call(TableColumn<VendorDTO, String> param) {
+                return new TableCell<VendorDTO, String>(){
+                    ComboBox<String> comboBox = new ComboBox<>();
+                    @Override
+                    public void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            comboBox.setPromptText("SET ACTION");
+                            comboBox.prefWidthProperty().bind(this.widthProperty());
+                            VendorDTO vendorDTO = getTableView().getItems().get(getIndex());
+                            comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "EDIT", "DELETE"));
+                            comboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+                                if(newValue.equals("VIEW DETAILS")){
+                                    VistaNavigator.loadDetailVista(VistaNavigator.VISTA_VENDOR_DETAIL, vendorDTO);
+                                }
+                            });
+                            comboBox.setValue(item);
+                            setGraphic(comboBox);
+                        }
+                    }
+                };
+            }
         });
-        bindSummaryLabel(totalUnpaidLabel, Unpaid);
-        bindSummaryLabel(totalPaidLabel, Paid);
     }
 
     @Override
-    public void initSearchField() {
-
-    }
+    public void initSearchField() {}
 
     @Override
     public IClient<VendorDTO> getOverviewClient(){
         return this.vendorClient;
     }
 
+    @Override
+    public void initSummaryLabel() {
+        bindSummaryLabel(totalUnpaidLabel, INVOICE_UNPAID);
+        bindSummaryLabel(totalPaidLabel, INVOICE_PAID);
+    }
+
     private void bindSummaryLabel(Label label, SummaryLabelMode mode){
         DoubleBinding numberBinding = Bindings.createDoubleBinding(() -> {
                     double totalValue = 0 ;
                     switch(mode){
-                        case Paid:
-                            for (VendorDTO item : getOverviewTable().getItems()) {
+                        case INVOICE_PAID:
+                            for (VendorDTO item : getOverviewDTOList()) {
                                 for(TransactionDTO transactionDTO: item.getTransactionList()){
                                     if(transactionDTO.getTransactionType().equals(Transaction.TransactionType.STOCK) &&
                                             transactionDTO.getPaymentStatus().equals(Transaction.PaymentStatus.PAID)){
@@ -87,8 +112,8 @@ public class VendorOverviewController extends IOverviewController<VendorDTO> {
                                 }
                             }
                             break;
-                        case Unpaid:
-                            for (VendorDTO item : getOverviewTable().getItems()) {
+                        case INVOICE_UNPAID:
+                            for (VendorDTO item : getOverviewDTOList()) {
                                 for(TransactionDTO transactionDTO: item.getTransactionList()){
                                     if(transactionDTO.getTransactionType().equals(Transaction.TransactionType.STOCK) &&
                                             transactionDTO.getPaymentStatus().equals(Transaction.PaymentStatus.UNPAID)){
@@ -103,6 +128,6 @@ public class VendorOverviewController extends IOverviewController<VendorDTO> {
                     return totalValue ;
                 },
                 getOverviewTable().getItems());
-        label.textProperty().bind(Bindings.format("%.2f", numberBinding));
+        label.textProperty().bind(Bindings.format("%s%.2f", "$", numberBinding));
     }
 }

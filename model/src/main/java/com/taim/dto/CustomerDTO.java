@@ -2,6 +2,7 @@ package com.taim.dto;
 
 import com.taim.dto.basedtos.UserBaseModelDTO;
 import com.taim.model.Customer;
+import com.taim.model.Property;
 import com.taim.model.basemodels.UserBaseModel;
 import javafx.beans.property.*;
 
@@ -12,7 +13,7 @@ import java.util.List;
 public class CustomerDTO extends UserBaseModelDTO{
     private DoubleProperty storeCredit;
     private BooleanProperty checked;
-    private ObjectProperty<Customer.CustomerClass> customerClass;
+    private ObjectProperty<PropertyDTO.CustomerClassDTO> customerClass;
     private ObjectProperty<UserBaseModel.UserType> userType;
     private ObjectProperty<OrganizationDTO> organization;
     private List<TransactionDTO> transactionList;
@@ -20,7 +21,7 @@ public class CustomerDTO extends UserBaseModelDTO{
     public CustomerDTO(){
         storeCredit = new SimpleDoubleProperty();
         checked = new SimpleBooleanProperty();
-        transactionList = new ArrayList<TransactionDTO>();
+        transactionList = new ArrayList<>();
         customerClass = new SimpleObjectProperty<>();
         userType = new SimpleObjectProperty<>();
         organization = new SimpleObjectProperty<>();
@@ -58,15 +59,15 @@ public class CustomerDTO extends UserBaseModelDTO{
         this.checked.set(checked);
     }
 
-    public Customer.CustomerClass getCustomerClass() {
+    public PropertyDTO.CustomerClassDTO getCustomerClass() {
         return customerClass.get();
     }
 
-    public ObjectProperty<Customer.CustomerClass> customerClassProperty() {
+    public ObjectProperty<PropertyDTO.CustomerClassDTO> customerClassProperty() {
         return customerClass;
     }
 
-    public void setCustomerClass(Customer.CustomerClass customerClass) {
+    public void setCustomerClass(PropertyDTO.CustomerClassDTO customerClass) {
         this.customerClass.set(customerClass);
     }
 

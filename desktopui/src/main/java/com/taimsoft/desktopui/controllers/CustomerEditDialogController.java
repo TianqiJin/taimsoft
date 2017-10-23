@@ -1,8 +1,10 @@
 package com.taimsoft.desktopui.controllers;
 
 import com.taim.dto.CustomerDTO;
+import com.taim.dto.PropertyDTO;
 import com.taim.model.Customer;
 import com.taimsoft.desktopui.util.AlertBuilder;
+import com.taimsoft.desktopui.util.VistaNavigator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -10,6 +12,9 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Created by jiawei.liu on 10/4/17.
@@ -31,9 +36,7 @@ public class CustomerEditDialogController {
     private String errorMsg;
     private boolean okClicked;
 
-    private ObservableList<Customer.CustomerClass> options = FXCollections.observableArrayList(
-            Customer.CustomerClass.values()
-    );
+    private ObservableList<String> options;
 
     @FXML
     private void initialize(){}
@@ -41,7 +44,11 @@ public class CustomerEditDialogController {
     public CustomerEditDialogController(){
         errorMsg = "";
         okClicked = false;
+        options = FXCollections.observableArrayList(VistaNavigator.getGlobalProperty().getCustomerClasses().stream()
+                .map(PropertyDTO.CustomerClassDTO::getCustomerClassName)
+                .collect(Collectors.toList()));
     }
+
     public void setDialogStage(Stage dialogStage){
         this.dialogStage = dialogStage;
     }
@@ -50,7 +57,7 @@ public class CustomerEditDialogController {
         fullNameField.setText(customer.getFullname());
         phoneField.setText(customer.getPhone());
         classField.setItems(options);
-        classField.setValue(customer.getCustomerClass());
+        classField.setValue(customer.getCustomerClass().getCustomerClassName());
         emailField.setText(customer.getEmail());
         storeCreditField.setText(String.valueOf(customer.getStoreCredit()));
     }
@@ -58,7 +65,14 @@ public class CustomerEditDialogController {
         if(isInputValid()){
             customer.setFullname(fullNameField.getText());
             customer.setPhone(phoneField.getText());
-            customer.setCustomerClass((Customer.CustomerClass) classField.getValue());
+            Optional<PropertyDTO.CustomerClassDTO>customerClass =
+                    VistaNavigator.getGlobalProperty().getCustomerClasses().stream()
+                            .filter(customerClassDTO -> customerClassDTO.getCustomerClassName().equals(classField.getValue()))
+                            .findAny();
+            if(customerClass.isPresent()){
+                customer.setCustomerClass(customerClass.get());
+            }
+
             customer.setEmail(emailField.getText());
             customer.setStoreCredit(Double.valueOf(storeCreditField.getText()));
 

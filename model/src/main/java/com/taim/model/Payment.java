@@ -31,6 +31,14 @@ public class Payment extends BaseModel {
         public void setValue(String value) {
             this.value = value;
         }
+        public static PaymentType getValue(String value){
+            for (PaymentType p: PaymentType.values()){
+                if (p.name().equalsIgnoreCase(value)){
+                    return p;
+                }
+            }
+            return null;
+        }
     }
     @Column(name = "payment_amount")
     private double paymentAmount;

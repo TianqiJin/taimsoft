@@ -450,6 +450,10 @@ VBox > .split-menu-button.last > .arrow-button {
     -fx-text-fill: -fx-text-inner-color;
 }
 
+.table-column {
+    -fx-alignment: CENTER;
+}
+
 .text-area .scroll-pane, .text-area .scroll-pane .content {
     -fx-background-color: white;
     -fx-background-radius: 4;

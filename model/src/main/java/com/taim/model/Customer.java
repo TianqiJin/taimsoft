@@ -21,27 +21,15 @@ import java.util.List;
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id")
 public class Customer extends UserBaseModel {
-    public enum CustomerClass{
-        CLASSA("Class A"),
-        CLASSB("Class B"),
-        CLASSC("Class C");
-
-        CustomerClass(String vvalue){
-            this.value = vvalue;
-        }
-
-        private String value;
-
-        public String getValue() {
-            return value;
-        }
-    }
     @Column(name = "store_credit")
     private double storeCredit;
-    @Column(name = "customer_class")
-    private CustomerClass customerClass;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "customer_class_id")
+    private Property.CustomerClass customerClass;
     @Column(name = "user_type")
     private UserType userType;
+    @Column(name = "pst_num")
+    private String pstNumber;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "organization_id")
     private Organization organization;
@@ -67,11 +55,11 @@ public class Customer extends UserBaseModel {
         this.transactionList = transactionList;
     }
 
-    public CustomerClass getCustomerClass() {
+    public Property.CustomerClass getCustomerClass() {
         return customerClass;
     }
 
-    public void setCustomerClass(CustomerClass customerClass) {
+    public void setCustomerClass(Property.CustomerClass customerClass) {
         this.customerClass = customerClass;
     }
 
@@ -85,6 +73,14 @@ public class Customer extends UserBaseModel {
 
     public Organization getOrganization() {
         return organization;
+    }
+
+    public String getPstNumber() {
+        return pstNumber;
+    }
+
+    public void setPstNumber(String pstNumber) {
+        this.pstNumber = pstNumber;
     }
 
     public void setOrganization(Organization organization) {

@@ -1,5 +1,6 @@
 package com.taimsoft.desktopui;
 
+import com.taimsoft.desktopui.controllers.login.LoginDialogController;
 import com.taimsoft.desktopui.util.VistaNavigator;
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
@@ -14,7 +15,9 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
+import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -64,6 +67,30 @@ public class TaimDesktop extends Application {
         rootPane.prefWidthProperty().bind(scene.widthProperty());
 
         return scene;
+    }
+
+    private void initLoginDialog(){
+        try{
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(TaimDesktop.class.getResource("/fxml/LoginDialog.fxml"));
+            AnchorPane page = loader.load();
+
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Login Dialog");
+            page.getStylesheets().add(TaimDesktop.class.getResource("/css/bootstrap3.css").toExternalForm());
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+
+            LoginDialogController controller = loader.getController();
+            controller.setDialogStage(dialogStage);
+            dialogStage.setResizable(false);
+            dialogStage.showAndWait();
+
+
+        }catch(IOException e){
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args){

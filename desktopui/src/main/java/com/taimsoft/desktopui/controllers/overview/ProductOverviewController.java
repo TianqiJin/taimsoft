@@ -101,6 +101,9 @@ public class ProductOverviewController extends IOverviewController<ProductDTO> {
         return this.productClient;
     }
 
+    @Override
+    public void initSummaryLabel() {}
+
     private ComboBox<String> initActionCombox(ProductDTO productDTO){
         System.out.println(productDTO.getId());
         if(productDTO.getId() == 0){

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.taim.model.basemodels.BaseModel;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
 import javax.persistence.*;
@@ -59,6 +60,15 @@ public class Transaction extends BaseModel {
         public String getValue() {
             return value;
         }
+
+        public PaymentStatus getStatus(String value){
+            for (PaymentStatus ps : PaymentStatus.values()){
+                if (value.equalsIgnoreCase(ps.name())){
+                    return ps;
+                }
+            }
+            return null;
+        }
     }
 
     @Column(name = "sale_amount")
@@ -84,8 +94,10 @@ public class Transaction extends BaseModel {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private DeliveryStatus deliveryStatus;
     @Column(name = "payment_due_date")
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     private DateTime paymentDueDate;
     @Column(name = "delivery_due_date")
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     private DateTime deliveryDueDate;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @Fetch(FetchMode.SUBSELECT)

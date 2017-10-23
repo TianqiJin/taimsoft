@@ -15,6 +15,7 @@ public class ProductDTO extends BaseModelDTO{
     private DoubleProperty virtualTotalNum;
     private DoubleProperty unitPrice;
     private BooleanProperty checked;
+    private IntegerProperty piecePerBox;
 
     public ProductDTO(){
         unitPrice = new SimpleDoubleProperty();
@@ -28,6 +29,7 @@ public class ProductDTO extends BaseModelDTO{
         totalNum = new SimpleDoubleProperty();
         virtualTotalNum = new SimpleDoubleProperty();
         checked = new SimpleBooleanProperty();
+        piecePerBox = new SimpleIntegerProperty();
     }
 
     public String getSku() {
@@ -152,6 +154,18 @@ public class ProductDTO extends BaseModelDTO{
 
     public double getVirtualTotalNum() {
         return virtualTotalNum.get();
+    }
+
+    public int getPiecePerBox() {
+        return piecePerBox.get();
+    }
+
+    public IntegerProperty piecePerBoxProperty() {
+        return piecePerBox;
+    }
+
+    public void setPiecePerBox(int piecePerBox) {
+        this.piecePerBox.set(piecePerBox);
     }
 
     public DoubleProperty virtualTotalNumProperty() {

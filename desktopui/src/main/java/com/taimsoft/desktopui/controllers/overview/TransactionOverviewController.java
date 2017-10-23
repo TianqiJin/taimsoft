@@ -57,9 +57,13 @@ public class TransactionOverviewController extends IOverviewController<Transacti
     @FXML
     private Label totalQuotedLabel;
     @FXML
-    private Label totalUnpaidLabel;
+    private Label totalInvoiceUnpaidLabel;
     @FXML
-    private Label totalPaidLabel;
+    private Label totalInvoicePaidLabel;
+    @FXML
+    private Label totalStockUnpaidLabel;
+    @FXML
+    private Label totalStockPaidLabel;
     @FXML
     private TextField searchField;
     @FXML
@@ -128,6 +132,10 @@ public class TransactionOverviewController extends IOverviewController<Transacti
                                 if(newValue.equals("VIEW DETAILS")){
                                     VistaNavigator.loadDetailVista(VistaNavigator.VISTA_TRANSACTION_DETAIL, transactionDTO);
                                 }
+                                if (newValue.equalsIgnoreCase("EDIT")){
+                                    TransactionDTO editedTrans = TransactionPanelLoader.loadQuotation(transactionDTO,null);
+
+                                }
                             });
                             comboBox.setValue(item);
                             setGraphic(comboBox);
@@ -137,10 +145,6 @@ public class TransactionOverviewController extends IOverviewController<Transacti
                 };
             }
         });
-
-        bindSummaryLabel(totalQuotedLabel, Quoted);
-        bindSummaryLabel(totalPaidLabel, Paid);
-        bindSummaryLabel(totalUnpaidLabel, Unpaid);
 
         createNewTransactionComboBox.setItems(FXCollections.observableArrayList(Transaction.TransactionType.values()));
         createNewTransactionComboBox.setOnAction(new EventHandler<ActionEvent>() {
@@ -154,6 +158,7 @@ public class TransactionOverviewController extends IOverviewController<Transacti
 //                        }
                         break;
                     case INVOICE:
+
                         break;
                     case STOCK:
                         break;
@@ -250,28 +255,53 @@ public class TransactionOverviewController extends IOverviewController<Transacti
         return this.transactionClient;
     }
 
+    @Override
+    public void initSummaryLabel() {
+        bindSummaryLabel(totalQuotedLabel, QUOTED);
+        bindSummaryLabel(totalInvoicePaidLabel, INVOICE_PAID);
+        bindSummaryLabel(totalInvoiceUnpaidLabel, INVOICE_UNPAID);
+        bindSummaryLabel(totalStockPaidLabel, STOCK_PAID);
+        bindSummaryLabel(totalStockUnpaidLabel, STOCK_UNPAID);
+    }
+
     private void bindSummaryLabel(Label label, SummaryLabelMode mode){
         DoubleBinding numberBinding = Bindings.createDoubleBinding(() -> {
                     double totalValue = 0 ;
                     switch(mode){
-                        case Quoted:
-                            for (TransactionDTO item : getOverviewTable().getItems()) {
+                        case QUOTED:
+                            for (TransactionDTO item : getOverviewDTOList()) {
                                 if(item.getTransactionType().equals(Transaction.TransactionType.QUOTATION) && !item.isFinalized()){
                                     totalValue = totalValue + item.getSaleAmount();
                                 }
                             }
                             break;
-                        case Paid:
-                            for (TransactionDTO item : getOverviewTable().getItems()) {
+                        case INVOICE_PAID:
+                            for (TransactionDTO item : getOverviewDTOList()) {
                                 if(item.getTransactionType().equals(Transaction.TransactionType.INVOICE) &&
                                         item.getPaymentStatus().equals(Transaction.PaymentStatus.PAID)){
                                     totalValue = totalValue + item.getSaleAmount();
                                 }
                             }
                             break;
-                        case Unpaid:
-                            for (TransactionDTO item : getOverviewTable().getItems()) {
+                        case INVOICE_UNPAID:
+                            for (TransactionDTO item : getOverviewDTOList()) {
                                 if(item.getTransactionType().equals(Transaction.TransactionType.INVOICE) &&
+                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.UNPAID)){
+                                    totalValue = totalValue + item.getSaleAmount();
+                                }
+                            }
+                            break;
+                        case STOCK_PAID:
+                            for (TransactionDTO item : getOverviewDTOList()) {
+                                if(item.getTransactionType().equals(Transaction.TransactionType.STOCK) &&
+                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.PAID)){
+                                    totalValue = totalValue + item.getSaleAmount();
+                                }
+                            }
+                            break;
+                        case STOCK_UNPAID:
+                            for (TransactionDTO item : getOverviewDTOList()) {
+                                if(item.getTransactionType().equals(Transaction.TransactionType.STOCK) &&
                                         item.getPaymentStatus().equals(Transaction.PaymentStatus.UNPAID)){
                                     totalValue = totalValue + item.getSaleAmount();
                                 }
@@ -284,6 +314,6 @@ public class TransactionOverviewController extends IOverviewController<Transacti
                     return totalValue ;
         },
                 getOverviewTable().getItems());
-        label.textProperty().bind(Bindings.format("%.2f", numberBinding));
+        label.textProperty().bind(Bindings.format("%s%.2f", "$", numberBinding));
     }
 }

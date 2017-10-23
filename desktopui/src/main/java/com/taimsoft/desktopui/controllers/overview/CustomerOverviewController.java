@@ -17,10 +17,6 @@ import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
 
-import static com.taimsoft.desktopui.controllers.overview.IOverviewController.SummaryLabelMode.Paid;
-import static com.taimsoft.desktopui.controllers.overview.IOverviewController.SummaryLabelMode.Quoted;
-import static com.taimsoft.desktopui.controllers.overview.IOverviewController.SummaryLabelMode.Unpaid;
-
 
 /**
  * Created by Tjin on 8/30/2017.
@@ -65,8 +61,9 @@ public class CustomerOverviewController extends IOverviewController<CustomerDTO>
         actionCol.setCellFactory(new Callback<TableColumn<CustomerDTO, String>, TableCell<CustomerDTO, String>>() {
             @Override
             public TableCell<CustomerDTO, String> call(TableColumn<CustomerDTO, String> param) {
-                return new TableCell<CustomerDTO, String>(){
+                return new TableCell<CustomerDTO, String>() {
                     ComboBox<String> comboBox = new ComboBox<>();
+
                     @Override
                     public void updateItem(String item, boolean empty) {
                         super.updateItem(item, empty);
@@ -78,7 +75,7 @@ public class CustomerOverviewController extends IOverviewController<CustomerDTO>
                             CustomerDTO customerDTO = getTableView().getItems().get(getIndex());
                             comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "EDIT", "DELETE"));
                             comboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-                                if(newValue.equals("VIEW DETAILS")){
+                                if (newValue.equals("VIEW DETAILS")) {
                                     VistaNavigator.loadDetailVista(VistaNavigator.VISTA_CUSTOMER_DETAIL, customerDTO);
                                 }
                             });
@@ -88,30 +85,30 @@ public class CustomerOverviewController extends IOverviewController<CustomerDTO>
                     }
                 };
             }
-        }
-    );
-
-        bindSummaryLabel(totalPaidLabel, Paid);
-        bindSummaryLabel(totalUnpaidLabel, Unpaid);
-        bindSummaryLabel(totalQuotedLabel, Quoted);
+        });
     }
 
     @Override
-    public void initSearchField() {
-
-    }
+    public void initSearchField() {}
 
     @Override
     public IClient<CustomerDTO> getOverviewClient(){
         return this.customerClient;
     }
 
+    @Override
+    public void initSummaryLabel() {
+        bindSummaryLabel(totalPaidLabel, SummaryLabelMode.INVOICE_PAID);
+        bindSummaryLabel(totalUnpaidLabel, SummaryLabelMode.INVOICE_UNPAID);
+        bindSummaryLabel(totalQuotedLabel, SummaryLabelMode.QUOTED);
+    }
+
     private void bindSummaryLabel(Label label, SummaryLabelMode mode){
         DoubleBinding numberBinding = Bindings.createDoubleBinding(() -> {
                     double totalValue = 0 ;
                     switch(mode){
-                        case Quoted:
-                            for (CustomerDTO item : getOverviewTable().getItems()) {
+                        case QUOTED:
+                            for (CustomerDTO item : getOverviewDTOList()) {
                                 for(TransactionDTO transactionDTO : item.getTransactionList()){
                                     if(transactionDTO.getTransactionType().equals(Transaction.TransactionType.QUOTATION)
                                             && !transactionDTO.isFinalized()){
@@ -120,8 +117,8 @@ public class CustomerOverviewController extends IOverviewController<CustomerDTO>
                                 }
                             }
                             break;
-                        case Paid:
-                            for (CustomerDTO item : getOverviewTable().getItems()) {
+                        case INVOICE_PAID:
+                            for (CustomerDTO item : getOverviewDTOList()) {
                                 for(TransactionDTO transactionDTO : item.getTransactionList()){
                                     if(transactionDTO.getTransactionType().equals(Transaction.TransactionType.INVOICE) &&
                                             transactionDTO.getPaymentStatus().equals(Transaction.PaymentStatus.PAID)){
@@ -130,8 +127,8 @@ public class CustomerOverviewController extends IOverviewController<CustomerDTO>
                                 }
                             }
                             break;
-                        case Unpaid:
-                            for (CustomerDTO item : getOverviewTable().getItems()) {
+                        case INVOICE_UNPAID:
+                            for (CustomerDTO item : getOverviewDTOList()) {
                                 for(TransactionDTO transactionDTO : item.getTransactionList()){
                                     if(transactionDTO.getTransactionType().equals(Transaction.TransactionType.INVOICE) &&
                                             transactionDTO.getPaymentStatus().equals(Transaction.PaymentStatus.UNPAID)){
@@ -147,6 +144,6 @@ public class CustomerOverviewController extends IOverviewController<CustomerDTO>
                     return totalValue ;
                 },
                 getOverviewTable().getItems());
-        label.textProperty().bind(Bindings.format("%.2f", numberBinding));
+        label.textProperty().bind(Bindings.format("%s%.2f", "$", numberBinding));
     }
 }

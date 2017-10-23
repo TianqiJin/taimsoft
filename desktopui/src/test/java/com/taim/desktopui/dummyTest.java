@@ -6,6 +6,8 @@ import com.taim.dto.TransactionDTO;
 import com.taim.dto.TransactionDetailDTO;
 import com.taim.model.Customer;
 import com.taimsoft.desktopui.util.RestClientFactory;
+import com.taimsoft.desktopui.util.TransactionPanelLoader;
+import de.saxsys.javafx.test.JfxRunner;
 import org.joda.time.DateTime;
 import org.junit.Test;
 
@@ -15,6 +17,7 @@ import java.util.List;
 /**
  * Created by jiawei.liu on 10/4/17.
  */
+
 public class dummyTest {
 
     @Test
@@ -103,7 +106,7 @@ public class dummyTest {
         customer1.setEmail("tm@gmail.com");
         customer1.setFullname("Tim Hortons");
         customer1.setPhone("5698974624");
-        customer1.setCustomerClass(Customer.CustomerClass.CLASSB);
+//        customer1.setCustomerClass(Customer.CustomerClass.CLASSB);
 
         CustomerDTO customer2 = new CustomerDTO();
         customer2.setDateCreated(DateTime.now());
@@ -111,7 +114,7 @@ public class dummyTest {
         customer2.setEmail("dummyDum@hotmail.com");
         customer2.setFullname("Dummy dum");
         customer2.setPhone("1234698712");
-        customer2.setCustomerClass(Customer.CustomerClass.CLASSC);
+//        customer2.setCustomerClass(Customer.CustomerClass.CLASSC);
 
         RestClientFactory.getCustomerClient().add(customer1);
         RestClientFactory.getCustomerClient().add(customer2);
@@ -156,4 +159,5 @@ public class dummyTest {
         RestClientFactory.getTransactionClient().add(transaction);
 
     }
+
 }

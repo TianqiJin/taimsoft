@@ -38,6 +38,15 @@ public class DeliveryStatus extends BaseModel {
         return status;
     }
 
+    public static Status getStatus(String value){
+        for (Status s : Status.values()){
+            if (s.name().equalsIgnoreCase(value)){
+                return s;
+            }
+        }
+        return null;
+    }
+
     public void setStatus(Status status) {
         this.status = status;
     }

@@ -22,7 +22,7 @@ public class TransactionDetail extends BaseModel {
     private int discount;
     @Column(name = "note")
     private String note;
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "package_info_id")
     private PackageInfo packageInfo;
 
