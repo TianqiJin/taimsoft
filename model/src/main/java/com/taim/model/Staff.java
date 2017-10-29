@@ -48,9 +48,6 @@ public class Staff extends UserBaseModel {
     private String picUrl;
     @Column
     private Position position;
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "organization_id")
-    private Organization organization;
     @OneToMany(mappedBy = "staff", fetch = FetchType.EAGER)
     @Fetch(FetchMode.SUBSELECT)
     private List<Transaction> transactionList;
@@ -71,14 +68,6 @@ public class Staff extends UserBaseModel {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public Organization getOrganization() {
-        return organization;
-    }
-
-    public void setOrganization(Organization organization) {
-        this.organization = organization;
     }
 
     public String getPicUrl() {

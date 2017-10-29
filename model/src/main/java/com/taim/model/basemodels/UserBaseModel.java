@@ -1,7 +1,8 @@
 package com.taim.model.basemodels;
 
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
+import com.taim.model.Organization;
+
+import javax.persistence.*;
 
 /**
  * Created by tjin on 2017-07-31.
@@ -25,6 +26,9 @@ public class UserBaseModel extends BaseModel{
     private String phone;
     @Column
     private String email;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "organization_id")
+    private Organization organization;
 
     public UserBaseModel(){}
 
@@ -52,13 +56,11 @@ public class UserBaseModel extends BaseModel{
         this.email = email;
     }
 
-    @Override
-    public String toString() {
-        return "{\"UserBaseModel\":"
-                + super.toString()
-                + ", \"fullname\":\"" + fullname + "\""
-                + ", \"phone\":\"" + phone + "\""
-                + ", \"email\":\"" + email + "\""
-                + "}";
+    public Organization getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
     }
 }
