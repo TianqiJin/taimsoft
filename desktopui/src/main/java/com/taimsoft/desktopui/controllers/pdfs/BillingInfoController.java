@@ -1,9 +1,11 @@
 package com.taimsoft.desktopui.controllers.pdfs;
 
 import com.taim.dto.CustomerDTO;
+import com.taim.dto.OrganizationDTO;
 import com.taim.dto.StaffDTO;
 import com.taim.dto.TransactionDTO;
 import com.taim.dto.basedtos.UserBaseModelDTO;
+import com.taim.model.Organization;
 import com.taim.model.basemodels.UserBaseModel;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
@@ -118,7 +120,21 @@ public class BillingInfoController {
     }
 
     public void initData(UserBaseModelDTO user){
-        this.user = user;
+        this.user = new UserBaseModelDTO();
+        OrganizationDTO organization = new OrganizationDTO();
+        if(user.getOrganization() != null){
+            organization.setPostalCode(user.getOrganization().getPostalCode());
+            organization.setStreetNum(user.getOrganization().getStreetNum());
+            organization.setStreet(user.getOrganization().getStreet());
+            organization.setCity(user.getOrganization().getCity());
+            organization.setCountry(user.getOrganization().getCountry());
+            organization.setOrgName(user.getOrganization().getOrgName());
+        }
+        user.setEmail(user.getEmail());
+        user.setFullname(user.getFullname());
+        user.setPhone(user.getPhone());
+        user.setOrganization(organization);
+
         if(this.user instanceof StaffDTO){
             infoCheckbox.setText("Use Staff Info");
             nameLabel.setText("From");

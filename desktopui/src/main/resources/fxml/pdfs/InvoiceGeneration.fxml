@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -17,7 +14,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0" prefWidth="1000.0" stylesheets="@/css/bootstrap3.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taimsoft.desktopui.controllers.pdfs.InvoiceGenerationController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0" prefWidth="1000.0" stylesheets="@/css/bootstrap3.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taimsoft.desktopui.controllers.pdfs.InvoiceGenerationController">
     <children>
         <HBox layoutX="330.0" layoutY="237.0" spacing="5.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0">
             <children>
@@ -35,7 +32,7 @@
                 </Button>
             </children>
         </HBox>
-        <SplitPane dividerPositions="0.15" layoutX="244.0" layoutY="66.0" orientation="VERTICAL" prefHeight="450.0" prefWidth="500.0" AnchorPane.bottomAnchor="550.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="100.0">
+        <SplitPane dividerPositions="0.1" layoutX="244.0" layoutY="66.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" AnchorPane.bottomAnchor="300.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="100.0">
             <items>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                     <children>
@@ -55,25 +52,25 @@
                                 </rowConstraints>
                      <children>
                         <Label text="Delivery Due Date" GridPane.columnIndex="4" />
-                        <Label text="Label" GridPane.columnIndex="5">
+                        <Label fx:id="deliveryDueDateLabel" text="Label" GridPane.columnIndex="5">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
                         </Label>
                         <Label text="Date" />
-                        <Label text="Label" GridPane.columnIndex="1">
+                        <Label fx:id="invoiceCreationDateLabel" text="Label" GridPane.columnIndex="1">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
                         </Label>
                         <Label text="Invoice Due Date" GridPane.columnIndex="2" />
-                        <Label text="Label" GridPane.columnIndex="3">
+                        <Label fx:id="paymentDueDateLabel" text="Label" GridPane.columnIndex="3">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
                         </Label>
                         <Label text="Invoice #" GridPane.columnIndex="6" />
-                        <Label text="Label" GridPane.columnIndex="7">
+                        <Label fx:id="invoiceNumLabel" text="Label" GridPane.columnIndex="7">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
@@ -88,244 +85,18 @@
                     <items>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                            <children>
-                                    <TitledPane fx:id="deliveryTitledPane" animated="false" collapsible="false" text="BILL FROM" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                        <content>
-                                            <AnchorPane>
-                                                <children>
-                                                    <GridPane layoutX="-49.0" layoutY="61.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
-                                                        <columnConstraints>
-                                                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                                        </columnConstraints>
-                                                        <rowConstraints>
-                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                        </rowConstraints>
-                                                        <children>
-                                                            <Label text="Street" GridPane.rowIndex="5" />
-                                                            <Label text="City" GridPane.rowIndex="6" />
-                                                            <Label text="Postal Code" GridPane.rowIndex="8" />
-                                                            <TextField fx:id="staffStreetField" GridPane.columnIndex="1" GridPane.rowIndex="5">
-                                                   <padding>
-                                                      <Insets bottom="5.0" top="5.0" />
-                                                   </padding>
-                                                </TextField>
-                                                            <TextField fx:id="staffCityField" GridPane.columnIndex="1" GridPane.rowIndex="6">
-                                                   <padding>
-                                                      <Insets bottom="5.0" top="5.0" />
-                                                   </padding>
-                                                </TextField>
-                                                            <TextField fx:id="staffPostalCodeField" GridPane.columnIndex="1" GridPane.rowIndex="8">
-                                                   <padding>
-                                                      <Insets bottom="5.0" top="5.0" />
-                                                   </padding>
-                                                </TextField>
-                                                            <CheckBox fx:id="staffAddressCheckbox" mnemonicParsing="false" text="Use Staff Info" />
-                                                <Label text="Label" GridPane.columnIndex="2" GridPane.rowIndex="5">
-                                                   <padding>
-                                                      <Insets left="5.0" />
-                                                   </padding>
-                                                </Label>
-                                                <Label text="Label" GridPane.columnIndex="2" GridPane.rowIndex="6">
-                                                   <padding>
-                                                      <Insets left="5.0" />
-                                                   </padding>
-                                                </Label>
-                                                <Label text="Label" GridPane.columnIndex="2" GridPane.rowIndex="8">
-                                                   <padding>
-                                                      <Insets left="5.0" />
-                                                   </padding>
-                                                </Label>
-                                                <Label text="Street #" GridPane.rowIndex="4" />
-                                                <TextField fx:id="staffStreetNumField" GridPane.columnIndex="1" GridPane.rowIndex="4">
-                                                   <padding>
-                                                      <Insets bottom="5.0" top="5.0" />
-                                                   </padding>
-                                                </TextField>
-                                                <TextField fx:id="staffCountryField" GridPane.columnIndex="1" GridPane.rowIndex="7">
-                                                   <padding>
-                                                      <Insets bottom="5.0" top="5.0" />
-                                                   </padding>
-                                                </TextField>
-                                                <Label text="Label" GridPane.columnIndex="2" GridPane.rowIndex="4">
-                                                   <padding>
-                                                      <Insets left="5.0" />
-                                                   </padding>
-                                                </Label>
-                                                <Label text="Label" GridPane.columnIndex="2" GridPane.rowIndex="7">
-                                                   <padding>
-                                                      <Insets left="5.0" />
-                                                   </padding>
-                                                </Label>
-                                                <Label text="Country" GridPane.rowIndex="7" />
-                                                <Label text="From" GridPane.rowIndex="1" />
-                                                <Label text="Phone" GridPane.rowIndex="2" />
-                                                <Label text="Email" GridPane.rowIndex="3" />
-                                                <Label text="Label" GridPane.columnIndex="2" GridPane.rowIndex="1">
-                                                   <padding>
-                                                      <Insets left="5.0" />
-                                                   </padding>
-                                                </Label>
-                                                <Label text="Label" GridPane.columnIndex="2" GridPane.rowIndex="2">
-                                                   <padding>
-                                                      <Insets left="5.0" />
-                                                   </padding>
-                                                </Label>
-                                                <Label text="Label" GridPane.columnIndex="2" GridPane.rowIndex="3">
-                                                   <padding>
-                                                      <Insets left="5.0" />
-                                                   </padding>
-                                                </Label>
-                                                <TextField fx:id="staffNameField" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                                   <padding>
-                                                      <Insets bottom="5.0" top="5.0" />
-                                                   </padding>
-                                                </TextField>
-                                                <TextField fx:id="staffPhoneField" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                                                   <padding>
-                                                      <Insets bottom="5.0" top="5.0" />
-                                                   </padding>
-                                                </TextField>
-                                                <TextField fx:id="staffEmailField" GridPane.columnIndex="1" GridPane.rowIndex="3">
-                                                   <padding>
-                                                      <Insets bottom="5.0" top="5.0" />
-                                                   </padding>
-                                                </TextField>
-                                                        </children>
-                                                    </GridPane>
-                                                </children>
-                                            </AnchorPane>
-                                        </content>
-                                    </TitledPane>
+                                    <TitledPane fx:id="billingFromPane" animated="false" collapsible="false" prefHeight="200.0" prefWidth="200.0" text="BILL FROM" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <content>
+                                    <AnchorPane prefHeight="200.0" prefWidth="200.0" />
+                                 </content></TitledPane>
                            </children>
                         </AnchorPane>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                            <children>
-                              <TitledPane fx:id="deliveryTitledPane1" animated="false" collapsible="false" text="BILL TO" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <TitledPane fx:id="billingToPane" animated="false" collapsible="false" prefHeight="200.0" prefWidth="200.0" text="BILL TO" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <content>
-                                    <AnchorPane>
-                                       <children>
-                                          <GridPane layoutX="-49.0" layoutY="61.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
-                                             <columnConstraints>
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                             </columnConstraints>
-                                             <rowConstraints>
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                             </rowConstraints>
-                                             <children>
-                                                <Label text="Street" GridPane.rowIndex="5" />
-                                                <Label text="City" GridPane.rowIndex="6" />
-                                                <Label text="Postal Code" GridPane.rowIndex="8" />
-                                                <TextField fx:id="customerStreetField" GridPane.columnIndex="1" GridPane.rowIndex="5">
-                                                   <padding>
-                                                      <Insets bottom="5.0" top="5.0" />
-                                                   </padding>
-                                                </TextField>
-                                                <TextField fx:id="customerCityField" GridPane.columnIndex="1" GridPane.rowIndex="6">
-                                                   <padding>
-                                                      <Insets bottom="5.0" top="5.0" />
-                                                   </padding>
-                                                </TextField>
-                                                <TextField fx:id="customerPostalCodeField" GridPane.columnIndex="1" GridPane.rowIndex="8">
-                                                   <padding>
-                                                      <Insets bottom="5.0" top="5.0" />
-                                                   </padding>
-                                                </TextField>
-                                                <CheckBox fx:id="customerAddressCheckbox" mnemonicParsing="false" text="Use Customer Info" />
-                                                <Label text="Label" GridPane.columnIndex="2" GridPane.rowIndex="5">
-                                                   <padding>
-                                                      <Insets left="5.0" />
-                                                   </padding>
-                                                </Label>
-                                                <Label text="Label" GridPane.columnIndex="2" GridPane.rowIndex="6">
-                                                   <padding>
-                                                      <Insets left="5.0" />
-                                                   </padding>
-                                                </Label>
-                                                <Label text="Label" GridPane.columnIndex="2" GridPane.rowIndex="8">
-                                                   <padding>
-                                                      <Insets left="5.0" />
-                                                   </padding>
-                                                </Label>
-                                                <Label text="Street #" GridPane.rowIndex="4" />
-                                                <TextField fx:id="customerStreetNumField" GridPane.columnIndex="1" GridPane.rowIndex="4">
-                                                   <padding>
-                                                      <Insets bottom="5.0" top="5.0" />
-                                                   </padding>
-                                                </TextField>
-                                                <TextField fx:id="customerCountryField" GridPane.columnIndex="1" GridPane.rowIndex="7">
-                                                   <padding>
-                                                      <Insets bottom="5.0" top="5.0" />
-                                                   </padding>
-                                                </TextField>
-                                                <Label text="Label" GridPane.columnIndex="2" GridPane.rowIndex="4">
-                                                   <padding>
-                                                      <Insets left="5.0" />
-                                                   </padding>
-                                                </Label>
-                                                <Label text="Label" GridPane.columnIndex="2" GridPane.rowIndex="7">
-                                                   <padding>
-                                                      <Insets left="5.0" />
-                                                   </padding>
-                                                </Label>
-                                                <Label text="Country" GridPane.rowIndex="7" />
-                                                <Label text="To" GridPane.rowIndex="1" />
-                                                <Label text="Label" GridPane.columnIndex="2" GridPane.rowIndex="1">
-                                                   <padding>
-                                                      <Insets left="5.0" />
-                                                   </padding>
-                                                </Label>
-                                                <Label text="Label" GridPane.columnIndex="2" GridPane.rowIndex="2">
-                                                   <padding>
-                                                      <Insets left="5.0" />
-                                                   </padding>
-                                                </Label>
-                                                <Label text="Label" GridPane.columnIndex="2" GridPane.rowIndex="3">
-                                                   <padding>
-                                                      <Insets left="5.0" />
-                                                   </padding>
-                                                </Label>
-                                                <Label text="Phone" GridPane.rowIndex="2" />
-                                                <Label text="Email" GridPane.rowIndex="3" />
-                                                <TextField fx:id="customerNameField" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                                   <padding>
-                                                      <Insets bottom="5.0" top="5.0" />
-                                                   </padding>
-                                                </TextField>
-                                                <TextField fx:id="customerPhoneField" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                                                   <padding>
-                                                      <Insets bottom="5.0" top="5.0" />
-                                                   </padding>
-                                                </TextField>
-                                                <TextField fx:id="customerEmailField" GridPane.columnIndex="1" GridPane.rowIndex="3">
-                                                   <padding>
-                                                      <Insets bottom="5.0" top="5.0" />
-                                                   </padding>
-                                                </TextField>
-                                             </children>
-                                          </GridPane>
-                                       </children>
-                                    </AnchorPane>
-                                 </content>
-                              </TitledPane>
+                                    <AnchorPane prefHeight="200.0" prefWidth="200.0" />
+                                 </content></TitledPane>
                            </children>
                         </AnchorPane>
                     </items>
@@ -339,6 +110,6 @@
             <Font name="System Bold" size="18.0" />
          </font>
       </Label>
-      <ComboBox fx:id="invoiceComboBox" layoutX="836.0" layoutY="14.0" prefWidth="150.0" promptText="Create New" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
+      <ComboBox fx:id="invoiceCreationComboBox" layoutX="836.0" layoutY="14.0" prefWidth="150.0" promptText="Create New" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
     </children>
 </AnchorPane>

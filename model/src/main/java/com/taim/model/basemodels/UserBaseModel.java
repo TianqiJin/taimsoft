@@ -26,7 +26,7 @@ public class UserBaseModel extends BaseModel{
     private String phone;
     @Column
     private String email;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "organization_id")
     private Organization organization;
 

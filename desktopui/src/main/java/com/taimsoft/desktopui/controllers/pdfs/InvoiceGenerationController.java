@@ -12,11 +12,14 @@ import com.taim.dto.TransactionDTO;
 import com.taim.dto.basedtos.UserBaseModelDTO;
 import com.taim.model.Transaction;
 import com.taimsoft.desktopui.util.AlertBuilder;
+import com.taimsoft.desktopui.util.InvoiceGenerator;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -26,13 +29,29 @@ import java.io.IOException;
  * Created by tjin on 3/7/2016.
  */
 public class InvoiceGenerationController {
+    public enum InvoiceType{
+        QUOTATION("Quotation"),
+        INVOICE("Purchase Invoice"),
+        DELIVERY_NOTICE("Delivery Notice"),
+        RETURN("Return Invoice");
+
+        private String value;
+
+        InvoiceType(String vvalue){
+            this.value = vvalue;
+        }
+
+        public String getValue(){
+            return this.value;
+        }
+    }
+
     private Stage dialogStage;
-    private File selectedDirectory;
+    private File newInvoice;
     private TransactionDTO transaction;
-
-    @FXML
-    private Label invoiceDirectoryLabel;
-
+//
+//    @FXML
+//    private Label invoiceDirectoryLabel;
     @FXML
     private Label invoiceCreationDateLabel;
     @FXML
@@ -42,26 +61,16 @@ public class InvoiceGenerationController {
     @FXML
     private Label invoiceNumLabel;
     @FXML
-    private AnchorPane billingInfoPane;
+    private TitledPane billingFromPane;
+    @FXML
+    private TitledPane billingToPane;
+    @FXML
+    private ComboBox<String> invoiceCreationComboBox;
+    @FXML
+    private void initialize(){ }
 
     @FXML
-    private void initialize(){
-    }
-
-    public InvoiceGenerationController(){}
-
-    @FXML
-    public void handleInvoiceDirectory(){
-        DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.setTitle("Select Invoice Directory");
-        selectedDirectory = directoryChooser.showDialog(dialogStage);
-        if(selectedDirectory != null){
-            invoiceDirectoryLabel.setText(selectedDirectory.toString());
-        }
-    }
-
-//    @FXML
-//    public void handleConfirmButton(){
+    public void handleConfirmButton(){
 //        errorMsgBuilder = new StringBuilder();
 //        if(isInvoicedirectoryValid()){
 //            try{
@@ -104,7 +113,8 @@ public class InvoiceGenerationController {
 //                    .build()
 //                    .showAndWait();
 //            }
-//        }
+        }
+
     @FXML
     public void handleCancelButton(){
         dialogStage.close();
@@ -116,29 +126,91 @@ public class InvoiceGenerationController {
 
     public void initData(TransactionDTO transaction){
         this.transaction = transaction;
-        initBillingInfoPanel(this.transaction.getCustomer());
-        initBillingInfoPanel(this.transaction.getStaff());
+        initInvoiceInfo();
+        initComboBox();
+        initBillingInfoPanel(this.transaction.getCustomer(), billingToPane);
+        initBillingInfoPanel(this.transaction.getStaff(), billingFromPane);
     }
 
-    private void initBillingInfoPanel(UserBaseModelDTO user){
+    private void initBillingInfoPanel(UserBaseModelDTO user, TitledPane billingPane){
         try {
             FXMLLoader fXMLLoader = new FXMLLoader();
-            AnchorPane root;
-            root = fXMLLoader.load(this.getClass().getResource("/fxml/pdfs/BillingInfo.fxml").openStream());
-            root.prefHeightProperty().bind(billingInfoPane.heightProperty());
-            root.prefWidthProperty().bind(billingInfoPane.widthProperty());
+            AnchorPane root = fXMLLoader.load(this.getClass().getResource("/fxml/pdfs/BillingInfo.fxml").openStream());
+            root.prefHeightProperty().bind(billingPane.heightProperty());
+            root.prefWidthProperty().bind(billingPane.widthProperty());
             BillingInfoController controller = fXMLLoader.getController();
             controller.initData(user);
+            billingPane.setContent(root);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
 
     private void initInvoiceInfo(){
-        invoiceCreationDateLabel.textProperty().bindBidirectional(this.transaction.in);
-        paymentDueDateLabel;
-         deliveryDueDateLabel;
-        invoiceNumLabel;
+        invoiceCreationDateLabel.textProperty().bind(this.transaction.dateCreatedProperty().asString());
+        paymentDueDateLabel.textProperty().bind(this.transaction.paymentDueDateProperty().asString());
+        deliveryDueDateLabel.textProperty().bind(this.transaction.deliveryDueDateProperty().asString());
+        invoiceNumLabel.textProperty().bind(this.transaction.idProperty().asString());
+    }
+
+    private void initComboBox(){
+        if(this.transaction.getTransactionType().equals(Transaction.TransactionType.QUOTATION)){
+            this.invoiceCreationComboBox.setItems(FXCollections.observableArrayList(InvoiceType.QUOTATION.getValue()));
+        }else if(this.transaction.getTransactionType().equals(Transaction.TransactionType.INVOICE)){
+            this.invoiceCreationComboBox.setItems(FXCollections.observableArrayList(
+                    InvoiceType.QUOTATION.getValue(),
+                    InvoiceType.INVOICE.getValue(),
+                    InvoiceType.DELIVERY_NOTICE.getValue()));
+        }else if(this.transaction.getTransactionType().equals(Transaction.TransactionType.RETURN)){
+            this.invoiceCreationComboBox.setItems(FXCollections.observableArrayList(InvoiceType.RETURN.getValue()));
+        }
+
+        invoiceCreationComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Create New Invoice");
+            newInvoice = fileChooser.showSaveDialog(dialogStage);
+            InvoiceGenerator generator = new InvoiceGenerator(newInvoice.getAbsolutePath());
+            if(newValue.equals(InvoiceType.QUOTATION.getValue())){
+                generator.buildQuotation(transaction, );
+            }else if(newValue.equals(InvoiceType.INVOICE.getValue())){
+
+            }else if(newValue.equals(InvoiceType.DELIVERY_NOTICE.getValue())){
+
+            }else if(newValue.equals(InvoiceType.RETURN.getValue())){
+
+            }
+        });
+    }
+
+    private void generateInvoice(){
+        try{
+            InvoiceGenerator generator = new InvoiceGenerator(newInvoice.getAbsolutePath());
+            if(isFieldValid()){
+                Address address = new Address(streetField.getText().trim(), cityField.getText().trim(), postalCodeField.getText().trim());
+                if(invoiceCheckBox.isSelected()){
+                    generator.buildInvoice(transaction,customer,staff, address);
+                }
+                if(quotationInvoiceCheckBox.isSelected()){
+                    generator.buildQuotation(transaction, customer, staff, address);
+                }
+                if(deliveryInvoiceCheckbox.isSelected()){
+                    generator.buildDelivery(transaction, customer, staff, address);
+                }
+                if(poCheckBox.isSelected()){
+                    generator.buildPo(transaction, customer, staff, address);
+                }
+            }else{
+                new AlertBuilder()
+                        .alertType(Alert.AlertType.ERROR)
+                        .alertHeaderText("Please fix the following error")
+                        .alertContentText(errorMsgBuilder.toString())
+                        .alertTitle("Invoice Error")
+                        .build()
+                        .showAndWait();
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
 }

@@ -5,6 +5,9 @@ import com.taim.client.TransactionClient;
 import com.taim.dto.PaymentDTO;
 import com.taim.dto.TransactionDTO;
 import com.taim.model.Transaction;
+import com.taimsoft.desktopui.TaimDesktop;
+import com.taimsoft.desktopui.controllers.pdfs.InvoiceGenerationController;
+import com.taimsoft.desktopui.controllers.settings.ResetPasswordController;
 import com.taimsoft.desktopui.util.RestClientFactory;
 import com.taimsoft.desktopui.util.TransactionPanelLoader;
 import com.taimsoft.desktopui.util.VistaNavigator;
@@ -17,13 +20,21 @@ import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 import org.joda.time.DateTime;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.stream.Collectors;
@@ -131,6 +142,30 @@ public class TransactionOverviewController extends IOverviewController<Transacti
                             comboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
                                 if(newValue.equals("VIEW DETAILS")){
                                     VistaNavigator.loadDetailVista(VistaNavigator.VISTA_TRANSACTION_DETAIL, transactionDTO);
+                                }else if(newValue.equals("PRINT")){
+                                    try {
+                                        FXMLLoader loader = new FXMLLoader();
+                                        loader.setLocation(TaimDesktop.class.getResource("/fxml/pdfs/InvoiceGeneration.fxml"));
+                                        AnchorPane page = loader.load();
+                                        Stage dialogStage = new Stage();
+                                        //Set the dialog stage bound to the maximum of the screen
+                                        Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
+                                        dialogStage.setX(bounds.getMinX());
+                                        dialogStage.setY(bounds.getMinY());
+                                        dialogStage.setWidth(bounds.getWidth());
+                                        dialogStage.setHeight(bounds.getHeight());
+                                        dialogStage.setTitle("PRINT INVOICES");
+                                        page.getStylesheets().add(TaimDesktop.class.getResource("/css/bootstrap3.css").toExternalForm());
+                                        Scene scene = new Scene(page);
+                                        dialogStage.setScene(scene);
+                                        dialogStage.initModality(Modality.WINDOW_MODAL);
+                                        InvoiceGenerationController controller = loader.getController();
+                                        controller.setDialogStage(dialogStage);
+                                        controller.initData(transactionDTO);
+                                        dialogStage.showAndWait();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
                                 }
                             });
                             comboBox.setValue(item);

@@ -1,10 +1,8 @@
 package com.taim.desktopui;
 
-import com.taim.dto.CustomerDTO;
-import com.taim.dto.ProductDTO;
-import com.taim.dto.TransactionDTO;
-import com.taim.dto.TransactionDetailDTO;
+import com.taim.dto.*;
 import com.taim.model.Customer;
+import com.taim.model.Staff;
 import com.taimsoft.desktopui.util.RestClientFactory;
 import org.joda.time.DateTime;
 import org.junit.Test;
@@ -120,6 +118,30 @@ public class dummyTest {
     }
 
     @Test
+    public void addStaff()throws Exception{
+        StaffDTO staff = new StaffDTO();
+        staff.setDateCreated(DateTime.now());
+        staff.setDateModified(DateTime.now());
+        staff.setEmail("staff@gmail.com");
+        staff.setFullname("admin");
+        staff.setPhone("1234567890");
+        staff.setUserName("admin");
+        staff.setPassword("admin");
+        staff.setPosition(Staff.Position.MANAGER);
+        OrganizationDTO organization = new OrganizationDTO();
+        organization.setDateCreated(DateTime.now());
+        organization.setDateModified(DateTime.now());
+        organization.setCountry("Canada");
+        organization.setOrgName("TEST ORG");
+        organization.setCity("Calgary");
+        organization.setStreet("Downtown");
+        organization.setStreetNum("123");
+        organization.setPostalCode("T3P1A1");
+        staff.setOrganization(organization);
+        RestClientFactory.getStaffClient().add(staff);
+    }
+
+    @Test
     public void getCustomerTransactionList(){
         System.out.println(RestClientFactory.getCustomerClient().getByName("Tim Hortons").getTransactionList().size());
     }
@@ -149,7 +171,25 @@ public class dummyTest {
         transaction.setCustomer(RestClientFactory.getCustomerClient().getByName("Tim Hortons"));
 
         RestClientFactory.getTransactionClient().add(transaction);
+    }
 
+    @Test
+    public void addProperty(){
+        PropertyDTO propertyDTO = new PropertyDTO();
+        propertyDTO.setCompanyName("TEST COMPANY");
+        propertyDTO.setGstNumber("123456");
+        propertyDTO.setGstRate(5);
+        propertyDTO.setPstRate(7);
+        propertyDTO.setProductWarnLimit(200);
+        propertyDTO.setDateCreated(DateTime.now());
+        propertyDTO.setDateModified(DateTime.now());
+        PropertyDTO.CustomerClassDTO customerClassDTO = new PropertyDTO.CustomerClassDTO();
+        customerClassDTO.setCustomerClassName("Class A");
+        customerClassDTO.setCustomerDiscount(15);
+        customerClassDTO.setDateCreated(DateTime.now());
+        customerClassDTO.setDateModified(DateTime.now());
+        propertyDTO.setCustomerClasses(new ArrayList<PropertyDTO.CustomerClassDTO>(){{add(customerClassDTO);}});
 
+        RestClientFactory.getPropertyClient().add(propertyDTO);
     }
 }
