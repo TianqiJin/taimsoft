@@ -61,7 +61,7 @@ public class Transaction extends BaseModel {
             return value;
         }
 
-        public PaymentStatus getStatus(String value){
+        public static PaymentStatus getStatus(String value){
             for (PaymentStatus ps : PaymentStatus.values()){
                 if (value.equalsIgnoreCase(ps.name())){
                     return ps;

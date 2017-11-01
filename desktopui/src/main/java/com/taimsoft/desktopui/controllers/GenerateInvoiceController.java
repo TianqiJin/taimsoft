@@ -22,7 +22,9 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormatter;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -30,17 +32,11 @@ import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDate;
+import java.util.*;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
-
-//TODO:  1. fix product Num update logic
-//TODO:  2. DatePicker
-//TODO:  3. In + Return Transaction
 
 /**
  * Created by jiawei.liu on 9/17/17.
@@ -69,6 +65,9 @@ public class GenerateInvoiceController {
     private int discount;
     private Executor executor;
     private Mode mode;
+    private Map<Integer, Double> oldProductQuantityMap;
+
+    private static final String DATE_PATTERN = "yyyy-MM-dd";
 
     @FXML
     private TableView<TransactionDetailDTO> transactionTableView;
@@ -104,9 +103,9 @@ public class GenerateInvoiceController {
 
     //transaction payment/delivery due Labels
     @FXML
-    private Label paymentDueLabel;
+    private DatePicker paymentDueDatePicker;
     @FXML
-    private Label deliveryDueLabel;
+    private DatePicker deliveryDueDatePicker;
     @FXML
     private ChoiceBox<String> deliveryStatusChoiceBox;
     @FXML
@@ -128,7 +127,7 @@ public class GenerateInvoiceController {
     @FXML
     private Label storeCreditLabel;
     @FXML
-    private Label discountLabel;
+    private Label userTypeLabel;
     @FXML
     private Label emailLabel;
     @FXML
@@ -275,6 +274,54 @@ public class GenerateInvoiceController {
                 payment.setPaymentType(Payment.PaymentType.getValue(newValue));
             }
         });
+        paymentDueDatePicker.setOnAction(event ->{
+            this.transaction.setPaymentDueDate(DateUtils.toDateTime(paymentDueDatePicker.getValue()));
+        });
+        paymentDueDatePicker.setPromptText(DATE_PATTERN.toLowerCase());
+        paymentDueDatePicker.setConverter(new StringConverter<LocalDate>() {
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(DATE_PATTERN);
+            @Override
+            public String toString(LocalDate date) {
+                if (date != null) {
+                    return dateFormatter.format(date);
+                } else {
+                    return "";
+                }
+            }
+            @Override
+            public LocalDate fromString(String string) {
+                if (string != null && !string.isEmpty()) {
+                    return LocalDate.parse(string, dateFormatter);
+                } else {
+                    return null;
+                }
+            }
+        });
+        deliveryDueDatePicker.setOnAction(event ->{
+            this.transaction.setDeliveryDueDate(DateUtils.toDateTime(deliveryDueDatePicker.getValue()));
+        });
+        deliveryDueDatePicker.setPromptText(DATE_PATTERN.toLowerCase());
+        deliveryDueDatePicker.setConverter(new StringConverter<LocalDate>() {
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(DATE_PATTERN);
+            @Override
+            public String toString(LocalDate date) {
+                if (date != null) {
+                    return dateFormatter.format(date);
+                } else {
+                    return "";
+                }
+            }
+            @Override
+            public LocalDate fromString(String string) {
+                if (string != null && !string.isEmpty()) {
+                    return LocalDate.parse(string, dateFormatter);
+                } else {
+                    return null;
+                }
+            }
+        });
+
+
         executor = Executors.newCachedThreadPool(r -> {
             Thread t = new Thread(r);
             t.setDaemon(true);
@@ -364,6 +411,7 @@ public class GenerateInvoiceController {
         }else{
             this.mode= Mode.EDIT;
             this.transaction = transactionFromAbove;
+            updatePrevProductCount();
         }
         this.payment = new PaymentDTO();
         this.customer = transactionFromAbove.getCustomer();
@@ -450,8 +498,8 @@ public class GenerateInvoiceController {
     }
 
     private void showPaymentDeliveryDetail(){
-        paymentDueLabel.setText(this.transaction.getPaymentDueDate().toString());
-        deliveryDueLabel.setText(this.transaction.getDeliveryDueDate().toString());
+        paymentDueDatePicker.setValue(DateUtils.toLocalDate(this.transaction.getPaymentDueDate()));
+        deliveryDueDatePicker.setValue(DateUtils.toLocalDate(this.transaction.getDeliveryDueDate()));
         deliveryStatusChoiceBox.getSelectionModel().select(transaction.getDeliveryStatus().getStatus().getValue());
         paymentStatusLabel.setText(this.transaction.getPaymentStatus().getValue());
     }
@@ -465,7 +513,7 @@ public class GenerateInvoiceController {
             addItemButton.setDisable(false);
             fullNameLabel.setText(this.customer.getFullname());
             storeCreditLabel.setText(String.valueOf(this.customer.getStoreCredit()));
-            //discountLabel.setText(this.customer.getCustomerClass().getCustomerClassName());
+            userTypeLabel.setText(this.customer.getUserType().getValue());
             emailLabel.setText(this.customer.getEmail());
             phoneLabel.setText(this.customer.getPhone());
         }
@@ -473,7 +521,7 @@ public class GenerateInvoiceController {
             addItemButton.setDisable(true);
             fullNameLabel.setText("");
             storeCreditLabel.setText("");
-            discountLabel.setText("");
+            userTypeLabel.setText("");
             emailLabel.setText("");
             phoneLabel.setText("");
         }
@@ -603,14 +651,26 @@ public class GenerateInvoiceController {
         }
     }
 
-
+    // change actual number only if delivered ?
     private void updateProduct(){
-        transaction.getTransactionDetails().forEach(p->{
-            double newActualNum = p.getProduct().getTotalNum()-p.getQuantity();
-            p.getProduct().setTotalNum(newActualNum);
-            p.getProduct().setVirtualTotalNum(p.getProduct().getVirtualTotalNum()-p.getQuantity());
-            RestClientFactory.getProductClient().update(p.getProduct());
-        });
+        //if (transaction.getDeliveryStatus().getStatus()== DeliveryStatus.Status.DELIVERED) {
+            if (mode == Mode.CREATE) {
+                transaction.getTransactionDetails().forEach(p -> {
+                    double newActualNum = p.getProduct().getTotalNum() - p.getQuantity();
+                    p.getProduct().setTotalNum(newActualNum);
+                    RestClientFactory.getProductClient().update(p.getProduct());
+                });
+            } else {
+                transaction.getTransactionDetails().forEach(p -> {
+                    double newActualNum = p.getProduct().getTotalNum() - p.getQuantity();
+                    if (oldProductQuantityMap.containsKey(p.getProduct().getId())) {
+                        newActualNum += oldProductQuantityMap.get(p.getProduct().getId());
+                    }
+                    p.getProduct().setTotalNum(newActualNum);
+                    RestClientFactory.getProductClient().update(p.getProduct());
+                });
+            }
+        //}
 
     }
 
@@ -712,5 +772,11 @@ public class GenerateInvoiceController {
         return true;
     }
 
+    private void updatePrevProductCount(){
+        oldProductQuantityMap = new HashMap<>();
+        this.transaction.getTransactionDetails().forEach(t->{
+            oldProductQuantityMap.put(t.getProduct().getId(),t.getQuantity());
+        });
+    }
 }
 

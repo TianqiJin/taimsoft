@@ -17,6 +17,20 @@ public class UserBaseModel extends BaseModel{
         UserType(String vvalue){
             this.value = vvalue;
         }
+
+        public String getValue() {
+            return value;
+        }
+
+        public static UserType getUserType(String value){
+            for (UserType s : UserType.values()){
+                if (s.name().equalsIgnoreCase(value)){
+                    return s;
+                }
+            }
+            return null;
+        }
+
     }
 
     @Column

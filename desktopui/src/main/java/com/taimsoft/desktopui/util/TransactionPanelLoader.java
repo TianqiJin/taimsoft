@@ -1,12 +1,8 @@
 package com.taimsoft.desktopui.util;
 
-import com.taim.dto.CustomerDTO;
-import com.taim.dto.StaffDTO;
-import com.taim.dto.TransactionDTO;
+import com.taim.dto.*;
 import com.taim.model.Transaction;
-import com.taimsoft.desktopui.controllers.CustomerEditDialogController;
-import com.taimsoft.desktopui.controllers.GenerateInvoiceController;
-import com.taimsoft.desktopui.controllers.GenerateQuotationController;
+import com.taimsoft.desktopui.controllers.*;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
@@ -113,4 +109,53 @@ public class TransactionPanelLoader {
         return false;
     }
 
+
+    public static boolean showVendorEditor(VendorDTO vendorDTO){
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(TransactionPanelLoader.class.getResource("/fxml/VendorEditDialog.fxml"));
+        AnchorPane page = null;
+        try {
+            page = loader.load();
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Vendor Editor");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+
+            VendorEditDialogController controller = loader.getController();
+            controller.setDialogStage(dialogStage);
+            controller.setTextField(vendorDTO);
+            dialogStage.showAndWait();
+            return controller.isOKClicked();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
+    public static boolean showOrganizationEditor(OrganizationDTO organizationDTO){
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(TransactionPanelLoader.class.getResource("/fxml/OrganizationEditDialog.fxml"));
+        AnchorPane page = null;
+        try {
+            page = loader.load();
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Address Editor");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+
+            OrganizationEditDialogController controller = loader.getController();
+            controller.setDialogStage(dialogStage);
+            controller.setTextField(organizationDTO);
+            dialogStage.showAndWait();
+            return controller.isOKClicked();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

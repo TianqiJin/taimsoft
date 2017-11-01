@@ -1,15 +1,11 @@
 package com.taimsoft.desktopui.controllers;
 
-import com.taim.dto.CustomerDTO;
 import com.taim.dto.OrganizationDTO;
-import com.taim.dto.PropertyDTO;
-import com.taim.model.Customer;
-import com.taim.model.Organization;
+import com.taim.dto.VendorDTO;
 import com.taim.model.basemodels.UserBaseModel;
 import com.taimsoft.desktopui.util.AlertBuilder;
 import com.taimsoft.desktopui.util.RestClientFactory;
 import com.taimsoft.desktopui.util.TransactionPanelLoader;
-import com.taimsoft.desktopui.util.VistaNavigator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -20,13 +16,12 @@ import javafx.stage.Stage;
 import org.joda.time.DateTime;
 
 import java.util.Arrays;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * Created by jiawei.liu on 10/4/17.
+ * Created by jiawei.liu on 10/31/17.
  */
-public class CustomerEditDialogController {
+public class VendorEditDialogController {
     @FXML
     private TextField fullNameField;
     @FXML
@@ -34,20 +29,14 @@ public class CustomerEditDialogController {
     @FXML
     private ComboBox userTypeComboBox;
     @FXML
-    private ComboBox classComboBox;
-    @FXML
     private TextField emailField;
-    @FXML
-    private TextField pstNumberField;
-    @FXML
-    private TextField storeCreditField;
+
 
     private Stage dialogStage;
-    private CustomerDTO customer;
+    private VendorDTO vendor;
     private String errorMsg;
     private boolean okClicked;
 
-    private ObservableList<String> options;
     private ObservableList<String> userTypeOpt;
 
     @FXML
@@ -56,7 +45,7 @@ public class CustomerEditDialogController {
     @FXML
     public void handleOrganization(){
         boolean newCreated = false;
-        OrganizationDTO organization = customer.getOrganization();
+        OrganizationDTO organization = vendor.getOrganization();
         if (organization == null){
             organization = new OrganizationDTO();
             organization.setDateCreated(DateTime.now());
@@ -92,7 +81,7 @@ public class CustomerEditDialogController {
                         .showAndWait();
             }finally{
                 if(flag){
-                    this.customer.setOrganization(organization);
+                    this.vendor.setOrganization(organization);
                 }
             }
         }
@@ -100,12 +89,9 @@ public class CustomerEditDialogController {
 
 
 
-    public CustomerEditDialogController(){
+    public VendorEditDialogController(){
         errorMsg = "";
         okClicked = false;
-        options = FXCollections.observableArrayList(VistaNavigator.getGlobalProperty().getCustomerClasses().stream()
-                .map(PropertyDTO.CustomerClassDTO::getCustomerClassName)
-                .collect(Collectors.toList()));
         userTypeOpt = FXCollections.observableArrayList(
                 Arrays.stream(UserBaseModel.UserType.values()).map(u->u.getValue()).collect(Collectors.toList()));
     }
@@ -113,34 +99,21 @@ public class CustomerEditDialogController {
     public void setDialogStage(Stage dialogStage){
         this.dialogStage = dialogStage;
     }
-    public void setTextField(CustomerDTO customer){
-        this.customer = customer;
-        fullNameField.setText(customer.getFullname());
-        phoneField.setText(customer.getPhone());
-        classComboBox.setItems(options);
-        classComboBox.setValue(customer.getCustomerClass().getCustomerClassName());
+    public void setTextField(VendorDTO vendor){
+        this.vendor = vendor;
+        fullNameField.setText(vendor.getFullname());
+        phoneField.setText(vendor.getPhone());
+
         userTypeComboBox.setItems(userTypeOpt);
-        userTypeComboBox.setValue(customer.getUserType().getValue());
-        emailField.setText(customer.getEmail());
-        storeCreditField.setText(String.valueOf(customer.getStoreCredit()));
-        pstNumberField.setText(String.valueOf(customer.getPstNumber()));
+        userTypeComboBox.setValue(vendor.getUserType().getValue());
+        emailField.setText(vendor.getEmail());
     }
     public void handleOk(){
         if(isInputValid()){
-            customer.setFullname(fullNameField.getText());
-            customer.setPhone(phoneField.getText());
-            Optional<PropertyDTO.CustomerClassDTO>customerClass =
-                    VistaNavigator.getGlobalProperty().getCustomerClasses().stream()
-                            .filter(customerClassDTO -> customerClassDTO.getCustomerClassName().equals(classComboBox.getValue()))
-                            .findAny();
-            if(customerClass.isPresent()){
-                customer.setCustomerClass(customerClass.get());
-            }
-            customer.setUserType(UserBaseModel.UserType.getUserType((String)userTypeComboBox.getSelectionModel().getSelectedItem()));
-            customer.setPstNumber(Double.valueOf(pstNumberField.getText()));
-
-            customer.setEmail(emailField.getText());
-            customer.setStoreCredit(Double.valueOf(storeCreditField.getText()));
+            vendor.setFullname(fullNameField.getText());
+            vendor.setPhone(phoneField.getText());
+            vendor.setUserType(UserBaseModel.UserType.getUserType((String)userTypeComboBox.getSelectionModel().getSelectedItem()));
+            vendor.setEmail(emailField.getText());
 
             okClicked = true;
             dialogStage.close();
@@ -149,7 +122,7 @@ public class CustomerEditDialogController {
             new AlertBuilder()
                     .alertHeaderText("Please correct the invalid fields")
                     .alertType(Alert.AlertType.WARNING)
-                    .alertTitle("Invalid Customer Fields")
+                    .alertTitle("Invalid Vendor Fields")
                     .alertContentText(errorMsg)
                     .build()
                     .showAndWait();
@@ -167,12 +140,6 @@ public class CustomerEditDialogController {
         if(fullNameField.getText() == null || fullNameField.getText().length() == 0){
             errorMsg += "Full Name should not be empty! \n";
         }
-        try{
-            Double.parseDouble(storeCreditField.getText());
-        }catch (NumberFormatException e){
-            errorMsg += "Store Credit must be numbers! \n";
-        }
-        //TODO: inpsect the validation for emailField
 
         if(errorMsg.length() == 0){
             return true;
