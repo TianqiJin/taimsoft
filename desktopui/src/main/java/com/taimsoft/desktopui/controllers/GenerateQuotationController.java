@@ -38,12 +38,7 @@ import java.util.stream.Collectors;
 /**
  * Created by jiawei.liu on 9/17/17.
  */
-//HardCoded several stuff here for now:
-    // Discount mapping A: 0-30
-    //                  B: 0-20
-    //                  C: 0-10
-    // PST:   7%
-    // GST:   5%
+
 public class GenerateQuotationController {
 
     private Stage dialogStage;
@@ -341,6 +336,11 @@ public class GenerateQuotationController {
             this.transaction = transactionFromAbove;
             this.customer = transactionFromAbove.getCustomer();
             updatePrevProductCount();
+            if(transaction.isFinalized()){
+                System.out.println("This transaction is already finalized! You cannot edit on it anymore.");
+                confirmButton.setDisable(true);
+            }
+
         }
         this.transactionDetailDTOObservableList = FXCollections.observableArrayList(transaction.getTransactionDetails());
         transactionTableView.setItems(transactionDetailDTOObservableList);
@@ -515,6 +515,10 @@ public class GenerateQuotationController {
 
     private void showPaymentDetails(){
         if(this.transactionDetailDTOObservableList != null ){
+            double pstNum = 7;
+            if(customer!=null && customer.getPstNumber()!=0){
+                pstNum = customer.getPstNumber();
+            }
             Iterator<TransactionDetailDTO> iterator = this.transactionDetailDTOObservableList.iterator();
             BigDecimal subTotalAfterDiscount = new BigDecimal(0.00);
             BigDecimal subTotalBeforeDiscount = new BigDecimal(0.00);
@@ -525,7 +529,7 @@ public class GenerateQuotationController {
             }
             BigDecimal paymentDiscount = subTotalBeforeDiscount.subtract(subTotalAfterDiscount).setScale(2, BigDecimal.ROUND_HALF_EVEN);
 
-            BigDecimal pstTax = new BigDecimal("7").multiply(subTotalAfterDiscount).divide(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_EVEN);
+            BigDecimal pstTax = new BigDecimal(pstNum).multiply(subTotalAfterDiscount).divide(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_EVEN);
             BigDecimal gstTax = new BigDecimal("5").multiply(subTotalAfterDiscount).divide(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_EVEN);
 
             BigDecimal total = subTotalAfterDiscount.add(pstTax).add(gstTax).setScale(2, BigDecimal.ROUND_HALF_EVEN);
@@ -643,7 +647,7 @@ public class GenerateQuotationController {
 
 
     private int validateDiscountEntered(int oldValue, int newValue){
-        if (this.customer!=null) {
+        if (this.customer!=null && this.customer.getCustomerClass()!=null) {
             if(newValue <= this.customer.getCustomerClass().getCustomerDiscount()){
                 return newValue;
             }

@@ -411,8 +411,12 @@ public class GenerateInvoiceController {
         }else{
             this.mode= Mode.EDIT;
             this.transaction = transactionFromAbove;
-            updatePrevProductCount();
+            if(transaction.isFinalized()){
+                System.out.println("This transaction is already finalized! You cannot edit on it anymore.");
+                confirmButton.setDisable(true);
+            }
         }
+        updatePrevProductCount();
         this.payment = new PaymentDTO();
         this.customer = transactionFromAbove.getCustomer();
         this.transactionDetailDTOObservableList = FXCollections.observableArrayList(transaction.getTransactionDetails());
@@ -533,6 +537,10 @@ public class GenerateInvoiceController {
 
     private void showPaymentDetails(){
         if(this.transactionDetailDTOObservableList != null ){
+            double pstNum = 7;
+            if(customer!=null && customer.getPstNumber()!=0){
+                pstNum = customer.getPstNumber();
+            }
             Iterator<TransactionDetailDTO> iterator = this.transactionDetailDTOObservableList.iterator();
             BigDecimal subTotalAfterDiscount = new BigDecimal(0.00);
             BigDecimal subTotalBeforeDiscount = new BigDecimal(0.00);
@@ -543,7 +551,7 @@ public class GenerateInvoiceController {
             }
             BigDecimal paymentDiscount = subTotalBeforeDiscount.subtract(subTotalAfterDiscount).setScale(2, BigDecimal.ROUND_HALF_EVEN);
 
-            BigDecimal pstTax = new BigDecimal("7").multiply(subTotalAfterDiscount).divide(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_EVEN);
+            BigDecimal pstTax = new BigDecimal(pstNum).multiply(subTotalAfterDiscount).divide(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_EVEN);
             BigDecimal gstTax = new BigDecimal("5").multiply(subTotalAfterDiscount).divide(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_EVEN);
 
             BigDecimal total = subTotalAfterDiscount.add(pstTax).add(gstTax).setScale(2, BigDecimal.ROUND_HALF_EVEN);
@@ -635,11 +643,15 @@ public class GenerateInvoiceController {
                 .build()
                 .showAndWait();
         if(result.isPresent() && result.get() == ButtonType.OK){
+            if (transaction.getDeliveryStatus().getStatus()== DeliveryStatus.Status.DELIVERED){
+                transaction.setFinalized(true);
+            }
             if(mode== Mode.CREATE) {
                 transaction.setRefId(oldTransaction.getId());
                 int refNum = RestClientFactory.getTransactionClient().add(transaction).getId();
                 oldTransaction.setRefId(refNum);
                 oldTransaction.setDateModified(DateTime.now());
+                oldTransaction.setFinalized(true);
                 RestClientFactory.getTransactionClient().update(oldTransaction);
             }else{
                 updateCustomer();
@@ -651,17 +663,26 @@ public class GenerateInvoiceController {
         }
     }
 
-    // change actual number only if delivered ?
     private void updateProduct(){
-        //if (transaction.getDeliveryStatus().getStatus()== DeliveryStatus.Status.DELIVERED) {
+        if (transaction.getDeliveryStatus().getStatus()== DeliveryStatus.Status.DELIVERYING) {
             if (mode == Mode.CREATE) {
                 transaction.getTransactionDetails().forEach(p -> {
+                    double newVirtualNum = p.getProduct().getVirtualTotalNum() - p.getQuantity();
+                    if (oldProductQuantityMap.containsKey(p.getProduct().getId())) {
+                        newVirtualNum += oldProductQuantityMap.get(p.getProduct().getId());
+                    }
+                    p.getProduct().setVirtualTotalNum(newVirtualNum);
                     double newActualNum = p.getProduct().getTotalNum() - p.getQuantity();
                     p.getProduct().setTotalNum(newActualNum);
                     RestClientFactory.getProductClient().update(p.getProduct());
                 });
             } else {
                 transaction.getTransactionDetails().forEach(p -> {
+                    double newVirtualNum = p.getProduct().getVirtualTotalNum() - p.getQuantity();
+                    if (oldProductQuantityMap.containsKey(p.getProduct().getId())) {
+                        newVirtualNum += oldProductQuantityMap.get(p.getProduct().getId());
+                    }
+                    p.getProduct().setVirtualTotalNum(newVirtualNum);
                     double newActualNum = p.getProduct().getTotalNum() - p.getQuantity();
                     if (oldProductQuantityMap.containsKey(p.getProduct().getId())) {
                         newActualNum += oldProductQuantityMap.get(p.getProduct().getId());
@@ -670,7 +691,16 @@ public class GenerateInvoiceController {
                     RestClientFactory.getProductClient().update(p.getProduct());
                 });
             }
-        //}
+        }else if (transaction.getDeliveryStatus().getStatus()== DeliveryStatus.Status.UNDELIVERED){
+            transaction.getTransactionDetails().forEach(p -> {
+                double newVirtualNum = p.getProduct().getVirtualTotalNum() - p.getQuantity();
+                if (oldProductQuantityMap.containsKey(p.getProduct().getId())) {
+                    newVirtualNum += oldProductQuantityMap.get(p.getProduct().getId());
+                }
+                p.getProduct().setVirtualTotalNum(newVirtualNum);
+                RestClientFactory.getProductClient().update(p.getProduct());
+            });
+        }
 
     }
 
@@ -702,7 +732,7 @@ public class GenerateInvoiceController {
 
 
     private int validateDiscountEntered(int oldValue, int newValue){
-        if (this.customer!=null) {
+        if (this.customer!=null && this.customer.getCustomerClass()!=null) {
             if(newValue <= this.customer.getCustomerClass().getCustomerDiscount()){
                 return newValue;
             }

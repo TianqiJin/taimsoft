@@ -85,6 +85,78 @@ public class TransactionPanelLoader {
     }
 
 
+    public static TransactionDTO loadReturn(TransactionDTO transaction, StaffDTO staff){
+        if(transaction==null){
+            System.out.println("Please select a valid transaction!");
+            return null;
+        }
+
+        if(transaction.getTransactionType()!= Transaction.TransactionType.RETURN && transaction.getTransactionType()!= Transaction.TransactionType.INVOICE){
+            System.out.println("Please either select an invoice to return or select return to generate!!");
+            return null;
+        }
+        if (transaction.getTransactionType()== Transaction.TransactionType.INVOICE && !transaction.isFinalized()){
+            System.out.println("Please select a finalized invoice transaction to generate return transaction!!");
+            return null;
+        }
+
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(TransactionPanelLoader.class.getResource("/fxml/GenerateReturn.fxml"));
+        AnchorPane page = null;
+        try {
+            page = loader.load();
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Transaction Panel");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+
+            GenerateReturnController controller = loader.getController();
+            controller.setMainClass(transaction,staff);
+            controller.setDialogStage(dialogStage);
+            controller.initPanelDetails();
+            dialogStage.showAndWait();
+
+            if (controller.isConfirmedClicked()){
+                transaction = controller.getTransaction();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return transaction;
+    }
+
+    public static TransactionDTO loadStock(TransactionDTO transaction, StaffDTO staff){
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(TransactionPanelLoader.class.getResource("/fxml/GenerateStock.fxml"));
+        AnchorPane page = null;
+        try {
+            page = loader.load();
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Transaction Panel");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+
+            GenerateStockController controller = loader.getController();
+            controller.setMainClass(transaction,staff);
+            controller.setDialogStage(dialogStage);
+            controller.initDataFromDB();
+            controller.initPanelDetails();
+            dialogStage.showAndWait();
+
+            if (controller.isConfirmedClicked()){
+                transaction = controller.getTransaction();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return transaction;
+    }
+
+
     public static boolean showCustomerEditor(CustomerDTO customerDTO){
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(TransactionPanelLoader.class.getResource("/fxml/CustomerEditDialog.fxml"));

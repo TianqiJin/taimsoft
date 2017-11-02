@@ -37,8 +37,11 @@ import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 /**
- * Created by jiawei.liu on 10/25/17.
+ * Created by jiawei.liu
+ * on 10/25/17.
  */
+
+//Default pst number for vendor is 7
 public class GenerateStockController {
 
     private Stage dialogStage;
@@ -394,6 +397,11 @@ public class GenerateStockController {
             this.transaction = transactionFromAbove;
             this.vendor = transactionFromAbove.getVendor();
             updatePrevProductCount();
+
+            if(transaction.isFinalized()){
+                System.out.println("This transaction is already finalized! You cannot edit on it anymore.");
+                confirmButton.setDisable(true);
+            }
         }
         this.transactionDetailDTOObservableList = FXCollections.observableArrayList(transaction.getTransactionDetails());
         transactionTableView.setItems(transactionDetailDTOObservableList);
@@ -628,7 +636,9 @@ public class GenerateStockController {
                 .build()
                 .showAndWait();
         if(result.isPresent() && result.get() == ButtonType.OK){
-
+            if (transaction.getDeliveryStatus().getStatus()== DeliveryStatus.Status.DELIVERED){
+                transaction.setFinalized(true);
+            }
             if(mode==Mode.CREATE) {
                 RestClientFactory.getTransactionClient().add(transaction);
             }else{
@@ -640,27 +650,50 @@ public class GenerateStockController {
         }
     }
 
-    // change actual number only if delivered ?
-    private void updateProduct(){
-        //if (transaction.getDeliveryStatus().getStatus()== DeliveryStatus.Status.DELIVERED) {
-        if (mode == Mode.CREATE) {
-            transaction.getTransactionDetails().forEach(p -> {
-                double newActualNum = p.getProduct().getTotalNum() + p.getQuantity();
-                p.getProduct().setTotalNum(newActualNum);
-                RestClientFactory.getProductClient().update(p.getProduct());
-            });
-        } else {
-            transaction.getTransactionDetails().forEach(p -> {
-                double newActualNum = p.getProduct().getTotalNum() + p.getQuantity();
-                if (oldProductQuantityMap.containsKey(p.getProduct().getId())) {
-                    newActualNum -= oldProductQuantityMap.get(p.getProduct().getId());
-                }
-                p.getProduct().setTotalNum(newActualNum);
-                RestClientFactory.getProductClient().update(p.getProduct());
-            });
-        }
-        //}
+    private void updateProduct() {
+        if (transaction.getDeliveryStatus().getStatus() == DeliveryStatus.Status.DELIVERYING) {
+            if (mode == Mode.CREATE) {
+                transaction.getTransactionDetails().forEach(p -> {
+                    double newVirtualNum = p.getProduct().getVirtualTotalNum() + p.getQuantity();
+                    p.getProduct().setVirtualTotalNum(newVirtualNum);
+                    double newActualNum = p.getProduct().getTotalNum() + p.getQuantity();
+                    p.getProduct().setTotalNum(newActualNum);
+                    RestClientFactory.getProductClient().update(p.getProduct());
+                });
+            } else {
+                transaction.getTransactionDetails().forEach(p -> {
+                    double newVirtualNum = p.getProduct().getVirtualTotalNum() + p.getQuantity();
+                    if (oldProductQuantityMap.containsKey(p.getProduct().getId())) {
+                        newVirtualNum -= oldProductQuantityMap.get(p.getProduct().getId());
+                    }
+                    p.getProduct().setVirtualTotalNum(newVirtualNum);
+                    double newActualNum = p.getProduct().getTotalNum() + p.getQuantity();
+                    if (oldProductQuantityMap.containsKey(p.getProduct().getId())) {
+                        newActualNum -= oldProductQuantityMap.get(p.getProduct().getId());
+                    }
+                    p.getProduct().setTotalNum(newActualNum);
+                    RestClientFactory.getProductClient().update(p.getProduct());
+                });
+            }
+        } else if (transaction.getDeliveryStatus().getStatus() == DeliveryStatus.Status.UNDELIVERED) {
+            if (mode==Mode.EDIT){
+                transaction.getTransactionDetails().forEach(p->{
+                    double newVirtualNum = p.getProduct().getTotalNum() + p.getQuantity();
+                    if (oldProductQuantityMap.containsKey(p.getProduct().getId())){
+                        newVirtualNum -=oldProductQuantityMap.get(p.getProduct().getId());
+                    }
+                    p.getProduct().setVirtualTotalNum(newVirtualNum);
+                    RestClientFactory.getProductClient().update(p.getProduct());
+                });
+            }else{
+                transaction.getTransactionDetails().forEach(p->{
+                    double newVirtualNum = p.getProduct().getTotalNum() + p.getQuantity();
+                    p.getProduct().setVirtualTotalNum(newVirtualNum);
+                    RestClientFactory.getProductClient().update(p.getProduct());
+                });
+            }
 
+        }
     }
 
     private void updateVendor(){
