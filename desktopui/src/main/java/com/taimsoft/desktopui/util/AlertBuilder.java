@@ -20,6 +20,7 @@ public class AlertBuilder {
         alert.setTitle(null);
         Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
         alertStage.getIcons().add(new Image(AlertBuilder.class.getResourceAsStream(Constant.Image.appIconPath)));
+        alert.getDialogPane().getStylesheets().add(AlertBuilder.class.getResource("/css/bootstrap3.css").toExternalForm());
     }
 
     public AlertBuilder alertType(Alert.AlertType type){

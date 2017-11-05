@@ -837,7 +837,7 @@ VBox > .split-menu-button.last > .arrow-button {
 }
 
 /*split pane*/
-#summarySplitPane{
+#summarySplitPane, #invoiceSplitPane{
     -fx-box-border: transparent;
 }
 /*.split-pane{*/

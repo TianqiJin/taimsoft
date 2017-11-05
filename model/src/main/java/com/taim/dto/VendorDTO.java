@@ -15,12 +15,10 @@ public class VendorDTO extends UserBaseModelDTO {
     private BooleanProperty checked;
     private List<TransactionDTO> transactionList;
     private ObjectProperty<UserBaseModel.UserType> userType;
-    private ObjectProperty<OrganizationDTO> organization;
     public VendorDTO(){
         transactionList = new ArrayList<>();
         checked = new SimpleBooleanProperty();
         userType = new SimpleObjectProperty<>();
-        organization = new SimpleObjectProperty<>();
     }
 
     public boolean isChecked() {
@@ -53,17 +51,5 @@ public class VendorDTO extends UserBaseModelDTO {
 
     public void setUserType(UserBaseModel.UserType userType) {
         this.userType.set(userType);
-    }
-
-    public OrganizationDTO getOrganization() {
-        return organization.get();
-    }
-
-    public ObjectProperty<OrganizationDTO> organizationProperty() {
-        return organization;
-    }
-
-    public void setOrganization(OrganizationDTO organization) {
-        this.organization.set(organization);
     }
 }
