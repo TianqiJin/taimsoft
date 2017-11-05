@@ -2,6 +2,7 @@ package com.taimsoft.desktopui.controllers;
 
 import com.taim.client.PropertyClient;
 import com.taim.dto.PropertyDTO;
+import com.taimsoft.desktopui.TaimDesktop;
 import com.taimsoft.desktopui.util.RestClientFactory;
 import com.taimsoft.desktopui.util.VistaNavigator;
 import javafx.animation.TranslateTransition;
@@ -49,6 +50,10 @@ public class RootLayoutController {
     }
 
     @FXML
+    public void handleHomeButton(){
+        VistaNavigator.loadHomeVista(VistaNavigator.VISTA_HOME);
+    }
+    @FXML
     public void handleTransactionButton(){
        VistaNavigator.loadVista(VistaNavigator.VISTA_TRANSACTION);
     }
@@ -68,6 +73,13 @@ public class RootLayoutController {
     @FXML
     public void handleSettingButton(){
         VistaNavigator.loadSettingVista(VistaNavigator.VISTA_SETTINGS);
+    }
+
+    @FXML
+    public void handleLogoutButton(){
+        TaimDesktop taimDesktop = new TaimDesktop();
+        TaimDesktop.getPrimaryStage().close();
+        taimDesktop.start(TaimDesktop.getPrimaryStage());
     }
 
     public void setVista(Node node){

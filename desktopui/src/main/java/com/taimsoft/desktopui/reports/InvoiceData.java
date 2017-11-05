@@ -5,6 +5,7 @@ import com.itextpdf.text.zugferd.checkers.basic.DocumentTypeCode;
 import com.itextpdf.text.zugferd.profiles.BasicProfileImp;
 import com.taim.dto.CustomerDTO;
 import com.taim.dto.StaffDTO;
+import com.taim.dto.basedtos.UserBaseModelDTO;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -19,6 +20,8 @@ public class InvoiceData {
         protected String buyerPhoneNumber;
         protected String buyerCompanyName;
         protected String sellerCompanyName;
+        protected String sellerEmail;
+        protected String buyerEmail;
 
         public String getSellerPhoneNumber() {
             return sellerPhoneNumber;
@@ -51,6 +54,22 @@ public class InvoiceData {
         public void setSellerCompanyName(String sellerCompanyName) {
             this.sellerCompanyName = sellerCompanyName;
         }
+
+        public String getSellerEmail() {
+            return sellerEmail;
+        }
+
+        public void setSellerEmail(String sellerEmail) {
+            this.sellerEmail = sellerEmail;
+        }
+
+        public String getBuyerEmail() {
+            return buyerEmail;
+        }
+
+        public void setBuyerEmail(String buyerEmail) {
+            this.buyerEmail = buyerEmail;
+        }
     }
 
     public InvoiceData() {
@@ -69,20 +88,22 @@ public class InvoiceData {
         profileImp.setName("INVOICE");
         profileImp.setTypeCode(DocumentTypeCode.COMMERCIAL_INVOICE);
         profileImp.setDate(invoice.getInvoiceDate().toDate(), DateFormatCode.YYYYMMDD);
-        StaffDTO staff = invoice.getStaff();
-        profileImp.setSellerName("");
+        UserBaseModelDTO staff = invoice.getStaff();
+        profileImp.setSellerName(staff.getFullname());
         profileImp.setSellerLineOne(String.format("%s %s", staff.getOrganization().getStreetNum(), staff.getOrganization().getStreet()));
         profileImp.setSellerPostcode(staff.getOrganization().getPostalCode());
         profileImp.setSellerCityName(staff.getOrganization().getCity());
         profileImp.setSellerCountryID(staff.getOrganization().getCountry());
         profileImp.setSellerPhoneNumber(staff.getPhone());
-        CustomerDTO customer = invoice.getCustomer();
+        profileImp.setSellerEmail(staff.getEmail());
+        UserBaseModelDTO customer = invoice.getCustomer();
         profileImp.setBuyerName(customer.getFullname());
         profileImp.setBuyerLineOne(String.format("%s %s", customer.getOrganization().getStreetNum(), customer.getOrganization().getStreet()));
         profileImp.setBuyerCityName(customer.getOrganization().getCity());
         profileImp.setBuyerPostcode(customer.getOrganization().getPostalCode());
         profileImp.setBuyerCountryID(customer.getOrganization().getCountry());
         profileImp.setBuyerPhoneNumber(customer.getPhone());
+        profileImp.setBuyerEmail(customer.getEmail());
         profileImp.setPaymentReference(String.format("%09d", invoice.getId()));
         profileImp.setInvoiceCurrencyCode("CAD");
     }

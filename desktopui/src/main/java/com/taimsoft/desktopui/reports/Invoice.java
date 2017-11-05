@@ -2,6 +2,7 @@ package com.taimsoft.desktopui.reports;
 
 
 import com.taim.dto.*;
+import com.taim.dto.basedtos.UserBaseModelDTO;
 import org.joda.time.DateTime;
 
 import java.time.ZoneId;
@@ -14,14 +15,14 @@ import java.util.List;
  */
 public class Invoice {
     protected int id;
-    protected CustomerDTO customer;
+    protected UserBaseModelDTO customer;
     protected TransactionDTO transaction;
     protected double total;
     protected DateTime invoiceDate;
-    protected StaffDTO staff;
+    protected UserBaseModelDTO staff;
     protected PropertyDTO property;
 
-    public Invoice(TransactionDTO transaction, CustomerDTO customer, StaffDTO staff, PropertyDTO property){
+    public Invoice(TransactionDTO transaction, UserBaseModelDTO customer, UserBaseModelDTO staff, PropertyDTO property){
         this.transaction = transaction;
         this.id = transaction.getId();
         this.invoiceDate = transaction.getDateCreated();
@@ -38,14 +39,6 @@ public class Invoice {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public CustomerDTO getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(CustomerDTO customer) {
-        this.customer = customer;
     }
 
     public TransactionDTO getTransaction() {
@@ -72,11 +65,19 @@ public class Invoice {
         this.invoiceDate = invoiceDate;
     }
 
-    public StaffDTO getStaff() {
+    public UserBaseModelDTO getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(UserBaseModelDTO customer) {
+        this.customer = customer;
+    }
+
+    public UserBaseModelDTO getStaff() {
         return staff;
     }
 
-    public void setStaff(StaffDTO staff) {
+    public void setStaff(UserBaseModelDTO staff) {
         this.staff = staff;
     }
 

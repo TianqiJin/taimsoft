@@ -21,8 +21,6 @@ public class ProductOverviewController extends IOverviewController<ProductDTO> {
     private ProductClient productClient;
 
     @FXML
-    private TableView<ProductDTO> productTable;
-    @FXML
     private TableColumn<ProductDTO, String> nameCol;
     @FXML
     private TableColumn<ProductDTO, String> skuCol;

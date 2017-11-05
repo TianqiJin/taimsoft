@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.util.converter.NumberStringConverter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.regex.Matcher;
@@ -24,6 +25,7 @@ public class BillingInfoController {
     private static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
             + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
     private UserBaseModelDTO user;
+    private UserBaseModelDTO inputUser;
 
     @FXML
     private TextField nameField;
@@ -89,18 +91,18 @@ public class BillingInfoController {
 
         infoCheckbox.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue){
-                if(this.user != null){
-                    nameField.setText(this.user.getFullname());
-                    emailField.setText(this.user.getEmail());
-                    phoneField.setText(this.user.getPhone());
-                    if(this.user.getOrganization() != null){
-                        streetNumField.setText(this.user.getOrganization().getStreetNum());
-                        streetField.setText(this.user.getOrganization().getStreet());
-                        cityField.setText(this.user.getOrganization().getCity());
-                        postalCodeField.setText(this.user.getOrganization().getPostalCode());
-                        countryField.setText(this.user.getOrganization().getCountry());
+                if(user != null){
+                    if(inputUser.getOrganization() != null){
+                        user.getOrganization().setPostalCode(inputUser.getOrganization().getPostalCode());
+                        user.getOrganization().setStreetNum(inputUser.getOrganization().getStreetNum());
+                        user.getOrganization().setStreet(inputUser.getOrganization().getStreet());
+                        user.getOrganization().setCity(inputUser.getOrganization().getCity());
+                        user.getOrganization().setCountry(inputUser.getOrganization().getCountry());
+                        user.getOrganization().setOrgName(inputUser.getOrganization().getOrgName());
                     }
-
+                    user.setEmail(inputUser.getEmail());
+                    user.setFullname(inputUser.getFullname());
+                    user.setPhone(inputUser.getPhone());
                 }
             }else{
                 nameField.clear();
@@ -119,32 +121,40 @@ public class BillingInfoController {
         pattern = Pattern.compile(EMAIL_PATTERN);
     }
 
-    public void initData(UserBaseModelDTO user){
+    public void initData(UserBaseModelDTO inputUser){
         this.user = new UserBaseModelDTO();
+        this.inputUser = inputUser;
         OrganizationDTO organization = new OrganizationDTO();
-        if(user.getOrganization() != null){
-            organization.setPostalCode(user.getOrganization().getPostalCode());
-            organization.setStreetNum(user.getOrganization().getStreetNum());
-            organization.setStreet(user.getOrganization().getStreet());
-            organization.setCity(user.getOrganization().getCity());
-            organization.setCountry(user.getOrganization().getCountry());
-            organization.setOrgName(user.getOrganization().getOrgName());
-        }
-        user.setEmail(user.getEmail());
-        user.setFullname(user.getFullname());
-        user.setPhone(user.getPhone());
-        user.setOrganization(organization);
+        this.user.setOrganization(organization);
+        bindBillingInfoFields();
 
-        if(this.user instanceof StaffDTO){
+        if(this.inputUser instanceof StaffDTO){
             infoCheckbox.setText("Use Staff Info");
-            nameLabel.setText("From");
-        }else if(this.user instanceof CustomerDTO){
+            nameLabel.setText("From (*)");
+        }else if(this.inputUser instanceof CustomerDTO){
             infoCheckbox.setText("Use Customer Info");
-            nameLabel.setText("To");
+            nameLabel.setText("To (*)");
         }
     }
 
+    private void bindBillingInfoFields(){
+        nameField.textProperty().bindBidirectional(this.user.fullnameProperty());
+        emailField.textProperty().bindBidirectional(this.user.emailProperty());
+        phoneField.textProperty().bindBidirectional(this.user.phoneProperty());
+        streetField.textProperty().bindBidirectional(this.user.getOrganization().streetProperty());
+        streetNumField.textProperty().bindBidirectional(this.user.getOrganization().streetNumProperty());
+        cityField.textProperty().bindBidirectional(this.user.getOrganization().cityProperty());
+        postalCodeField.textProperty().bindBidirectional(this.user.getOrganization().postalCodeProperty());
+        countryField.textProperty().bindBidirectional(this.user.getOrganization().countryProperty());
+    }
+
+    public boolean isReadyForInvoiceGeneration(){
+        return StringUtils.isEmpty(emailErrorLabel.getText())
+                && StringUtils.isEmpty(nameErrorLabel.getText())
+                && StringUtils.isEmpty(phoneErrorLabel.getText());
+    }
+
     public UserBaseModelDTO getUser() {
-        return user;
+        return this.user;
     }
 }

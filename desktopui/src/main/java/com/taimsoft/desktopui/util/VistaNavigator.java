@@ -4,6 +4,7 @@ import com.taim.dto.PropertyDTO;
 import com.taim.dto.StaffDTO;
 import com.taimsoft.desktopui.controllers.RootLayoutController;
 import com.taimsoft.desktopui.controllers.details.IDetailController;
+import com.taimsoft.desktopui.controllers.overview.HomeOverviewController;
 import com.taimsoft.desktopui.controllers.overview.IOverviewController;
 import com.taimsoft.desktopui.controllers.settings.SettingsOverviewController;
 import javafx.fxml.FXMLLoader;
@@ -14,6 +15,7 @@ import java.io.IOException;
  * Created by Tjin on 8/29/2017.
  */
 public class VistaNavigator {
+    public static final String VISTA_HOME = "overview/HomeOverview.fxml";
     public static final String VISTA_TRANSACTION = "overview/TransactionOverview.fxml";
     public static final String VISTA_PRODUCT = "overview/ProductOverview.fxml";
     public static final String VISTA_CUSTOMER = "overview/CustomerOverview.fxml";
@@ -66,6 +68,18 @@ public class VistaNavigator {
         try {
             rootLayoutController.setVista(loader.load());
             SettingsOverviewController controller = loader.getController();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void loadHomeVista(String fxml){
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(VistaNavigator.class.getResource("/fxml/" + fxml));
+        try {
+            rootLayoutController.setVista(loader.load());
+            HomeOverviewController controller = loader.getController();
+            controller.initTransactionData();
         } catch (IOException e) {
             e.printStackTrace();
         }

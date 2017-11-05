@@ -8,11 +8,13 @@
 
 package com.taimsoft.desktopui.controllers.pdfs;
 
+import com.taim.dto.PropertyDTO;
 import com.taim.dto.TransactionDTO;
 import com.taim.dto.basedtos.UserBaseModelDTO;
 import com.taim.model.Transaction;
 import com.taimsoft.desktopui.util.AlertBuilder;
 import com.taimsoft.desktopui.util.InvoiceGenerator;
+import com.taimsoft.desktopui.util.VistaNavigator;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -49,6 +51,8 @@ public class InvoiceGenerationController {
     private Stage dialogStage;
     private File newInvoice;
     private TransactionDTO transaction;
+    private BillingInfoController billFromController;
+    private BillingInfoController billToController;
 //
 //    @FXML
 //    private Label invoiceDirectoryLabel;
@@ -67,53 +71,10 @@ public class InvoiceGenerationController {
     @FXML
     private ComboBox<String> invoiceCreationComboBox;
     @FXML
-    private void initialize(){ }
+    private SplitPane invoiceSplitPane;
 
     @FXML
-    public void handleConfirmButton(){
-//        errorMsgBuilder = new StringBuilder();
-//        if(isInvoicedirectoryValid()){
-//            try{
-//                InvoiceGenerator generator = new InvoiceGenerator(selectedDirectory.toString(), this.saleSystem);
-//                if(isFieldValid()){
-//                    Address address = new Address(streetField.getText().trim(), cityField.getText().trim(), postalCodeField.getText().trim());
-//                    if(invoiceCheckBox.isSelected()){
-//                        generator.buildInvoice(transaction,customer,staff, address);
-//                    }
-//                    if(quotationInvoiceCheckBox.isSelected()){
-//                        generator.buildQuotation(transaction, customer, staff, address);
-//                    }
-//                    if(deliveryInvoiceCheckbox.isSelected()){
-//                        generator.buildDelivery(transaction, customer, staff, address);
-//                    }
-//                    if(poCheckBox.isSelected()){
-//                        generator.buildPo(transaction, customer, staff, address);
-//                    }
-//                }else{
-//                    new AlertBuilder()
-//                            .alertType(Alert.AlertType.ERROR)
-//                            .alertHeaderText("Please fix the following error")
-//                            .alertContentText(errorMsgBuilder.toString())
-//                            .alertTitle("Invoice Error")
-//                            .build()
-//                            .showAndWait();
-//                }
-//            }catch(Exception e){
-//                e.printStackTrace();
-//            }
-//            if(errorMsgBuilder.length() == 0){
-//                dialogStage.close();
-//            }
-//        }else{
-//            new AlertBuilder()
-//                    .alertType(Alert.AlertType.ERROR)
-//                    .alertHeaderText("Please fix the following error")
-//                    .alertContentText(errorMsgBuilder.toString())
-//                    .alertTitle("Invoice Error")
-//                    .build()
-//                    .showAndWait();
-//            }
-        }
+    private void initialize(){ }
 
     @FXML
     public void handleCancelButton(){
@@ -128,11 +89,11 @@ public class InvoiceGenerationController {
         this.transaction = transaction;
         initInvoiceInfo();
         initComboBox();
-        initBillingInfoPanel(this.transaction.getCustomer(), billingToPane);
-        initBillingInfoPanel(this.transaction.getStaff(), billingFromPane);
+        billToController = initBillingInfoPanel(this.transaction.getCustomer(), billingToPane);
+        billFromController = initBillingInfoPanel(this.transaction.getStaff(), billingFromPane);
     }
 
-    private void initBillingInfoPanel(UserBaseModelDTO user, TitledPane billingPane){
+    private BillingInfoController initBillingInfoPanel(UserBaseModelDTO user, TitledPane billingPane){
         try {
             FXMLLoader fXMLLoader = new FXMLLoader();
             AnchorPane root = fXMLLoader.load(this.getClass().getResource("/fxml/pdfs/BillingInfo.fxml").openStream());
@@ -141,9 +102,13 @@ public class InvoiceGenerationController {
             BillingInfoController controller = fXMLLoader.getController();
             controller.initData(user);
             billingPane.setContent(root);
+            return controller;
+
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+
+        return null;
     }
 
     private void initInvoiceInfo(){
@@ -166,51 +131,31 @@ public class InvoiceGenerationController {
         }
 
         invoiceCreationComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Create New Invoice");
-            newInvoice = fileChooser.showSaveDialog(dialogStage);
-            InvoiceGenerator generator = new InvoiceGenerator(newInvoice.getAbsolutePath());
-            if(newValue.equals(InvoiceType.QUOTATION.getValue())){
-                generator.buildQuotation(transaction, );
-            }else if(newValue.equals(InvoiceType.INVOICE.getValue())){
+            if(billFromController.isReadyForInvoiceGeneration() && billToController.isReadyForInvoiceGeneration() && newValue != null){
+                FileChooser fileChooser = new FileChooser();
+                FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("PDF files (*.pdf)", "*.pdf");
+                fileChooser.getExtensionFilters().add(extFilter);
+                fileChooser.setTitle("Create New Invoice");
+                newInvoice = fileChooser.showSaveDialog(dialogStage);
+                try{
+                    InvoiceGenerator generator = new InvoiceGenerator(newInvoice.getAbsolutePath());
+                    if(newValue.equals(InvoiceType.QUOTATION.getValue())){
+                        generator.buildQuotation(transaction, billToController.getUser(), billFromController.getUser(), VistaNavigator.getGlobalProperty());
+                    }else if(newValue.equals(InvoiceType.INVOICE.getValue())){
+                        generator.buildInvoice(transaction, billToController.getUser(), billFromController.getUser(), VistaNavigator.getGlobalProperty());
+                    }else if(newValue.equals(InvoiceType.DELIVERY_NOTICE.getValue())){
+                        generator.buildDelivery(transaction, billToController.getUser(), billFromController.getUser(), VistaNavigator.getGlobalProperty());
+                    }else if(newValue.equals(InvoiceType.RETURN.getValue())){
 
-            }else if(newValue.equals(InvoiceType.DELIVERY_NOTICE.getValue())){
-
-            }else if(newValue.equals(InvoiceType.RETURN.getValue())){
-
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                finally {
+                    invoiceCreationComboBox.getSelectionModel().clearSelection();
+                }
             }
         });
-    }
-
-    private void generateInvoice(){
-        try{
-            InvoiceGenerator generator = new InvoiceGenerator(newInvoice.getAbsolutePath());
-            if(isFieldValid()){
-                Address address = new Address(streetField.getText().trim(), cityField.getText().trim(), postalCodeField.getText().trim());
-                if(invoiceCheckBox.isSelected()){
-                    generator.buildInvoice(transaction,customer,staff, address);
-                }
-                if(quotationInvoiceCheckBox.isSelected()){
-                    generator.buildQuotation(transaction, customer, staff, address);
-                }
-                if(deliveryInvoiceCheckbox.isSelected()){
-                    generator.buildDelivery(transaction, customer, staff, address);
-                }
-                if(poCheckBox.isSelected()){
-                    generator.buildPo(transaction, customer, staff, address);
-                }
-            }else{
-                new AlertBuilder()
-                        .alertType(Alert.AlertType.ERROR)
-                        .alertHeaderText("Please fix the following error")
-                        .alertContentText(errorMsgBuilder.toString())
-                        .alertTitle("Invoice Error")
-                        .build()
-                        .showAndWait();
-            }
-        }catch(Exception e){
-            e.printStackTrace();
-        }
     }
 
 }

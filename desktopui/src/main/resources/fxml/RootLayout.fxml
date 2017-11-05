@@ -28,7 +28,7 @@
                <children>
                   <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Home">
+                        <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleHomeButton" text="Home">
                            <VBox.margin>
                               <Insets />
                            </VBox.margin>
@@ -64,7 +64,7 @@
                               <Insets bottom="20.0" top="20.0" />
                            </padding>
                         </Button>
-                        <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Logout">
+                        <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleLogoutButton" text="Logout">
                            <padding>
                               <Insets bottom="20.0" top="20.0" />
                            </padding>

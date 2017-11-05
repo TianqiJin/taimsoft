@@ -1,6 +1,7 @@
 package com.taimsoft.desktopui.util;
 
 import com.taim.dto.*;
+import com.taim.dto.basedtos.UserBaseModelDTO;
 import com.taim.model.Transaction;
 import com.taimsoft.desktopui.reports.Invoice;
 import com.taimsoft.desktopui.reports.InvoiceData;
@@ -60,18 +61,18 @@ public class InvoiceGenerator {
         this.errorMsg = new StringBuilder();
     }
 
-    public void buildInvoice(TransactionDTO transaction, CustomerDTO customer, StaffDTO staff, PropertyDTO property) throws Exception {
+    public void buildInvoice(TransactionDTO transaction, UserBaseModelDTO customer, UserBaseModelDTO staff, PropertyDTO property) throws Exception {
         invoice = new Invoice(transaction, customer, staff, property);
         createInvoice(invoice);
     }
 
-    public void buildDelivery(TransactionDTO transaction, CustomerDTO customer, StaffDTO staff, PropertyDTO property) throws Exception{
+    public void buildDelivery(TransactionDTO transaction, UserBaseModelDTO customer, UserBaseModelDTO staff, PropertyDTO property) throws Exception{
         invoice = new Invoice(transaction, customer, staff, property);
         createDelivery(invoice);
 
     }
 
-    public void buildQuotation(TransactionDTO transaction, CustomerDTO customer, StaffDTO staff, PropertyDTO property) throws Exception {
+    public void buildQuotation(TransactionDTO transaction, UserBaseModelDTO customer, UserBaseModelDTO staff, PropertyDTO property) throws Exception {
         invoice = new Invoice(transaction, customer, staff, property);
         createQuotation(invoice);
     }
@@ -188,7 +189,7 @@ public class InvoiceGenerator {
         return sdf.format(d);
     }
 
-    public PdfPCell getPartyAddress(String who, String name, String line1, String line2, String countryID, String postcode, String city, String company, String phone) {
+    public PdfPCell getPartyAddress(String who, String name, String line1, String line2, String countryID, String postcode, String city, String company, String phone, String email) {
         PdfPCell cell = new PdfPCell();
         cell.setBorder(PdfPCell.NO_BORDER);
         cell.addElement(new Paragraph(who, addressFont));
@@ -203,7 +204,10 @@ public class InvoiceGenerator {
             cell.addElement(new Paragraph(company, addressFont));
         }
         if(phone != null){
-            cell.addElement(new Paragraph(phone, addressFont));
+            cell.addElement(new Paragraph("Phone: " + phone, addressFont));
+        }
+        if(email != null){
+            cell.addElement(new Paragraph("Email: " + email, addressFont));
         }
         return cell;
     }
@@ -461,7 +465,8 @@ public class InvoiceGenerator {
                 basic.getBuyerPostcode(),
                 basic.getBuyerCityName(),
                 basic.getBuyerCompanyName(),
-                basic.getBuyerPhoneNumber());
+                basic.getBuyerPhoneNumber(),
+                basic.getBuyerEmail());
         seller = getPartyAddress(sellerWho,
                 basic.getSellerName(),
                 basic.getSellerLineOne(),
@@ -470,7 +475,8 @@ public class InvoiceGenerator {
                 basic.getSellerPostcode(),
                 basic.getSellerCityName(),
                 basic.getSellerCompanyName(),
-                basic.getSellerPhoneNumber());
+                basic.getSellerPhoneNumber(),
+                basic.getSellerEmail());
         if(this.invoice.getTransaction().getTransactionType().equals(Transaction.TransactionType.RETURN)){
             table.addCell(buyer);
             table.addCell(seller);
