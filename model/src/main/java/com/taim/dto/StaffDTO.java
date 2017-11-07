@@ -12,7 +12,6 @@ public class StaffDTO extends UserBaseModelDTO{
     private StringProperty password;
     private StringProperty picUrl;
     private ObjectProperty<Staff.Position> position;
-    private ObjectProperty<OrganizationDTO> organization;
     private List<TransactionDTO> transactionList;
     private BooleanProperty checked;
 
@@ -20,7 +19,6 @@ public class StaffDTO extends UserBaseModelDTO{
         userName = new SimpleStringProperty();
         password = new SimpleStringProperty();
         picUrl = new SimpleStringProperty();
-        organization = new SimpleObjectProperty<>();
         position = new SimpleObjectProperty<>();
         transactionList = new ArrayList<>();
         checked = new SimpleBooleanProperty();
@@ -60,18 +58,6 @@ public class StaffDTO extends UserBaseModelDTO{
 
     public void setPicUrl(String picUrl) {
         this.picUrl.set(picUrl);
-    }
-
-    public OrganizationDTO getOrganization() {
-        return organization.get();
-    }
-
-    public ObjectProperty<OrganizationDTO> organizationProperty() {
-        return organization;
-    }
-
-    public void setOrganization(OrganizationDTO organization) {
-        this.organization.set(organization);
     }
 
     public List<TransactionDTO> getTransactionList() {

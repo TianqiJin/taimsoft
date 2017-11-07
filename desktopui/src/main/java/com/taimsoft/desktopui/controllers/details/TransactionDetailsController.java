@@ -153,8 +153,18 @@ public class TransactionDetailsController implements IDetailController<Transacti
         qtyCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         subTotalCol.setCellValueFactory(new PropertyValueFactory<>("saleAmount"));
         discountCol.setCellValueFactory(new PropertyValueFactory<>("discount"));
-        boxNumCol.setCellValueFactory(param -> param.getValue().getPackageInfo().boxProperty().asObject());
-        pieceNumCol.setCellValueFactory(param -> param.getValue().getPackageInfo().piecesProperty().asObject());
+        boxNumCol.setCellValueFactory(param -> {
+            if(param.getValue().getPackageInfo() != null){
+                return  param.getValue().getPackageInfo().boxProperty().asObject();
+            }
+            return null;
+        });
+        pieceNumCol.setCellValueFactory(param -> {
+            if(param.getValue().getPackageInfo() != null){
+                return param.getValue().getPackageInfo().piecesProperty().asObject();
+            }
+            return null;
+        });
         unitPriceCol.setCellValueFactory(param -> param.getValue().getProduct().unitPriceProperty().asObject());
         remarkCol.setCellValueFactory(new PropertyValueFactory<>("note"));
     }

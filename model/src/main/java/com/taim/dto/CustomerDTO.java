@@ -16,7 +16,6 @@ public class CustomerDTO extends UserBaseModelDTO{
     private DoubleProperty pstNumber;
     private ObjectProperty<PropertyDTO.CustomerClassDTO> customerClass;
     private ObjectProperty<UserBaseModel.UserType> userType;
-    private ObjectProperty<OrganizationDTO> organization;
     private List<TransactionDTO> transactionList;
 
     public CustomerDTO(){
@@ -25,7 +24,6 @@ public class CustomerDTO extends UserBaseModelDTO{
         transactionList = new ArrayList<>();
         customerClass = new SimpleObjectProperty<>();
         userType = new SimpleObjectProperty<>();
-        organization = new SimpleObjectProperty<>();
     }
 
     public double getStoreCredit() {
@@ -82,18 +80,6 @@ public class CustomerDTO extends UserBaseModelDTO{
 
     public void setUserType(UserBaseModel.UserType userType) {
         this.userType.set(userType);
-    }
-
-    public OrganizationDTO getOrganization() {
-        return organization.get();
-    }
-
-    public ObjectProperty<OrganizationDTO> organizationProperty() {
-        return organization;
-    }
-
-    public void setOrganization(OrganizationDTO organization) {
-        this.organization.set(organization);
     }
 
     public double getPstNumber() {

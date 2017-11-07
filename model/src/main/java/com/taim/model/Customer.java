@@ -30,9 +30,6 @@ public class Customer extends UserBaseModel {
     private UserType userType;
     @Column(name = "pst_num")
     private String pstNumber;
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "organization_id")
-    private Organization organization;
     @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @Fetch(FetchMode.SUBSELECT)
     private List<Transaction> transactionList;
@@ -71,19 +68,11 @@ public class Customer extends UserBaseModel {
         this.userType = userType;
     }
 
-    public Organization getOrganization() {
-        return organization;
-    }
-
     public String getPstNumber() {
         return pstNumber;
     }
 
     public void setPstNumber(String pstNumber) {
         this.pstNumber = pstNumber;
-    }
-
-    public void setOrganization(Organization organization) {
-        this.organization = organization;
     }
 }

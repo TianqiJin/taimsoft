@@ -29,10 +29,12 @@ import java.io.IOException;
  */
 public class TaimDesktop extends Application {
     private static final String APPLICATION_TITLE = "TAIM SOFTWARE DESKTOP";
+    private static Stage primaryStage;
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage stage) {
         if(initLoginDialog()){
+            primaryStage = stage;
             primaryStage.setTitle(APPLICATION_TITLE);
 
             //Set the primaryStage bound to the maximum of the screen
@@ -95,6 +97,10 @@ public class TaimDesktop extends Application {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public static Stage getPrimaryStage() {
+        return primaryStage;
     }
 
     public static void main(String[] args){
