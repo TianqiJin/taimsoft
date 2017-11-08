@@ -75,6 +75,8 @@ public class StaffOverviewController extends IOverviewController<StaffDTO> {
                             comboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
                                 if(newValue.equals("VIEW DETAILS")){
                                     VistaNavigator.loadDetailVista(VistaNavigator.VISTA_STAFF_DETAIL, staffDTO);
+                                }else if(newValue.equals("EDIT")){
+
                                 }
                             });
                             comboBox.setValue(item);

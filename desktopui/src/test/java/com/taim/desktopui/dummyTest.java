@@ -1,7 +1,6 @@
 package com.taim.desktopui;
 
 import com.taim.dto.*;
-import com.taim.model.Customer;
 import com.taim.model.Staff;
 import com.taimsoft.desktopui.util.RestClientFactory;
 import com.taimsoft.desktopui.util.TransactionPanelLoader;

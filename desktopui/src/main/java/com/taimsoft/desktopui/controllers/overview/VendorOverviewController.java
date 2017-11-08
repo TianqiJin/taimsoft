@@ -73,6 +73,8 @@ public class VendorOverviewController extends IOverviewController<VendorDTO> {
                             comboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
                                 if(newValue.equals("VIEW DETAILS")){
                                     VistaNavigator.loadDetailVista(VistaNavigator.VISTA_VENDOR_DETAIL, vendorDTO);
+                                }else if(newValue.equals("EDIT")){
+
                                 }
                             });
                             comboBox.setValue(item);

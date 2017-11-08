@@ -38,7 +38,7 @@ public class CustomerClient implements IClient<CustomerDTO> {
 
     public CustomerDTO add(CustomerDTO customerDTO){
         String url = CUSTOMER_PATH+"/add";
-        HttpEntity<Customer> requestEntity = new HttpEntity<Customer>(BeanMapper.map(customerDTO, Customer.class), headers);
+        HttpEntity<Customer> requestEntity = new HttpEntity<>(BeanMapper.map(customerDTO, Customer.class), headers);
         ResponseEntity<Customer> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Customer.class);
         return BeanMapper.map(responseEntity.getBody(), CustomerDTO.class);
     }

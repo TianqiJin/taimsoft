@@ -4,13 +4,15 @@ import com.taim.client.PropertyClient;
 import com.taim.client.StaffClient;
 import com.taim.dto.PropertyDTO;
 import com.taim.dto.StaffDTO;
-import com.taimsoft.desktopui.Constants.Constant;
+import com.taimsoft.desktopui.constants.Constant;
 import com.taimsoft.desktopui.util.RestClientFactory;
 import com.taimsoft.desktopui.util.VistaNavigator;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
@@ -34,6 +36,8 @@ public class LoginDialogController {
     private Button loginButton;
     @FXML
     private Label errorLMsgLabel;
+    @FXML
+    private Hyperlink signUpLink;
 
     @FXML
     private void initialize(){
@@ -56,6 +60,12 @@ public class LoginDialogController {
         passwordField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue) { // we only care about loosing focus
                 errorLMsgLabel.setText("");
+            }
+        });
+        signUpLink.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
             }
         });
     }

@@ -21,12 +21,9 @@ public  class ButtonCell extends TableCell<TransactionDetailDTO, Boolean> {
         setAlignment(Pos.CENTER_LEFT);
         cellButton.setGraphic(new ImageView(image));
         cellButton.setPadding(Insets.EMPTY);
-        cellButton.setOnAction(new EventHandler<ActionEvent>(){
-            @Override
-            public void handle(ActionEvent t) {
-                int selectedIndex = getTableRow().getIndex();
-                tableView.getItems().remove(selectedIndex);
-            }
+        cellButton.setOnAction(t -> {
+            int selectedIndex = getTableRow().getIndex();
+            tableView.getItems().remove(selectedIndex);
         });
     }
     //Display button if the row is not empty

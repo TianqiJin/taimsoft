@@ -166,10 +166,8 @@ public class TransactionOverviewController extends IOverviewController<Transacti
                                     } catch (IOException e) {
                                         e.printStackTrace();
                                     }
-                                }
-                                if (newValue.equalsIgnoreCase("EDIT")){
+                                }else if(newValue.equalsIgnoreCase("EDIT")){
                                     TransactionDTO editedTrans = TransactionPanelLoader.loadQuotation(transactionDTO,null);
-
                                 }
                             });
                             comboBox.setValue(item);

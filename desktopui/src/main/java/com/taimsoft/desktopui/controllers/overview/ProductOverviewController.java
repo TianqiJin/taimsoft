@@ -76,6 +76,8 @@ public class ProductOverviewController extends IOverviewController<ProductDTO> {
                             comboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
                                 if(newValue.equals("VIEW DETAILS")){
                                     VistaNavigator.loadDetailVista(VistaNavigator.VISTA_PRODUCT_DETAIL, productDTO);
+                                }else if(newValue.equals("EDIT")){
+
                                 }
                             });
                             comboBox.setValue(item);

@@ -46,6 +46,7 @@ public class TaimDesktop extends Application {
 
             primaryStage.setScene(createScene(loadMainVista()));
             primaryStage.show();
+            VistaNavigator.loadHomeVista(VistaNavigator.VISTA_HOME);
         }
     }
 
@@ -56,7 +57,6 @@ public class TaimDesktop extends Application {
         try {
             BorderPane rootLayout = loader.load();
             VistaNavigator.setRootLayoutController(loader.getController());
-            //TODO: Load the first vista pane
             return rootLayout;
         } catch (IOException e) {
             e.printStackTrace();

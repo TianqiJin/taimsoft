@@ -516,7 +516,7 @@ public class GenerateQuotationController {
     private void showPaymentDetails(){
         if(this.transactionDetailDTOObservableList != null ){
             double pstNum = 7;
-            if(customer!=null && customer.getPstNumber()!=0){
+            if(customer!=null && customer.pstNumberProperty() != null){
                 pstNum = customer.getPstNumber();
             }
             Iterator<TransactionDetailDTO> iterator = this.transactionDetailDTOObservableList.iterator();
