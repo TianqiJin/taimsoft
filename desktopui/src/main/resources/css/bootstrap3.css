@@ -668,6 +668,7 @@ VBox > .split-menu-button.last > .arrow-button {
     -fx-background-color: #d9534f;
 }
 
+
 .tooltip {
     -fx-background: white;
     -fx-text-fill: #333333;
@@ -837,7 +838,7 @@ VBox > .split-menu-button.last > .arrow-button {
 }
 
 /*split pane*/
-#summarySplitPane, #invoiceSplitPane{
+#summarySplitPane, #invoiceSplitPane, #generalSettingPane{
     -fx-box-border: transparent;
 }
 /*.split-pane{*/

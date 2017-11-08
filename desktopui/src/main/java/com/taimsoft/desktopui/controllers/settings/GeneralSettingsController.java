@@ -62,6 +62,8 @@ public class GeneralSettingsController implements ISettingsController{
     private Label pstRateErrorLabel;
     @FXML
     private AnchorPane rootPane;
+    @FXML
+    private SplitPane generalSettingPane;
 
     @FXML
     public void initialize(){
