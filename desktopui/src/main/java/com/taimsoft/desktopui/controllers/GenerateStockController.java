@@ -651,7 +651,7 @@ public class GenerateStockController {
     }
 
     private void updateProduct() {
-        if (transaction.getDeliveryStatus().getStatus() == DeliveryStatus.Status.DELIVERYING) {
+        if (transaction.getDeliveryStatus().getStatus() == DeliveryStatus.Status.DELIVERED) {
             if (mode == Mode.CREATE) {
                 transaction.getTransactionDetails().forEach(p -> {
                     double newVirtualNum = p.getProduct().getVirtualTotalNum() + p.getQuantity();
