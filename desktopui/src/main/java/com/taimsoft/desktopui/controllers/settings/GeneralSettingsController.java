@@ -205,6 +205,13 @@ public class GeneralSettingsController implements ISettingsController{
         executor.execute(getPropertyTask);
     }
 
+    public void initWelcomeData(){
+        this.property = new PropertyDTO();
+        this.property.setDateCreated(DateTime.now());
+        this.property.setDateModified(DateTime.now());
+        initGeneralInfoTextFields();
+    }
+
     @FXML
     public void handleSavePropertyButton(){
         if(StringUtils.isEmpty(gstRateErrorLabel.getText())
@@ -227,6 +234,7 @@ public class GeneralSettingsController implements ISettingsController{
             });
 
             savePropertyTask.setOnFailed(event -> {
+                System.out.println(event.getSource().exceptionProperty().toString());
                 FadingStatusMessage.flash("Failed", rootPane);
             });
 
