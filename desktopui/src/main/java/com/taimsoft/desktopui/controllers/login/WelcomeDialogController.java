@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class WelcomeDialogController {
-    private Stage stage;
+    private Stage welcomeStage;
     @FXML
     private void initialize(){}
 
@@ -22,6 +22,7 @@ public class WelcomeDialogController {
         try {
             FXMLLoader fXMLLoader = new FXMLLoader();
             AnchorPane root = fXMLLoader.load(this.getClass().getResource("/fxml/login/PropertyConfiguration.fxml").openStream());
+            PropertyConfigurationController controller = fXMLLoader.getController();
             root.getStylesheets().add(WelcomeDialogController.class.getResource("/css/bootstrap3.css").toExternalForm());
             Scene scene = new Scene(root);
 
@@ -34,19 +35,20 @@ public class WelcomeDialogController {
             dialogStage.setY(bounds.getMinY());
             dialogStage.setWidth(bounds.getWidth());
             dialogStage.setHeight(bounds.getHeight());
+            controller.setStage(dialogStage);
 
             dialogStage.showAndWait();
-            stage.close();
+            welcomeStage.close();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
 
     public Stage getStage() {
-        return stage;
+        return welcomeStage;
     }
 
     public void setStage(Stage stage) {
-        this.stage = stage;
+        this.welcomeStage = stage;
     }
 }

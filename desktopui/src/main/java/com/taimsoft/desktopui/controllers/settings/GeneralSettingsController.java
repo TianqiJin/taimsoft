@@ -61,6 +61,10 @@ public class GeneralSettingsController implements ISettingsController{
     @FXML
     private Label pstRateErrorLabel;
     @FXML
+    private Button saveCompanyInfoButton;
+    @FXML
+    private Button saveCustomerClassInfoButton;
+    @FXML
     private AnchorPane rootPane;
     @FXML
     private SplitPane generalSettingPane;
@@ -209,16 +213,14 @@ public class GeneralSettingsController implements ISettingsController{
         this.property = new PropertyDTO();
         this.property.setDateCreated(DateTime.now());
         this.property.setDateModified(DateTime.now());
+        saveCompanyInfoButton.setVisible(false);
+        saveCustomerClassInfoButton.setVisible(false);
         initGeneralInfoTextFields();
     }
 
     @FXML
     public void handleSavePropertyButton(){
-        if(StringUtils.isEmpty(gstRateErrorLabel.getText())
-                && StringUtils.isEmpty(gstNumErrorLabel.getText())
-                && StringUtils.isEmpty(productWarnLimitErrorLabel.getText())
-                && StringUtils.isEmpty(companyNameErrorLabel.getText())
-                && StringUtils.isEmpty(pstRateErrorLabel.getText())){
+        if(isCompanyInfoValid()){
             Task<PropertyDTO> savePropertyTask = new Task<PropertyDTO>() {
                 @Override
                 protected PropertyDTO call() throws Exception {
@@ -234,7 +236,6 @@ public class GeneralSettingsController implements ISettingsController{
             });
 
             savePropertyTask.setOnFailed(event -> {
-                System.out.println(event.getSource().exceptionProperty().toString());
                 FadingStatusMessage.flash("Failed", rootPane);
             });
 
@@ -264,6 +265,40 @@ public class GeneralSettingsController implements ISettingsController{
         });
 
         executor.execute(saveCustomerClassTask);
+    }
+
+    public void scanCompanyInfoFields(){
+        companyNameField.requestFocus();
+        productWarnLimitField.requestFocus();
+        gstNumField.requestFocus();
+        gstRateField.requestFocus();
+        pstRateField.requestFocus();
+        gstRateErrorLabel.requestFocus();
+        gstNumErrorLabel.requestFocus();
+    }
+
+    public boolean isCompanyInfoValid(){
+        return  StringUtils.isEmpty(gstRateErrorLabel.getText())
+                && StringUtils.isEmpty(gstNumErrorLabel.getText())
+                && StringUtils.isEmpty(productWarnLimitErrorLabel.getText())
+                && StringUtils.isEmpty(companyNameErrorLabel.getText())
+                && StringUtils.isEmpty(pstRateErrorLabel.getText());
+    }
+
+    public TableView<PropertyDTO.CustomerClassDTO> getCustomerClassTable() {
+        return customerClassTable;
+    }
+
+    public PropertyDTO getProperty() {
+        return property;
+    }
+
+    public PropertyClient getPropertyClient() {
+        return propertyClient;
+    }
+
+    public Executor getExecutor() {
+        return executor;
     }
 
     private void initGeneralInfoTextFields(){

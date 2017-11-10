@@ -118,6 +118,8 @@ public class LoginDialogController {
                     controller.setStage(welcomeStage);
 
                     welcomeStage.showAndWait();
+                    successful = true;
+                    dialogStage.close();
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
