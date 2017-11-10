@@ -47,12 +47,12 @@ public class OrganizationEditDialogController {
     }
     public void setTextField(OrganizationDTO organization){
         this.organization = organization;
-        nameField.setText(organization.getOrgName());
-        countryField.setText(organization.getCountry());
-        cityField.setText(organization.getCountry());
-        streetNumberField.setText(organization.getStreetNum());
-        streetField.setText(organization.getStreet());
-        postalCodeField.setText(organization.getPostalCode());
+        nameField.setText(organization.getOrgName()==null?"":organization.getOrgName());
+        countryField.setText(organization.getCountry()==null?"":organization.getCountry());
+        cityField.setText(organization.getCity()==null?"":organization.getCity());
+        streetNumberField.setText(organization.getStreetNum()==null?"":organization.getStreetNum());
+        streetField.setText(organization.getStreet()==null?"":organization.getStreet());
+        postalCodeField.setText(organization.getPostalCode()==null?"":organization.getPostalCode());
     }
     public void handleOk(){
         if(isInputValid()){

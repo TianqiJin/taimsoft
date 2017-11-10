@@ -376,6 +376,7 @@ public class GenerateStockController {
 
         //either edit existing stock or create new stock
         if (transactionFromAbove==null) {
+            this.staff = VistaNavigator.getGlobalStaff();
             this.mode= Mode.CREATE;
             this.transaction = new TransactionDTO();
             transaction.setTransactionType(Transaction.TransactionType.STOCK);
@@ -395,6 +396,7 @@ public class GenerateStockController {
         }else{
             this.mode= Mode.EDIT;
             this.transaction = transactionFromAbove;
+            this.staff = transactionFromAbove.getStaff();
             this.vendor = transactionFromAbove.getVendor();
             updatePrevProductCount();
 

@@ -115,18 +115,25 @@ public class CustomerEditDialogController {
     }
 
     public void setTextField(CustomerDTO customer){
-        if(customer != null){
-            this.customer = customer;
-            fullNameField.setText(customer.getFullname());
-            phoneField.setText(customer.getPhone());
-            classComboBox.setItems(options);
+        this.customer = customer;
+        fullNameField.setText(customer.getFullname()==null?"":customer.getFullname());
+        phoneField.setText(customer.getPhone()==null?"":customer.getPhone());
+        classComboBox.setItems(options);
+        if (customer.getCustomerClass()!=null) {
             classComboBox.setValue(customer.getCustomerClass().getCustomerClassName());
-            userTypeComboBox.setItems(userTypeOpt);
-            userTypeComboBox.setValue(customer.getUserType().getValue());
-            emailField.setText(customer.getEmail());
-            storeCreditField.setText(String.valueOf(customer.getStoreCredit()));
-            pstNumberField.setText(String.valueOf(customer.getPstNumber()));
+        }else {
+            classComboBox.setValue(options.get(0));
         }
+        userTypeComboBox.setItems(userTypeOpt);
+        if(customer.getUserType()!=null){
+            userTypeComboBox.setValue(customer.getUserType().getValue());
+        }else{
+            userTypeComboBox.setValue(userTypeOpt.get(0));
+        }
+        emailField.setText(customer.getEmail()==null?"":customer.getEmail());
+        storeCreditField.setText(String.valueOf(customer.getStoreCredit()));
+        pstNumberField.setText(customer.getPstNumber()==null?"":customer.getPstNumber());
+
 
     }
 

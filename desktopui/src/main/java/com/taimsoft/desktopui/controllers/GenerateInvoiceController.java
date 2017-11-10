@@ -391,7 +391,7 @@ public class GenerateInvoiceController {
      * Initialize the main class for this class
      */
 
-    public void setMainClass(TransactionDTO transactionFromAbove, StaffDTO staff){
+    public void setMainClass(TransactionDTO transactionFromAbove){
 
         //either edit existing invoice or generate new invoice from transaction
         if (transactionFromAbove.getTransactionType()== Transaction.TransactionType.QUOTATION) {
@@ -416,6 +416,7 @@ public class GenerateInvoiceController {
                 confirmButton.setDisable(true);
             }
         }
+        this.staff = transactionFromAbove.getStaff();
         updatePrevProductCount();
         this.payment = new PaymentDTO();
         this.customer = transactionFromAbove.getCustomer();

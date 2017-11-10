@@ -351,6 +351,7 @@ public class GenerateReturnController {
                 confirmButton.setDisable(true);
             }
         }
+        this.staff = transactionFromAbove.getStaff();
         updatePrevProductCount();
         this.payment = new PaymentDTO();
         this.customer = transactionFromAbove.getCustomer();

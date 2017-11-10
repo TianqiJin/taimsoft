@@ -321,11 +321,12 @@ public class GenerateQuotationController {
      * Initialize the main class for this class
      */
 
-    public void setMainClass(TransactionDTO transactionFromAbove, StaffDTO staff){
+    public void setMainClass(TransactionDTO transactionFromAbove){
 
         //either edit or generate new quotation
         if (transactionFromAbove==null) {
             this.mode=Mode.CREATE;
+            this.staff = VistaNavigator.getGlobalStaff();
             this.transaction = new TransactionDTO();
             transaction.setTransactionType(Transaction.TransactionType.QUOTATION);
             transaction.setFinalized(false);
@@ -333,6 +334,7 @@ public class GenerateQuotationController {
             transaction.setDateCreated(DateTime.now());
         }else{
             this.mode=Mode.EDIT;
+            this.staff = transactionFromAbove.getStaff();
             this.transaction = transactionFromAbove;
             this.customer = transactionFromAbove.getCustomer();
             updatePrevProductCount();
