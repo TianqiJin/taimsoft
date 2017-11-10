@@ -539,6 +539,7 @@ public class GenerateInvoiceController {
     private void showPaymentDetails(){
         if(this.transactionDetailDTOObservableList != null ){
             int pstNum = VistaNavigator.getGlobalProperty().getPstRate();
+            int gstNum = VistaNavigator.getGlobalProperty().getGstRate();
             Iterator<TransactionDetailDTO> iterator = this.transactionDetailDTOObservableList.iterator();
             BigDecimal subTotalAfterDiscount = new BigDecimal(0.00);
             BigDecimal subTotalBeforeDiscount = new BigDecimal(0.00);
@@ -550,7 +551,7 @@ public class GenerateInvoiceController {
             BigDecimal paymentDiscount = subTotalBeforeDiscount.subtract(subTotalAfterDiscount).setScale(2, BigDecimal.ROUND_HALF_EVEN);
 
             BigDecimal pstTax = new BigDecimal(pstNum).multiply(subTotalAfterDiscount).divide(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_EVEN);
-            BigDecimal gstTax = new BigDecimal("5").multiply(subTotalAfterDiscount).divide(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_EVEN);
+            BigDecimal gstTax = new BigDecimal(gstNum).multiply(subTotalAfterDiscount).divide(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_EVEN);
 
             BigDecimal total = subTotalAfterDiscount.add(pstTax).add(gstTax).setScale(2, BigDecimal.ROUND_HALF_EVEN);
             subTotalBeforeDiscount.setScale(2, RoundingMode.HALF_EVEN);

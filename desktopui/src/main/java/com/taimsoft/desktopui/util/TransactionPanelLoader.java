@@ -18,7 +18,7 @@ import java.io.IOException;
  */
 public class TransactionPanelLoader {
 
-    public static TransactionDTO loadQuotation(TransactionDTO transaction, StaffDTO staff){
+    public static TransactionDTO loadQuotation(TransactionDTO transaction){
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(TransactionPanelLoader.class.getResource("/fxml/GenerateQuotation.fxml"));
         AnchorPane page = null;
@@ -38,7 +38,7 @@ public class TransactionPanelLoader {
             dialogStage.setScene(scene);
 
             GenerateQuotationController controller = loader.getController();
-            controller.setMainClass(transaction,staff);
+            controller.setMainClass(transaction);
             controller.setDialogStage(dialogStage);
             controller.initDataFromDB();
             controller.initPanelDetails();
@@ -54,7 +54,7 @@ public class TransactionPanelLoader {
         return transaction;
     }
 
-    public static TransactionDTO loadInvoice(TransactionDTO transaction, StaffDTO staff){
+    public static TransactionDTO loadInvoice(TransactionDTO transaction){
         if(transaction==null){
             System.out.println("Please select a valid transaction!");
             return null;
@@ -77,7 +77,7 @@ public class TransactionPanelLoader {
             dialogStage.setScene(scene);
 
             GenerateInvoiceController controller = loader.getController();
-            controller.setMainClass(transaction,staff);
+            controller.setMainClass(transaction);
             controller.setDialogStage(dialogStage);
             controller.initDataFromDB();
             controller.initPanelDetails();
@@ -94,7 +94,7 @@ public class TransactionPanelLoader {
     }
 
 
-    public static TransactionDTO loadReturn(TransactionDTO transaction, StaffDTO staff){
+    public static TransactionDTO loadReturn(TransactionDTO transaction){
         if(transaction==null){
             System.out.println("Please select a valid transaction!");
             return null;
@@ -121,7 +121,7 @@ public class TransactionPanelLoader {
             dialogStage.setScene(scene);
 
             GenerateReturnController controller = loader.getController();
-            controller.setMainClass(transaction,staff);
+            controller.setMainClass(transaction);
             controller.setDialogStage(dialogStage);
             controller.initPanelDetails();
             dialogStage.showAndWait();
@@ -136,7 +136,7 @@ public class TransactionPanelLoader {
         return transaction;
     }
 
-    public static TransactionDTO loadStock(TransactionDTO transaction, StaffDTO staff){
+    public static TransactionDTO loadStock(TransactionDTO transaction){
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(TransactionPanelLoader.class.getResource("/fxml/GenerateStock.fxml"));
         AnchorPane page = null;
@@ -149,7 +149,7 @@ public class TransactionPanelLoader {
             dialogStage.setScene(scene);
 
             GenerateStockController controller = loader.getController();
-            controller.setMainClass(transaction,staff);
+            controller.setMainClass(transaction);
             controller.setDialogStage(dialogStage);
             controller.initDataFromDB();
             controller.initPanelDetails();
@@ -231,6 +231,31 @@ public class TransactionPanelLoader {
             OrganizationEditDialogController controller = loader.getController();
             controller.setDialogStage(dialogStage);
             controller.setTextField(organizationDTO);
+            dialogStage.showAndWait();
+            return controller.isOKClicked();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public static boolean showProductEditor(ProductDTO productDTO, boolean isEdit){
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(TransactionPanelLoader.class.getResource("/fxml/ProdictEditDialog.fxml"));
+        AnchorPane page = null;
+        try {
+            page = loader.load();
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Product Editor");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+
+            ProductEditDialogController controller = loader.getController();
+            controller.setMainClass(isEdit);
+            controller.setDialogStage(dialogStage);
+            controller.setTextField(productDTO);
             dialogStage.showAndWait();
             return controller.isOKClicked();
 

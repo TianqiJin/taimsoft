@@ -168,7 +168,7 @@ public class TransactionOverviewController extends IOverviewController<Transacti
                                         e.printStackTrace();
                                     }
                                 }else if(newValue.equalsIgnoreCase("EDIT")){
-                                    TransactionDTO editedTrans = TransactionPanelLoader.loadQuotation(transactionDTO, null);
+                                    TransactionDTO editedTrans = TransactionPanelLoader.loadQuotation(transactionDTO);
                                 }
                             });
                             comboBox.setValue(item);
@@ -186,7 +186,7 @@ public class TransactionOverviewController extends IOverviewController<Transacti
             public void handle(ActionEvent event) {
                 switch (createNewTransactionComboBox.getSelectionModel().getSelectedItem()){
                     case QUOTATION:
-                        TransactionDTO transactionDTO = TransactionPanelLoader.loadQuotation(null,null);
+                        TransactionDTO transactionDTO = TransactionPanelLoader.loadQuotation(null);
 //                        if (transactionDTO!=null){
 //                            transactionDTOS.add(transactionDTO);
 //                        }
