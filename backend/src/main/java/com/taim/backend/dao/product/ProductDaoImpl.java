@@ -43,6 +43,11 @@ public class ProductDaoImpl extends AbstractDao implements IDao<Product> {
     }
 
     @Override
+    public Product saveOrUpdateObject(Product object) {
+        return null;
+    }
+
+    @Override
     public Product findByName(String name) {
        return null;
     }

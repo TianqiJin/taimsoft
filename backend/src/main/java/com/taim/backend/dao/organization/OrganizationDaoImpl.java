@@ -40,6 +40,11 @@ public class OrganizationDaoImpl extends AbstractDao implements IDao<Organizatio
     }
 
     @Override
+    public Organization saveOrUpdateObject(Organization object) {
+        return null;
+    }
+
+    @Override
     public Organization findByName(String name) {
         Criteria criteria = getSession().createCriteria(Organization.class);
         criteria.add(Restrictions.eq("orgName", name));

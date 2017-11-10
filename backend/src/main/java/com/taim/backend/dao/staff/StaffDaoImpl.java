@@ -43,6 +43,11 @@ public class StaffDaoImpl extends AbstractDao implements IDao<Staff> {
     }
 
     @Override
+    public Staff saveOrUpdateObject(Staff object) {
+        return null;
+    }
+
+    @Override
     public Staff findByName(String name){
     Criteria criteria = getSession().createCriteria(Staff.class);
     criteria.add(Restrictions.eq("userName", name));

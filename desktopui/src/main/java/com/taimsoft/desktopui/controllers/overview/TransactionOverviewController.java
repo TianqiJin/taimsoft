@@ -3,6 +3,7 @@ package com.taimsoft.desktopui.controllers.overview;
 import com.taim.client.IClient;
 import com.taim.client.TransactionClient;
 import com.taim.dto.PaymentDTO;
+import com.taim.dto.StaffDTO;
 import com.taim.dto.TransactionDTO;
 import com.taim.model.Transaction;
 import com.taimsoft.desktopui.TaimDesktop;
@@ -167,7 +168,7 @@ public class TransactionOverviewController extends IOverviewController<Transacti
                                         e.printStackTrace();
                                     }
                                 }else if(newValue.equalsIgnoreCase("EDIT")){
-                                    TransactionDTO editedTrans = TransactionPanelLoader.loadQuotation(transactionDTO,null);
+                                    TransactionDTO editedTrans = TransactionPanelLoader.loadQuotation(transactionDTO, null);
                                 }
                             });
                             comboBox.setValue(item);

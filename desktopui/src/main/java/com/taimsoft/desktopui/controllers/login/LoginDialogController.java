@@ -136,6 +136,7 @@ public class LoginDialogController {
         });
 
         staffDTOTask.setOnFailed(event -> {
+            System.out.println(event.getSource().exceptionProperty().toString());
             errorLMsgLabel.setText("Username does not exist");
             errorLMsgLabel.setStyle(Constant.FXStyle.FX_ERROR_LABEL_COLOR);
         });

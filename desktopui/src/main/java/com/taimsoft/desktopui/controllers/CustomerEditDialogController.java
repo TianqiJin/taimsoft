@@ -113,18 +113,23 @@ public class CustomerEditDialogController {
     public void setDialogStage(Stage dialogStage){
         this.dialogStage = dialogStage;
     }
+
     public void setTextField(CustomerDTO customer){
-        this.customer = customer;
-        fullNameField.setText(customer.getFullname());
-        phoneField.setText(customer.getPhone());
-        classComboBox.setItems(options);
-        classComboBox.setValue(customer.getCustomerClass().getCustomerClassName());
-        userTypeComboBox.setItems(userTypeOpt);
-        userTypeComboBox.setValue(customer.getUserType().getValue());
-        emailField.setText(customer.getEmail());
-        storeCreditField.setText(String.valueOf(customer.getStoreCredit()));
-        pstNumberField.setText(String.valueOf(customer.getPstNumber()));
+        if(customer != null){
+            this.customer = customer;
+            fullNameField.setText(customer.getFullname());
+            phoneField.setText(customer.getPhone());
+            classComboBox.setItems(options);
+            classComboBox.setValue(customer.getCustomerClass().getCustomerClassName());
+            userTypeComboBox.setItems(userTypeOpt);
+            userTypeComboBox.setValue(customer.getUserType().getValue());
+            emailField.setText(customer.getEmail());
+            storeCreditField.setText(String.valueOf(customer.getStoreCredit()));
+            pstNumberField.setText(String.valueOf(customer.getPstNumber()));
+        }
+
     }
+
     public void handleOk(){
         if(isInputValid()){
             customer.setFullname(fullNameField.getText());
@@ -137,7 +142,7 @@ public class CustomerEditDialogController {
                 customer.setCustomerClass(customerClass.get());
             }
             customer.setUserType(UserBaseModel.UserType.getUserType((String)userTypeComboBox.getSelectionModel().getSelectedItem()));
-            customer.setPstNumber(Double.valueOf(pstNumberField.getText()));
+            customer.setPstNumber(pstNumberField.getText());
 
             customer.setEmail(emailField.getText());
             customer.setStoreCredit(Double.valueOf(storeCreditField.getText()));

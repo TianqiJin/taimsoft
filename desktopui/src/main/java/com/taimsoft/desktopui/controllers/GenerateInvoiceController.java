@@ -537,10 +537,7 @@ public class GenerateInvoiceController {
 
     private void showPaymentDetails(){
         if(this.transactionDetailDTOObservableList != null ){
-            double pstNum = 7;
-            if(customer!=null && customer.getPstNumber()!=0){
-                pstNum = customer.getPstNumber();
-            }
+            int pstNum = VistaNavigator.getGlobalProperty().getPstRate();
             Iterator<TransactionDetailDTO> iterator = this.transactionDetailDTOObservableList.iterator();
             BigDecimal subTotalAfterDiscount = new BigDecimal(0.00);
             BigDecimal subTotalBeforeDiscount = new BigDecimal(0.00);

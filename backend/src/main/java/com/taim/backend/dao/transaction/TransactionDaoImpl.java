@@ -45,6 +45,11 @@ public class TransactionDaoImpl extends AbstractDao implements IDao<Transaction>
     }
 
     @Override
+    public Transaction saveOrUpdateObject(Transaction object) {
+        return null;
+    }
+
+    @Override
     public Transaction findByName(String name) {
         return null;
     }

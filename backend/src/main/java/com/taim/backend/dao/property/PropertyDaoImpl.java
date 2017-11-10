@@ -38,6 +38,12 @@ public class PropertyDaoImpl extends AbstractDao implements IDao<Property> {
     }
 
     @Override
+    public Property saveOrUpdateObject(Property object) {
+        saveOrUpdate(object);
+        return object;
+    }
+
+    @Override
     public Property findByName(String name) {
         return null;
     }

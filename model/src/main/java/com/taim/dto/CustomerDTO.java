@@ -13,7 +13,7 @@ import java.util.List;
 public class CustomerDTO extends UserBaseModelDTO{
     private DoubleProperty storeCredit;
     private BooleanProperty checked;
-    private DoubleProperty pstNumber;
+    private StringProperty pstNumber;
     private ObjectProperty<PropertyDTO.CustomerClassDTO> customerClass;
     private ObjectProperty<UserBaseModel.UserType> userType;
     private List<TransactionDTO> transactionList;
@@ -24,6 +24,7 @@ public class CustomerDTO extends UserBaseModelDTO{
         transactionList = new ArrayList<>();
         customerClass = new SimpleObjectProperty<>();
         userType = new SimpleObjectProperty<>();
+        pstNumber = new SimpleStringProperty();
     }
 
     public double getStoreCredit() {
@@ -82,15 +83,15 @@ public class CustomerDTO extends UserBaseModelDTO{
         this.userType.set(userType);
     }
 
-    public double getPstNumber() {
+    public String getPstNumber() {
         return pstNumber.get();
     }
 
-    public DoubleProperty pstNumberProperty() {
+    public StringProperty pstNumberProperty() {
         return pstNumber;
     }
 
-    public void setPstNumber(double pstNumber) {
+    public void setPstNumber(String pstNumber) {
         this.pstNumber.set(pstNumber);
     }
 }

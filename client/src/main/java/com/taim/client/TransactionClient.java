@@ -74,7 +74,7 @@ public class TransactionClient implements IClient<TransactionDTO>{
 
     public TransactionDTO update(TransactionDTO transactionDTO){
         String url = TRANSACTION_PATH+"/update";
-        HttpEntity<Transaction> requestEntity = new HttpEntity<Transaction>(BeanMapper.map(transactionDTO, Transaction.class), headers);
+        HttpEntity<Transaction> requestEntity = new HttpEntity<>(BeanMapper.map(transactionDTO, Transaction.class), headers);
         ResponseEntity<Transaction> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Transaction.class);
         return BeanMapper.map(responseEntity.getBody(), TransactionDTO.class);
     }

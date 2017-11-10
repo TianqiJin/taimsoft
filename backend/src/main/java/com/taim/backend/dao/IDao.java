@@ -14,6 +14,8 @@ public interface IDao<T> {
 
     T updateObject(T object);
 
+    T saveOrUpdateObject(T object);
+
     T findByName(String name);
 
     void deleteObject(T object);

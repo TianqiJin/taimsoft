@@ -43,6 +43,11 @@ public class CustomerDaoImpl extends AbstractDao implements IDao<Customer> {
     }
 
     @Override
+    public Customer saveOrUpdateObject(Customer object) {
+        return null;
+    }
+
+    @Override
     public Customer findByName(String name) {
         Criteria criteria = getSession().createCriteria(Customer.class);
         criteria.add(Restrictions.eq("fullname", name));

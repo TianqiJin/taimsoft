@@ -44,6 +44,11 @@ public class VendorDaoImpl extends AbstractDao implements IDao<Vendor> {
     }
 
     @Override
+    public Vendor saveOrUpdateObject(Vendor object) {
+        return null;
+    }
+
+    @Override
     public Vendor findByName(String name) {
         Criteria criteria = getSession().createCriteria(Vendor.class);
         criteria.add(Restrictions.eq("fullname", name));
