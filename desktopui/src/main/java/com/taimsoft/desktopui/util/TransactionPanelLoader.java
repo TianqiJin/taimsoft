@@ -1,12 +1,10 @@
 package com.taimsoft.desktopui.util;
 
 import com.taim.dto.*;
+import com.taim.model.Product;
 import com.taim.model.Transaction;
 import com.taimsoft.desktopui.controllers.*;
-import com.taimsoft.desktopui.controllers.edit.CustomerEditDialogController;
-import com.taimsoft.desktopui.controllers.edit.OrganizationEditDialogController;
-import com.taimsoft.desktopui.controllers.edit.StaffEditDialogController;
-import com.taimsoft.desktopui.controllers.edit.VendorEditDialogController;
+import com.taimsoft.desktopui.controllers.edit.*;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
@@ -14,7 +12,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -292,9 +289,9 @@ public class TransactionPanelLoader {
         return false;
     }
 
-    public static boolean showProductEditor(ProductDTO productDTO, boolean isEdit){
+    public static ProductEditDialogController showProductEditor(ProductDTO productDTO){
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(TransactionPanelLoader.class.getResource("/fxml/ProductEditDialog.fxml"));
+        loader.setLocation(TransactionPanelLoader.class.getResource("/fxml/edit/ProductEditDialog.fxml"));
         AnchorPane page = null;
         try {
             page = loader.load();
@@ -305,15 +302,21 @@ public class TransactionPanelLoader {
             dialogStage.setScene(scene);
 
             ProductEditDialogController controller = loader.getController();
-            controller.setMainClass(isEdit);
+            //Set the stage bound to the maximum of the screen
+            Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
+            dialogStage.setX(bounds.getMinX());
+            dialogStage.setY(bounds.getMinY());
+            dialogStage.setWidth(bounds.getWidth());
+            dialogStage.setHeight(bounds.getHeight());
+
             controller.setDialogStage(dialogStage);
-            controller.setTextField(productDTO);
+            controller.initData(productDTO);
             dialogStage.showAndWait();
-            return controller.isOKClicked();
+            return controller;
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return false;
+        return null;
     }
 }

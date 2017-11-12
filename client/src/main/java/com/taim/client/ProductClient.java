@@ -76,4 +76,11 @@ public class ProductClient implements IClient<ProductDTO>{
         return BeanMapper.map(responseEntity.getBody(), ProductDTO.class);
     }
 
+    public ProductDTO saveOrUpdate(ProductDTO productDTO){
+        String url = PRODUCT_PATH+"/saveOrUpdate";
+        HttpEntity<Product> requestEntity = new HttpEntity<Product>(BeanMapper.map(productDTO, Product.class), headers);
+        ResponseEntity<Product> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Product.class);
+        return BeanMapper.map(responseEntity.getBody(), ProductDTO.class);
+    }
+
 }

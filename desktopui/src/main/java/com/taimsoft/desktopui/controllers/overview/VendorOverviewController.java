@@ -7,6 +7,7 @@ import com.taim.dto.TransactionDTO;
 import com.taim.dto.VendorDTO;
 import com.taim.model.Transaction;
 import com.taim.model.Vendor;
+import com.taimsoft.desktopui.controllers.edit.StaffEditDialogController;
 import com.taimsoft.desktopui.controllers.edit.VendorEditDialogController;
 import com.taimsoft.desktopui.uicomponents.LiveComboBoxTableCell;
 import com.taimsoft.desktopui.util.AlertBuilder;
@@ -79,7 +80,10 @@ public class VendorOverviewController extends IOverviewController<VendorDTO> {
                                 if(newValue.equals("VIEW DETAILS")){
                                     VistaNavigator.loadDetailVista(VistaNavigator.VISTA_VENDOR_DETAIL, vendorDTO);
                                 }else if(newValue.equals("EDIT")){
-
+                                    VendorEditDialogController controller = TransactionPanelLoader.showVendorEditor(vendorDTO);
+                                    if(controller != null && controller.isOKClicked()){
+                                        getTableView().getItems().set(getIndex(), controller.getVendor());
+                                    }
                                 }
                             });
                             comboBox.setValue(item);

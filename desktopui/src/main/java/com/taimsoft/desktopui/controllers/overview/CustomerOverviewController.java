@@ -82,7 +82,10 @@ public class CustomerOverviewController extends IOverviewController<CustomerDTO>
                                 if (newValue.equals("VIEW DETAILS")) {
                                     VistaNavigator.loadDetailVista(VistaNavigator.VISTA_CUSTOMER_DETAIL, customerDTO);
                                 }else if(newValue.equals("EDIT")){
-
+                                    CustomerEditDialogController controller = TransactionPanelLoader.showCustomerEditor(customerDTO);
+                                    if(controller != null && controller.isOKClicked()){
+                                        getTableView().getItems().set(getIndex(), controller.getCustomer());
+                                    }
                                 }
                             });
                             comboBox.setValue(item);
