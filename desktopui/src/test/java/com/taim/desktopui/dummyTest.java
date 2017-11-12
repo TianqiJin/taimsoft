@@ -156,44 +156,37 @@ public class dummyTest {
         RestClientFactory.getStaffClient().add(staff);
     }
 
-//    @Test
-//    public void getCustomerTransactionList(){
-//        System.out.println(RestClientFactory.getCustomerClient().getByName("Tim Hortons").getTransactionList().size());
-//    }
-
-
-    @Test
-    public void addCustomerTransactionDTOTest()throws Exception{
-        TransactionDetailDTO detail1 = new TransactionDetailDTO();
-
-        detail1.setProduct(RestClientFactory.getProductClient().getById(1));
-        detail1.setQuantity(2);
-        detail1.setSaleAmount(20);
-        detail1.setDateCreated(DateTime.now());
-        detail1.setDateModified(DateTime.now());
-
-        List<TransactionDetailDTO> detailList = new ArrayList<>();
-        detailList.add(detail1);
-
-        TransactionDTO transaction = new TransactionDTO();
-        transaction.getTransactionDetails().addAll(detailList);
-        transaction.setSaleAmount(Double.valueOf(20));
-        transaction.setGst(Double.valueOf(1.2));
-        transaction.setPst(Double.valueOf(1));
-        transaction.setNote("WHY");
-        transaction.setDateModified(DateTime.now());
-        transaction.setDateCreated(DateTime.now());
-
-        CustomerDTO customer = RestClientFactory.getCustomerClient().getByName("Tim Hortons");
-
-        transaction.setCustomer(customer);
+//    public void addCustomerTransactionDTOTest()throws Exception{
+//        TransactionDetailDTO detail1 = new TransactionDetailDTO();
+//
+//        detail1.setProduct(RestClientFactory.getProductClient().getById(1));
+//        detail1.setQuantity(2);
+//        detail1.setSaleAmount(20);
+//        detail1.setDateCreated(DateTime.now());
+//        detail1.setDateModified(DateTime.now());
+//
+//        List<TransactionDetailDTO> detailList = new ArrayList<>();
+//        detailList.add(detail1);
+//
+//        TransactionDTO transaction = new TransactionDTO();
+//        transaction.getTransactionDetails().addAll(detailList);
+//        transaction.setSaleAmount(Double.valueOf(20));
+//        transaction.setGst(Double.valueOf(1.2));
+//        transaction.setPst(Double.valueOf(1));
+//        transaction.setNote("WHY");
+//        transaction.setDateModified(DateTime.now());
+//        transaction.setDateCreated(DateTime.now());
+//
+//        CustomerDTO customer = RestClientFactory.getCustomerClient().getByName("Tim Hortons");
+//
+//        transaction.setCustomer(customer);
 //        customer.getTransactionList().add(transaction);
-
-        RestClientFactory.getCustomerClient().update(customer);
-        RestClientFactory.getTransactionClient().add(transaction);
-
-        RestClientFactory.getTransactionClient().add(transaction);
-    }
+//
+//        RestClientFactory.getCustomerClient().update(customer);
+//        RestClientFactory.getTransactionClient().add(transaction);
+//
+//        RestClientFactory.getTransactionClient().add(transaction);
+//    }
 
     @Test
     public void addProperty(){
