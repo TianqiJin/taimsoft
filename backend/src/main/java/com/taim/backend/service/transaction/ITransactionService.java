@@ -13,4 +13,8 @@ public interface ITransactionService {
     Transaction getTransactionById(Integer id);
     void deleteTransaction(Transaction transaction);
     Transaction updateTransaction(Transaction transaction);
+    List<Transaction> getAllTransactionsByCustomerId(Integer id);
+    List<Transaction> getAllTransactionsByVendorId(Integer id);
+    List<Transaction> getAllTransactionsByStaffId(Integer id);
+
 }

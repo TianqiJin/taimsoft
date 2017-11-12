@@ -30,9 +30,6 @@ public class Customer extends UserBaseModel {
     private UserType userType;
     @Column(name = "pst_num")
     private String pstNumber;
-    @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @Fetch(FetchMode.SUBSELECT)
-    private List<Transaction> transactionList;
 
     public Customer(){}
 
@@ -42,14 +39,6 @@ public class Customer extends UserBaseModel {
 
     public void setStoreCredit(double storeCredit) {
         this.storeCredit = storeCredit;
-    }
-
-    public List<Transaction> getTransactionList() {
-        return transactionList;
-    }
-
-    public void setTransactionList(List<Transaction> transactionList) {
-        this.transactionList = transactionList;
     }
 
     public Property.CustomerClass getCustomerClass() {

@@ -701,9 +701,9 @@ public class GenerateStockController {
     }
 
     private void updateVendor(){
-        if (this.mode== Mode.EDIT){
-            vendor.getTransactionList().removeIf(t->t.getId()==transaction.getId());
-        }
+//        if (this.mode== Mode.EDIT){
+//            vendor.getTransactionList().removeIf(t->t.getId()==transaction.getId());
+//        }
 //       customer.getTransactionList().add(transaction);
 //        RestClientFactory.getCustomerClient().update(customer);
 

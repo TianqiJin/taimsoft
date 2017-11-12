@@ -283,7 +283,7 @@ public class GenerateQuotationController {
                         .showAndWait();
             }finally{
                 if(flag){
-                    this.customer = newCustomer;
+                    this.customer = RestClientFactory.getCustomerClient().getByName(newCustomer.getFullname());
                     customerList.add(this.customer);
                     showCustomerDetails();
                 }
@@ -356,7 +356,7 @@ public class GenerateQuotationController {
                 }
             }
         });
-        this.staff = staff;
+        //this.staff = staff;
     }
 
     /**
@@ -567,8 +567,8 @@ public class GenerateQuotationController {
         transaction.setPst(Double.valueOf(pstTaxLabel.getText()));
         transaction.setNote(textArea.getText());
         transaction.setCustomer(customer);
-        transaction.setStaff(staff);
         transaction.setDateModified(DateTime.now());
+
 
 
         Optional<ButtonType> result = new AlertBuilder()
@@ -620,9 +620,9 @@ public class GenerateQuotationController {
     }
 
     private void updateCustomer(){
-        if (this.mode==Mode.EDIT){
-            customer.getTransactionList().removeIf(t->t.getId()==transaction.getId());
-        }
+//        if (this.mode==Mode.EDIT){
+//            customer.getTransactionList().removeIf(t->t.getId()==transaction.getId());
+//        }
 //       customer.getTransactionList().add(transaction);
 //        RestClientFactory.getCustomerClient().update(customer);
 

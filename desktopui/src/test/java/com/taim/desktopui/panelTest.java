@@ -41,9 +41,10 @@ public class panelTest{
     }
 
     public static Pane showInvoice(){
-            TransactionDTO transactionDTO = RestClientFactory.getTransactionClient().getById(8);
-            TransactionDTO updatedTransaction = TransactionPanelLoader.loadInvoice(transactionDTO);
-            return null;
+        //TransactionDTO transactionDTO = RestClientFactory.getTransactionClient().getById(8);
+        //TransactionDTO updatedTransaction = TransactionPanelLoader.loadInvoice(transactionDTO);
+        TransactionDTO quotation = TransactionPanelLoader.loadQuotation(null);
+        return null;
     }
 
     private static Scene createScene(Pane rootPane){

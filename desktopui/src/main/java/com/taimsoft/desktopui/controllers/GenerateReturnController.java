@@ -593,9 +593,9 @@ public class GenerateReturnController {
     }
 
     private void updateCustomer(){
-        if (this.mode== Mode.EDIT){
-            customer.getTransactionList().removeIf(t->t.getId()==transaction.getId());
-        }
+//        if (this.mode== Mode.EDIT){
+//            customer.getTransactionList().removeIf(t->t.getId()==transaction.getId());
+//        }
 //       customer.getTransactionList().add(transaction);
 //        RestClientFactory.getCustomerClient().update(customer);
 

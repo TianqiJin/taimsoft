@@ -39,9 +39,7 @@ public class TransactionClientTest {
     @Test
     public void addTransactionTest()throws Exception{
         CustomerDTO customerDTO = customerClient.getByName("dummy dumb");
-        System.out.println(customerDTO.getTransactionList().size());
         transaction.setCustomer(customerDTO);
-        customerDTO.getTransactionList().add(transaction);
         TransactionDTO tran = client.add(transaction);
         Assert.assertEquals(transaction.getSaleAmount(), tran.getSaleAmount());
         Assert.assertEquals(transaction.getGst(),tran.getGst());

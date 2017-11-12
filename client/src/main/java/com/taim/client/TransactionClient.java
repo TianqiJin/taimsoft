@@ -78,4 +78,40 @@ public class TransactionClient implements IClient<TransactionDTO>{
         ResponseEntity<Transaction> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Transaction.class);
         return BeanMapper.map(responseEntity.getBody(), TransactionDTO.class);
     }
+
+    public List<TransactionDTO> getListByCustomerID(Integer id){
+        String url = TRANSACTION_PATH+"/getByCustomerId"+"?id="+id;
+        HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
+
+        ResponseEntity<Transaction[]> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity,Transaction[].class);
+        Transaction[] transactions = responseEntity.getBody();
+        List<TransactionDTO> transactionList = new ArrayList<>();
+        Arrays.stream(transactions).forEach(p->transactionList.add(BeanMapper.map(p, TransactionDTO.class)));
+
+        return transactionList;
+    }
+
+    public List<TransactionDTO> getListByVendorID(Integer id){
+        String url = TRANSACTION_PATH+"/getByVendorId"+"?id="+id;
+        HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
+
+        ResponseEntity<Transaction[]> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity,Transaction[].class);
+        Transaction[] transactions = responseEntity.getBody();
+        List<TransactionDTO> transactionList = new ArrayList<>();
+        Arrays.stream(transactions).forEach(p->transactionList.add(BeanMapper.map(p, TransactionDTO.class)));
+
+        return transactionList;
+    }
+
+    public List<TransactionDTO> getListByStaffID(Integer id){
+        String url = TRANSACTION_PATH+"/getByStaffId"+"?id="+id;
+        HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
+
+        ResponseEntity<Transaction[]> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity,Transaction[].class);
+        Transaction[] transactions = responseEntity.getBody();
+        List<TransactionDTO> transactionList = new ArrayList<>();
+        Arrays.stream(transactions).forEach(p->transactionList.add(BeanMapper.map(p, TransactionDTO.class)));
+
+        return transactionList;
+    }
 }

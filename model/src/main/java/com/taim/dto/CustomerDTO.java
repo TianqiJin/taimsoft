@@ -16,12 +16,10 @@ public class CustomerDTO extends UserBaseModelDTO{
     private StringProperty pstNumber;
     private ObjectProperty<PropertyDTO.CustomerClassDTO> customerClass;
     private ObjectProperty<UserBaseModel.UserType> userType;
-    private List<TransactionDTO> transactionList;
 
     public CustomerDTO(){
         storeCredit = new SimpleDoubleProperty();
         checked = new SimpleBooleanProperty();
-        transactionList = new ArrayList<>();
         customerClass = new SimpleObjectProperty<>();
         userType = new SimpleObjectProperty<>();
         pstNumber = new SimpleStringProperty();
@@ -37,14 +35,6 @@ public class CustomerDTO extends UserBaseModelDTO{
 
     public void setStoreCredit(double storeCredit) {
         this.storeCredit.set(storeCredit);
-    }
-
-    public List<TransactionDTO> getTransactionList() {
-        return transactionList;
-    }
-
-    public void setTransactionList(List<TransactionDTO> transactionList) {
-        this.transactionList = transactionList;
     }
 
     public boolean isChecked() {

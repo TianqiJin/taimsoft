@@ -51,6 +51,30 @@ public class TransactionController {
         return new ResponseEntity<List<Transaction>>(realList, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/getByCustomerId",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<List<Transaction>> getTransactionByCustomerId(@RequestParam Integer id) {
+        List<Transaction> list = service.getAllTransactionsByCustomerId(id);
+        return new ResponseEntity<List<Transaction>>(list, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/getByVendorId",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<List<Transaction>> getTransactionByVendorId(@RequestParam Integer id) {
+        List<Transaction> list = service.getAllTransactionsByVendorId(id);
+        return new ResponseEntity<List<Transaction>>(list, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/getByStaffId",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<List<Transaction>> getTransactionByStaffId(@RequestParam Integer id) {
+        List<Transaction> list = service.getAllTransactionsByStaffId(id);
+        return new ResponseEntity<List<Transaction>>(list, HttpStatus.OK);
+    }
+
 
     @RequestMapping(value = "/add",
             method = RequestMethod.POST,

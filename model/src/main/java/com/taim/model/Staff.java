@@ -48,9 +48,6 @@ public class Staff extends UserBaseModel {
     private String picUrl;
     @Column
     private Position position;
-    @OneToMany(mappedBy = "staff", fetch = FetchType.EAGER)
-    @Fetch(FetchMode.SUBSELECT)
-    private List<Transaction> transactionList;
 
     public Staff(){}
 
@@ -76,14 +73,6 @@ public class Staff extends UserBaseModel {
 
     public void setPicUrl(String picUrl) {
         this.picUrl = picUrl;
-    }
-
-    public List<Transaction> getTransactionList() {
-        return transactionList;
-    }
-
-    public void setTransactionList(List<Transaction> transactionList) {
-        this.transactionList = transactionList;
     }
 
     public Position getPosition() {

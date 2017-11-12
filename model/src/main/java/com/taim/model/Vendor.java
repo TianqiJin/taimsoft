@@ -23,19 +23,8 @@ import java.util.List;
 public class Vendor extends UserBaseModel {
     @Column(name = "user_type")
     private UserType userType;
-    @OneToMany(mappedBy = "vendor", fetch = FetchType.EAGER)
-    @Fetch(FetchMode.SUBSELECT)
-    private List<Transaction> transactionList;
 
     public Vendor(){}
-
-    public List<Transaction> getTransactionList() {
-        return transactionList;
-    }
-
-    public void setTransactionList(List<Transaction> transactionList) {
-        this.transactionList = transactionList;
-    }
 
     public UserType getUserType() {
         return userType;

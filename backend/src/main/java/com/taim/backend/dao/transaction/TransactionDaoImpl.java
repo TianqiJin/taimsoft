@@ -58,4 +58,20 @@ public class TransactionDaoImpl extends AbstractDao implements IDao<Transaction>
     public void deleteObject(Transaction object) {
         delete(object);
     }
+
+    public List<Transaction> getByCustomerId(Integer id){
+        Criteria criteria = getSession().createCriteria(Transaction.class);
+        criteria.add(Restrictions.eq("customer_id",id));
+        return (List<Transaction>) criteria.list();
+    }
+    public List<Transaction> getByStaffId(Integer id){
+        Criteria criteria = getSession().createCriteria(Transaction.class);
+        criteria.add(Restrictions.eq("vendor_id",id));
+        return (List<Transaction>) criteria.list();
+    }
+    public List<Transaction> getByVendorId(Integer id){
+        Criteria criteria = getSession().createCriteria(Transaction.class);
+        criteria.add(Restrictions.eq("staff_id",id));
+        return (List<Transaction>) criteria.list();
+    }
 }

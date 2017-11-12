@@ -29,7 +29,8 @@ public class ProductEditDialogController {
     private TextField piecesPerBoxField;
     @FXML
     private TextField heightField;
-
+    @FXML
+    private TextField displayNameField;
 
     private Stage dialogStage;
     private ProductDTO product;
@@ -49,7 +50,8 @@ public class ProductEditDialogController {
     public void setTextField(ProductDTO product){
         this.product = product;
         if(product.getSku() != null){
-            productIdField.setText(String.valueOf(product.getSku()));
+            productIdField.setText(product.getSku());
+            displayNameField.setText(product.getDisplayName());
             textureField.setText(product.getTexture());
             unitPriceField.setText(String.valueOf(product.getUnitPrice()));
             piecesPerBoxField.setText(String.valueOf(product.getPiecePerBox()));
@@ -59,6 +61,7 @@ public class ProductEditDialogController {
         }
         else{
             productIdField.setText("");
+            displayNameField.setText("");
             textureField.setText("");
             unitPriceField.setText("");
             piecesPerBoxField.setText("");
@@ -71,6 +74,7 @@ public class ProductEditDialogController {
     public void handleOk(){
         if(isInputValid()){
             product.setSku(productIdField.getText());
+            product.setDisplayName(displayNameField.getText());
             product.setTexture(textureField.getText());
             product.setUnitPrice(Float.valueOf(unitPriceField.getText()));
             product.setLength(Double.valueOf(lengthField.getText()));
@@ -113,6 +117,9 @@ public class ProductEditDialogController {
         errorMsg  = "";
         if(productIdField.getText() == null || productIdField.getText().length() == 0){
             errorMsg += "Product SKU should not be empty! \n";
+        }
+        if(displayNameField.getText() == null || displayNameField.getText().length() == 0){
+            errorMsg += "Product Display Name should not be empty! \n";
         }
         try{
             Double.parseDouble(lengthField.getText());

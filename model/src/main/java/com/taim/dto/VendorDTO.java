@@ -13,10 +13,8 @@ import java.util.List;
 
 public class VendorDTO extends UserBaseModelDTO {
     private BooleanProperty checked;
-    private List<TransactionDTO> transactionList;
     private ObjectProperty<UserBaseModel.UserType> userType;
     public VendorDTO(){
-        transactionList = new ArrayList<>();
         checked = new SimpleBooleanProperty();
         userType = new SimpleObjectProperty<>();
     }
@@ -31,14 +29,6 @@ public class VendorDTO extends UserBaseModelDTO {
 
     public void setChecked(boolean checked) {
         this.checked.set(checked);
-    }
-
-    public List<TransactionDTO> getTransactionList() {
-        return transactionList;
-    }
-
-    public void setTransactionList(List<TransactionDTO> transactionList) {
-        this.transactionList = transactionList;
     }
 
     public UserBaseModel.UserType getUserType() {
