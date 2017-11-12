@@ -58,12 +58,22 @@ public abstract class IOverviewController<T>{
     public abstract void initSummaryLabel();
 
     public void initOverviewData(IClient<T> client){
-        Task<List<T>> task = new Task<List<T>>() {
+        Task<List<T>> overviewTask = new Task<List<T>>() {
             @Override
             protected List<T> call() throws Exception {
                 return client.getList();
             }
         };
+        overviewTask.setOnSucceeded(event -> {
+            overviewDTOList = overviewTask.getValue();
+            overviewTable.setItems(FXCollections.observableArrayList(overviewDTOList));
+            initSearchField();
+            initSummaryLabel();
+        });
+
+        overviewTask.setOnFailed(event -> {
+            logger.error(overviewTask.getException().getMessage(), overviewTask.getException());
+        });
 
         if(fetchTransactions){
             Task<List<TransactionDTO>> transactionTask = new Task<List<TransactionDTO>>() {
@@ -73,23 +83,15 @@ public abstract class IOverviewController<T>{
                 }
             };
 
-            transactionTask.setOnSucceeded(event -> transactionList = transactionTask.getValue());
+            transactionTask.setOnSucceeded(event -> {
+                transactionList = transactionTask.getValue();
+                executor.execute(overviewTask);
+            });
             transactionTask.setOnFailed(event -> logger.error(transactionTask.getException().getMessage(), transactionTask.getException()));
             executor.execute(transactionTask);
+        }else{
+            executor.execute(overviewTask);
         }
-
-        task.setOnSucceeded(event -> {
-            overviewDTOList = task.getValue();
-            overviewTable.setItems(FXCollections.observableArrayList(overviewDTOList));
-            initSearchField();
-            initSummaryLabel();
-        });
-
-        task.setOnFailed(event -> {
-            logger.error(task.getException().getMessage(), task.getException());
-        });
-
-        executor.execute(task);
     }
 
     public List<T> getOverviewDTOList() {
