@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 public class StaffDetailsController implements IDetailController<StaffDTO> {
@@ -68,6 +69,11 @@ public class StaffDetailsController implements IDetailController<StaffDTO> {
         invoiceList = new ArrayList<>();
         returnList = new ArrayList<>();
         stockList = new ArrayList<>();
+        executor = Executors.newCachedThreadPool(r -> {
+            Thread t = new Thread(r);
+            t.setDaemon(true);
+            return t;
+        });
     }
 
     @FXML
@@ -79,7 +85,6 @@ public class StaffDetailsController implements IDetailController<StaffDTO> {
     public void initDetailData(StaffDTO obj) {
         this.staffDTO = obj;
         initDataFromDB(staffDTO.getId());
-        initTransactionTabPane();
         bindStaffInfoLabels();
     }
 
@@ -97,6 +102,7 @@ public class StaffDetailsController implements IDetailController<StaffDTO> {
                 this.quotationList = transactionTask.get().stream().filter(t -> t.getTransactionType().equals(Transaction.TransactionType.QUOTATION)).collect(Collectors.toList());
                 this.returnList = transactionTask.get().stream().filter(t -> t.getTransactionType().equals(Transaction.TransactionType.RETURN)).collect(Collectors.toList());
                 this.stockList = transactionTask.get().stream().filter(t -> t.getTransactionType().equals(Transaction.TransactionType.STOCK)).collect(Collectors.toList());
+                initTransactionTabPane();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {

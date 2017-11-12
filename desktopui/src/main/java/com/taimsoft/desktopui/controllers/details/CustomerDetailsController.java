@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 public class CustomerDetailsController implements IDetailController<CustomerDTO>{
@@ -69,18 +70,23 @@ public class CustomerDetailsController implements IDetailController<CustomerDTO>
         quotationList = new ArrayList<>();
         invoiceList = new ArrayList<>();
         returnList = new ArrayList<>();
+        executor = Executors.newCachedThreadPool(r -> {
+            Thread t = new Thread(r);
+            t.setDaemon(true);
+            return t;
+        });
     }
 
     @FXML
     public void initialize(){
         actionComboBox.setItems(FXCollections.observableArrayList("EDIT", "DELETE"));
+
     }
 
     @Override
     public void initDetailData(CustomerDTO obj) {
         this.customerDTO = obj;
         initDataFromDB(customerDTO.getId());
-        initTransactionTabPane();
         bindCustomerInfoLabels();
     }
 
@@ -97,6 +103,7 @@ public class CustomerDetailsController implements IDetailController<CustomerDTO>
                 this.invoiceList = transactionTask.get().stream().filter(t -> t.getTransactionType().equals(Transaction.TransactionType.INVOICE)).collect(Collectors.toList());
                 this.quotationList = transactionTask.get().stream().filter(t -> t.getTransactionType().equals(Transaction.TransactionType.QUOTATION)).collect(Collectors.toList());
                 this.returnList = transactionTask.get().stream().filter(t -> t.getTransactionType().equals(Transaction.TransactionType.RETURN)).collect(Collectors.toList());
+                initTransactionTabPane();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {

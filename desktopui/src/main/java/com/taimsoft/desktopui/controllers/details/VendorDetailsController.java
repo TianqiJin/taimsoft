@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 public class VendorDetailsController implements IDetailController<VendorDTO> {
@@ -65,6 +66,11 @@ public class VendorDetailsController implements IDetailController<VendorDTO> {
     @FXML
     public void initialize(){
         actionComboBox.setItems(FXCollections.observableArrayList("EDIT", "DELETE"));
+        executor = Executors.newCachedThreadPool(r -> {
+            Thread t = new Thread(r);
+            t.setDaemon(true);
+            return t;
+        });
     }
 
     @Override

@@ -156,10 +156,10 @@ public class dummyTest {
         RestClientFactory.getStaffClient().add(staff);
     }
 
-    @Test
-    public void getCustomerTransactionList(){
-        System.out.println(RestClientFactory.getCustomerClient().getByName("Tim Hortons").getTransactionList().size());
-    }
+//    @Test
+//    public void getCustomerTransactionList(){
+//        System.out.println(RestClientFactory.getCustomerClient().getByName("Tim Hortons").getTransactionList().size());
+//    }
 
 
     @Test
@@ -187,7 +187,7 @@ public class dummyTest {
         CustomerDTO customer = RestClientFactory.getCustomerClient().getByName("Tim Hortons");
 
         transaction.setCustomer(customer);
-        customer.getTransactionList().add(transaction);
+//        customer.getTransactionList().add(transaction);
 
         RestClientFactory.getCustomerClient().update(customer);
         RestClientFactory.getTransactionClient().add(transaction);
