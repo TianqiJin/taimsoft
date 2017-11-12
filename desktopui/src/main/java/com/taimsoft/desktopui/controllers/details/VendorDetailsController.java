@@ -61,11 +61,7 @@ public class VendorDetailsController implements IDetailController<VendorDTO> {
     private TabPane transactionTabPane;
 
 
-    public VendorDetailsController(){}
-
-    @FXML
-    public void initialize(){
-        actionComboBox.setItems(FXCollections.observableArrayList("EDIT", "DELETE"));
+    public VendorDetailsController(){
         executor = Executors.newCachedThreadPool(r -> {
             Thread t = new Thread(r);
             t.setDaemon(true);
@@ -73,11 +69,15 @@ public class VendorDetailsController implements IDetailController<VendorDTO> {
         });
     }
 
+    @FXML
+    public void initialize(){
+        actionComboBox.setItems(FXCollections.observableArrayList("EDIT", "DELETE"));
+    }
+
     @Override
     public void initDetailData(VendorDTO obj) {
         this.vendorDTO = obj;
         initDataFromDB(vendorDTO.getId());
-        initTransactionTabPane();
         bindVendorInfoLabels();
     }
 
@@ -92,6 +92,7 @@ public class VendorDetailsController implements IDetailController<VendorDTO> {
         transactionTask.setOnSucceeded(event ->{
             try {
                 this.stockList = transactionTask.get().stream().filter(t -> t.getTransactionType().equals(Transaction.TransactionType.STOCK)).collect(Collectors.toList());
+                initTransactionTabPane();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
