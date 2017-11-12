@@ -3,13 +3,17 @@ package com.taimsoft.desktopui.controllers.details;
 import com.taim.dto.CustomerDTO;
 import com.taim.dto.TransactionDTO;
 import com.taim.model.Transaction;
+import com.taimsoft.desktopui.util.AlertBuilder;
+import com.taimsoft.desktopui.util.RestClientFactory;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.value.ObservableBooleanValue;
 import javafx.beans.value.ObservableStringValue;
 import javafx.collections.FXCollections;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
@@ -18,6 +22,8 @@ import javafx.scene.layout.AnchorPane;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
 
 public class CustomerDetailsController implements IDetailController<CustomerDTO>{
@@ -25,6 +31,7 @@ public class CustomerDetailsController implements IDetailController<CustomerDTO>
     private List<TransactionDTO> quotationList;
     private List<TransactionDTO> invoiceList;
     private List<TransactionDTO> returnList;
+    private Executor executor;
 
     @FXML
     private Label storeCreditLabel;
@@ -72,11 +79,41 @@ public class CustomerDetailsController implements IDetailController<CustomerDTO>
     @Override
     public void initDetailData(CustomerDTO obj) {
         this.customerDTO = obj;
-        invoiceList = this.customerDTO.getTransactionList().stream().filter(t -> t.getTransactionType().equals(Transaction.TransactionType.INVOICE)).collect(Collectors.toList());
-        quotationList = this.customerDTO.getTransactionList().stream().filter(t -> t.getTransactionType().equals(Transaction.TransactionType.QUOTATION)).collect(Collectors.toList());
-        returnList = this.customerDTO.getTransactionList().stream().filter(t -> t.getTransactionType().equals(Transaction.TransactionType.RETURN)).collect(Collectors.toList());
+        initDataFromDB(customerDTO.getId());
         initTransactionTabPane();
         bindCustomerInfoLabels();
+    }
+
+    public void initDataFromDB(int id){
+        Task<List<TransactionDTO>> transactionTask = new Task<List<TransactionDTO>>() {
+            @Override
+            protected List<TransactionDTO> call() throws Exception {
+                return RestClientFactory.getTransactionClient().getListByCustomerID(id);
+            }
+        };
+
+        transactionTask.setOnSucceeded(event ->{
+            try {
+                this.invoiceList = transactionTask.get().stream().filter(t -> t.getTransactionType().equals(Transaction.TransactionType.INVOICE)).collect(Collectors.toList());
+                this.quotationList = transactionTask.get().stream().filter(t -> t.getTransactionType().equals(Transaction.TransactionType.QUOTATION)).collect(Collectors.toList());
+                this.returnList = transactionTask.get().stream().filter(t -> t.getTransactionType().equals(Transaction.TransactionType.RETURN)).collect(Collectors.toList());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+        });
+        transactionTask.setOnFailed(event -> {
+            System.out.println(event.getSource().getMessage());
+            new AlertBuilder()
+                    .alertType(Alert.AlertType.ERROR)
+                    .alertHeaderText("Database Error!")
+                    .alertContentText("Unable to fetch transaction information from the database!")
+                    .build()
+                    .showAndWait();
+        });
+        executor.execute(transactionTask);
+
     }
 
     private void initTransactionTabPane(){

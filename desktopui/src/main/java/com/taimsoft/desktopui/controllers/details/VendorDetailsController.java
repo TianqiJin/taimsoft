@@ -4,13 +4,17 @@ import com.taim.dto.TransactionDTO;
 import com.taim.dto.VendorDTO;
 import com.taim.model.Transaction;
 import com.taim.model.Vendor;
+import com.taimsoft.desktopui.util.AlertBuilder;
+import com.taimsoft.desktopui.util.RestClientFactory;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.value.ObservableBooleanValue;
 import javafx.beans.value.ObservableStringValue;
 import javafx.collections.FXCollections;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
@@ -19,11 +23,14 @@ import javafx.scene.layout.AnchorPane;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
 
 public class VendorDetailsController implements IDetailController<VendorDTO> {
     private VendorDTO vendorDTO;
     private List<TransactionDTO> stockList;
+    private Executor executor;
 
     @FXML
     private Label fullNameLabel;
@@ -63,9 +70,39 @@ public class VendorDetailsController implements IDetailController<VendorDTO> {
     @Override
     public void initDetailData(VendorDTO obj) {
         this.vendorDTO = obj;
-        stockList = this.vendorDTO.getTransactionList().stream().filter(t -> t.getTransactionType().equals(Transaction.TransactionType.STOCK)).collect(Collectors.toList());
+        initDataFromDB(vendorDTO.getId());
         initTransactionTabPane();
         bindVendorInfoLabels();
+    }
+
+    public void initDataFromDB(int id){
+        Task<List<TransactionDTO>> transactionTask = new Task<List<TransactionDTO>>() {
+            @Override
+            protected List<TransactionDTO> call() throws Exception {
+                return RestClientFactory.getTransactionClient().getListByVendorID(id);
+            }
+        };
+
+        transactionTask.setOnSucceeded(event ->{
+            try {
+                this.stockList = transactionTask.get().stream().filter(t -> t.getTransactionType().equals(Transaction.TransactionType.STOCK)).collect(Collectors.toList());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+        });
+        transactionTask.setOnFailed(event -> {
+            System.out.println(event.getSource().getMessage());
+            new AlertBuilder()
+                    .alertType(Alert.AlertType.ERROR)
+                    .alertHeaderText("Database Error!")
+                    .alertContentText("Unable to fetch transaction information from the database!")
+                    .build()
+                    .showAndWait();
+        });
+        executor.execute(transactionTask);
+
     }
 
     private void initTransactionTabPane(){
