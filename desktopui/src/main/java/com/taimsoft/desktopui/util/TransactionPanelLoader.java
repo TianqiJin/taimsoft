@@ -10,6 +10,7 @@ import com.taimsoft.desktopui.controllers.edit.VendorEditDialogController;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.scene.control.TitledPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
@@ -69,7 +70,11 @@ public class TransactionPanelLoader {
         }
 
         if(transaction.getTransactionType()!= Transaction.TransactionType.INVOICE && transaction.getTransactionType()!= Transaction.TransactionType.QUOTATION){
-            System.out.println("Please either select an invoice to edit or select quotation to generat invoice!!");
+            System.out.println("Please either select an invoice to edit or select quotation to generate invoice!!");
+            return null;
+        }
+        if (transaction.getTransactionType()== Transaction.TransactionType.QUOTATION && transaction.isFinalized()){
+            System.out.println("Quotation already finalized!");
             return null;
         }
 
@@ -315,5 +320,28 @@ public class TransactionPanelLoader {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public static void showNewTransactionDialog(Transaction.TransactionType type){
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(TransactionPanelLoader.class.getResource("/fxml/InvoiceReturnTransaction.fxml"));
+        TitledPane page = null;
+        try {
+            page = loader.load();
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Create Transaction");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+
+            InvRetController controller = loader.getController();
+            controller.setDialogStage(dialogStage);
+            controller.assignType(type);
+            dialogStage.showAndWait();
+            controller.isConfirmedClicked();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

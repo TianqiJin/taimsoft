@@ -34,28 +34,29 @@ public class dummyTest {
     public void addFewProducts()throws Exception{
         ProductDTO product1 = new ProductDTO();
         product1.setSku("p-1");
-        product1.setDisplayName("wahaha");
-        product1.setHeight(40);
-        product1.setWidth(30);
-        product1.setLength(100);
-        product1.setTexture("lol");
-        product1.setTotalNum(300);
-        product1.setVirtualTotalNum(300);
+        product1.setDisplayName("Product1");
+        product1.setHeight(10);
+        product1.setWidth(10);
+        product1.setLength(10);
+        product1.setTexture("Unknown");
+        product1.setTotalNum(0);
+        product1.setVirtualTotalNum(0);
         product1.setUnitPrice(10);
+        product1.setPiecePerBox(10);
         product1.setDateCreated(DateTime.now());
         product1.setDateModified(DateTime.now());
 
 
         ProductDTO product2 = new ProductDTO();
         product2.setSku("p-2");
-        product2.setDisplayName("dummyProd");
-        product2.setHeight(33);
-        product2.setWidth(22);
-        product2.setLength(80);
-        product2.setTexture("zack");
-        product2.setTotalNum(800);
-        product2.setVirtualTotalNum(800);
-        product2.setUnitPrice(5);
+        product2.setDisplayName("Product2");
+        product2.setHeight(5);
+        product2.setWidth(10);
+        product2.setLength(20);
+        product2.setTexture("TBD");
+        product2.setTotalNum(0);
+        product2.setVirtualTotalNum(0);
+        product2.setUnitPrice(20);
         product2.setDateCreated(DateTime.now());
         product2.setDateModified(DateTime.now());
 

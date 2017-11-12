@@ -59,6 +59,7 @@ public class GenerateReturnController {
     private Executor executor;
     private Mode mode;
     private Map<Integer, Double> oldProductQuantityMap;
+    private DeliveryStatus.Status prevStats;
 
     private static final String DATE_PATTERN = "yyyy-MM-dd";
 
@@ -345,7 +346,12 @@ public class GenerateReturnController {
 
         }else{
             this.mode= Mode.EDIT;
+            prevStats = transactionFromAbove.getDeliveryStatus().getStatus();
             this.transaction = transactionFromAbove;
+            if (prevStats== DeliveryStatus.Status.DELIVERED){
+                qtyCol.setEditable(false);
+                discountCol.setEditable(false);
+            }
             if(transaction.isFinalized()){
                 System.out.println("This transaction is already finalized! You cannot edit on it anymore.");
                 confirmButton.setDisable(true);
@@ -367,7 +373,6 @@ public class GenerateReturnController {
                 }
             }
         });
-        this.staff = staff;
     }
 
 
@@ -407,7 +412,7 @@ public class GenerateReturnController {
         paymentDueDatePicker.setValue(DateUtils.toLocalDate(this.transaction.getPaymentDueDate()));
         deliveryDueDatePicker.setValue(DateUtils.toLocalDate(this.transaction.getDeliveryDueDate()));
         deliveryStatusChoiceBox.getSelectionModel().select(transaction.getDeliveryStatus().getStatus().getValue());
-        paymentStatusLabel.setText(this.transaction.getPaymentStatus().getValue());
+        paymentStatusLabel.setText(this.transaction.getPaymentStatus().name());
     }
 
     /**
@@ -535,7 +540,7 @@ public class GenerateReturnController {
                 .build()
                 .showAndWait();
         if(result.isPresent() && result.get() == ButtonType.OK){
-            if (transaction.getDeliveryStatus().getStatus()== DeliveryStatus.Status.DELIVERED){
+            if (transaction.getDeliveryStatus().getStatus()== DeliveryStatus.Status.DELIVERED && transaction.getPaymentStatus()== Transaction.PaymentStatus.PAID){
                 transaction.setFinalized(true);
             }
             if(mode== Mode.CREATE) {
@@ -556,9 +561,6 @@ public class GenerateReturnController {
             if (mode == Mode.CREATE) {
                 transaction.getTransactionDetails().forEach(p -> {
                     double newVirtualNum = p.getProduct().getVirtualTotalNum() + p.getQuantity();
-                    if (oldProductQuantityMap.containsKey(p.getProduct().getId())) {
-                        newVirtualNum -= oldProductQuantityMap.get(p.getProduct().getId());
-                    }
                     p.getProduct().setVirtualTotalNum(newVirtualNum);
                     double newActualNum = p.getProduct().getTotalNum() + p.getQuantity();
                     p.getProduct().setTotalNum(newActualNum);
@@ -571,19 +573,20 @@ public class GenerateReturnController {
                         newVirtualNum -= oldProductQuantityMap.get(p.getProduct().getId());
                     }
                     p.getProduct().setVirtualTotalNum(newVirtualNum);
-                    double newActualNum = p.getProduct().getTotalNum() + p.getQuantity();
-                    if (oldProductQuantityMap.containsKey(p.getProduct().getId())) {
-                        newActualNum -= oldProductQuantityMap.get(p.getProduct().getId());
+                    if (prevStats != DeliveryStatus.Status.DELIVERED) {
+                        double newActualNum = p.getProduct().getTotalNum() + p.getQuantity();
+                        p.getProduct().setTotalNum(newActualNum);
                     }
-                    p.getProduct().setTotalNum(newActualNum);
                     RestClientFactory.getProductClient().update(p.getProduct());
                 });
             }
         }else if (transaction.getDeliveryStatus().getStatus()== DeliveryStatus.Status.UNDELIVERED){
             transaction.getTransactionDetails().forEach(p -> {
                 double newVirtualNum = p.getProduct().getVirtualTotalNum() + p.getQuantity();
-                if (oldProductQuantityMap.containsKey(p.getProduct().getId())) {
-                    newVirtualNum -= oldProductQuantityMap.get(p.getProduct().getId());
+                if (mode == Mode.EDIT) {
+                    if (oldProductQuantityMap.containsKey(p.getProduct().getId())) {
+                        newVirtualNum -= oldProductQuantityMap.get(p.getProduct().getId());
+                    }
                 }
                 p.getProduct().setVirtualTotalNum(newVirtualNum);
                 RestClientFactory.getProductClient().update(p.getProduct());

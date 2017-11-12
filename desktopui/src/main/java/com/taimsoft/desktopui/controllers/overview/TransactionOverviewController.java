@@ -132,7 +132,7 @@ public class TransactionOverviewController extends IOverviewController<Transacti
                                     comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "EDIT", "PRINT", "DELETE"));
                                     break;
                                 case INVOICE:
-                                    comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "EDIT", "PRINT", "DELETE"));
+                                    comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "EDIT", "FILE RETURN","PRINT", "DELETE"));
                                     break;
                                 case QUOTATION:
                                     comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "CONVERT TO INVOICE", "EDIT", "PRINT", "DELETE"));
@@ -168,8 +168,26 @@ public class TransactionOverviewController extends IOverviewController<Transacti
                                         e.printStackTrace();
                                     }
                                 }else if(newValue.equalsIgnoreCase("EDIT")){
-                                    TransactionDTO editedTrans = TransactionPanelLoader.loadQuotation(transactionDTO);
-                                    getOverviewTable().getItems().add(editedTrans);
+                                    getOverviewTable().getItems().remove(transactionDTO);
+                                    switch (transactionDTO.getTransactionType()){
+                                        case QUOTATION:
+                                            getOverviewTable().getItems().add(TransactionPanelLoader.loadQuotation(transactionDTO));
+                                            break;
+                                        case INVOICE:
+                                            getOverviewTable().getItems().add(TransactionPanelLoader.loadInvoice(transactionDTO));
+                                            break;
+                                        case RETURN:
+                                            getOverviewTable().getItems().add(TransactionPanelLoader.loadReturn(transactionDTO));
+                                            break;
+                                        case STOCK:
+                                            getOverviewTable().getItems().add(TransactionPanelLoader.loadStock(transactionDTO));
+                                            break;
+                                    }
+                                }else if(newValue.equalsIgnoreCase("CONVERT TO INVOICE") && transactionDTO.getTransactionType()== Transaction.TransactionType.QUOTATION){
+                                    getOverviewTable().getItems().add(TransactionPanelLoader.loadInvoice(transactionDTO));
+                                } else if(newValue.equalsIgnoreCase("FILE RETURN") && transactionDTO.getTransactionType()== Transaction.TransactionType.INVOICE){
+                                    getOverviewTable().getItems().add(TransactionPanelLoader.loadReturn(transactionDTO));
+
                                 }
                             });
                             comboBox.setValue(item);
@@ -185,17 +203,17 @@ public class TransactionOverviewController extends IOverviewController<Transacti
         createNewTransactionComboBox.setOnAction(event -> {
             switch (createNewTransactionComboBox.getSelectionModel().getSelectedItem()){
                 case QUOTATION:
-                    TransactionDTO transactionDTO = TransactionPanelLoader.loadQuotation(null);
-//                        if (transactionDTO!=null){
-//                            transactionDTOS.add(transactionDTO);
-//                        }
+                    TransactionPanelLoader.loadQuotation(null);
+//
                     break;
                 case INVOICE:
-
+                    TransactionPanelLoader.showNewTransactionDialog(Transaction.TransactionType.INVOICE);
                     break;
                 case STOCK:
+                    TransactionPanelLoader.loadStock(null);
                     break;
                 case RETURN:
+                    TransactionPanelLoader.showNewTransactionDialog(Transaction.TransactionType.RETURN);
                     break;
             }
         });

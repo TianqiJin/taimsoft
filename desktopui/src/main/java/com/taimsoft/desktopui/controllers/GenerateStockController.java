@@ -2,6 +2,7 @@ package com.taimsoft.desktopui.controllers;
 
 import com.taim.dto.*;
 import com.taim.model.DeliveryStatus;
+import com.taim.model.PackageInfo;
 import com.taim.model.Transaction;
 import com.taimsoft.desktopui.controllers.edit.VendorEditDialogController;
 import com.taimsoft.desktopui.util.*;
@@ -59,6 +60,10 @@ public class GenerateStockController {
     private Executor executor;
     private Mode mode;
     private Map<Integer, Double> oldProductQuantityMap;
+    private ObservableList<String> paymentDue;
+    private ObservableList<String> deliveryDue;
+    private DeliveryStatus.Status prevStats;
+
 
     private static final String DATE_PATTERN = "yyyy-MM-dd";
 
@@ -173,6 +178,8 @@ public class GenerateStockController {
             TransactionDetailDTO p = event.getTableView().getItems().get(event.getTablePosition().getRow());
             p.setQuantity(event.getNewValue().floatValue());
             p.setSaleAmount(new BigDecimal(p.getQuantity() * p.getProduct().getUnitPrice()).setScale(2, BigDecimal.ROUND_HALF_EVEN).floatValue());
+            p.getPackageInfo().setBox(new BigDecimal(p.getQuantity()/p.getProduct().getPiecePerBox()).intValue());
+            p.getPackageInfo().setPieces(new BigDecimal(p.getQuantity()-p.getProduct().getPiecePerBox()*p.getPackageInfo().getBox()).intValue());
             showPaymentDetails();
             refreshTable();
         });
@@ -202,8 +209,7 @@ public class GenerateStockController {
                     }
 
                 });
-
-        deliveryStatusChoiceBox.getSelectionModel().selectFirst();
+        deliveryStatusChoiceBox.setItems(deliveryDue);
         deliveryStatusChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,String newValue) {
@@ -211,9 +217,8 @@ public class GenerateStockController {
                 transaction.getDeliveryStatus().setDateModified(DateTime.now());
             }
         });
-
-        paymentStatusChoiceBox.getSelectionModel().selectFirst();
-        paymentStatusChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+        paymentStatusChoiceBox.setItems(paymentDue);
+        paymentStatusChoiceBox.valueProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,String newValue) {
                 transaction.setPaymentStatus(Transaction.PaymentStatus.getStatus(newValue));
@@ -316,7 +321,7 @@ public class GenerateStockController {
         newVendor.getOrganization().setDateModified(DateTime.now());
         VendorEditDialogController controller = TransactionPanelLoader.showVendorEditor(newVendor);
         if(controller != null && controller.isOKClicked()){
-            this.vendor = controller.getVendor();
+            this.vendor = RestClientFactory.getVendorClient().getByName(controller.getVendor().getFullname());
             vendorList.add(this.vendor);
             showVendorDetails();
         }
@@ -339,6 +344,10 @@ public class GenerateStockController {
 
     public GenerateStockController(){
         confirmedClicked = false;
+        paymentDue = FXCollections.observableArrayList(
+                Arrays.stream(Transaction.PaymentStatus.values()).map(Transaction.PaymentStatus::name).collect(Collectors.toList()));
+        deliveryDue = FXCollections.observableArrayList(
+                Arrays.stream(DeliveryStatus.Status.values()).map(DeliveryStatus.Status::getValue).collect(Collectors.toList()));
     }
 
 
@@ -374,11 +383,15 @@ public class GenerateStockController {
 
         }else{
             this.mode= Mode.EDIT;
+            prevStats = transactionFromAbove.getDeliveryStatus().getStatus();
             this.transaction = transactionFromAbove;
             this.staff = transactionFromAbove.getStaff();
             this.vendor = transactionFromAbove.getVendor();
             updatePrevProductCount();
 
+            if (prevStats== DeliveryStatus.Status.DELIVERED){
+                qtyCol.setEditable(false);
+            }
             if(transaction.isFinalized()){
                 System.out.println("This transaction is already finalized! You cannot edit on it anymore.");
                 confirmButton.setDisable(true);
@@ -396,7 +409,6 @@ public class GenerateStockController {
                 }
             }
         });
-        this.staff = staff;
     }
 
     /**
@@ -531,7 +543,7 @@ public class GenerateStockController {
         paymentDueDatePicker.setValue(DateUtils.toLocalDate(this.transaction.getPaymentDueDate()));
         deliveryDueDatePicker.setValue(DateUtils.toLocalDate(this.transaction.getDeliveryDueDate()));
         deliveryStatusChoiceBox.getSelectionModel().select(transaction.getDeliveryStatus().getStatus().getValue());
-        paymentStatusChoiceBox.getSelectionModel().select(transaction.getPaymentStatus().getValue());
+        paymentStatusChoiceBox.getSelectionModel().select(transaction.getPaymentStatus().name());
     }
 
     /**
@@ -619,13 +631,12 @@ public class GenerateStockController {
                 .build()
                 .showAndWait();
         if(result.isPresent() && result.get() == ButtonType.OK){
-            if (transaction.getDeliveryStatus().getStatus()== DeliveryStatus.Status.DELIVERED){
+            if (transaction.getDeliveryStatus().getStatus()== DeliveryStatus.Status.DELIVERED && transaction.getPaymentStatus()== Transaction.PaymentStatus.PAID){
                 transaction.setFinalized(true);
             }
             if(mode==Mode.CREATE) {
                 RestClientFactory.getTransactionClient().add(transaction);
             }else{
-                updateVendor();
                 RestClientFactory.getTransactionClient().update(transaction);
             }
             updateProduct();
@@ -650,18 +661,17 @@ public class GenerateStockController {
                         newVirtualNum -= oldProductQuantityMap.get(p.getProduct().getId());
                     }
                     p.getProduct().setVirtualTotalNum(newVirtualNum);
-                    double newActualNum = p.getProduct().getTotalNum() + p.getQuantity();
-                    if (oldProductQuantityMap.containsKey(p.getProduct().getId())) {
-                        newActualNum -= oldProductQuantityMap.get(p.getProduct().getId());
+                    if (prevStats != DeliveryStatus.Status.DELIVERED) {
+                        double newActualNum = p.getProduct().getTotalNum() + p.getQuantity();
+                        p.getProduct().setTotalNum(newActualNum);
                     }
-                    p.getProduct().setTotalNum(newActualNum);
                     RestClientFactory.getProductClient().update(p.getProduct());
                 });
             }
         } else if (transaction.getDeliveryStatus().getStatus() == DeliveryStatus.Status.UNDELIVERED) {
             if (mode==Mode.EDIT){
                 transaction.getTransactionDetails().forEach(p->{
-                    double newVirtualNum = p.getProduct().getTotalNum() + p.getQuantity();
+                    double newVirtualNum = p.getProduct().getVirtualTotalNum() + p.getQuantity();
                     if (oldProductQuantityMap.containsKey(p.getProduct().getId())){
                         newVirtualNum -=oldProductQuantityMap.get(p.getProduct().getId());
                     }
@@ -670,7 +680,7 @@ public class GenerateStockController {
                 });
             }else{
                 transaction.getTransactionDetails().forEach(p->{
-                    double newVirtualNum = p.getProduct().getTotalNum() + p.getQuantity();
+                    double newVirtualNum = p.getProduct().getVirtualTotalNum() + p.getQuantity();
                     p.getProduct().setVirtualTotalNum(newVirtualNum);
                     RestClientFactory.getProductClient().update(p.getProduct());
                 });
@@ -679,14 +689,7 @@ public class GenerateStockController {
         }
     }
 
-    private void updateVendor(){
-//        if (this.mode== Mode.EDIT){
-//            vendor.getTransactionList().removeIf(t->t.getId()==transaction.getId());
-//        }
-//       customer.getTransactionList().add(transaction);
-//        RestClientFactory.getCustomerClient().update(customer);
 
-    }
 
     public boolean isConfirmedClicked(){
         return this.confirmedClicked;

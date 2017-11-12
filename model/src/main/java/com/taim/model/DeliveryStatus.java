@@ -15,7 +15,7 @@ import javax.persistence.Table;
 public class DeliveryStatus extends BaseModel {
     public enum Status{
         UNDELIVERED("Undelivered"),
-        DELIVERYING("Delivering"),
+        DELIVERING("Delivering"),
         DELIVERED("Delivered");
 
         private String value;

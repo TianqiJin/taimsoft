@@ -66,6 +66,7 @@ public class GenerateInvoiceController {
     private Executor executor;
     private Mode mode;
     private Map<Integer, Double> oldProductQuantityMap;
+    private DeliveryStatus.Status prevStats;
 
     private static final String DATE_PATTERN = "yyyy-MM-dd";
 
@@ -210,7 +211,6 @@ public class GenerateInvoiceController {
                 return Float.valueOf(string);
             }
         }));
-
         qtyCol.setOnEditCommit(event -> {
             TransactionDetailDTO p = event.getTableView().getItems().get(event.getTablePosition().getRow());
             p.setQuantity(event.getNewValue().floatValue());
@@ -253,8 +253,7 @@ public class GenerateInvoiceController {
                     }
 
                 });
-        deliveryStatusChoiceBox.getSelectionModel().selectFirst();
-        deliveryStatusChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+        deliveryStatusChoiceBox.valueProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,String newValue) {
                 transaction.getDeliveryStatus().setStatus(DeliveryStatus.getStatus(newValue));
@@ -410,10 +409,16 @@ public class GenerateInvoiceController {
 
         }else{
             this.mode= Mode.EDIT;
+            prevStats = transactionFromAbove.getDeliveryStatus().getStatus();
             this.transaction = transactionFromAbove;
             if(transaction.isFinalized()){
                 System.out.println("This transaction is already finalized! You cannot edit on it anymore.");
                 confirmButton.setDisable(true);
+            }
+            if (prevStats== DeliveryStatus.Status.DELIVERING || prevStats== DeliveryStatus.Status.DELIVERED){
+                deliveryStatusChoiceBox.getItems().remove("Undelivered");
+                qtyCol.setEditable(false);
+                discountCol.setEditable(false);
             }
         }
         this.staff = transactionFromAbove.getStaff();
@@ -432,7 +437,6 @@ public class GenerateInvoiceController {
                 }
             }
         });
-        this.staff = staff;
     }
 
     /**
@@ -506,7 +510,7 @@ public class GenerateInvoiceController {
         paymentDueDatePicker.setValue(DateUtils.toLocalDate(this.transaction.getPaymentDueDate()));
         deliveryDueDatePicker.setValue(DateUtils.toLocalDate(this.transaction.getDeliveryDueDate()));
         deliveryStatusChoiceBox.getSelectionModel().select(transaction.getDeliveryStatus().getStatus().getValue());
-        paymentStatusLabel.setText(this.transaction.getPaymentStatus().getValue());
+        paymentStatusLabel.setText(this.transaction.getPaymentStatus().name());
     }
 
     /**
@@ -642,7 +646,8 @@ public class GenerateInvoiceController {
                 .build()
                 .showAndWait();
         if(result.isPresent() && result.get() == ButtonType.OK){
-            if (transaction.getDeliveryStatus().getStatus()== DeliveryStatus.Status.DELIVERED){
+            System.out.println("There: "+transaction.getDeliveryStatus().getStatus().getValue());
+            if (transaction.getDeliveryStatus().getStatus()== DeliveryStatus.Status.DELIVERED && transaction.getPaymentStatus()== Transaction.PaymentStatus.PAID){
                 transaction.setFinalized(true);
             }
             if(mode== Mode.CREATE) {
@@ -653,7 +658,6 @@ public class GenerateInvoiceController {
                 oldTransaction.setFinalized(true);
                 RestClientFactory.getTransactionClient().update(oldTransaction);
             }else{
-                updateCustomer();
                 RestClientFactory.getTransactionClient().update(transaction);
             }
             updateProduct();
@@ -663,7 +667,7 @@ public class GenerateInvoiceController {
     }
 
     private void updateProduct(){
-        if (transaction.getDeliveryStatus().getStatus()== DeliveryStatus.Status.DELIVERYING) {
+        if (transaction.getDeliveryStatus().getStatus()== DeliveryStatus.Status.DELIVERING) {
             if (mode == Mode.CREATE) {
                 transaction.getTransactionDetails().forEach(p -> {
                     double newVirtualNum = p.getProduct().getVirtualTotalNum() - p.getQuantity();
@@ -681,12 +685,11 @@ public class GenerateInvoiceController {
                     if (oldProductQuantityMap.containsKey(p.getProduct().getId())) {
                         newVirtualNum += oldProductQuantityMap.get(p.getProduct().getId());
                     }
-                    p.getProduct().setVirtualTotalNum(newVirtualNum);
-                    double newActualNum = p.getProduct().getTotalNum() - p.getQuantity();
-                    if (oldProductQuantityMap.containsKey(p.getProduct().getId())) {
-                        newActualNum += oldProductQuantityMap.get(p.getProduct().getId());
+                        p.getProduct().setVirtualTotalNum(newVirtualNum);
+                    if (prevStats != DeliveryStatus.Status.DELIVERING) {
+                        double newActualNum = p.getProduct().getTotalNum() - p.getQuantity();
+                        p.getProduct().setTotalNum(newActualNum);
                     }
-                    p.getProduct().setTotalNum(newActualNum);
                     RestClientFactory.getProductClient().update(p.getProduct());
                 });
             }
@@ -703,14 +706,6 @@ public class GenerateInvoiceController {
 
     }
 
-    private void updateCustomer(){
-//        if (this.mode== Mode.EDIT){
-//            customer.getTransactionList().removeIf(t->t.getId()==transaction.getId());
-//        }
-//       customer.getTransactionList().add(transaction);
-//        RestClientFactory.getCustomerClient().update(customer);
-
-    }
 
     public boolean isConfirmedClicked(){
         return this.confirmedClicked;

@@ -267,7 +267,7 @@ public class GenerateQuotationController {
         newCustomer.getOrganization().setDateCreated(DateTime.now());
         CustomerEditDialogController controller = TransactionPanelLoader.showCustomerEditor(newCustomer);
         if(controller != null && controller.isOKClicked()){
-            this.customer = controller.getCustomer();
+            this.customer = RestClientFactory.getCustomerClient().getByName(controller.getCustomer().getFullname());
             customerList.add(this.customer);
             showCustomerDetails();
         }
@@ -564,7 +564,6 @@ public class GenerateQuotationController {
             if(mode==Mode.CREATE) {
                 RestClientFactory.getTransactionClient().add(transaction);
             }else{
-                updateCustomer();
                 RestClientFactory.getTransactionClient().update(transaction);
             }
             updateProduct();
@@ -583,7 +582,7 @@ public class GenerateQuotationController {
     private void updateProduct(){
         if (mode==Mode.EDIT){
             transaction.getTransactionDetails().forEach(p->{
-                double newVirtualNum = p.getProduct().getTotalNum()-p.getQuantity();
+                double newVirtualNum = p.getProduct().getVirtualTotalNum()-p.getQuantity();
                 if (oldProductQuantityMap.containsKey(p.getProduct().getId())){
                     newVirtualNum +=oldProductQuantityMap.get(p.getProduct().getId());
                 }
@@ -592,7 +591,7 @@ public class GenerateQuotationController {
             });
         }else{
             transaction.getTransactionDetails().forEach(p->{
-                double newVirtualNum = p.getProduct().getTotalNum()-p.getQuantity();
+                double newVirtualNum = p.getProduct().getVirtualTotalNum()-p.getQuantity();
                 p.getProduct().setVirtualTotalNum(newVirtualNum);
                 RestClientFactory.getProductClient().update(p.getProduct());
             });
@@ -601,14 +600,6 @@ public class GenerateQuotationController {
 
     }
 
-    private void updateCustomer(){
-//        if (this.mode==Mode.EDIT){
-//            customer.getTransactionList().removeIf(t->t.getId()==transaction.getId());
-//        }
-//       customer.getTransactionList().add(transaction);
-//        RestClientFactory.getCustomerClient().update(customer);
-
-    }
 
     public boolean isConfirmedClicked(){
         return this.confirmedClicked;
