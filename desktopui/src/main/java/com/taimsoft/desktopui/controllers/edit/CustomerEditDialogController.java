@@ -6,6 +6,7 @@ import com.taim.dto.PropertyDTO;
 import com.taim.dto.StaffDTO;
 import com.taim.model.Customer;
 import com.taim.model.Organization;
+import com.taim.model.Property;
 import com.taim.model.basemodels.UserBaseModel;
 import com.taimsoft.desktopui.uicomponents.FadingStatusMessage;
 import com.taimsoft.desktopui.util.AlertBuilder;
@@ -15,6 +16,8 @@ import com.taimsoft.desktopui.util.VistaNavigator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
@@ -91,6 +94,19 @@ public class CustomerEditDialogController {
                     storeCreditErrorLabel.setStyle(FX_ERROR_LABEL_COLOR);
                 }
             }
+        });
+        classComboBox.setItems(options);
+        classComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            for(PropertyDTO.CustomerClassDTO customerClass : VistaNavigator.getGlobalProperty().getCustomerClasses()){
+                if(customerClass.getCustomerClassName().equals(newValue)){
+                    customer.setCustomerClass(customerClass);
+                }
+            }
+        });
+
+        userTypeComboBox.setItems(userTypeOpt);
+        userTypeComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            customer.setUserType(UserBaseModel.UserType.getUserType(newValue));
         });
     }
 
@@ -176,18 +192,17 @@ public class CustomerEditDialogController {
         emailField.textProperty().bindBidirectional(this.customer.emailProperty());
         storeCreditField.textProperty().bindBidirectional(this.customer.storeCreditProperty(), new NumberStringConverter());
         pstNumberField.textProperty().bindBidirectional(this.customer.pstNumberProperty());
-        classComboBox.setItems(options);
         if (customer.getCustomerClass()!=null) {
             classComboBox.setValue(customer.getCustomerClass().getCustomerClassName());
         }else {
             classComboBox.getSelectionModel().selectFirst();
         }
-        userTypeComboBox.setItems(userTypeOpt);
         if(customer.getUserType()!=null){
             userTypeComboBox.setValue(customer.getUserType().getValue());
         }else{
             userTypeComboBox.getSelectionModel().selectFirst();
         }
+
     }
 
     private void scanBasicInfoFields(){

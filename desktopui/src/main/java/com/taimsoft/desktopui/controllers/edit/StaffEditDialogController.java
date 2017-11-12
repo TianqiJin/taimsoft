@@ -177,4 +177,8 @@ public class StaffEditDialogController {
             logger.error(ex.getMessage(), ex);
         }
     }
+
+    public boolean isOkClicked() {
+        return okClicked;
+    }
 }

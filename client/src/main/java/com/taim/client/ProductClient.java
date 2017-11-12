@@ -40,7 +40,6 @@ public class ProductClient implements IClient<ProductDTO>{
     public ProductDTO add(ProductDTO productDTO){
         String url = PRODUCT_PATH+"/add";
         Product product = BeanMapper.map(productDTO, Product.class);
-        System.out.println("PRODUCT:" + product.getLength());
         HttpEntity<Product> requestEntity = new HttpEntity<Product>(product, headers);
         ResponseEntity<Product> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Product.class);
         return BeanMapper.map(responseEntity.getBody(), ProductDTO.class);

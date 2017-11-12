@@ -152,7 +152,7 @@ public class CustomerDetailsController implements IDetailController<CustomerDTO>
             storeCreditLabel.textProperty().bind(initStringBinding(Bindings.isNull(customerDTO.storeCreditProperty().asObject()),
                     "", customerDTO.storeCreditProperty().asString()));
             customerClassLabel.textProperty().bind(initStringBinding(customerDTO.customerClassProperty().isNull(),
-                    "", customerDTO.customerClassProperty().asString()));
+                    "", customerDTO.getCustomerClass().customerClassNameProperty()));
             dateCreatedLabel.textProperty().bind(initStringBinding(customerDTO.dateCreatedProperty().isNull(),
                     "", customerDTO.dateCreatedProperty().asString()));
             fullNameLabel.textProperty().bind(initStringBinding(customerDTO.fullnameProperty().isNull(),

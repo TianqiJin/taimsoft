@@ -147,7 +147,6 @@ public class ProductOverviewController extends IOverviewController<ProductDTO> {
 
 
     private ComboBox<String> initActionCombox(ProductDTO productDTO){
-        System.out.println(productDTO.getId());
         if(productDTO.getId() == 0){
             return new ComboBox<>(FXCollections.observableArrayList("Edit", "Print", "Delete"));
         }else{

@@ -100,7 +100,6 @@ public class VendorDetailsController implements IDetailController<VendorDTO> {
             }
         });
         transactionTask.setOnFailed(event -> {
-            System.out.println(event.getSource().getMessage());
             new AlertBuilder()
                     .alertType(Alert.AlertType.ERROR)
                     .alertHeaderText("Database Error!")

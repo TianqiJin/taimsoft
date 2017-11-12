@@ -42,7 +42,6 @@ public class TransactionClient implements IClient<TransactionDTO>{
         Transaction[] transactions = responseEntity.getBody();
         List<TransactionDTO> transactionList = new ArrayList<>();
         Arrays.stream(transactions).forEach(p->transactionList.add(BeanMapper.map(p, TransactionDTO.class)));
-        System.out.println(transactionList.get(0).getDeliveryDueDate());
         return transactionList;
     }
 

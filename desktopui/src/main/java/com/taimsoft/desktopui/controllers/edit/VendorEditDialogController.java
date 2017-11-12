@@ -73,6 +73,9 @@ public class VendorEditDialogController {
     private void initialize(){
         initErrorLabel(fullNameField, fullNameErrorLabel, "Full name must not be empty!");
         userTypeComboBox.setItems(userTypeOpt);
+        userTypeComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            vendor.setUserType(UserBaseModel.UserType.getUserType(newValue));
+        });
     }
 
     public void setDialogStage(Stage dialogStage){

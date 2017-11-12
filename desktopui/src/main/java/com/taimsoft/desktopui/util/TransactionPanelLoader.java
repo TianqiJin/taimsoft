@@ -5,6 +5,7 @@ import com.taim.model.Transaction;
 import com.taimsoft.desktopui.controllers.*;
 import com.taimsoft.desktopui.controllers.edit.CustomerEditDialogController;
 import com.taimsoft.desktopui.controllers.edit.OrganizationEditDialogController;
+import com.taimsoft.desktopui.controllers.edit.StaffEditDialogController;
 import com.taimsoft.desktopui.controllers.edit.VendorEditDialogController;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
@@ -13,6 +14,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -193,6 +195,37 @@ public class TransactionPanelLoader {
             CustomerEditDialogController controller = loader.getController();
             controller.setDialogStage(dialogStage);
             controller.initData(customerDTO);
+
+            dialogStage.showAndWait();
+            return controller;
+        }catch (IOException e){
+            logger.error(e.getMessage(), e);
+        }
+
+        return null;
+    }
+
+    public static StaffEditDialogController showStaffEditor(StaffDTO staffDTO){
+        try{
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(TransactionPanelLoader.class.getResource("/fxml/edit/StaffEditDialog.fxml"));
+            AnchorPane page = loader.load();
+
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Edit Staff");
+            page.getStylesheets().add(TransactionPanelLoader.class.getResource("/css/bootstrap3.css").toExternalForm());
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            //Set the stage bound to the maximum of the screen
+            Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
+            dialogStage.setX(bounds.getMinX());
+            dialogStage.setY(bounds.getMinY());
+            dialogStage.setWidth(bounds.getWidth());
+            dialogStage.setHeight(bounds.getHeight());
+            StaffEditDialogController controller = loader.getController();
+            controller.setStage(dialogStage);
+            controller.initData(staffDTO);
 
             dialogStage.showAndWait();
             return controller;

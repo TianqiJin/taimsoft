@@ -2,10 +2,14 @@ package com.taimsoft.desktopui.controllers.overview;
 
 import com.taim.client.IClient;
 import com.taim.client.StaffClient;
+import com.taim.dto.OrganizationDTO;
 import com.taim.dto.StaffDTO;
 import com.taim.model.Staff;
+import com.taimsoft.desktopui.controllers.edit.CustomerEditDialogController;
+import com.taimsoft.desktopui.controllers.edit.StaffEditDialogController;
 import com.taimsoft.desktopui.uicomponents.LiveComboBoxTableCell;
 import com.taimsoft.desktopui.util.RestClientFactory;
+import com.taimsoft.desktopui.util.TransactionPanelLoader;
 import com.taimsoft.desktopui.util.VistaNavigator;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -13,6 +17,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
+import org.joda.time.DateTime;
 
 /**
  * Created by Tjin on 8/30/2017.
@@ -97,5 +102,19 @@ public class StaffOverviewController extends IOverviewController<StaffDTO> {
     @Override
     public IClient<StaffDTO> getOverviewClient(){
         return this.staffClient;
+    }
+
+    @FXML
+    public void handleAddStaff(){
+        StaffDTO newStaff = new StaffDTO();
+        newStaff.setDateCreated(DateTime.now());
+        newStaff.setDateModified(DateTime.now());
+        newStaff.setOrganization(new OrganizationDTO());
+        newStaff.getOrganization().setDateModified(DateTime.now());
+        newStaff.getOrganization().setDateCreated(DateTime.now());
+        StaffEditDialogController controller = TransactionPanelLoader.showStaffEditor(newStaff);
+        if(controller != null && controller.isOkClicked()){
+            getOverviewTable().getItems().add(controller.getStaff());
+        }
     }
 }
