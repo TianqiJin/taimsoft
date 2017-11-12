@@ -105,7 +105,11 @@ public class VendorEditDialogController {
         phoneField.setText(vendor.getPhone());
 
         userTypeComboBox.setItems(userTypeOpt);
-        userTypeComboBox.setValue(vendor.getUserType().getValue());
+        if (vendor.getUserType()!=null){
+            userTypeComboBox.setValue(vendor.getUserType().getValue());
+        }else{
+            userTypeComboBox.setValue(userTypeOpt.get(0));
+        }
         emailField.setText(vendor.getEmail());
     }
     public void handleOk(){

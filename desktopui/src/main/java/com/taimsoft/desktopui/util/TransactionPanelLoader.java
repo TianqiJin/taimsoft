@@ -242,7 +242,7 @@ public class TransactionPanelLoader {
 
     public static boolean showProductEditor(ProductDTO productDTO, boolean isEdit){
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(TransactionPanelLoader.class.getResource("/fxml/ProdictEditDialog.fxml"));
+        loader.setLocation(TransactionPanelLoader.class.getResource("/fxml/ProductEditDialog.fxml"));
         AnchorPane page = null;
         try {
             page = loader.load();

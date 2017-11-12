@@ -6,7 +6,9 @@ import com.taim.dto.CustomerDTO;
 import com.taim.dto.TransactionDTO;
 import com.taim.model.Transaction;
 import com.taimsoft.desktopui.uicomponents.LiveComboBoxTableCell;
+import com.taimsoft.desktopui.util.AlertBuilder;
 import com.taimsoft.desktopui.util.RestClientFactory;
+import com.taimsoft.desktopui.util.TransactionPanelLoader;
 import com.taimsoft.desktopui.util.VistaNavigator;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
@@ -16,6 +18,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
+import org.joda.time.DateTime;
 
 
 /**
@@ -103,6 +106,45 @@ public class CustomerOverviewController extends IOverviewController<CustomerDTO>
         bindSummaryLabel(totalUnpaidLabel, SummaryLabelMode.INVOICE_UNPAID);
         bindSummaryLabel(totalQuotedLabel, SummaryLabelMode.QUOTED);
     }
+
+    @FXML
+    public void handleAddCustomer(){
+        CustomerDTO newCustomer = new CustomerDTO();
+        boolean okClicked = TransactionPanelLoader.showCustomerEditor(newCustomer);
+        if(okClicked){
+            boolean flag = true;
+            try{
+                newCustomer.setDateCreated(DateTime.now());
+                newCustomer.setDateModified(DateTime.now());
+                RestClientFactory.getCustomerClient().add(newCustomer);
+                new AlertBuilder()
+                        .alertHeaderText("Customer Created successfully!")
+                        .alertType(Alert.AlertType.INFORMATION)
+                        .alertTitle("Customer")
+                        .alertContentText(newCustomer.getFullname())
+                        .build()
+                        .showAndWait();
+
+            }catch(Exception e){
+                e.printStackTrace();
+                flag = false;
+                new AlertBuilder()
+                        .alertType(Alert.AlertType.ERROR)
+                        .alertTitle("Error")
+                        .alertHeaderText("Add New Customer Error")
+                        .alertContentText("Unable To Add New Customer" + newCustomer.getFullname() )
+                        .build()
+                        .showAndWait();
+            }finally{
+//                if(flag){
+//                    this.customer = newCustomer;
+//                    customerList.add(this.customer);
+//                    showCustomerDetails();
+//                }
+            }
+        }
+    }
+
 
     private void bindSummaryLabel(Label label, SummaryLabelMode mode){
         DoubleBinding numberBinding = Bindings.createDoubleBinding(() -> {

@@ -69,7 +69,7 @@
                         <Font name="System Bold" size="18.0" />
                      </font>
                   </Label>
-                  <Button layoutX="923.0" layoutY="11.0" mnemonicParsing="false" text="New Vendor" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                  <Button fx:id="addNewVendor" onAction="#handleAddVendor" layoutX="923.0" layoutY="11.0" mnemonicParsing="false" text="New Vendor" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
                </children>
             </AnchorPane>
             <AnchorPane prefHeight="200.0" prefWidth="200.0">

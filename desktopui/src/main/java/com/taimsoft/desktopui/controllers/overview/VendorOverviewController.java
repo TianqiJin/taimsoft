@@ -7,7 +7,9 @@ import com.taim.dto.VendorDTO;
 import com.taim.model.Transaction;
 import com.taim.model.Vendor;
 import com.taimsoft.desktopui.uicomponents.LiveComboBoxTableCell;
+import com.taimsoft.desktopui.util.AlertBuilder;
 import com.taimsoft.desktopui.util.RestClientFactory;
+import com.taimsoft.desktopui.util.TransactionPanelLoader;
 import com.taimsoft.desktopui.util.VistaNavigator;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
@@ -17,6 +19,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
+import org.joda.time.DateTime;
 
 import static com.taimsoft.desktopui.controllers.overview.IOverviewController.SummaryLabelMode.*;
 
@@ -84,6 +87,44 @@ public class VendorOverviewController extends IOverviewController<VendorDTO> {
                 };
             }
         });
+    }
+
+    @FXML
+    public void handleAddVendor(){
+        VendorDTO newVendor = new VendorDTO();
+        boolean okClicked = TransactionPanelLoader.showVendorEditor(newVendor);
+        if(okClicked){
+            boolean flag = true;
+            try{
+                newVendor.setDateCreated(DateTime.now());
+                newVendor.setDateModified(DateTime.now());
+                RestClientFactory.getVendorClient().add(newVendor);
+                new AlertBuilder()
+                        .alertHeaderText("Vendor Created successfully!")
+                        .alertType(Alert.AlertType.INFORMATION)
+                        .alertTitle("Vendor")
+                        .alertContentText(newVendor.getFullname())
+                        .build()
+                        .showAndWait();
+
+            }catch(Exception e){
+                e.printStackTrace();
+                flag = false;
+                new AlertBuilder()
+                        .alertType(Alert.AlertType.ERROR)
+                        .alertTitle("Error")
+                        .alertHeaderText("Add New Vendor Error")
+                        .alertContentText("Unable To Add New Vendor" + newVendor.getFullname() )
+                        .build()
+                        .showAndWait();
+            }finally{
+//                if(flag){
+//                    this.customer = newCustomer;
+//                    customerList.add(this.customer);
+//                    showCustomerDetails();
+//                }
+            }
+        }
     }
 
     @Override

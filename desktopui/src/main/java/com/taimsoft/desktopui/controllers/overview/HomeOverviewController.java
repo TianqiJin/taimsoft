@@ -294,7 +294,7 @@ public class HomeOverviewController {
                         if(newValue.equals("VIEW DETAILS")){
                             VistaNavigator.loadDetailVista(VistaNavigator.VISTA_TRANSACTION_DETAIL, transactionDTO);
                         }else if(newValue.equals("EDIT")){
-                            TransactionDTO editedTrans = TransactionPanelLoader.loadQuotation(transactionDTO,null);
+                            TransactionDTO editedTrans = TransactionPanelLoader.loadQuotation(transactionDTO);
                         }
                     });
                     comboBox.setValue(item);

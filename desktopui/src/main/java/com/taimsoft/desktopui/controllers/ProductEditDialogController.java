@@ -101,10 +101,10 @@ public class ProductEditDialogController {
     }
 
     public void setMainClass(boolean isEditClicked) {
-        if(VistaNavigator.getGlobalStaff().getPosition()!= Staff.Position.MANAGER && isEditClicked){
+        if(VistaNavigator.getGlobalStaff().getPosition()!= Staff.Position.MANAGER && !isEditClicked){
             unitPriceField.setDisable(true);
         }
-        if(isEditClicked){
+        if(!isEditClicked){
             productIdField.setDisable(true);
         }
     }

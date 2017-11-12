@@ -1,9 +1,7 @@
 package com.taimsoft.desktopui.controllers.settings;
 
 import com.taim.client.PropertyClient;
-import com.taim.client.StaffClient;
 import com.taim.dto.PropertyDTO;
-import com.taim.dto.StaffDTO;
 import com.taimsoft.desktopui.uicomponents.FadingStatusMessage;
 import com.taimsoft.desktopui.util.RestClientFactory;
 import com.taimsoft.desktopui.util.VistaNavigator;
@@ -18,7 +16,6 @@ import javafx.util.Callback;
 import javafx.util.StringConverter;
 import javafx.util.converter.NumberStringConverter;
 import org.apache.commons.lang3.StringUtils;
-import org.hamcrest.core.Is;
 import org.joda.time.DateTime;
 
 import java.util.List;

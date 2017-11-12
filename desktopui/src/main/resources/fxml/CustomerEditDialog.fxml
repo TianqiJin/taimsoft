@@ -71,7 +71,7 @@
                         <Label text="Pst Number" GridPane.rowIndex="6" />
                         <TextField fx:id="pstNumberField" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                         <Label text="User Class" GridPane.rowIndex="4" />
-                        <ComboBox fx:id="userTypeComboBox1" prefWidth="290.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <ComboBox fx:id="classComboBox" prefWidth="290.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                         <!--<Label text="Company" GridPane.rowIndex="5" />-->
                         <!--<TextField fx:id="companyField" GridPane.columnIndex="1" GridPane.rowIndex="5" />-->
                         <!--<Label text="PST Number" GridPane.rowIndex="6" />-->

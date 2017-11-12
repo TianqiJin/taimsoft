@@ -3,7 +3,9 @@ package com.taimsoft.desktopui.controllers.overview;
 import com.taim.client.IClient;
 import com.taim.client.ProductClient;
 import com.taim.dto.ProductDTO;
+import com.taimsoft.desktopui.util.AlertBuilder;
 import com.taimsoft.desktopui.util.RestClientFactory;
+import com.taimsoft.desktopui.util.TransactionPanelLoader;
 import com.taimsoft.desktopui.util.VistaNavigator;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -12,6 +14,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
+import org.joda.time.DateTime;
 
 
 /**
@@ -89,6 +92,44 @@ public class ProductOverviewController extends IOverviewController<ProductDTO> {
         });
     }
 
+    @FXML
+    public void handleAddProduct(){
+        ProductDTO newProduct = new ProductDTO();
+        boolean okClicked = TransactionPanelLoader.showProductEditor(newProduct,true);
+        if(okClicked){
+            boolean flag = true;
+            try{
+                newProduct.setDateCreated(DateTime.now());
+                newProduct.setDateModified(DateTime.now());
+                RestClientFactory.getProductClient().add(newProduct);
+                new AlertBuilder()
+                        .alertHeaderText("Product Created successfully!")
+                        .alertType(Alert.AlertType.INFORMATION)
+                        .alertTitle("Product")
+                        .alertContentText(newProduct.getDisplayName())
+                        .build()
+                        .showAndWait();
+
+            }catch(Exception e){
+                e.printStackTrace();
+                flag = false;
+                new AlertBuilder()
+                        .alertType(Alert.AlertType.ERROR)
+                        .alertTitle("Error")
+                        .alertHeaderText("Add New Product Error")
+                        .alertContentText("Unable To Add New Product" + newProduct.getDisplayName() )
+                        .build()
+                        .showAndWait();
+            }finally{
+//                if(flag){
+//                    this.customer = newCustomer;
+//                    customerList.add(this.customer);
+//                    showCustomerDetails();
+//                }
+            }
+        }
+    }
+
     public ProductOverviewController(){
         this.productClient = RestClientFactory.getProductClient();
     }
@@ -103,6 +144,7 @@ public class ProductOverviewController extends IOverviewController<ProductDTO> {
 
     @Override
     public void initSummaryLabel() {}
+
 
     private ComboBox<String> initActionCombox(ProductDTO productDTO){
         System.out.println(productDTO.getId());

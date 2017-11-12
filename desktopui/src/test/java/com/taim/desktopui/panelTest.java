@@ -42,7 +42,7 @@ public class panelTest{
 
     public static Pane showInvoice(){
             TransactionDTO transactionDTO = RestClientFactory.getTransactionClient().getById(8);
-            TransactionDTO updatedTransaction = TransactionPanelLoader.loadInvoice(transactionDTO,null);
+            TransactionDTO updatedTransaction = TransactionPanelLoader.loadInvoice(transactionDTO);
             return null;
     }
 
