@@ -42,4 +42,9 @@ public class VendorServiceImpl implements IVendorService{
     public Vendor updateVendor(Vendor vendor) {
        return dao.updateObject(vendor);
     }
+
+    @Override
+    public Vendor saveOrUpdateVendor(Vendor vendor) {
+        return dao.saveOrUpdateObject(vendor);
+    }
 }

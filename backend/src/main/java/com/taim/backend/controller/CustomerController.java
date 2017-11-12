@@ -56,6 +56,16 @@ public class CustomerController {
         return new ResponseEntity<Customer>(customer1, HttpStatus.ACCEPTED);
     }
 
+    @RequestMapping(value = "/saveOrUpdate",
+            method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Customer> saveOrUpdate(@RequestBody Customer customer) {
+        Customer customer1 = service.saveOrUpdateCustomer(customer);
+        return new ResponseEntity<>(customer1, HttpStatus.ACCEPTED);
+    }
+
     @RequestMapping(value = "/deleteObject")
     @ResponseBody
     public ResponseEntity<String> deletCustomerByName(@RequestParam String name) {

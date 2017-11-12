@@ -65,4 +65,11 @@ public class CustomerClient implements IClient<CustomerDTO> {
         ResponseEntity<Customer> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Customer.class);
         return BeanMapper.map(responseEntity.getBody(), CustomerDTO.class);
     }
+
+    public CustomerDTO saveOrUpdate(CustomerDTO customerDTO){
+        String url = CUSTOMER_PATH+"/saveOrUpdate";
+        HttpEntity<Customer> requestEntity = new HttpEntity<Customer>(BeanMapper.map(customerDTO, Customer.class), headers);
+        ResponseEntity<Customer> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Customer.class);
+        return BeanMapper.map(responseEntity.getBody(), CustomerDTO.class);
+    }
 }

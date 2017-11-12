@@ -25,7 +25,7 @@ public class StaffController {
     @ResponseBody
     public ResponseEntity<List<Staff>> getAllStaffs() {
         List<Staff> list = service.getAllStaffs();
-        return new ResponseEntity<List<Staff>>(list, HttpStatus.OK);
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/getByName",
@@ -33,7 +33,7 @@ public class StaffController {
     @ResponseBody
     public ResponseEntity<Staff> getStaffByName(@RequestParam String name) {
         Staff staff = service.getStaffByName(name);
-        return new ResponseEntity<Staff>(staff, HttpStatus.OK);
+        return new ResponseEntity<>(staff, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/add",
@@ -43,7 +43,7 @@ public class StaffController {
     @ResponseBody
     public ResponseEntity<Staff> create(@RequestBody Staff staff) {
         Staff staff1 = service.saveStaff(staff);
-        return new ResponseEntity<Staff>(staff1, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(staff1, HttpStatus.ACCEPTED);
     }
 
     @RequestMapping(value = "/update",
@@ -53,7 +53,17 @@ public class StaffController {
     @ResponseBody
     public ResponseEntity<Staff> update(@RequestBody Staff staff) {
         Staff staff1 = service.updateStaff(staff);
-        return new ResponseEntity<Staff>(staff1, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(staff1, HttpStatus.ACCEPTED);
+    }
+
+    @RequestMapping(value = "/saveOrUpdate",
+            method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Staff> saveOrUpdate(@RequestBody Staff staff) {
+        Staff staff1 = service.saveOrUpdateStaff(staff);
+        return new ResponseEntity<>(staff1, HttpStatus.ACCEPTED);
     }
 
     @RequestMapping(value = "/deleteObject")
@@ -62,10 +72,10 @@ public class StaffController {
         Staff staff = service.getStaffByName(name);
         if (staff !=null){
             service.deleteStaff(staff);
-            return new ResponseEntity<String>("Deleted!", HttpStatus.OK);
+            return new ResponseEntity<>("Deleted!", HttpStatus.OK);
 
         }else {
-            return new ResponseEntity<String>("No such staff found!", HttpStatus.OK);
+            return new ResponseEntity<>("No such staff found!", HttpStatus.OK);
         }
     }
 }

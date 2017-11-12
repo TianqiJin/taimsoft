@@ -55,20 +55,20 @@ public class RootLayoutController {
     }
     @FXML
     public void handleTransactionButton(){
-       VistaNavigator.loadVista(VistaNavigator.VISTA_TRANSACTION);
+       VistaNavigator.loadVista(VistaNavigator.VISTA_TRANSACTION, false);
     }
 
     @FXML
-    public void handleProductButton(){ VistaNavigator.loadVista(VistaNavigator.VISTA_PRODUCT); }
+    public void handleProductButton(){ VistaNavigator.loadVista(VistaNavigator.VISTA_PRODUCT, false); }
 
     @FXML
-    public void handleCustomerButton(){ VistaNavigator.loadVista(VistaNavigator.VISTA_CUSTOMER); }
+    public void handleCustomerButton(){ VistaNavigator.loadVista(VistaNavigator.VISTA_CUSTOMER, true); }
 
     @FXML
-    public void handleStaffButton(){ VistaNavigator.loadVista(VistaNavigator.VISTA_STAFF); }
+    public void handleStaffButton(){ VistaNavigator.loadVista(VistaNavigator.VISTA_STAFF, false); }
 
     @FXML
-    public void handleVendorButton(){ VistaNavigator.loadVista(VistaNavigator.VISTA_VENDOR); }
+    public void handleVendorButton(){ VistaNavigator.loadVista(VistaNavigator.VISTA_VENDOR, true); }
 
     @FXML
     public void handleSettingButton(){

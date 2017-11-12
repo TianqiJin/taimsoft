@@ -3,8 +3,10 @@ package com.taimsoft.desktopui.controllers.overview;
 import com.taim.client.CustomerClient;
 import com.taim.client.IClient;
 import com.taim.dto.CustomerDTO;
+import com.taim.dto.OrganizationDTO;
 import com.taim.dto.TransactionDTO;
 import com.taim.model.Transaction;
+import com.taimsoft.desktopui.controllers.edit.CustomerEditDialogController;
 import com.taimsoft.desktopui.uicomponents.LiveComboBoxTableCell;
 import com.taimsoft.desktopui.util.AlertBuilder;
 import com.taimsoft.desktopui.util.RestClientFactory;
@@ -110,38 +112,14 @@ public class CustomerOverviewController extends IOverviewController<CustomerDTO>
     @FXML
     public void handleAddCustomer(){
         CustomerDTO newCustomer = new CustomerDTO();
-        boolean okClicked = TransactionPanelLoader.showCustomerEditor(newCustomer);
-        if(okClicked){
-            boolean flag = true;
-            try{
-                newCustomer.setDateCreated(DateTime.now());
-                newCustomer.setDateModified(DateTime.now());
-                RestClientFactory.getCustomerClient().add(newCustomer);
-                new AlertBuilder()
-                        .alertHeaderText("Customer Created successfully!")
-                        .alertType(Alert.AlertType.INFORMATION)
-                        .alertTitle("Customer")
-                        .alertContentText(newCustomer.getFullname())
-                        .build()
-                        .showAndWait();
-
-            }catch(Exception e){
-                e.printStackTrace();
-                flag = false;
-                new AlertBuilder()
-                        .alertType(Alert.AlertType.ERROR)
-                        .alertTitle("Error")
-                        .alertHeaderText("Add New Customer Error")
-                        .alertContentText("Unable To Add New Customer" + newCustomer.getFullname() )
-                        .build()
-                        .showAndWait();
-            }finally{
-//                if(flag){
-//                    this.customer = newCustomer;
-//                    customerList.add(this.customer);
-//                    showCustomerDetails();
-//                }
-            }
+        newCustomer.setDateCreated(DateTime.now());
+        newCustomer.setDateModified(DateTime.now());
+        newCustomer.setOrganization(new OrganizationDTO());
+        newCustomer.getOrganization().setDateModified(DateTime.now());
+        newCustomer.getOrganization().setDateCreated(DateTime.now());
+        CustomerEditDialogController controller = TransactionPanelLoader.showCustomerEditor(newCustomer);
+        if(controller != null && controller.isOKClicked()){
+            getOverviewTable().getItems().add(controller.getCustomer());
         }
     }
 
@@ -151,32 +129,25 @@ public class CustomerOverviewController extends IOverviewController<CustomerDTO>
                     double totalValue = 0 ;
                     switch(mode){
                         case QUOTED:
-                            for (CustomerDTO item : getOverviewDTOList()) {
-                                for(TransactionDTO transactionDTO : item.getTransactionList()){
-                                    if(transactionDTO.getTransactionType().equals(Transaction.TransactionType.QUOTATION)
-                                            && !transactionDTO.isFinalized()){
-                                        totalValue = totalValue + transactionDTO.getSaleAmount();
-                                    }
+                            for (TransactionDTO item : getTransactionList()) {
+                                if(item.getTransactionType().equals(Transaction.TransactionType.QUOTATION) && !item.isFinalized()){
+                                    totalValue = totalValue + item.getSaleAmount();
                                 }
                             }
                             break;
                         case INVOICE_PAID:
-                            for (CustomerDTO item : getOverviewDTOList()) {
-                                for(TransactionDTO transactionDTO : item.getTransactionList()){
-                                    if(transactionDTO.getTransactionType().equals(Transaction.TransactionType.INVOICE) &&
-                                            transactionDTO.getPaymentStatus().equals(Transaction.PaymentStatus.PAID)){
-                                        totalValue = totalValue + transactionDTO.getSaleAmount();
-                                    }
+                            for (TransactionDTO item : getTransactionList()) {
+                                if(item.getTransactionType().equals(Transaction.TransactionType.INVOICE) &&
+                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.PAID)){
+                                    totalValue = totalValue + item.getSaleAmount();
                                 }
                             }
                             break;
                         case INVOICE_UNPAID:
-                            for (CustomerDTO item : getOverviewDTOList()) {
-                                for(TransactionDTO transactionDTO : item.getTransactionList()){
-                                    if(transactionDTO.getTransactionType().equals(Transaction.TransactionType.INVOICE) &&
-                                            transactionDTO.getPaymentStatus().equals(Transaction.PaymentStatus.UNPAID)){
-                                        totalValue = totalValue + transactionDTO.getSaleAmount();
-                                    }
+                            for (TransactionDTO item : getTransactionList()) {
+                                if(item.getTransactionType().equals(Transaction.TransactionType.INVOICE) &&
+                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.UNPAID)){
+                                    totalValue = totalValue + item.getSaleAmount();
                                 }
                             }
                             break;

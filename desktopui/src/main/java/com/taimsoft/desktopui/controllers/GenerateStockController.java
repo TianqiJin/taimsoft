@@ -3,6 +3,7 @@ package com.taimsoft.desktopui.controllers;
 import com.taim.dto.*;
 import com.taim.model.DeliveryStatus;
 import com.taim.model.Transaction;
+import com.taimsoft.desktopui.controllers.edit.VendorEditDialogController;
 import com.taimsoft.desktopui.util.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -308,38 +309,16 @@ public class GenerateStockController {
     @FXML
     public void handleAddVendor(){
         VendorDTO newVendor = new VendorDTO();
-        boolean okClicked = TransactionPanelLoader.showVendorEditor(newVendor);
-        if(okClicked){
-            boolean flag = true;
-            try{
-                newVendor.setDateCreated(DateTime.now());
-                newVendor.setDateModified(DateTime.now());
-                RestClientFactory.getVendorClient().add(newVendor);
-                new AlertBuilder()
-                        .alertHeaderText("Vendor Created successfully!")
-                        .alertType(Alert.AlertType.INFORMATION)
-                        .alertTitle("Vendor")
-                        .alertContentText(newVendor.getFullname())
-                        .build()
-                        .showAndWait();
-
-            }catch(Exception e){
-                e.printStackTrace();
-                flag = false;
-                new AlertBuilder()
-                        .alertType(Alert.AlertType.ERROR)
-                        .alertTitle("Error")
-                        .alertHeaderText("Add New Vendor Error")
-                        .alertContentText("Unable To Add New Vendor" + newVendor.getFullname() )
-                        .build()
-                        .showAndWait();
-            }finally{
-                if(flag){
-                    this.vendor = newVendor;
-                    vendorList.add(this.vendor);
-                    showVendorDetails();
-                }
-            }
+        newVendor.setDateCreated(DateTime.now());
+        newVendor.setDateModified(DateTime.now());
+        newVendor.setOrganization(new OrganizationDTO());
+        newVendor.getOrganization().setDateCreated(DateTime.now());
+        newVendor.getOrganization().setDateModified(DateTime.now());
+        VendorEditDialogController controller = TransactionPanelLoader.showVendorEditor(newVendor);
+        if(controller != null && controller.isOKClicked()){
+            this.vendor = controller.getVendor();
+            vendorList.add(this.vendor);
+            showVendorDetails();
         }
     }
 

@@ -169,6 +169,7 @@ public class TransactionOverviewController extends IOverviewController<Transacti
                                     }
                                 }else if(newValue.equalsIgnoreCase("EDIT")){
                                     TransactionDTO editedTrans = TransactionPanelLoader.loadQuotation(transactionDTO);
+                                    getOverviewTable().getItems().add(editedTrans);
                                 }
                             });
                             comboBox.setValue(item);
@@ -181,24 +182,21 @@ public class TransactionOverviewController extends IOverviewController<Transacti
         });
 
         createNewTransactionComboBox.setItems(FXCollections.observableArrayList(Transaction.TransactionType.values()));
-        createNewTransactionComboBox.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                switch (createNewTransactionComboBox.getSelectionModel().getSelectedItem()){
-                    case QUOTATION:
-                        TransactionDTO transactionDTO = TransactionPanelLoader.loadQuotation(null);
+        createNewTransactionComboBox.setOnAction(event -> {
+            switch (createNewTransactionComboBox.getSelectionModel().getSelectedItem()){
+                case QUOTATION:
+                    TransactionDTO transactionDTO = TransactionPanelLoader.loadQuotation(null);
 //                        if (transactionDTO!=null){
 //                            transactionDTOS.add(transactionDTO);
 //                        }
-                        break;
-                    case INVOICE:
+                    break;
+                case INVOICE:
 
-                        break;
-                    case STOCK:
-                        break;
-                    case RETURN:
-                        break;
-                }
+                    break;
+                case STOCK:
+                    break;
+                case RETURN:
+                    break;
             }
         });
         transactionTypeComboBox.setItems(FXCollections.observableArrayList(Transaction.TransactionType.values()));

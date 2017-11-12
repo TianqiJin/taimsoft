@@ -4,6 +4,7 @@ import com.taim.dto.*;
 import com.taim.model.Customer;
 import com.taim.model.Staff;
 import com.taim.model.Transaction;
+import com.taimsoft.desktopui.controllers.edit.CustomerEditDialogController;
 import com.taimsoft.desktopui.util.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -136,6 +137,9 @@ public class GenerateQuotationController {
     @FXML
     private TextArea textArea;
 
+    @FXML
+    private SplitPane transactionGeneratePane;
+
 
     @FXML
     private void initialize(){
@@ -256,38 +260,16 @@ public class GenerateQuotationController {
     @FXML
     public void handleAddCustomer(){
         CustomerDTO newCustomer = new CustomerDTO();
-        boolean okClicked = TransactionPanelLoader.showCustomerEditor(newCustomer);
-        if(okClicked){
-            boolean flag = true;
-            try{
-                newCustomer.setDateCreated(DateTime.now());
-                newCustomer.setDateModified(DateTime.now());
-                RestClientFactory.getCustomerClient().add(newCustomer);
-                new AlertBuilder()
-                        .alertHeaderText("Customer Created successfully!")
-                        .alertType(Alert.AlertType.INFORMATION)
-                        .alertTitle("Customer")
-                        .alertContentText(newCustomer.getFullname())
-                        .build()
-                        .showAndWait();
-
-            }catch(Exception e){
-                e.printStackTrace();
-                flag = false;
-                new AlertBuilder()
-                        .alertType(Alert.AlertType.ERROR)
-                        .alertTitle("Error")
-                        .alertHeaderText("Add New Customer Error")
-                        .alertContentText("Unable To Add New Customer" + newCustomer.getFullname() )
-                        .build()
-                        .showAndWait();
-            }finally{
-                if(flag){
-                    this.customer = RestClientFactory.getCustomerClient().getByName(newCustomer.getFullname());
-                    customerList.add(this.customer);
-                    showCustomerDetails();
-                }
-            }
+        newCustomer.setDateCreated(DateTime.now());
+        newCustomer.setDateModified(DateTime.now());
+        newCustomer.setOrganization(new OrganizationDTO());
+        newCustomer.getOrganization().setDateModified(DateTime.now());
+        newCustomer.getOrganization().setDateCreated(DateTime.now());
+        CustomerEditDialogController controller = TransactionPanelLoader.showCustomerEditor(newCustomer);
+        if(controller != null && controller.isOKClicked()){
+            this.customer = controller.getCustomer();
+            customerList.add(this.customer);
+            showCustomerDetails();
         }
     }
 

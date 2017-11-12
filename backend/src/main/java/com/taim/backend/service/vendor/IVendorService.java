@@ -13,4 +13,5 @@ public interface IVendorService {
     Vendor getVendorByName(String name);
     void deleteVendor(Vendor vendor);
     Vendor updateVendor(Vendor vendor);
+    Vendor saveOrUpdateVendor(Vendor vendor);
 }

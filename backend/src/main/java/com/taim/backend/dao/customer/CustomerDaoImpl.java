@@ -44,7 +44,8 @@ public class CustomerDaoImpl extends AbstractDao implements IDao<Customer> {
 
     @Override
     public Customer saveOrUpdateObject(Customer object) {
-        return null;
+        saveOrUpdate(object);
+        return object;
     }
 
     @Override

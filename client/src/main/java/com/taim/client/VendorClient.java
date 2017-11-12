@@ -66,4 +66,11 @@ public class VendorClient implements IClient<VendorDTO>{
         ResponseEntity<Vendor> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Vendor.class);
         return BeanMapper.map(responseEntity.getBody(), VendorDTO.class);
     }
+
+    public VendorDTO saveOrUpdate(VendorDTO vendorDTO){
+        String url = VENDOR_PATH+"/saveOrUpdate";
+        HttpEntity<Vendor> requestEntity = new HttpEntity<Vendor>(BeanMapper.map(vendorDTO, Vendor.class), headers);
+        ResponseEntity<Vendor> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Vendor.class);
+        return BeanMapper.map(responseEntity.getBody(), VendorDTO.class);
+    }
 }

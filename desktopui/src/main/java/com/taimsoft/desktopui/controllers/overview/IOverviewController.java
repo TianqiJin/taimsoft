@@ -2,12 +2,17 @@ package com.taimsoft.desktopui.controllers.overview;
 
 
 import com.taim.client.IClient;
+import com.taim.dto.TransactionDTO;
+import com.taimsoft.desktopui.util.RestClientFactory;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
@@ -17,8 +22,12 @@ import java.util.concurrent.Executors;
  * Created by Tjin on 9/5/2017.
  */
 public abstract class IOverviewController<T>{
+    private static final Logger logger = LoggerFactory.getLogger(IOverviewController.class);
     private Executor executor;
     private List<T> overviewDTOList;
+    private boolean fetchTransactions;
+    private List<TransactionDTO> transactionList;
+
     @FXML
     private TableView<T> overviewTable;
 
@@ -33,6 +42,8 @@ public abstract class IOverviewController<T>{
     }
 
     public IOverviewController(){
+        fetchTransactions = false;
+        transactionList = new ArrayList<>();
         executor = Executors.newCachedThreadPool(r -> {
             Thread t = new Thread(r);
             t.setDaemon(true);
@@ -54,11 +65,28 @@ public abstract class IOverviewController<T>{
             }
         };
 
+        if(fetchTransactions){
+            Task<List<TransactionDTO>> transactionTask = new Task<List<TransactionDTO>>() {
+                @Override
+                protected List<TransactionDTO> call() throws Exception {
+                    return RestClientFactory.getTransactionClient().getList();
+                }
+            };
+
+            transactionTask.setOnSucceeded(event -> transactionList = transactionTask.getValue());
+            transactionTask.setOnFailed(event -> logger.error(transactionTask.getException().getMessage(), transactionTask.getException()));
+            executor.execute(transactionTask);
+        }
+
         task.setOnSucceeded(event -> {
             overviewDTOList = task.getValue();
             overviewTable.setItems(FXCollections.observableArrayList(overviewDTOList));
             initSearchField();
             initSummaryLabel();
+        });
+
+        task.setOnFailed(event -> {
+            logger.error(task.getException().getMessage(), task.getException());
         });
 
         executor.execute(task);
@@ -78,5 +106,21 @@ public abstract class IOverviewController<T>{
 
     public TableView<T> getOverviewTable() {
         return overviewTable;
+    }
+
+    public boolean isFetchTransactions() {
+        return fetchTransactions;
+    }
+
+    public void setFetchTransactions(boolean fetchTransactions) {
+        this.fetchTransactions = fetchTransactions;
+    }
+
+    public List<TransactionDTO> getTransactionList() {
+        return transactionList;
+    }
+
+    public void setTransactionList(List<TransactionDTO> transactionList) {
+        this.transactionList = transactionList;
     }
 }

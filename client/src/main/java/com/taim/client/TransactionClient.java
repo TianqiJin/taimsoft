@@ -1,11 +1,15 @@
 package com.taim.client;
 
+import com.taim.client.configuration.LoggingRequestInterceptor;
 import com.taim.client.util.BeanMapper;
 import com.taim.client.util.PropertiesProcessor;
 import com.taim.client.util.RestTemplateFactory;
 import com.taim.dto.TransactionDTO;
 import com.taim.model.Transaction;
 import org.springframework.http.*;
+import org.springframework.http.client.BufferingClientHttpRequestFactory;
+import org.springframework.http.client.ClientHttpRequestInterceptor;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
@@ -18,11 +22,17 @@ import java.util.List;
 public class TransactionClient implements IClient<TransactionDTO>{
     private static final String TRANSACTION_PATH= PropertiesProcessor.serverUrl+"/transaction";
     private static HttpHeaders headers = new HttpHeaders();
-    private static RestTemplate restTemplate = RestTemplateFactory.getRestTemplate();
+    private static RestTemplate restTemplate;
     static {
         headers.setContentType(MediaType.APPLICATION_JSON);
     }
 
+    public TransactionClient(){
+        restTemplate = new RestTemplate(new BufferingClientHttpRequestFactory(new SimpleClientHttpRequestFactory()));
+        List<ClientHttpRequestInterceptor> interceptors = new ArrayList<ClientHttpRequestInterceptor>();
+        interceptors.add(new LoggingRequestInterceptor());
+        restTemplate.setInterceptors(interceptors);
+    }
 
     public List<TransactionDTO> getList(){
         String url = TRANSACTION_PATH+"/getAll";

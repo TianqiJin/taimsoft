@@ -22,15 +22,15 @@ import java.util.Set;
 public class Organization extends BaseModel {
     @Column(name = "name", nullable = false)
     private String orgName;
-    @Column(name = "street_num", nullable = false)
+    @Column(name = "street_num")
     private String streetNum;
-    @Column(nullable = false)
+    @Column()
     private String street;
-    @Column(nullable = false)
+    @Column()
     private String city;
-    @Column(nullable = false)
+    @Column()
     private String country;
-    @Column(name = "postal_code", nullable = false)
+    @Column(name = "postal_code")
     private String postalCode;
 
     public Organization(){}

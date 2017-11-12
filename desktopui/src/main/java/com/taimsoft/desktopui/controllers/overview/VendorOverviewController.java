@@ -2,10 +2,12 @@ package com.taimsoft.desktopui.controllers.overview;
 
 import com.taim.client.IClient;
 import com.taim.client.VendorClient;
+import com.taim.dto.OrganizationDTO;
 import com.taim.dto.TransactionDTO;
 import com.taim.dto.VendorDTO;
 import com.taim.model.Transaction;
 import com.taim.model.Vendor;
+import com.taimsoft.desktopui.controllers.edit.VendorEditDialogController;
 import com.taimsoft.desktopui.uicomponents.LiveComboBoxTableCell;
 import com.taimsoft.desktopui.util.AlertBuilder;
 import com.taimsoft.desktopui.util.RestClientFactory;
@@ -92,38 +94,14 @@ public class VendorOverviewController extends IOverviewController<VendorDTO> {
     @FXML
     public void handleAddVendor(){
         VendorDTO newVendor = new VendorDTO();
-        boolean okClicked = TransactionPanelLoader.showVendorEditor(newVendor);
-        if(okClicked){
-            boolean flag = true;
-            try{
-                newVendor.setDateCreated(DateTime.now());
-                newVendor.setDateModified(DateTime.now());
-                RestClientFactory.getVendorClient().add(newVendor);
-                new AlertBuilder()
-                        .alertHeaderText("Vendor Created successfully!")
-                        .alertType(Alert.AlertType.INFORMATION)
-                        .alertTitle("Vendor")
-                        .alertContentText(newVendor.getFullname())
-                        .build()
-                        .showAndWait();
-
-            }catch(Exception e){
-                e.printStackTrace();
-                flag = false;
-                new AlertBuilder()
-                        .alertType(Alert.AlertType.ERROR)
-                        .alertTitle("Error")
-                        .alertHeaderText("Add New Vendor Error")
-                        .alertContentText("Unable To Add New Vendor" + newVendor.getFullname() )
-                        .build()
-                        .showAndWait();
-            }finally{
-//                if(flag){
-//                    this.customer = newCustomer;
-//                    customerList.add(this.customer);
-//                    showCustomerDetails();
-//                }
-            }
+        newVendor.setDateCreated(DateTime.now());
+        newVendor.setDateModified(DateTime.now());
+        newVendor.setOrganization(new OrganizationDTO());
+        newVendor.getOrganization().setDateCreated(DateTime.now());
+        newVendor.getOrganization().setDateModified(DateTime.now());
+        VendorEditDialogController controller = TransactionPanelLoader.showVendorEditor(newVendor);
+        if(controller != null && controller.isOKClicked()){
+            getOverviewTable().getItems().add(controller.getVendor());
         }
     }
 
@@ -137,33 +115,30 @@ public class VendorOverviewController extends IOverviewController<VendorDTO> {
 
     @Override
     public void initSummaryLabel() {
-        bindSummaryLabel(totalUnpaidLabel, INVOICE_UNPAID);
-        bindSummaryLabel(totalPaidLabel, INVOICE_PAID);
+        bindSummaryLabel(totalUnpaidLabel, STOCK_UNPAID);
+        bindSummaryLabel(totalPaidLabel, STOCK_PAID);
     }
 
     private void bindSummaryLabel(Label label, SummaryLabelMode mode){
         DoubleBinding numberBinding = Bindings.createDoubleBinding(() -> {
                     double totalValue = 0 ;
                     switch(mode){
-                        case INVOICE_PAID:
-                            for (VendorDTO item : getOverviewDTOList()) {
-                                for(TransactionDTO transactionDTO: item.getTransactionList()){
-                                    if(transactionDTO.getTransactionType().equals(Transaction.TransactionType.STOCK) &&
-                                            transactionDTO.getPaymentStatus().equals(Transaction.PaymentStatus.PAID)){
-                                        totalValue += transactionDTO.getSaleAmount();
-                                    }
+                        case STOCK_PAID:
+                            for (TransactionDTO item : getTransactionList()) {
+                                if(item.getTransactionType().equals(Transaction.TransactionType.STOCK) &&
+                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.PAID)){
+                                    totalValue = totalValue + item.getSaleAmount();
                                 }
                             }
                             break;
-                        case INVOICE_UNPAID:
-                            for (VendorDTO item : getOverviewDTOList()) {
-                                for(TransactionDTO transactionDTO: item.getTransactionList()){
-                                    if(transactionDTO.getTransactionType().equals(Transaction.TransactionType.STOCK) &&
-                                            transactionDTO.getPaymentStatus().equals(Transaction.PaymentStatus.UNPAID)){
-                                        totalValue += transactionDTO.getSaleAmount();
-                                    }
+                        case STOCK_UNPAID:
+                            for (TransactionDTO item : getTransactionList()) {
+                                if(item.getTransactionType().equals(Transaction.TransactionType.STOCK) &&
+                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.UNPAID)){
+                                    totalValue = totalValue + item.getSaleAmount();
                                 }
                             }
+                            break;
                         default:
                             break;
                     }

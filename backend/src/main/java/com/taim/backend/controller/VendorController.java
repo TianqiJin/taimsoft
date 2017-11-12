@@ -57,6 +57,16 @@ public class VendorController {
         return new ResponseEntity<Vendor>(vendor1, HttpStatus.ACCEPTED);
     }
 
+    @RequestMapping(value = "/saveOrUpdate",
+            method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Vendor> saveOrUpdate(@RequestBody Vendor vendor) {
+        Vendor vendor1 = service.saveOrUpdateVendor(vendor);
+        return new ResponseEntity<Vendor>(vendor1, HttpStatus.ACCEPTED);
+    }
+
     @RequestMapping(value = "/deleteObject")
     @ResponseBody
     public ResponseEntity<String> deleteVendorByName(@RequestParam String name) {

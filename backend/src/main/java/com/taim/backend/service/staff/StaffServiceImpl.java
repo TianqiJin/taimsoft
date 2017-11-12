@@ -40,6 +40,11 @@ public class StaffServiceImpl implements IStaffService {
     }
 
     @Override
+    public Staff saveOrUpdateStaff(Staff staff) {
+        return dao.saveOrUpdateObject(staff);
+    }
+
+    @Override
     public void deleteStaff(Staff staff) {
         dao.deleteObject(staff);
     }

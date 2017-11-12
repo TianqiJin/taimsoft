@@ -45,7 +45,8 @@ public class VendorDaoImpl extends AbstractDao implements IDao<Vendor> {
 
     @Override
     public Vendor saveOrUpdateObject(Vendor object) {
-        return null;
+        saveOrUpdate(object);
+        return object;
     }
 
     @Override

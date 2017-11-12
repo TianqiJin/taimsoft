@@ -41,7 +41,11 @@ public class CustomerServiceImpl implements ICustomerService{
 
     @Override
     public Customer updateCustomer(Customer customer) {
-
        return dao.updateObject(customer);
+    }
+
+    @Override
+    public Customer saveOrUpdateCustomer(Customer customer) {
+        return dao.saveOrUpdateObject(customer);
     }
 }

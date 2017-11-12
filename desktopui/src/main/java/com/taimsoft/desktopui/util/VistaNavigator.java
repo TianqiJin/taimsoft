@@ -2,6 +2,7 @@ package com.taimsoft.desktopui.util;
 
 import com.taim.dto.PropertyDTO;
 import com.taim.dto.StaffDTO;
+import com.taim.model.PackageInfo;
 import com.taimsoft.desktopui.controllers.RootLayoutController;
 import com.taimsoft.desktopui.controllers.details.IDetailController;
 import com.taimsoft.desktopui.controllers.overview.HomeOverviewController;
@@ -37,12 +38,13 @@ public class VistaNavigator {
     }
 
     @SuppressWarnings("unchecked")
-    public static void loadVista(String fxml){
+    public static void loadVista(String fxml, boolean fetchTransactionsForSummary){
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(VistaNavigator.class.getResource("/fxml/" + fxml));
         try {
             rootLayoutController.setVista(loader.load());
             IOverviewController controller = loader.getController();
+            controller.setFetchTransactions(fetchTransactionsForSummary);
             controller.initOverviewData(controller.getOverviewClient());
         } catch (IOException e) {
             e.printStackTrace();

@@ -13,4 +13,5 @@ public interface ICustomerService {
     Customer getCustomerByName(String name);
     void deleteCustomer(Customer customer);
     Customer updateCustomer(Customer customer);
+    Customer saveOrUpdateCustomer(Customer customer);
 }

@@ -66,4 +66,11 @@ public class StaffClient implements IClient<StaffDTO>{
         ResponseEntity<Staff> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Staff.class);
         return BeanMapper.map(responseEntity.getBody(), StaffDTO.class);
     }
+
+    public StaffDTO saveOrUpdate(StaffDTO staffDTO){
+        String url = STAFF_PATH+"/saveOrUpdate";
+        HttpEntity<Staff> requestEntity = new HttpEntity<Staff>(BeanMapper.map(staffDTO, Staff.class), headers);
+        ResponseEntity<Staff> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Staff.class);
+        return BeanMapper.map(responseEntity.getBody(), StaffDTO.class);
+    }
 }

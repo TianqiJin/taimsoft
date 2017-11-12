@@ -14,5 +14,6 @@ public interface IStaffService {
     Staff saveStaff(Staff staff);
     Staff updateStaff(Staff staff);
     Staff getStaffByName(String name);
+    Staff saveOrUpdateStaff(Staff staff);
     void deleteStaff(Staff staff);
 }
