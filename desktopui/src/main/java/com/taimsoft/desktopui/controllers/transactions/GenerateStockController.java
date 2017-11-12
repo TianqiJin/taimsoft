@@ -1,9 +1,10 @@
-package com.taimsoft.desktopui.controllers;
+package com.taimsoft.desktopui.controllers.transactions;
 
 import com.taim.dto.*;
 import com.taim.model.DeliveryStatus;
-import com.taim.model.Payment;
+import com.taim.model.PackageInfo;
 import com.taim.model.Transaction;
+import com.taimsoft.desktopui.controllers.edit.VendorEditDialogController;
 import com.taimsoft.desktopui.util.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -27,7 +28,6 @@ import org.joda.time.DateTime;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -39,27 +39,31 @@ import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 /**
- * Created by jiawei.liu on 10/25/17.
+ * Created by jiawei.liu
+ * on 10/25/17.
  */
-public class GenerateReturnController {
+
+//Default pst number for vendor is 7
+public class GenerateStockController {
+
     private Stage dialogStage;
 
-    private CustomerDTO customer;
+    private VendorDTO vendor;
     private StaffDTO staff;
-    private List<CustomerDTO> customerList;
+    private List<VendorDTO> vendorList;
     private List<ProductDTO> productList;
     private ObservableList<TransactionDetailDTO> transactionDetailDTOObservableList;
     private TransactionDTO transaction;
-    private TransactionDTO oldTransaction;
-    private PaymentDTO payment;
     private StringBuffer errorMsgBuilder;
     private boolean confirmedClicked;
     private BooleanBinding confimButtonBinding;
-    private int discount;
     private Executor executor;
     private Mode mode;
     private Map<Integer, Double> oldProductQuantityMap;
+    private ObservableList<String> paymentDue;
+    private ObservableList<String> deliveryDue;
     private DeliveryStatus.Status prevStats;
+
 
     private static final String DATE_PATTERN = "yyyy-MM-dd";
 
@@ -71,10 +75,6 @@ public class GenerateReturnController {
     private TableColumn<TransactionDetailDTO, Number> unitPriceCol;
     @FXML
     private TableColumn<TransactionDetailDTO, Number> qtyCol;
-    @FXML
-    private TableColumn<TransactionDetailDTO, Number> subTotalCol;
-    @FXML
-    private TableColumn<TransactionDetailDTO, Number> discountCol;
     @FXML
     private TableColumn<TransactionDetailDTO, Number> totalCol;
     @FXML
@@ -103,7 +103,7 @@ public class GenerateReturnController {
     @FXML
     private ChoiceBox<String> deliveryStatusChoiceBox;
     @FXML
-    private Label paymentStatusLabel;
+    private ChoiceBox<String> paymentStatusChoiceBox;
 
     //Staff Information Labels
     @FXML
@@ -115,25 +115,15 @@ public class GenerateReturnController {
     @FXML
     private Label staffEmail;
 
-    //Customer Details Labels
+    //Vendor Details Labels
     @FXML
     private Label fullNameLabel;
-    @FXML
-    private Label storeCreditLabel;
     @FXML
     private Label userTypeLabel;
     @FXML
     private Label emailLabel;
     @FXML
     private Label phoneLabel;
-
-    //payment details
-    @FXML
-    private Label balanceLabel;
-    @FXML
-    private ChoiceBox<String> paymentTypeChoiceBox;
-    @FXML
-    private TextField paymentField;
 
 
     //Items Information Labels
@@ -142,8 +132,6 @@ public class GenerateReturnController {
     @FXML
     private Label subTotalLabel;
     @FXML
-    private Label paymentDiscountLabel;
-    @FXML
     private Label pstTaxLabel;
     @FXML
     private Label gstTaxLabel;
@@ -151,10 +139,18 @@ public class GenerateReturnController {
     private Label totalLabel;
 
     @FXML
+    private Button addItemButton;
+    @FXML
     private Button confirmButton;
     @FXML
     private Button cancelButton;
 
+    @FXML
+    private ComboBox<String> productComboBox;
+    @FXML
+    private ComboBox<String> vendorComboBox;
+    @FXML
+    private ComboBox<String> vendorPhoneComboBox;
     @FXML
     private TextArea textArea;
 
@@ -166,16 +162,6 @@ public class GenerateReturnController {
         productIdCol.setCellValueFactory(p->new SimpleStringProperty(p.getValue().getProduct().getSku()));
         unitPriceCol.setCellValueFactory(u->new SimpleFloatProperty(new BigDecimal(u.getValue().getProduct().getUnitPrice()).floatValue()));
         qtyCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        sizeCol.setCellValueFactory(s->new SimpleStringProperty(SizeHelper.getSizeString(s.getValue().getProduct())));
-        pkgBoxCol.setCellValueFactory(u->new SimpleFloatProperty(new BigDecimal(u.getValue().getPackageInfo().getBox()).floatValue()));
-        pkgPieceCol.setCellValueFactory(u->new SimpleFloatProperty(new BigDecimal(u.getValue().getPackageInfo().getPieces()).floatValue()));
-        discountCol.setCellValueFactory(p->new SimpleFloatProperty(new BigDecimal(p.getValue().getDiscount()).floatValue()));
-
-        remarkCol.setCellValueFactory(new PropertyValueFactory<>("note"));
-        remarkCol.setOnEditCommit(event ->
-                (event.getTableView().getItems().get(event.getTablePosition().getRow())).setNote(event.getNewValue()));
-
-        remarkCol.setCellFactory(TextFieldTableCell.forTableColumn());
         qtyCol.setCellFactory(TextFieldTableCell.forTableColumn(new StringConverter<Number>() {
             @Override
             public String toString(Number object) {
@@ -192,27 +178,62 @@ public class GenerateReturnController {
             TransactionDetailDTO p = event.getTableView().getItems().get(event.getTablePosition().getRow());
             p.setQuantity(event.getNewValue().floatValue());
             p.setSaleAmount(new BigDecimal(p.getQuantity() * p.getProduct().getUnitPrice()).setScale(2, BigDecimal.ROUND_HALF_EVEN).floatValue());
+            p.getPackageInfo().setBox(new BigDecimal(p.getQuantity()/p.getProduct().getPiecePerBox()).intValue());
+            p.getPackageInfo().setPieces(new BigDecimal(p.getQuantity()-p.getProduct().getPiecePerBox()*p.getPackageInfo().getBox()).intValue());
             showPaymentDetails();
             refreshTable();
         });
+        pkgBoxCol.setCellFactory(TextFieldTableCell.forTableColumn(new StringConverter<Number>() {
+            @Override
+            public String toString(Number object) {
+                return String.valueOf(object);
+            }
 
-        subTotalCol.setCellValueFactory(param ->
-                new SimpleFloatProperty(new BigDecimal(param.getValue().getSaleAmount()).floatValue()));
+            @Override
+            public Float fromString(String string) {
+                return Float.valueOf(string);
+            }
+        }));
+        pkgPieceCol.setCellFactory(TextFieldTableCell.forTableColumn(new StringConverter<Number>() {
+            @Override
+            public String toString(Number object) {
+                return String.valueOf(object);
+            }
 
+            @Override
+            public Float fromString(String string) {
+                return Float.valueOf(string);
+            }
+        }));
+        pkgBoxCol.setOnEditCommit(event -> {
+            TransactionDetailDTO p = event.getTableView().getItems().get(event.getTablePosition().getRow());
+            p.getPackageInfo().setBox(event.getNewValue().intValue());
+            refreshTable();
+        });
 
+        pkgPieceCol.setOnEditCommit(event -> {
+            TransactionDetailDTO p = event.getTableView().getItems().get(event.getTablePosition().getRow());
+            p.getPackageInfo().setPieces(event.getNewValue().intValue());
+            refreshTable();
+        });
+        sizeCol.setCellValueFactory(s->new SimpleStringProperty(SizeHelper.getSizeString(s.getValue().getProduct())));
+        pkgBoxCol.setCellValueFactory(u->new SimpleFloatProperty(new BigDecimal(u.getValue().getPackageInfo().getBox()).floatValue()));
+        pkgPieceCol.setCellValueFactory(u->new SimpleFloatProperty(new BigDecimal(u.getValue().getPackageInfo().getPieces()).floatValue()));
+        remarkCol.setCellValueFactory(new PropertyValueFactory<>("note"));
+        remarkCol.setOnEditCommit(event ->
+                (event.getTableView().getItems().get(event.getTablePosition().getRow())).setNote(event.getNewValue()));
+        remarkCol.setCellFactory(TextFieldTableCell.forTableColumn());
         totalCol.setCellValueFactory(param ->
-                new SimpleFloatProperty(new BigDecimal(param.getValue().getSaleAmount()* (100 - param.getValue().getDiscount()) / 100)
+                new SimpleFloatProperty(new BigDecimal(param.getValue().getSaleAmount())
                         .setScale(2, RoundingMode.HALF_EVEN).floatValue()));
-
         deleteCol.setCellValueFactory(
                 new Callback<TableColumn.CellDataFeatures<TransactionDetailDTO, Boolean>,
-                        ObservableValue<Boolean>>() {
+                                        ObservableValue<Boolean>>() {
                     @Override
                     public ObservableValue<Boolean> call(TableColumn.CellDataFeatures<TransactionDetailDTO, Boolean> p) {
                         return new SimpleBooleanProperty(p.getValue() != null);
                     }
                 });
-
         deleteCol.setCellFactory(
                 new Callback<TableColumn<TransactionDetailDTO, Boolean>, TableCell<TransactionDetailDTO, Boolean>>() {
                     @Override
@@ -221,7 +242,7 @@ public class GenerateReturnController {
                     }
 
                 });
-        deliveryStatusChoiceBox.getSelectionModel().selectFirst();
+        deliveryStatusChoiceBox.setItems(deliveryDue);
         deliveryStatusChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,String newValue) {
@@ -229,19 +250,14 @@ public class GenerateReturnController {
                 transaction.getDeliveryStatus().setDateModified(DateTime.now());
             }
         });
-        paymentField.textProperty().addListener(new ChangeListener<String>() {
+        paymentStatusChoiceBox.setItems(paymentDue);
+        paymentStatusChoiceBox.valueProperty().addListener(new ChangeListener<String>() {
             @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                showBalanceDetails();
+            public void changed(ObservableValue<? extends String> observable, String oldValue,String newValue) {
+                transaction.setPaymentStatus(Transaction.PaymentStatus.getStatus(newValue));
             }
         });
-        paymentTypeChoiceBox.getSelectionModel().selectFirst();
-        paymentTypeChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                payment.setPaymentType(Payment.PaymentType.getValue(newValue));
-            }
-        });
+
         paymentDueDatePicker.setOnAction(event ->{
             this.transaction.setPaymentDueDate(DateUtils.toDateTime(paymentDueDatePicker.getValue()));
         });
@@ -298,6 +314,52 @@ public class GenerateReturnController {
     }
 
 
+
+
+    @FXML
+    public void handleAddItem(){
+        ProductDTO selectedProduct = productList
+                .stream()
+                .filter(product -> product.getSku().equals(productComboBox.getSelectionModel().getSelectedItem()))
+                .findFirst()
+                .get();
+        List<String> productIdList = transactionDetailDTOObservableList.stream()
+                .map(t -> t.getProduct().getSku())
+                .collect(Collectors.toList());
+        if(productIdList.contains(selectedProduct.getSku())){
+            new AlertBuilder()
+                    .alertType(Alert.AlertType.ERROR)
+                    .alertContentText("Product Add Error")
+                    .alertContentText(selectedProduct.getSku() + " has already been added!")
+                    .build()
+                    .showAndWait();
+        }else{
+            TransactionDetailDTO newProductTransaction = new TransactionDetailDTO();
+            newProductTransaction.setProduct(selectedProduct);
+            newProductTransaction.setDiscount(0);
+            newProductTransaction.setQuantity(0);
+            newProductTransaction.setSaleAmount(selectedProduct.getUnitPrice()*newProductTransaction.getQuantity());
+            newProductTransaction.setPackageInfo(initiatePkgInfo(newProductTransaction));
+            transactionDetailDTOObservableList.add(newProductTransaction);
+        }
+    }
+
+    @FXML
+    public void handleAddVendor(){
+        VendorDTO newVendor = new VendorDTO();
+        newVendor.setDateCreated(DateTime.now());
+        newVendor.setDateModified(DateTime.now());
+        newVendor.setOrganization(new OrganizationDTO());
+        newVendor.getOrganization().setDateCreated(DateTime.now());
+        newVendor.getOrganization().setDateModified(DateTime.now());
+        VendorEditDialogController controller = TransactionPanelLoader.showVendorEditor(newVendor);
+        if(controller != null && controller.isOKClicked()){
+            this.vendor = RestClientFactory.getVendorClient().getByName(controller.getVendor().getFullname());
+            vendorList.add(this.vendor);
+            showVendorDetails();
+        }
+    }
+
     @FXML
     public void handleCancelButton(){
         this.dialogStage.close();
@@ -313,8 +375,12 @@ public class GenerateReturnController {
     }
 
 
-    public GenerateReturnController(){
+    public GenerateStockController(){
         confirmedClicked = false;
+        paymentDue = FXCollections.observableArrayList(
+                Arrays.stream(Transaction.PaymentStatus.values()).map(Transaction.PaymentStatus::name).collect(Collectors.toList()));
+        deliveryDue = FXCollections.observableArrayList(
+                Arrays.stream(DeliveryStatus.Status.values()).map(DeliveryStatus.Status::getValue).collect(Collectors.toList()));
     }
 
 
@@ -329,38 +395,41 @@ public class GenerateReturnController {
 
     public void setMainClass(TransactionDTO transactionFromAbove){
 
-        //generate from existing invoice or edit on return transaction
-        if (transactionFromAbove.getTransactionType()== Transaction.TransactionType.INVOICE) {
+        //either edit existing stock or create new stock
+        if (transactionFromAbove==null) {
+            this.staff = VistaNavigator.getGlobalStaff();
             this.mode= Mode.CREATE;
-            this.oldTransaction = transactionFromAbove;
-            this.transaction = copyTransaction(transactionFromAbove);
+            this.transaction = new TransactionDTO();
+            transaction.setTransactionType(Transaction.TransactionType.STOCK);
+            transaction.setFinalized(false);
+            transaction.setStaff(staff);
+            transaction.setDateCreated(DateTime.now());
+
             DeliveryStatusDTO currentDeliveryStatus = new DeliveryStatusDTO();
             currentDeliveryStatus.setStatus(DeliveryStatus.Status.UNDELIVERED);
             currentDeliveryStatus.setDateCreated(DateTime.now());
             currentDeliveryStatus.setDateModified(DateTime.now());
             this.transaction.setDeliveryStatus(currentDeliveryStatus);
-            this.transaction.setPaymentDueDate(transaction.getDateCreated().plusDays(30));
-            this.transaction.setDeliveryDueDate(transaction.getDateCreated().plusDays(30));
-            this.transaction.setPayments(new ArrayList<>());
+            this.transaction.setPaymentDueDate(transaction.getDateCreated());
+            this.transaction.setDeliveryDueDate(transaction.getDateCreated());
             this.transaction.setPaymentStatus(Transaction.PaymentStatus.UNPAID);
 
         }else{
             this.mode= Mode.EDIT;
             prevStats = transactionFromAbove.getDeliveryStatus().getStatus();
             this.transaction = transactionFromAbove;
+            this.staff = transactionFromAbove.getStaff();
+            this.vendor = transactionFromAbove.getVendor();
+            updatePrevProductCount();
+
             if (prevStats== DeliveryStatus.Status.DELIVERED){
                 qtyCol.setEditable(false);
-                discountCol.setEditable(false);
             }
             if(transaction.isFinalized()){
                 System.out.println("This transaction is already finalized! You cannot edit on it anymore.");
                 confirmButton.setDisable(true);
             }
         }
-        this.staff = transactionFromAbove.getStaff();
-        updatePrevProductCount();
-        this.payment = new PaymentDTO();
-        this.customer = transactionFromAbove.getCustomer();
         this.transactionDetailDTOObservableList = FXCollections.observableArrayList(transaction.getTransactionDetails());
         transactionTableView.setItems(transactionDetailDTOObservableList);
         transactionDetailDTOObservableList.addListener(new ListChangeListener<TransactionDetailDTO>() {
@@ -375,6 +444,101 @@ public class GenerateReturnController {
         });
     }
 
+    /**
+     * Load Data From DB (Customer and Product)
+     */
+    public void initDataFromDB(){
+        //load list of products and vendors
+        Task<List<VendorDTO>> vendorsTask = new Task<List<VendorDTO>>() {
+            @Override
+            protected List<VendorDTO> call() throws Exception {
+                return RestClientFactory.getVendorClient().getList();
+            }
+        };
+        Task<List<ProductDTO>> productsTask = new Task<List<ProductDTO>>() {
+            @Override
+            protected List<ProductDTO> call() throws Exception {
+                return RestClientFactory.getProductClient().getList();
+            }
+        };
+
+        vendorsTask.setOnSucceeded(event ->{
+            this.vendorList = vendorsTask.getValue();
+
+            if(this.transaction.getVendor()!=null && this.transaction.getVendor().getFullname() != null){
+                Optional<VendorDTO> vendor =  vendorList.stream().filter(p -> p.getFullname().equals(transaction.getVendor().getFullname())).findFirst();
+                if(vendor.isPresent()){
+                    this.vendor = vendor.get();
+                    showVendorDetails();
+                }
+            }
+            List<String> tmpVendorList = new ArrayList<>();
+            for(VendorDTO vendor: this.vendorList){
+                tmpVendorList.add(vendor.getFullname());
+            }
+            vendorComboBox.setItems(FXCollections.observableArrayList(tmpVendorList));
+            vendorComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+                for(VendorDTO tmpVendor: this.vendorList){
+                    if(tmpVendor.getFullname().equals(newValue)){
+                        vendor = tmpVendor;
+                        showVendorDetails();
+                        break;
+                    }
+                }
+            });
+            List<String> tmpVendorPhoneList = new ArrayList<>();
+            for(VendorDTO vendor: this.vendorList){
+
+                tmpVendorPhoneList.add(vendor.getPhone());
+            }
+            vendorPhoneComboBox.setItems(FXCollections.observableArrayList(tmpVendorPhoneList));
+            vendorPhoneComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+                for(VendorDTO tmpVendor: this.vendorList){
+                    if(tmpVendor.getPhone() != null && tmpVendor.getPhone().equals(newValue)){
+                        vendor = tmpVendor;
+                        showVendorDetails();
+                        break;
+                    }
+                }
+            });
+            new AutoCompleteComboBoxListener<>(vendorComboBox);
+            new AutoCompleteComboBoxListener<>(vendorPhoneComboBox);
+        });
+
+        vendorsTask.setOnFailed(event -> {
+            System.out.println((event.getSource().getMessage()));
+            new AlertBuilder()
+                    .alertType(Alert.AlertType.ERROR)
+                    .alertHeaderText("Database Error!")
+                    .alertContentText("Unable to fetch vendor information from the database!")
+                    .build()
+                    .showAndWait();
+            dialogStage.close();
+        });
+
+        //product
+        productsTask.setOnSucceeded(event ->{
+            this.productList = productsTask.getValue();
+            List<String> tmpProductList = productList
+                    .stream()
+                    .map(product -> product.getSku())
+                    .collect(Collectors.toList());
+            productComboBox.setItems(FXCollections.observableArrayList(tmpProductList));
+            new AutoCompleteComboBoxListener<>(productComboBox);
+        });
+        productsTask.setOnFailed(event -> {
+            System.out.println(event.getSource().getMessage());
+            new AlertBuilder()
+                    .alertType(Alert.AlertType.ERROR)
+                    .alertHeaderText("Database Error!")
+                    .alertContentText("Unable to fetch product information from the database!")
+                    .build()
+                    .showAndWait();
+            dialogStage.close();
+        });
+        executor.execute(vendorsTask);
+        executor.execute(productsTask);
+    }
 
     /**
      * Initial Panel Details
@@ -382,7 +546,7 @@ public class GenerateReturnController {
     public void initPanelDetails(){
         showTransactionDetails();
         showStaffDetails();
-        showCustomerDetails();
+        showVendorDetails();
         showPaymentDetails();
         showPaymentDeliveryDetail();
 
@@ -412,24 +576,24 @@ public class GenerateReturnController {
         paymentDueDatePicker.setValue(DateUtils.toLocalDate(this.transaction.getPaymentDueDate()));
         deliveryDueDatePicker.setValue(DateUtils.toLocalDate(this.transaction.getDeliveryDueDate()));
         deliveryStatusChoiceBox.getSelectionModel().select(transaction.getDeliveryStatus().getStatus().getValue());
-        paymentStatusLabel.setText(this.transaction.getPaymentStatus().name());
+        paymentStatusChoiceBox.getSelectionModel().select(transaction.getPaymentStatus().name());
     }
 
     /**
      * Show customer details grid pane
      */
 
-    private void showCustomerDetails(){
-        if(this.customer != null){
-            fullNameLabel.setText(this.customer.getFullname());
-            storeCreditLabel.setText(String.valueOf(this.customer.getStoreCredit()));
-            userTypeLabel.setText(this.customer.getUserType().getValue());
-            emailLabel.setText(this.customer.getEmail());
-            phoneLabel.setText(this.customer.getPhone());
+    private void showVendorDetails(){
+        if(this.vendor != null){
+            addItemButton.setDisable(false);
+            fullNameLabel.setText(vendor.getFullname());
+            userTypeLabel.setText(vendor.getUserType().getValue());
+            emailLabel.setText(this.vendor.getEmail());
+            phoneLabel.setText(this.vendor.getPhone());
         }
         else{
+            addItemButton.setDisable(true);
             fullNameLabel.setText("");
-            storeCreditLabel.setText("");
             userTypeLabel.setText("");
             emailLabel.setText("");
             phoneLabel.setText("");
@@ -445,50 +609,31 @@ public class GenerateReturnController {
             int pstNum = VistaNavigator.getGlobalProperty().getPstRate();
             int gstNum = VistaNavigator.getGlobalProperty().getGstRate();
             Iterator<TransactionDetailDTO> iterator = this.transactionDetailDTOObservableList.iterator();
-            BigDecimal subTotalAfterDiscount = new BigDecimal(0.00);
-            BigDecimal subTotalBeforeDiscount = new BigDecimal(0.00);
+            BigDecimal subTotal = new BigDecimal(0.00);
             while(iterator.hasNext()){
                 TransactionDetailDTO tmp = iterator.next();
-                subTotalBeforeDiscount = subTotalBeforeDiscount.add(new BigDecimal(tmp.getSaleAmount()));
-                subTotalAfterDiscount = subTotalAfterDiscount.add(new BigDecimal(tmp.getSaleAmount()* (100 - tmp.getDiscount()) / 100));
+                subTotal = subTotal.add(new BigDecimal(tmp.getSaleAmount()));
             }
-            BigDecimal paymentDiscount = subTotalBeforeDiscount.subtract(subTotalAfterDiscount).setScale(2, BigDecimal.ROUND_HALF_EVEN);
 
-            BigDecimal pstTax = new BigDecimal(pstNum).multiply(subTotalAfterDiscount).divide(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_EVEN);
-            BigDecimal gstTax = new BigDecimal(gstNum).multiply(subTotalAfterDiscount).divide(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_EVEN);
+            BigDecimal pstTax = new BigDecimal(pstNum).multiply(subTotal).divide(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_EVEN);
+            BigDecimal gstTax = new BigDecimal(gstNum).multiply(subTotal).divide(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_EVEN);
 
-            BigDecimal total = subTotalAfterDiscount.add(pstTax).add(gstTax).setScale(2, BigDecimal.ROUND_HALF_EVEN);
-            subTotalBeforeDiscount.setScale(2, RoundingMode.HALF_EVEN);
+            BigDecimal total = subTotal.add(pstTax).add(gstTax).setScale(2, BigDecimal.ROUND_HALF_EVEN);
+            subTotal.setScale(2, RoundingMode.HALF_EVEN);
 
             itemsCountLabel.setText(String.valueOf(this.transactionDetailDTOObservableList.size()));
-            subTotalLabel.setText(String.valueOf(subTotalBeforeDiscount.floatValue()));
-            paymentDiscountLabel.setText(String.valueOf(paymentDiscount.floatValue()));
+            subTotalLabel.setText(String.valueOf(subTotal.floatValue()));
             pstTaxLabel.setText(String.valueOf(pstTax.floatValue()));
             gstTaxLabel.setText(String.valueOf(gstTax.floatValue()));
             totalLabel.setText(String.valueOf(total.floatValue()));
-            showBalanceDetails();
         }
         else{
             itemsCountLabel.setText("");
             subTotalLabel.setText("");
-            paymentDiscountLabel.setText("");
             pstTaxLabel.setText("");
             gstTaxLabel.setText("");
             totalLabel.setText("");
-            balanceLabel.setText("");
         }
-    }
-
-    private void showBalanceDetails(){
-        BigDecimal balance;
-        if(!paymentField.getText().trim().isEmpty() && isPaymentValid()){
-            balance = new BigDecimal(paymentField.getText()).setScale(2, BigDecimal.ROUND_HALF_EVEN);
-            balance = balance.subtract(new BigDecimal(totalLabel.getText()));
-            balanceLabel.setText(balance.toString());
-        }else{
-            balanceLabel.setText("");
-        }
-
     }
 
 
@@ -501,36 +646,15 @@ public class GenerateReturnController {
             t.setDateModified(DateTime.now());
         });
 
-        if(!paymentField.getText().trim().isEmpty()){
-            if(payment.getPaymentType()== Payment.PaymentType.STORE_CREDIT){
-                customer.setStoreCredit(new BigDecimal(customer.getStoreCredit()).setScale(2,BigDecimal.ROUND_HALF_EVEN).add(new BigDecimal(paymentField.getText())).doubleValue());
-                RestClientFactory.getCustomerClient().update(customer);
-            }
-            payment.setDateCreated(DateTime.now());
-            payment.setDateModified(DateTime.now());
-            payment.setPaymentAmount(new BigDecimal(paymentField.getText()).doubleValue());
-        }
+
         transaction.getTransactionDetails().addAll(transactionDetailDTOObservableList);
         transaction.setSaleAmount(Double.valueOf(totalLabel.getText()));
         transaction.setGst(Double.valueOf(gstTaxLabel.getText()));
         transaction.setPst(Double.valueOf(pstTaxLabel.getText()));
         transaction.setNote(textArea.getText());
-        transaction.setCustomer(customer);
+        transaction.setVendor(vendor);
         transaction.setStaff(staff);
         transaction.setDateModified(DateTime.now());
-        if (this.payment.getPaymentAmount()!=0){
-            transaction.getPayments().add(payment);
-            double paid = 0.0;
-            for (PaymentDTO p : transaction.getPayments()){
-                paid+=p.getPaymentAmount();
-            }
-            if (paid >= transaction.getSaleAmount()){
-                transaction.setPaymentStatus(Transaction.PaymentStatus.PAID);
-            }else if (paid >0){
-                transaction.setPaymentStatus(Transaction.PaymentStatus.PARTIALLY_PAID);
-            }
-        }
-
 
         Optional<ButtonType> result = new AlertBuilder()
                 .alertType(Alert.AlertType.CONFIRMATION)
@@ -543,21 +667,18 @@ public class GenerateReturnController {
             if (transaction.getDeliveryStatus().getStatus()== DeliveryStatus.Status.DELIVERED && transaction.getPaymentStatus()== Transaction.PaymentStatus.PAID){
                 transaction.setFinalized(true);
             }
-            if(mode== Mode.CREATE) {
-                transaction.setRefId(oldTransaction.getId());
+            if(mode==Mode.CREATE) {
                 RestClientFactory.getTransactionClient().add(transaction);
             }else{
-                updateCustomer();
                 RestClientFactory.getTransactionClient().update(transaction);
             }
             updateProduct();
-
             confirmedClicked = true;
         }
     }
 
-    private void updateProduct(){
-        if (transaction.getDeliveryStatus().getStatus()== DeliveryStatus.Status.DELIVERED) {
+    private void updateProduct() {
+        if (transaction.getDeliveryStatus().getStatus() == DeliveryStatus.Status.DELIVERED) {
             if (mode == Mode.CREATE) {
                 transaction.getTransactionDetails().forEach(p -> {
                     double newVirtualNum = p.getProduct().getVirtualTotalNum() + p.getQuantity();
@@ -580,29 +701,28 @@ public class GenerateReturnController {
                     RestClientFactory.getProductClient().update(p.getProduct());
                 });
             }
-        }else if (transaction.getDeliveryStatus().getStatus()== DeliveryStatus.Status.UNDELIVERED){
-            transaction.getTransactionDetails().forEach(p -> {
-                double newVirtualNum = p.getProduct().getVirtualTotalNum() + p.getQuantity();
-                if (mode == Mode.EDIT) {
-                    if (oldProductQuantityMap.containsKey(p.getProduct().getId())) {
-                        newVirtualNum -= oldProductQuantityMap.get(p.getProduct().getId());
+        } else if (transaction.getDeliveryStatus().getStatus() == DeliveryStatus.Status.UNDELIVERED) {
+            if (mode==Mode.EDIT){
+                transaction.getTransactionDetails().forEach(p->{
+                    double newVirtualNum = p.getProduct().getVirtualTotalNum() + p.getQuantity();
+                    if (oldProductQuantityMap.containsKey(p.getProduct().getId())){
+                        newVirtualNum -=oldProductQuantityMap.get(p.getProduct().getId());
                     }
-                }
-                p.getProduct().setVirtualTotalNum(newVirtualNum);
-                RestClientFactory.getProductClient().update(p.getProduct());
-            });
+                    p.getProduct().setVirtualTotalNum(newVirtualNum);
+                    RestClientFactory.getProductClient().update(p.getProduct());
+                });
+            }else{
+                transaction.getTransactionDetails().forEach(p->{
+                    double newVirtualNum = p.getProduct().getVirtualTotalNum() + p.getQuantity();
+                    p.getProduct().setVirtualTotalNum(newVirtualNum);
+                    RestClientFactory.getProductClient().update(p.getProduct());
+                });
+            }
+
         }
-
     }
 
-    private void updateCustomer(){
-//        if (this.mode== Mode.EDIT){
-//            customer.getTransactionList().removeIf(t->t.getId()==transaction.getId());
-//        }
-//       customer.getTransactionList().add(transaction);
-//        RestClientFactory.getCustomerClient().update(customer);
 
-    }
 
     public boolean isConfirmedClicked(){
         return this.confirmedClicked;
@@ -621,6 +741,8 @@ public class GenerateReturnController {
     }
 
 
+
+
     private PackageInfoDTO initiatePkgInfo(TransactionDetailDTO detailDTO){
         PackageInfoDTO pkgInfo = new PackageInfoDTO();
         pkgInfo.setDateCreated(DateTime.now());
@@ -630,46 +752,8 @@ public class GenerateReturnController {
         return pkgInfo;
     }
 
-    private TransactionDetailDTO copyDetails(TransactionDetailDTO oldDetail){
-        TransactionDetailDTO transactionDetailDTO = new TransactionDetailDTO();
-        transactionDetailDTO.setDateCreated(DateTime.now());
-        transactionDetailDTO.setDateModified(DateTime.now());
-        transactionDetailDTO.setPackageInfo(initiatePkgInfo(oldDetail));
-        transactionDetailDTO.setProduct(oldDetail.getProduct());
-        transactionDetailDTO.setNote(oldDetail.getNote());
-        transactionDetailDTO.setSaleAmount(oldDetail.getSaleAmount());
-        transactionDetailDTO.setQuantity(oldDetail.getQuantity());
-        transactionDetailDTO.setDiscount(oldDetail.getDiscount());
-        return transactionDetailDTO;
-    }
 
 
-    private TransactionDTO copyTransaction(TransactionDTO oldTransaction){
-        TransactionDTO newTransaction = new TransactionDTO();
-        newTransaction.setDateCreated(DateTime.now());
-        newTransaction.setTransactionType(Transaction.TransactionType.RETURN);
-        newTransaction.setCustomer(oldTransaction.getCustomer());
-        newTransaction.setFinalized(false);
-        newTransaction.setTransactionDetails(oldTransaction.getTransactionDetails().stream().map(d->copyDetails(d)).collect(Collectors.toList()));
-        newTransaction.setSaleAmount(oldTransaction.getSaleAmount());
-        newTransaction.setPst(oldTransaction.getPst());
-        newTransaction.setGst(oldTransaction.getGst());
-        newTransaction.setStaff(oldTransaction.getStaff());
-        newTransaction.setVendor(oldTransaction.getVendor());
-        newTransaction.setNote(oldTransaction.getNote());
-
-        return newTransaction;
-    }
-
-
-    private boolean isPaymentValid(){
-        try{
-            Double.parseDouble(paymentField.getText());
-        }catch(NumberFormatException e){
-            return false;
-        }
-        return true;
-    }
 
     private void updatePrevProductCount(){
         oldProductQuantityMap = new HashMap<>();
@@ -677,9 +761,4 @@ public class GenerateReturnController {
             oldProductQuantityMap.put(t.getProduct().getId(),t.getQuantity());
         });
     }
-
-
-
 }
-
-

@@ -1,4 +1,4 @@
-package com.taimsoft.desktopui.controllers;
+package com.taimsoft.desktopui.controllers.transactions;
 
 import com.taim.dto.TransactionDTO;
 import com.taim.model.Transaction;

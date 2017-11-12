@@ -1,13 +1,13 @@
 package com.taimsoft.desktopui.util;
 
 import com.taim.dto.*;
-import com.taim.model.Product;
 import com.taim.model.Transaction;
-import com.taimsoft.desktopui.controllers.*;
 import com.taimsoft.desktopui.controllers.edit.*;
+import com.taimsoft.desktopui.controllers.transactions.*;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
@@ -62,17 +62,31 @@ public class TransactionPanelLoader {
 
     public static TransactionDTO loadInvoice(TransactionDTO transaction){
         if(transaction==null){
-            System.out.println("Please select a valid transaction!");
-            return null;
+            new AlertBuilder()
+                    .alertType(Alert.AlertType.ERROR)
+                    .alertHeaderText("Transaction Error!")
+                    .alertContentText("Please select a valid transaction!")
+                    .build()
+                    .showAndWait();
+            return transaction;
         }
-
         if(transaction.getTransactionType()!= Transaction.TransactionType.INVOICE && transaction.getTransactionType()!= Transaction.TransactionType.QUOTATION){
-            System.out.println("Please either select an invoice to edit or select quotation to generate invoice!!");
-            return null;
+            new AlertBuilder()
+                    .alertType(Alert.AlertType.ERROR)
+                    .alertHeaderText("Transaction Error!")
+                    .alertContentText("Please either select an invoice to edit or select quotation to generate invoice!!")
+                    .build()
+                    .showAndWait();
+            return transaction;
         }
         if (transaction.getTransactionType()== Transaction.TransactionType.QUOTATION && transaction.isFinalized()){
-            System.out.println("Quotation already finalized!");
-            return null;
+            new AlertBuilder()
+                    .alertType(Alert.AlertType.ERROR)
+                    .alertHeaderText("Transaction Error!")
+                    .alertContentText("Quotation already finalized!")
+                    .build()
+                    .showAndWait();
+            return transaction;
         }
 
         FXMLLoader loader = new FXMLLoader();
@@ -106,17 +120,32 @@ public class TransactionPanelLoader {
 
     public static TransactionDTO loadReturn(TransactionDTO transaction){
         if(transaction==null){
-            System.out.println("Please select a valid transaction!");
-            return null;
+            new AlertBuilder()
+                    .alertType(Alert.AlertType.ERROR)
+                    .alertHeaderText("Transaction Error!")
+                    .alertContentText("Please select a valid transaction!")
+                    .build()
+                    .showAndWait();
+            return transaction;
         }
 
         if(transaction.getTransactionType()!= Transaction.TransactionType.RETURN && transaction.getTransactionType()!= Transaction.TransactionType.INVOICE){
-            System.out.println("Please either select an invoice to return or select return to generate!!");
-            return null;
+            new AlertBuilder()
+                    .alertType(Alert.AlertType.ERROR)
+                    .alertHeaderText("Transaction Error!")
+                    .alertContentText("Please either select an Invoice to return or select Return to Edit!!")
+                    .build()
+                    .showAndWait();
+            return transaction;
         }
         if (transaction.getTransactionType()== Transaction.TransactionType.INVOICE && !transaction.isFinalized()){
-            System.out.println("Please select a finalized invoice transaction to generate return transaction!!");
-            return null;
+            new AlertBuilder()
+                    .alertType(Alert.AlertType.ERROR)
+                    .alertHeaderText("Transaction Error!")
+                    .alertContentText("Please select a finalized invoice transaction to generate return transaction!!")
+                    .build()
+                    .showAndWait();
+            return transaction;
         }
 
         FXMLLoader loader = new FXMLLoader();

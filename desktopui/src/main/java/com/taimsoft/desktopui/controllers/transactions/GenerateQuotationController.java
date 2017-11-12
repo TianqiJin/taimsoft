@@ -1,17 +1,16 @@
-package com.taimsoft.desktopui.controllers;
+package com.taimsoft.desktopui.controllers.transactions;
 
 import com.taim.dto.*;
-import com.taim.model.DeliveryStatus;
-import com.taim.model.PackageInfo;
+import com.taim.model.Customer;
+import com.taim.model.Staff;
 import com.taim.model.Transaction;
-import com.taimsoft.desktopui.controllers.edit.VendorEditDialogController;
+import com.taimsoft.desktopui.controllers.edit.CustomerEditDialogController;
 import com.taimsoft.desktopui.util.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -31,41 +30,33 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
+
 /**
- * Created by jiawei.liu
- * on 10/25/17.
+ * Created by jiawei.liu on 9/17/17.
  */
 
-//Default pst number for vendor is 7
-public class GenerateStockController {
+public class GenerateQuotationController {
 
     private Stage dialogStage;
 
-    private VendorDTO vendor;
+    private CustomerDTO customer;
     private StaffDTO staff;
-    private List<VendorDTO> vendorList;
+    private List<CustomerDTO> customerList;
     private List<ProductDTO> productList;
     private ObservableList<TransactionDetailDTO> transactionDetailDTOObservableList;
     private TransactionDTO transaction;
     private StringBuffer errorMsgBuilder;
     private boolean confirmedClicked;
     private BooleanBinding confimButtonBinding;
+    private int discount;
     private Executor executor;
     private Mode mode;
     private Map<Integer, Double> oldProductQuantityMap;
-    private ObservableList<String> paymentDue;
-    private ObservableList<String> deliveryDue;
-    private DeliveryStatus.Status prevStats;
-
-
-    private static final String DATE_PATTERN = "yyyy-MM-dd";
 
     @FXML
     private TableView<TransactionDetailDTO> transactionTableView;
@@ -76,13 +67,13 @@ public class GenerateStockController {
     @FXML
     private TableColumn<TransactionDetailDTO, Number> qtyCol;
     @FXML
+    private TableColumn<TransactionDetailDTO, Number> subTotalCol;
+    @FXML
+    private TableColumn<TransactionDetailDTO, Number> discountCol;
+    @FXML
     private TableColumn<TransactionDetailDTO, Number> totalCol;
     @FXML
     private TableColumn<TransactionDetailDTO, String> sizeCol;
-    @FXML
-    private TableColumn<TransactionDetailDTO, Number> pkgBoxCol;
-    @FXML
-    private TableColumn<TransactionDetailDTO, Number> pkgPieceCol;
     @FXML
     private TableColumn deleteCol;
     @FXML
@@ -95,16 +86,6 @@ public class GenerateStockController {
     @FXML
     private Label dateLabel;
 
-    //transaction payment/delivery due Labels
-    @FXML
-    private DatePicker paymentDueDatePicker;
-    @FXML
-    private DatePicker deliveryDueDatePicker;
-    @FXML
-    private ChoiceBox<String> deliveryStatusChoiceBox;
-    @FXML
-    private ChoiceBox<String> paymentStatusChoiceBox;
-
     //Staff Information Labels
     @FXML
     private Label staffFullNameLabel;
@@ -115,9 +96,11 @@ public class GenerateStockController {
     @FXML
     private Label staffEmail;
 
-    //Vendor Details Labels
+    //Customer Details Labels
     @FXML
     private Label fullNameLabel;
+    @FXML
+    private Label storeCreditLabel;
     @FXML
     private Label userTypeLabel;
     @FXML
@@ -125,12 +108,13 @@ public class GenerateStockController {
     @FXML
     private Label phoneLabel;
 
-
     //Items Information Labels
     @FXML
     private Label itemsCountLabel;
     @FXML
     private Label subTotalLabel;
+    @FXML
+    private Label paymentDiscountLabel;
     @FXML
     private Label pstTaxLabel;
     @FXML
@@ -144,15 +128,17 @@ public class GenerateStockController {
     private Button confirmButton;
     @FXML
     private Button cancelButton;
-
+    @FXML
+    private ComboBox<String> customerComboBox;
+    @FXML
+    private ComboBox<String> customerPhoneComboBox;
     @FXML
     private ComboBox<String> productComboBox;
     @FXML
-    private ComboBox<String> vendorComboBox;
-    @FXML
-    private ComboBox<String> vendorPhoneComboBox;
-    @FXML
     private TextArea textArea;
+
+    @FXML
+    private SplitPane transactionGeneratePane;
 
 
     @FXML
@@ -162,6 +148,24 @@ public class GenerateStockController {
         productIdCol.setCellValueFactory(p->new SimpleStringProperty(p.getValue().getProduct().getSku()));
         unitPriceCol.setCellValueFactory(u->new SimpleFloatProperty(new BigDecimal(u.getValue().getProduct().getUnitPrice()).floatValue()));
         qtyCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        sizeCol.setCellValueFactory(s->new SimpleStringProperty(SizeHelper.getSizeString(s.getValue().getProduct())));
+        discountCol.setCellValueFactory(new PropertyValueFactory<>("discount"));
+        discountCol.setCellFactory(TextFieldTableCell.forTableColumn(new StringConverter<Number>() {
+            @Override
+            public String toString(Number object) {
+                return String.valueOf(object);
+            }
+
+            @Override
+            public Float fromString(String string) {
+                return Float.valueOf(string);
+            }
+        }));
+        remarkCol.setCellValueFactory(new PropertyValueFactory<>("note"));
+        remarkCol.setOnEditCommit(event ->
+            (event.getTableView().getItems().get(event.getTablePosition().getRow())).setNote(event.getNewValue()));
+
+        remarkCol.setCellFactory(TextFieldTableCell.forTableColumn());
         qtyCol.setCellFactory(TextFieldTableCell.forTableColumn(new StringConverter<Number>() {
             @Override
             public String toString(Number object) {
@@ -178,21 +182,27 @@ public class GenerateStockController {
             TransactionDetailDTO p = event.getTableView().getItems().get(event.getTablePosition().getRow());
             p.setQuantity(event.getNewValue().floatValue());
             p.setSaleAmount(new BigDecimal(p.getQuantity() * p.getProduct().getUnitPrice()).setScale(2, BigDecimal.ROUND_HALF_EVEN).floatValue());
-            p.getPackageInfo().setBox(new BigDecimal(p.getQuantity()/p.getProduct().getPiecePerBox()).intValue());
-            p.getPackageInfo().setPieces(new BigDecimal(p.getQuantity()-p.getProduct().getPiecePerBox()*p.getPackageInfo().getBox()).intValue());
             showPaymentDetails();
             refreshTable();
         });
-        sizeCol.setCellValueFactory(s->new SimpleStringProperty(SizeHelper.getSizeString(s.getValue().getProduct())));
-        pkgBoxCol.setCellValueFactory(u->new SimpleFloatProperty(new BigDecimal(u.getValue().getPackageInfo().getBox()).floatValue()));
-        pkgPieceCol.setCellValueFactory(u->new SimpleFloatProperty(new BigDecimal(u.getValue().getPackageInfo().getPieces()).floatValue()));
-        remarkCol.setCellValueFactory(new PropertyValueFactory<>("note"));
-        remarkCol.setOnEditCommit(event ->
-                (event.getTableView().getItems().get(event.getTablePosition().getRow())).setNote(event.getNewValue()));
-        remarkCol.setCellFactory(TextFieldTableCell.forTableColumn());
+
+        subTotalCol.setCellValueFactory(param ->
+                new SimpleFloatProperty(new BigDecimal(param.getValue().getSaleAmount()).floatValue()));
+
+        discountCol.setOnEditCommit(event ->{
+            TransactionDetailDTO p = event.getTableView().getItems().get(event.getTablePosition().getRow());
+            int newDiscount=validateDiscountEntered(event.getOldValue().intValue(),event.getNewValue().intValue());
+            p.setDiscount(newDiscount);
+            showPaymentDetails();
+            refreshTable();
+
+            (event.getTableView().getItems().get(event.getTablePosition().getRow())).setDiscount(event.getNewValue().intValue());
+            });
+
         totalCol.setCellValueFactory(param ->
-                new SimpleFloatProperty(new BigDecimal(param.getValue().getSaleAmount())
+                new SimpleFloatProperty(new BigDecimal(param.getValue().getSaleAmount()* (100 - param.getValue().getDiscount()) / 100)
                         .setScale(2, RoundingMode.HALF_EVEN).floatValue()));
+
         deleteCol.setCellValueFactory(
                 new Callback<TableColumn.CellDataFeatures<TransactionDetailDTO, Boolean>,
                                         ObservableValue<Boolean>>() {
@@ -201,6 +211,7 @@ public class GenerateStockController {
                         return new SimpleBooleanProperty(p.getValue() != null);
                     }
                 });
+
         deleteCol.setCellFactory(
                 new Callback<TableColumn<TransactionDetailDTO, Boolean>, TableCell<TransactionDetailDTO, Boolean>>() {
                     @Override
@@ -209,70 +220,6 @@ public class GenerateStockController {
                     }
 
                 });
-        deliveryStatusChoiceBox.setItems(deliveryDue);
-        deliveryStatusChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,String newValue) {
-                transaction.getDeliveryStatus().setStatus(DeliveryStatus.getStatus(newValue));
-                transaction.getDeliveryStatus().setDateModified(DateTime.now());
-            }
-        });
-        paymentStatusChoiceBox.setItems(paymentDue);
-        paymentStatusChoiceBox.valueProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,String newValue) {
-                transaction.setPaymentStatus(Transaction.PaymentStatus.getStatus(newValue));
-            }
-        });
-
-        paymentDueDatePicker.setOnAction(event ->{
-            this.transaction.setPaymentDueDate(DateUtils.toDateTime(paymentDueDatePicker.getValue()));
-        });
-        paymentDueDatePicker.setPromptText(DATE_PATTERN.toLowerCase());
-        paymentDueDatePicker.setConverter(new StringConverter<LocalDate>() {
-            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(DATE_PATTERN);
-            @Override
-            public String toString(LocalDate date) {
-                if (date != null) {
-                    return dateFormatter.format(date);
-                } else {
-                    return "";
-                }
-            }
-            @Override
-            public LocalDate fromString(String string) {
-                if (string != null && !string.isEmpty()) {
-                    return LocalDate.parse(string, dateFormatter);
-                } else {
-                    return null;
-                }
-            }
-        });
-        deliveryDueDatePicker.setOnAction(event ->{
-            this.transaction.setDeliveryDueDate(DateUtils.toDateTime(deliveryDueDatePicker.getValue()));
-        });
-        deliveryDueDatePicker.setPromptText(DATE_PATTERN.toLowerCase());
-        deliveryDueDatePicker.setConverter(new StringConverter<LocalDate>() {
-            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(DATE_PATTERN);
-            @Override
-            public String toString(LocalDate date) {
-                if (date != null) {
-                    return dateFormatter.format(date);
-                } else {
-                    return "";
-                }
-            }
-            @Override
-            public LocalDate fromString(String string) {
-                if (string != null && !string.isEmpty()) {
-                    return LocalDate.parse(string, dateFormatter);
-                } else {
-                    return null;
-                }
-            }
-        });
-
-
         executor = Executors.newCachedThreadPool(r -> {
             Thread t = new Thread(r);
             t.setDaemon(true);
@@ -306,24 +253,23 @@ public class GenerateStockController {
             newProductTransaction.setDiscount(0);
             newProductTransaction.setQuantity(0);
             newProductTransaction.setSaleAmount(selectedProduct.getUnitPrice()*newProductTransaction.getQuantity());
-            newProductTransaction.setPackageInfo(initiatePkgInfo(newProductTransaction));
             transactionDetailDTOObservableList.add(newProductTransaction);
         }
     }
 
     @FXML
-    public void handleAddVendor(){
-        VendorDTO newVendor = new VendorDTO();
-        newVendor.setDateCreated(DateTime.now());
-        newVendor.setDateModified(DateTime.now());
-        newVendor.setOrganization(new OrganizationDTO());
-        newVendor.getOrganization().setDateCreated(DateTime.now());
-        newVendor.getOrganization().setDateModified(DateTime.now());
-        VendorEditDialogController controller = TransactionPanelLoader.showVendorEditor(newVendor);
+    public void handleAddCustomer(){
+        CustomerDTO newCustomer = new CustomerDTO();
+        newCustomer.setDateCreated(DateTime.now());
+        newCustomer.setDateModified(DateTime.now());
+        newCustomer.setOrganization(new OrganizationDTO());
+        newCustomer.getOrganization().setDateModified(DateTime.now());
+        newCustomer.getOrganization().setDateCreated(DateTime.now());
+        CustomerEditDialogController controller = TransactionPanelLoader.showCustomerEditor(newCustomer);
         if(controller != null && controller.isOKClicked()){
-            this.vendor = RestClientFactory.getVendorClient().getByName(controller.getVendor().getFullname());
-            vendorList.add(this.vendor);
-            showVendorDetails();
+            this.customer = RestClientFactory.getCustomerClient().getByName(controller.getCustomer().getFullname());
+            customerList.add(this.customer);
+            showCustomerDetails();
         }
     }
 
@@ -342,12 +288,9 @@ public class GenerateStockController {
     }
 
 
-    public GenerateStockController(){
+    public GenerateQuotationController(){
         confirmedClicked = false;
-        paymentDue = FXCollections.observableArrayList(
-                Arrays.stream(Transaction.PaymentStatus.values()).map(Transaction.PaymentStatus::name).collect(Collectors.toList()));
-        deliveryDue = FXCollections.observableArrayList(
-                Arrays.stream(DeliveryStatus.Status.values()).map(DeliveryStatus.Status::getValue).collect(Collectors.toList()));
+        discount = 100;
     }
 
 
@@ -362,40 +305,26 @@ public class GenerateStockController {
 
     public void setMainClass(TransactionDTO transactionFromAbove){
 
-        //either edit existing stock or create new stock
+        //either edit or generate new quotation
         if (transactionFromAbove==null) {
+            this.mode=Mode.CREATE;
             this.staff = VistaNavigator.getGlobalStaff();
-            this.mode= Mode.CREATE;
             this.transaction = new TransactionDTO();
-            transaction.setTransactionType(Transaction.TransactionType.STOCK);
+            transaction.setTransactionType(Transaction.TransactionType.QUOTATION);
             transaction.setFinalized(false);
             transaction.setStaff(staff);
             transaction.setDateCreated(DateTime.now());
-
-            DeliveryStatusDTO currentDeliveryStatus = new DeliveryStatusDTO();
-            currentDeliveryStatus.setStatus(DeliveryStatus.Status.UNDELIVERED);
-            currentDeliveryStatus.setDateCreated(DateTime.now());
-            currentDeliveryStatus.setDateModified(DateTime.now());
-            this.transaction.setDeliveryStatus(currentDeliveryStatus);
-            this.transaction.setPaymentDueDate(transaction.getDateCreated().plusDays(30));
-            this.transaction.setDeliveryDueDate(transaction.getDateCreated().plusDays(30));
-            this.transaction.setPaymentStatus(Transaction.PaymentStatus.UNPAID);
-
         }else{
-            this.mode= Mode.EDIT;
-            prevStats = transactionFromAbove.getDeliveryStatus().getStatus();
-            this.transaction = transactionFromAbove;
+            this.mode=Mode.EDIT;
             this.staff = transactionFromAbove.getStaff();
-            this.vendor = transactionFromAbove.getVendor();
+            this.transaction = transactionFromAbove;
+            this.customer = transactionFromAbove.getCustomer();
             updatePrevProductCount();
-
-            if (prevStats== DeliveryStatus.Status.DELIVERED){
-                qtyCol.setEditable(false);
-            }
             if(transaction.isFinalized()){
                 System.out.println("This transaction is already finalized! You cannot edit on it anymore.");
                 confirmButton.setDisable(true);
             }
+
         }
         this.transactionDetailDTOObservableList = FXCollections.observableArrayList(transaction.getTransactionDetails());
         transactionTableView.setItems(transactionDetailDTOObservableList);
@@ -409,17 +338,18 @@ public class GenerateStockController {
                 }
             }
         });
+        //this.staff = staff;
     }
 
     /**
      * Load Data From DB (Customer and Product)
      */
     public void initDataFromDB(){
-        //load list of products and vendors
-        Task<List<VendorDTO>> vendorsTask = new Task<List<VendorDTO>>() {
+        //load list of products and customers
+        Task<List<CustomerDTO>> customersTask = new Task<List<CustomerDTO>>() {
             @Override
-            protected List<VendorDTO> call() throws Exception {
-                return RestClientFactory.getVendorClient().getList();
+            protected List<CustomerDTO> call() throws Exception {
+                return RestClientFactory.getCustomerClient().getList();
             }
         };
         Task<List<ProductDTO>> productsTask = new Task<List<ProductDTO>>() {
@@ -429,60 +359,62 @@ public class GenerateStockController {
             }
         };
 
-        vendorsTask.setOnSucceeded(event ->{
-            this.vendorList = vendorsTask.getValue();
+        customersTask.setOnSucceeded(event ->{
+            this.customerList = customersTask.getValue();
 
-            if(this.transaction.getVendor()!=null && this.transaction.getVendor().getFullname() != null){
-                Optional<VendorDTO> vendor =  vendorList.stream().filter(p -> p.getFullname().equals(transaction.getVendor().getFullname())).findFirst();
-                if(vendor.isPresent()){
-                    this.vendor = vendor.get();
-                    showVendorDetails();
+            if(this.transaction.getCustomer()!=null && this.transaction.getCustomer().getFullname() != null){
+                Optional<CustomerDTO> customer =  customerList.stream().filter(p -> p.getFullname().equals(transaction.getCustomer().getFullname())).findFirst();
+                if(customer.isPresent()){
+                    this.customer = customer.get();
+                    showCustomerDetails();
                 }
             }
-            List<String> tmpVendorList = new ArrayList<>();
-            for(VendorDTO vendor: this.vendorList){
-                tmpVendorList.add(vendor.getFullname());
+            List<String> tmpCustomerList = new ArrayList<>();
+            for(CustomerDTO customer: this.customerList){
+//                customer.constructCustomerInfo();
+//                tmpCustomerList.add(customer.getCustomerInfo());
+                tmpCustomerList.add(customer.getFullname());
             }
-            vendorComboBox.setItems(FXCollections.observableArrayList(tmpVendorList));
-            vendorComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-                for(VendorDTO tmpVendor: this.vendorList){
-                    if(tmpVendor.getFullname().equals(newValue)){
-                        vendor = tmpVendor;
-                        showVendorDetails();
+            customerComboBox.setItems(FXCollections.observableArrayList(tmpCustomerList));
+            customerComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+                for(CustomerDTO tmpCustomer: this.customerList){
+                    if(tmpCustomer.getFullname().equals(newValue)){
+                        customer = tmpCustomer;
+                        showCustomerDetails();
                         break;
                     }
                 }
             });
-            List<String> tmpVendorPhoneList = new ArrayList<>();
-            for(VendorDTO vendor: this.vendorList){
-
-                tmpVendorPhoneList.add(vendor.getPhone());
+            List<String> tmpCustomerPhoneList = new ArrayList<>();
+            for(CustomerDTO customer: this.customerList){
+//                customer.constructCustomerPhoneInfo();
+//                tmpCustomerPhoneList.add(customer.getCustomerPhoneInfo());
+                tmpCustomerPhoneList.add(customer.getPhone());
             }
-            vendorPhoneComboBox.setItems(FXCollections.observableArrayList(tmpVendorPhoneList));
-            vendorPhoneComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-                for(VendorDTO tmpVendor: this.vendorList){
-                    if(tmpVendor.getPhone() != null && tmpVendor.getPhone().equals(newValue)){
-                        vendor = tmpVendor;
-                        showVendorDetails();
+            customerPhoneComboBox.setItems(FXCollections.observableArrayList(tmpCustomerPhoneList));
+            customerPhoneComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+                for(CustomerDTO tmpCustomer: this.customerList){
+                    if(tmpCustomer.getPhone() != null && tmpCustomer.getPhone().equals(newValue)){
+                        customer = tmpCustomer;
+                        showCustomerDetails();
                         break;
                     }
                 }
             });
-            new AutoCompleteComboBoxListener<>(vendorComboBox);
-            new AutoCompleteComboBoxListener<>(vendorPhoneComboBox);
+            new AutoCompleteComboBoxListener<>(customerComboBox);
+            new AutoCompleteComboBoxListener<>(customerPhoneComboBox);
         });
 
-        vendorsTask.setOnFailed(event -> {
+        customersTask.setOnFailed(event -> {
             System.out.println((event.getSource().getMessage()));
             new AlertBuilder()
                     .alertType(Alert.AlertType.ERROR)
                     .alertHeaderText("Database Error!")
-                    .alertContentText("Unable to fetch vendor information from the database!")
+                    .alertContentText("Unable to fetch customer information from the database!")
                     .build()
                     .showAndWait();
             dialogStage.close();
         });
-
         //product
         productsTask.setOnSucceeded(event ->{
             this.productList = productsTask.getValue();
@@ -503,7 +435,7 @@ public class GenerateStockController {
                     .showAndWait();
             dialogStage.close();
         });
-        executor.execute(vendorsTask);
+        executor.execute(customersTask);
         executor.execute(productsTask);
     }
 
@@ -513,10 +445,8 @@ public class GenerateStockController {
     public void initPanelDetails(){
         showTransactionDetails();
         showStaffDetails();
-        showVendorDetails();
+        showCustomerDetails();
         showPaymentDetails();
-        showPaymentDeliveryDetail();
-
     }
 
 
@@ -539,35 +469,31 @@ public class GenerateStockController {
         }
     }
 
-    private void showPaymentDeliveryDetail(){
-        paymentDueDatePicker.setValue(DateUtils.toLocalDate(this.transaction.getPaymentDueDate()));
-        deliveryDueDatePicker.setValue(DateUtils.toLocalDate(this.transaction.getDeliveryDueDate()));
-        deliveryStatusChoiceBox.getSelectionModel().select(transaction.getDeliveryStatus().getStatus().getValue());
-        paymentStatusChoiceBox.getSelectionModel().select(transaction.getPaymentStatus().name());
-    }
 
     /**
      * Show customer details grid pane
      */
 
-    private void showVendorDetails(){
-        if(this.vendor != null){
+    private void showCustomerDetails(){
+        if(this.customer != null){
             addItemButton.setDisable(false);
-            fullNameLabel.setText(vendor.getFullname());
-            userTypeLabel.setText(vendor.getUserType().getValue());
-            emailLabel.setText(this.vendor.getEmail());
-            phoneLabel.setText(this.vendor.getPhone());
+            fullNameLabel.setText(this.customer.getFullname());
+            storeCreditLabel.setText(String.valueOf(this.customer.getStoreCredit()));
+            userTypeLabel.setText(this.customer.getUserType().getValue());
+            emailLabel.setText(this.customer.getEmail());
+            phoneLabel.setText(this.customer.getPhone());
         }
         else{
             addItemButton.setDisable(true);
             fullNameLabel.setText("");
+            storeCreditLabel.setText("");
             userTypeLabel.setText("");
             emailLabel.setText("");
             phoneLabel.setText("");
         }
     }
 
-    /**
+/**
      * Show payment details grid pane
      */
 
@@ -576,20 +502,24 @@ public class GenerateStockController {
             int pstNum = VistaNavigator.getGlobalProperty().getPstRate();
             int gstNum = VistaNavigator.getGlobalProperty().getGstRate();
             Iterator<TransactionDetailDTO> iterator = this.transactionDetailDTOObservableList.iterator();
-            BigDecimal subTotal = new BigDecimal(0.00);
+            BigDecimal subTotalAfterDiscount = new BigDecimal(0.00);
+            BigDecimal subTotalBeforeDiscount = new BigDecimal(0.00);
             while(iterator.hasNext()){
                 TransactionDetailDTO tmp = iterator.next();
-                subTotal = subTotal.add(new BigDecimal(tmp.getSaleAmount()));
+                subTotalBeforeDiscount = subTotalBeforeDiscount.add(new BigDecimal(tmp.getSaleAmount()));
+                subTotalAfterDiscount = subTotalAfterDiscount.add(new BigDecimal(tmp.getSaleAmount()* (100 - tmp.getDiscount()) / 100));
             }
+            BigDecimal paymentDiscount = subTotalBeforeDiscount.subtract(subTotalAfterDiscount).setScale(2, BigDecimal.ROUND_HALF_EVEN);
 
-            BigDecimal pstTax = new BigDecimal(pstNum).multiply(subTotal).divide(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_EVEN);
-            BigDecimal gstTax = new BigDecimal(gstNum).multiply(subTotal).divide(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_EVEN);
+            BigDecimal pstTax = new BigDecimal(pstNum).multiply(subTotalAfterDiscount).divide(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_EVEN);
+            BigDecimal gstTax = new BigDecimal(gstNum).multiply(subTotalAfterDiscount).divide(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_EVEN);
 
-            BigDecimal total = subTotal.add(pstTax).add(gstTax).setScale(2, BigDecimal.ROUND_HALF_EVEN);
-            subTotal.setScale(2, RoundingMode.HALF_EVEN);
+            BigDecimal total = subTotalAfterDiscount.add(pstTax).add(gstTax).setScale(2, BigDecimal.ROUND_HALF_EVEN);
+            subTotalBeforeDiscount.setScale(2, RoundingMode.HALF_EVEN);
 
             itemsCountLabel.setText(String.valueOf(this.transactionDetailDTOObservableList.size()));
-            subTotalLabel.setText(String.valueOf(subTotal.floatValue()));
+            subTotalLabel.setText(String.valueOf(subTotalBeforeDiscount.floatValue()));
+            paymentDiscountLabel.setText(String.valueOf(paymentDiscount.floatValue()));
             pstTaxLabel.setText(String.valueOf(pstTax.floatValue()));
             gstTaxLabel.setText(String.valueOf(gstTax.floatValue()));
             totalLabel.setText(String.valueOf(total.floatValue()));
@@ -597,6 +527,7 @@ public class GenerateStockController {
         else{
             itemsCountLabel.setText("");
             subTotalLabel.setText("");
+            paymentDiscountLabel.setText("");
             pstTaxLabel.setText("");
             gstTaxLabel.setText("");
             totalLabel.setText("");
@@ -612,16 +543,15 @@ public class GenerateStockController {
             }
             t.setDateModified(DateTime.now());
         });
-
-
         transaction.getTransactionDetails().addAll(transactionDetailDTOObservableList);
         transaction.setSaleAmount(Double.valueOf(totalLabel.getText()));
         transaction.setGst(Double.valueOf(gstTaxLabel.getText()));
         transaction.setPst(Double.valueOf(pstTaxLabel.getText()));
         transaction.setNote(textArea.getText());
-        transaction.setVendor(vendor);
-        transaction.setStaff(staff);
+        transaction.setCustomer(customer);
         transaction.setDateModified(DateTime.now());
+
+
 
         Optional<ButtonType> result = new AlertBuilder()
                 .alertType(Alert.AlertType.CONFIRMATION)
@@ -631,64 +561,44 @@ public class GenerateStockController {
                 .build()
                 .showAndWait();
         if(result.isPresent() && result.get() == ButtonType.OK){
-            if (transaction.getDeliveryStatus().getStatus()== DeliveryStatus.Status.DELIVERED && transaction.getPaymentStatus()== Transaction.PaymentStatus.PAID){
-                transaction.setFinalized(true);
-            }
             if(mode==Mode.CREATE) {
                 RestClientFactory.getTransactionClient().add(transaction);
             }else{
                 RestClientFactory.getTransactionClient().update(transaction);
             }
             updateProduct();
+
             confirmedClicked = true;
-        }
+        }/*else{
+            transaction = new TransactionDTO();
+            transaction.setTransactionType(Transaction.TransactionType.QUOTATION);
+            transaction.setIsFinalized(false);
+            transaction.setStaff(staff);
+            transaction.setDateCreated(DateTime.now());
+        }*/
     }
 
-    private void updateProduct() {
-        if (transaction.getDeliveryStatus().getStatus() == DeliveryStatus.Status.DELIVERED) {
-            if (mode == Mode.CREATE) {
-                transaction.getTransactionDetails().forEach(p -> {
-                    double newVirtualNum = p.getProduct().getVirtualTotalNum() + p.getQuantity();
-                    p.getProduct().setVirtualTotalNum(newVirtualNum);
-                    double newActualNum = p.getProduct().getTotalNum() + p.getQuantity();
-                    p.getProduct().setTotalNum(newActualNum);
-                    RestClientFactory.getProductClient().update(p.getProduct());
-                });
-            } else {
-                transaction.getTransactionDetails().forEach(p -> {
-                    double newVirtualNum = p.getProduct().getVirtualTotalNum() + p.getQuantity();
-                    if (oldProductQuantityMap.containsKey(p.getProduct().getId())) {
-                        newVirtualNum -= oldProductQuantityMap.get(p.getProduct().getId());
-                    }
-                    p.getProduct().setVirtualTotalNum(newVirtualNum);
-                    if (prevStats != DeliveryStatus.Status.DELIVERED) {
-                        double newActualNum = p.getProduct().getTotalNum() + p.getQuantity();
-                        p.getProduct().setTotalNum(newActualNum);
-                    }
-                    RestClientFactory.getProductClient().update(p.getProduct());
-                });
-            }
-        } else if (transaction.getDeliveryStatus().getStatus() == DeliveryStatus.Status.UNDELIVERED) {
-            if (mode==Mode.EDIT){
-                transaction.getTransactionDetails().forEach(p->{
-                    double newVirtualNum = p.getProduct().getVirtualTotalNum() + p.getQuantity();
-                    if (oldProductQuantityMap.containsKey(p.getProduct().getId())){
-                        newVirtualNum -=oldProductQuantityMap.get(p.getProduct().getId());
-                    }
-                    p.getProduct().setVirtualTotalNum(newVirtualNum);
-                    RestClientFactory.getProductClient().update(p.getProduct());
-                });
-            }else{
-                transaction.getTransactionDetails().forEach(p->{
-                    double newVirtualNum = p.getProduct().getVirtualTotalNum() + p.getQuantity();
-                    p.getProduct().setVirtualTotalNum(newVirtualNum);
-                    RestClientFactory.getProductClient().update(p.getProduct());
-                });
-            }
 
+    private void updateProduct(){
+        if (mode==Mode.EDIT){
+            transaction.getTransactionDetails().forEach(p->{
+                double newVirtualNum = p.getProduct().getVirtualTotalNum()-p.getQuantity();
+                if (oldProductQuantityMap.containsKey(p.getProduct().getId())){
+                    newVirtualNum +=oldProductQuantityMap.get(p.getProduct().getId());
+                }
+                p.getProduct().setVirtualTotalNum(newVirtualNum);
+                RestClientFactory.getProductClient().update(p.getProduct());
+            });
+        }else{
+            transaction.getTransactionDetails().forEach(p->{
+                double newVirtualNum = p.getProduct().getVirtualTotalNum()-p.getQuantity();
+                p.getProduct().setVirtualTotalNum(newVirtualNum);
+                RestClientFactory.getProductClient().update(p.getProduct());
+            });
         }
-    }
 
+
+    }
 
 
     public boolean isConfirmedClicked(){
@@ -709,18 +619,14 @@ public class GenerateStockController {
 
 
 
-
-    private PackageInfoDTO initiatePkgInfo(TransactionDetailDTO detailDTO){
-        PackageInfoDTO pkgInfo = new PackageInfoDTO();
-        pkgInfo.setDateCreated(DateTime.now());
-        pkgInfo.setDateModified(DateTime.now());
-        pkgInfo.setBox((int)detailDTO.getQuantity()/detailDTO.getProduct().getPiecePerBox());
-        pkgInfo.setPieces((int)detailDTO.getQuantity()-detailDTO.getProduct().getPiecePerBox()* pkgInfo.getBox());
-        return pkgInfo;
+    private int validateDiscountEntered(int oldValue, int newValue){
+        if (this.customer!=null && this.customer.getCustomerClass()!=null) {
+            if(newValue <= this.customer.getCustomerClass().getCustomerDiscount()){
+                return newValue;
+            }
+        }
+        return oldValue;
     }
-
-
-
 
     private void updatePrevProductCount(){
         oldProductQuantityMap = new HashMap<>();
@@ -728,4 +634,6 @@ public class GenerateStockController {
             oldProductQuantityMap.put(t.getProduct().getId(),t.getQuantity());
         });
     }
+
 }
+
