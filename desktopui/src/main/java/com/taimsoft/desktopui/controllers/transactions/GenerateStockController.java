@@ -43,7 +43,6 @@ import java.util.stream.Collectors;
  * on 10/25/17.
  */
 
-//Default pst number for vendor is 7
 public class GenerateStockController {
 
     private Stage dialogStage;
@@ -59,7 +58,7 @@ public class GenerateStockController {
     private BooleanBinding confimButtonBinding;
     private Executor executor;
     private Mode mode;
-    private Map<Integer, Double> oldProductQuantityMap;
+    //private Map<Integer, Double> oldProductQuantityMap;
     private ObservableList<String> paymentDue;
     private ObservableList<String> deliveryDue;
     private DeliveryStatus.Status prevStats;
@@ -73,6 +72,10 @@ public class GenerateStockController {
     private TableColumn<TransactionDetailDTO, String> productIdCol;
     @FXML
     private TableColumn<TransactionDetailDTO, Number> unitPriceCol;
+    @FXML
+    private TableColumn<TransactionDetailDTO, Number> virtualNumCol;
+    @FXML
+    private TableColumn<TransactionDetailDTO, Number> actualNumCol;
     @FXML
     private TableColumn<TransactionDetailDTO, Number> qtyCol;
     @FXML
@@ -175,14 +178,23 @@ public class GenerateStockController {
         }));
 
         qtyCol.setOnEditCommit(event -> {
+            int oldValue = event.getOldValue().intValue();
             TransactionDetailDTO p = event.getTableView().getItems().get(event.getTablePosition().getRow());
             p.setQuantity(event.getNewValue().floatValue());
             p.setSaleAmount(new BigDecimal(p.getQuantity() * p.getProduct().getUnitPrice()).setScale(2, BigDecimal.ROUND_HALF_EVEN).floatValue());
             p.getPackageInfo().setBox(new BigDecimal(p.getQuantity()/p.getProduct().getPiecePerBox()).intValue());
             p.getPackageInfo().setPieces(new BigDecimal(p.getQuantity()-p.getProduct().getPiecePerBox()*p.getPackageInfo().getBox()).intValue());
             showPaymentDetails();
+            p.getProduct().setVirtualTotalNum(p.getProduct().getVirtualTotalNum()-oldValue+event.getNewValue().intValue());
             refreshTable();
         });
+
+        actualNumCol.setCellValueFactory(param ->
+                new SimpleFloatProperty(new BigDecimal(param.getValue().getProduct().getTotalNum()).floatValue()));
+
+        virtualNumCol.setCellValueFactory(param ->
+                new SimpleFloatProperty(new BigDecimal(param.getValue().getProduct().getVirtualTotalNum()).floatValue()));
+
         pkgBoxCol.setCellFactory(TextFieldTableCell.forTableColumn(new StringConverter<Number>() {
             @Override
             public String toString(Number object) {
@@ -248,6 +260,15 @@ public class GenerateStockController {
             public void changed(ObservableValue<? extends String> observable, String oldValue,String newValue) {
                 transaction.getDeliveryStatus().setStatus(DeliveryStatus.getStatus(newValue));
                 transaction.getDeliveryStatus().setDateModified(DateTime.now());
+                if (DeliveryStatus.getStatus(newValue)== DeliveryStatus.Status.DELIVERED && oldValue!=null){
+                    transactionTableView.getItems().forEach(e->e.getProduct().setTotalNum(e.getProduct().getTotalNum()+e.getQuantity()));
+                    qtyCol.setEditable(false);
+                    refreshTable();
+                }else if (DeliveryStatus.getStatus(oldValue)== DeliveryStatus.Status.DELIVERED){
+                    transactionTableView.getItems().forEach(e->e.getProduct().setTotalNum(e.getProduct().getTotalNum()-e.getQuantity()));
+                    qtyCol.setEditable(true);
+                    refreshTable();
+                }
             }
         });
         paymentStatusChoiceBox.setItems(paymentDue);
@@ -420,7 +441,7 @@ public class GenerateStockController {
             this.transaction = transactionFromAbove;
             this.staff = transactionFromAbove.getStaff();
             this.vendor = transactionFromAbove.getVendor();
-            updatePrevProductCount();
+            //updatePrevProductCount();
 
             if (prevStats== DeliveryStatus.Status.DELIVERED){
                 qtyCol.setEditable(false);
@@ -678,48 +699,51 @@ public class GenerateStockController {
     }
 
     private void updateProduct() {
-        if (transaction.getDeliveryStatus().getStatus() == DeliveryStatus.Status.DELIVERED) {
-            if (mode == Mode.CREATE) {
-                transaction.getTransactionDetails().forEach(p -> {
-                    double newVirtualNum = p.getProduct().getVirtualTotalNum() + p.getQuantity();
-                    p.getProduct().setVirtualTotalNum(newVirtualNum);
-                    double newActualNum = p.getProduct().getTotalNum() + p.getQuantity();
-                    p.getProduct().setTotalNum(newActualNum);
-                    RestClientFactory.getProductClient().update(p.getProduct());
-                });
-            } else {
-                transaction.getTransactionDetails().forEach(p -> {
-                    double newVirtualNum = p.getProduct().getVirtualTotalNum() + p.getQuantity();
-                    if (oldProductQuantityMap.containsKey(p.getProduct().getId())) {
-                        newVirtualNum -= oldProductQuantityMap.get(p.getProduct().getId());
-                    }
-                    p.getProduct().setVirtualTotalNum(newVirtualNum);
-                    if (prevStats != DeliveryStatus.Status.DELIVERED) {
-                        double newActualNum = p.getProduct().getTotalNum() + p.getQuantity();
-                        p.getProduct().setTotalNum(newActualNum);
-                    }
-                    RestClientFactory.getProductClient().update(p.getProduct());
-                });
-            }
-        } else if (transaction.getDeliveryStatus().getStatus() == DeliveryStatus.Status.UNDELIVERED) {
-            if (mode==Mode.EDIT){
-                transaction.getTransactionDetails().forEach(p->{
-                    double newVirtualNum = p.getProduct().getVirtualTotalNum() + p.getQuantity();
-                    if (oldProductQuantityMap.containsKey(p.getProduct().getId())){
-                        newVirtualNum -=oldProductQuantityMap.get(p.getProduct().getId());
-                    }
-                    p.getProduct().setVirtualTotalNum(newVirtualNum);
-                    RestClientFactory.getProductClient().update(p.getProduct());
-                });
-            }else{
-                transaction.getTransactionDetails().forEach(p->{
-                    double newVirtualNum = p.getProduct().getVirtualTotalNum() + p.getQuantity();
-                    p.getProduct().setVirtualTotalNum(newVirtualNum);
-                    RestClientFactory.getProductClient().update(p.getProduct());
-                });
-            }
-
-        }
+        transaction.getTransactionDetails().forEach(p->{
+            RestClientFactory.getProductClient().update(p.getProduct());
+        });
+//        if (transaction.getDeliveryStatus().getStatus() == DeliveryStatus.Status.DELIVERED) {
+//            if (mode == Mode.CREATE) {
+//                transaction.getTransactionDetails().forEach(p -> {
+//                    double newVirtualNum = p.getProduct().getVirtualTotalNum() + p.getQuantity();
+//                    p.getProduct().setVirtualTotalNum(newVirtualNum);
+//                    double newActualNum = p.getProduct().getTotalNum() + p.getQuantity();
+//                    p.getProduct().setTotalNum(newActualNum);
+//                    RestClientFactory.getProductClient().update(p.getProduct());
+//                });
+//            } else {
+//                transaction.getTransactionDetails().forEach(p -> {
+//                    double newVirtualNum = p.getProduct().getVirtualTotalNum() + p.getQuantity();
+//                    if (oldProductQuantityMap.containsKey(p.getProduct().getId())) {
+//                        newVirtualNum -= oldProductQuantityMap.get(p.getProduct().getId());
+//                    }
+//                    p.getProduct().setVirtualTotalNum(newVirtualNum);
+//                    if (prevStats != DeliveryStatus.Status.DELIVERED) {
+//                        double newActualNum = p.getProduct().getTotalNum() + p.getQuantity();
+//                        p.getProduct().setTotalNum(newActualNum);
+//                    }
+//                    RestClientFactory.getProductClient().update(p.getProduct());
+//                });
+//            }
+//        } else if (transaction.getDeliveryStatus().getStatus() == DeliveryStatus.Status.UNDELIVERED) {
+//            if (mode==Mode.EDIT){
+//                transaction.getTransactionDetails().forEach(p->{
+//                    double newVirtualNum = p.getProduct().getVirtualTotalNum() + p.getQuantity();
+//                    if (oldProductQuantityMap.containsKey(p.getProduct().getId())){
+//                        newVirtualNum -=oldProductQuantityMap.get(p.getProduct().getId());
+//                    }
+//                    p.getProduct().setVirtualTotalNum(newVirtualNum);
+//                    RestClientFactory.getProductClient().update(p.getProduct());
+//                });
+//            }else{
+//                transaction.getTransactionDetails().forEach(p->{
+//                    double newVirtualNum = p.getProduct().getVirtualTotalNum() + p.getQuantity();
+//                    p.getProduct().setVirtualTotalNum(newVirtualNum);
+//                    RestClientFactory.getProductClient().update(p.getProduct());
+//                });
+//            }
+//
+//        }
     }
 
 
@@ -755,10 +779,10 @@ public class GenerateStockController {
 
 
 
-    private void updatePrevProductCount(){
-        oldProductQuantityMap = new HashMap<>();
-        this.transaction.getTransactionDetails().forEach(t->{
-            oldProductQuantityMap.put(t.getProduct().getId(),t.getQuantity());
-        });
-    }
+//    private void updatePrevProductCount(){
+//        oldProductQuantityMap = new HashMap<>();
+//        this.transaction.getTransactionDetails().forEach(t->{
+//            oldProductQuantityMap.put(t.getProduct().getId(),t.getQuantity());
+//        });
+//    }
 }

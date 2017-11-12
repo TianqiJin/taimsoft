@@ -26,7 +26,7 @@ public class TransactionPanelLoader {
 
     public static TransactionDTO loadQuotation(TransactionDTO transaction){
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(TransactionPanelLoader.class.getResource("/fxml/GenerateQuotation.fxml"));
+        loader.setLocation(TransactionPanelLoader.class.getResource("/fxml/transactions/GenerateQuotation.fxml"));
         AnchorPane page = null;
         try {
             page = loader.load();
@@ -90,7 +90,7 @@ public class TransactionPanelLoader {
         }
 
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(TransactionPanelLoader.class.getResource("/fxml/GenerateInvoice.fxml"));
+        loader.setLocation(TransactionPanelLoader.class.getResource("/fxml/transactions/GenerateInvoice.fxml"));
         AnchorPane page = null;
         try {
             page = loader.load();
@@ -149,7 +149,7 @@ public class TransactionPanelLoader {
         }
 
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(TransactionPanelLoader.class.getResource("/fxml/GenerateReturn.fxml"));
+        loader.setLocation(TransactionPanelLoader.class.getResource("/fxml/transactions/GenerateReturn.fxml"));
         AnchorPane page = null;
         try {
             page = loader.load();
@@ -177,7 +177,7 @@ public class TransactionPanelLoader {
 
     public static TransactionDTO loadStock(TransactionDTO transaction){
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(TransactionPanelLoader.class.getResource("/fxml/GenerateStock.fxml"));
+        loader.setLocation(TransactionPanelLoader.class.getResource("/fxml/transactions/GenerateStock.fxml"));
         AnchorPane page = null;
         try {
             page = loader.load();

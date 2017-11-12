@@ -65,7 +65,7 @@ public class GenerateInvoiceController {
     private int discount;
     private Executor executor;
     private Mode mode;
-    private Map<Integer, Double> oldProductQuantityMap;
+    //private Map<Integer, Double> oldProductQuantityMap;
     private DeliveryStatus.Status prevStats;
 
     private static final String DATE_PATTERN = "yyyy-MM-dd";
@@ -76,6 +76,10 @@ public class GenerateInvoiceController {
     private TableColumn<TransactionDetailDTO, String> productIdCol;
     @FXML
     private TableColumn<TransactionDetailDTO, Number> unitPriceCol;
+    @FXML
+    private TableColumn<TransactionDetailDTO, Number> virtualNumCol;
+    @FXML
+    private TableColumn<TransactionDetailDTO, Number> actualNumCol;
     @FXML
     private TableColumn<TransactionDetailDTO, Number> qtyCol;
     @FXML
@@ -200,6 +204,13 @@ public class GenerateInvoiceController {
             (event.getTableView().getItems().get(event.getTablePosition().getRow())).setNote(event.getNewValue()));
 
         remarkCol.setCellFactory(TextFieldTableCell.forTableColumn());
+
+        actualNumCol.setCellValueFactory(param ->
+                new SimpleFloatProperty(new BigDecimal(param.getValue().getProduct().getTotalNum()).floatValue()));
+
+        virtualNumCol.setCellValueFactory(param ->
+                new SimpleFloatProperty(new BigDecimal(param.getValue().getProduct().getVirtualTotalNum()).floatValue()));
+
         qtyCol.setCellFactory(TextFieldTableCell.forTableColumn(new StringConverter<Number>() {
             @Override
             public String toString(Number object) {
@@ -212,10 +223,12 @@ public class GenerateInvoiceController {
             }
         }));
         qtyCol.setOnEditCommit(event -> {
+            int oldValue = event.getOldValue().intValue();
             TransactionDetailDTO p = event.getTableView().getItems().get(event.getTablePosition().getRow());
             p.setQuantity(event.getNewValue().floatValue());
             p.setSaleAmount(new BigDecimal(p.getQuantity() * p.getProduct().getUnitPrice()).setScale(2, BigDecimal.ROUND_HALF_EVEN).floatValue());
             showPaymentDetails();
+            p.getProduct().setVirtualTotalNum(p.getProduct().getVirtualTotalNum()+oldValue-event.getNewValue().intValue());
             refreshTable();
         });
 
@@ -257,8 +270,9 @@ public class GenerateInvoiceController {
                 new SimpleFloatProperty(new BigDecimal(param.getValue().getSaleAmount()).floatValue()));
 
         discountCol.setOnEditCommit(event ->{
+            int oldValue = event.getOldValue().intValue();
             TransactionDetailDTO p = event.getTableView().getItems().get(event.getTablePosition().getRow());
-            int newDiscount=validateDiscountEntered(event.getOldValue().intValue(),event.getNewValue().intValue());
+            int newDiscount=validateDiscountEntered(oldValue,event.getNewValue().intValue());
             p.setDiscount(newDiscount);
             showPaymentDetails();
             refreshTable();
@@ -292,6 +306,15 @@ public class GenerateInvoiceController {
             public void changed(ObservableValue<? extends String> observable, String oldValue,String newValue) {
                 transaction.getDeliveryStatus().setStatus(DeliveryStatus.getStatus(newValue));
                 transaction.getDeliveryStatus().setDateModified(DateTime.now());
+                if (DeliveryStatus.getStatus(newValue)== DeliveryStatus.Status.DELIVERING && DeliveryStatus.getStatus(oldValue)== DeliveryStatus.Status.UNDELIVERED){
+                    transactionTableView.getItems().forEach(e->e.getProduct().setTotalNum(e.getProduct().getTotalNum()-e.getQuantity()));
+                    qtyCol.setEditable(false);
+                    refreshTable();
+                }else if (DeliveryStatus.getStatus(oldValue)== DeliveryStatus.Status.DELIVERING && DeliveryStatus.getStatus(newValue)== DeliveryStatus.Status.UNDELIVERED){
+                    transactionTableView.getItems().forEach(e->e.getProduct().setTotalNum(e.getProduct().getTotalNum()+e.getQuantity()));
+                    qtyCol.setEditable(true);
+                    refreshTable();
+                }
             }
         });
         paymentField.textProperty().addListener(new ChangeListener<String>() {
@@ -456,7 +479,7 @@ public class GenerateInvoiceController {
             }
         }
         this.staff = transactionFromAbove.getStaff();
-        updatePrevProductCount();
+        //updatePrevProductCount();
         this.payment = new PaymentDTO();
         this.customer = transactionFromAbove.getCustomer();
         this.transactionDetailDTOObservableList = FXCollections.observableArrayList(transaction.getTransactionDetails());
@@ -701,42 +724,45 @@ public class GenerateInvoiceController {
     }
 
     private void updateProduct(){
-        if (transaction.getDeliveryStatus().getStatus()== DeliveryStatus.Status.DELIVERING) {
-            if (mode == Mode.CREATE) {
-                transaction.getTransactionDetails().forEach(p -> {
-                    double newVirtualNum = p.getProduct().getVirtualTotalNum() - p.getQuantity();
-                    if (oldProductQuantityMap.containsKey(p.getProduct().getId())) {
-                        newVirtualNum += oldProductQuantityMap.get(p.getProduct().getId());
-                    }
-                    p.getProduct().setVirtualTotalNum(newVirtualNum);
-                    double newActualNum = p.getProduct().getTotalNum() - p.getQuantity();
-                    p.getProduct().setTotalNum(newActualNum);
-                    RestClientFactory.getProductClient().update(p.getProduct());
-                });
-            } else {
-                transaction.getTransactionDetails().forEach(p -> {
-                    double newVirtualNum = p.getProduct().getVirtualTotalNum() - p.getQuantity();
-                    if (oldProductQuantityMap.containsKey(p.getProduct().getId())) {
-                        newVirtualNum += oldProductQuantityMap.get(p.getProduct().getId());
-                    }
-                        p.getProduct().setVirtualTotalNum(newVirtualNum);
-                    if (prevStats != DeliveryStatus.Status.DELIVERING) {
-                        double newActualNum = p.getProduct().getTotalNum() - p.getQuantity();
-                        p.getProduct().setTotalNum(newActualNum);
-                    }
-                    RestClientFactory.getProductClient().update(p.getProduct());
-                });
-            }
-        }else if (transaction.getDeliveryStatus().getStatus()== DeliveryStatus.Status.UNDELIVERED){
-            transaction.getTransactionDetails().forEach(p -> {
-                double newVirtualNum = p.getProduct().getVirtualTotalNum() - p.getQuantity();
-                if (oldProductQuantityMap.containsKey(p.getProduct().getId())) {
-                    newVirtualNum += oldProductQuantityMap.get(p.getProduct().getId());
-                }
-                p.getProduct().setVirtualTotalNum(newVirtualNum);
-                RestClientFactory.getProductClient().update(p.getProduct());
-            });
-        }
+        transaction.getTransactionDetails().forEach(p->{
+            RestClientFactory.getProductClient().update(p.getProduct());
+        });
+//        if (transaction.getDeliveryStatus().getStatus()== DeliveryStatus.Status.DELIVERING) {
+//            if (mode == Mode.CREATE) {
+//                transaction.getTransactionDetails().forEach(p -> {
+//                    double newVirtualNum = p.getProduct().getVirtualTotalNum() - p.getQuantity();
+//                    if (oldProductQuantityMap.containsKey(p.getProduct().getId())) {
+//                        newVirtualNum += oldProductQuantityMap.get(p.getProduct().getId());
+//                    }
+//                    p.getProduct().setVirtualTotalNum(newVirtualNum);
+//                    double newActualNum = p.getProduct().getTotalNum() - p.getQuantity();
+//                    p.getProduct().setTotalNum(newActualNum);
+//                    RestClientFactory.getProductClient().update(p.getProduct());
+//                });
+//            } else {
+//                transaction.getTransactionDetails().forEach(p -> {
+//                    double newVirtualNum = p.getProduct().getVirtualTotalNum() - p.getQuantity();
+//                    if (oldProductQuantityMap.containsKey(p.getProduct().getId())) {
+//                        newVirtualNum += oldProductQuantityMap.get(p.getProduct().getId());
+//                    }
+//                        p.getProduct().setVirtualTotalNum(newVirtualNum);
+//                    if (prevStats != DeliveryStatus.Status.DELIVERING) {
+//                        double newActualNum = p.getProduct().getTotalNum() - p.getQuantity();
+//                        p.getProduct().setTotalNum(newActualNum);
+//                    }
+//                    RestClientFactory.getProductClient().update(p.getProduct());
+//                });
+//            }
+//        }else if (transaction.getDeliveryStatus().getStatus()== DeliveryStatus.Status.UNDELIVERED){
+//            transaction.getTransactionDetails().forEach(p -> {
+//                double newVirtualNum = p.getProduct().getVirtualTotalNum() - p.getQuantity();
+//                if (oldProductQuantityMap.containsKey(p.getProduct().getId())) {
+//                    newVirtualNum += oldProductQuantityMap.get(p.getProduct().getId());
+//                }
+//                p.getProduct().setVirtualTotalNum(newVirtualNum);
+//                RestClientFactory.getProductClient().update(p.getProduct());
+//            });
+//        }
 
     }
 
@@ -830,11 +856,11 @@ public class GenerateInvoiceController {
         return true;
     }
 
-    private void updatePrevProductCount(){
-        oldProductQuantityMap = new HashMap<>();
-        this.transaction.getTransactionDetails().forEach(t->{
-            oldProductQuantityMap.put(t.getProduct().getId(),t.getQuantity());
-        });
-    }
+//    private void updatePrevProductCount(){
+//        oldProductQuantityMap = new HashMap<>();
+//        this.transaction.getTransactionDetails().forEach(t->{
+//            oldProductQuantityMap.put(t.getProduct().getId(),t.getQuantity());
+//        });
+//    }
 }
 

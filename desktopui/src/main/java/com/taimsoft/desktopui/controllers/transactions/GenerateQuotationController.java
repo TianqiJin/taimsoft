@@ -56,7 +56,7 @@ public class GenerateQuotationController {
     private int discount;
     private Executor executor;
     private Mode mode;
-    private Map<Integer, Double> oldProductQuantityMap;
+    //private Map<Integer, Double> oldProductQuantityMap;
 
     @FXML
     private TableView<TransactionDetailDTO> transactionTableView;
@@ -64,6 +64,10 @@ public class GenerateQuotationController {
     private TableColumn<TransactionDetailDTO, String> productIdCol;
     @FXML
     private TableColumn<TransactionDetailDTO, Number> unitPriceCol;
+    @FXML
+    private TableColumn<TransactionDetailDTO, Number> virtualNumCol;
+    @FXML
+    private TableColumn<TransactionDetailDTO, Number> actualNumCol;
     @FXML
     private TableColumn<TransactionDetailDTO, Number> qtyCol;
     @FXML
@@ -161,6 +165,12 @@ public class GenerateQuotationController {
                 return Float.valueOf(string);
             }
         }));
+
+        actualNumCol.setCellValueFactory(param ->
+                new SimpleFloatProperty(new BigDecimal(param.getValue().getProduct().getTotalNum()).floatValue()));
+
+        virtualNumCol.setCellValueFactory(param ->
+                new SimpleFloatProperty(new BigDecimal(param.getValue().getProduct().getVirtualTotalNum()).floatValue()));
         remarkCol.setCellValueFactory(new PropertyValueFactory<>("note"));
         remarkCol.setOnEditCommit(event ->
             (event.getTableView().getItems().get(event.getTablePosition().getRow())).setNote(event.getNewValue()));
@@ -179,10 +189,12 @@ public class GenerateQuotationController {
         }));
 
         qtyCol.setOnEditCommit(event -> {
+            int oldValue = event.getOldValue().intValue();
             TransactionDetailDTO p = event.getTableView().getItems().get(event.getTablePosition().getRow());
             p.setQuantity(event.getNewValue().floatValue());
             p.setSaleAmount(new BigDecimal(p.getQuantity() * p.getProduct().getUnitPrice()).setScale(2, BigDecimal.ROUND_HALF_EVEN).floatValue());
             showPaymentDetails();
+            p.getProduct().setVirtualTotalNum(p.getProduct().getVirtualTotalNum()+oldValue-event.getNewValue().intValue());
             refreshTable();
         });
 
@@ -190,8 +202,9 @@ public class GenerateQuotationController {
                 new SimpleFloatProperty(new BigDecimal(param.getValue().getSaleAmount()).floatValue()));
 
         discountCol.setOnEditCommit(event ->{
+            int oldValue= event.getOldValue().intValue();
             TransactionDetailDTO p = event.getTableView().getItems().get(event.getTablePosition().getRow());
-            int newDiscount=validateDiscountEntered(event.getOldValue().intValue(),event.getNewValue().intValue());
+            int newDiscount=validateDiscountEntered(oldValue,event.getNewValue().intValue());
             p.setDiscount(newDiscount);
             showPaymentDetails();
             refreshTable();
@@ -319,7 +332,7 @@ public class GenerateQuotationController {
             this.staff = transactionFromAbove.getStaff();
             this.transaction = transactionFromAbove;
             this.customer = transactionFromAbove.getCustomer();
-            updatePrevProductCount();
+            //updatePrevProductCount();
             if(transaction.isFinalized()){
                 System.out.println("This transaction is already finalized! You cannot edit on it anymore.");
                 confirmButton.setDisable(true);
@@ -580,24 +593,26 @@ public class GenerateQuotationController {
 
 
     private void updateProduct(){
-        if (mode==Mode.EDIT){
-            transaction.getTransactionDetails().forEach(p->{
-                double newVirtualNum = p.getProduct().getVirtualTotalNum()-p.getQuantity();
-                if (oldProductQuantityMap.containsKey(p.getProduct().getId())){
-                    newVirtualNum +=oldProductQuantityMap.get(p.getProduct().getId());
-                }
-                p.getProduct().setVirtualTotalNum(newVirtualNum);
+        transaction.getTransactionDetails().forEach(p->{
                 RestClientFactory.getProductClient().update(p.getProduct());
             });
-        }else{
-            transaction.getTransactionDetails().forEach(p->{
-                double newVirtualNum = p.getProduct().getVirtualTotalNum()-p.getQuantity();
-                p.getProduct().setVirtualTotalNum(newVirtualNum);
-                RestClientFactory.getProductClient().update(p.getProduct());
-            });
-        }
 
-
+//        if (mode==Mode.EDIT){
+//            transaction.getTransactionDetails().forEach(p->{
+//                double newVirtualNum = p.getProduct().getVirtualTotalNum()-p.getQuantity();
+//                if (oldProductQuantityMap.containsKey(p.getProduct().getId())){
+//                    newVirtualNum +=oldProductQuantityMap.get(p.getProduct().getId());
+//                }
+//                p.getProduct().setVirtualTotalNum(newVirtualNum);
+//                RestClientFactory.getProductClient().update(p.getProduct());
+//            });
+//        }else{
+//            transaction.getTransactionDetails().forEach(p->{
+//                double newVirtualNum = p.getProduct().getVirtualTotalNum()-p.getQuantity();
+//                p.getProduct().setVirtualTotalNum(newVirtualNum);
+//                RestClientFactory.getProductClient().update(p.getProduct());
+//            });
+//        }
     }
 
 
@@ -628,12 +643,12 @@ public class GenerateQuotationController {
         return oldValue;
     }
 
-    private void updatePrevProductCount(){
-        oldProductQuantityMap = new HashMap<>();
-        this.transaction.getTransactionDetails().forEach(t->{
-            oldProductQuantityMap.put(t.getProduct().getId(),t.getQuantity());
-        });
-    }
+//    private void updatePrevProductCount(){
+//        oldProductQuantityMap = new HashMap<>();
+//        this.transaction.getTransactionDetails().forEach(t->{
+//            oldProductQuantityMap.put(t.getProduct().getId(),t.getQuantity());
+//        });
+//    }
 
 }
 
