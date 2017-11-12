@@ -81,7 +81,10 @@ public class StaffOverviewController extends IOverviewController<StaffDTO> {
                                 if(newValue.equals("VIEW DETAILS")){
                                     VistaNavigator.loadDetailVista(VistaNavigator.VISTA_STAFF_DETAIL, staffDTO);
                                 }else if(newValue.equals("EDIT")){
-
+                                    StaffEditDialogController controller = TransactionPanelLoader.showStaffEditor(staffDTO);
+                                    if(controller != null && controller.isOkClicked()){
+                                        getTableView().getItems().set(getIndex(), controller.getStaff());
+                                    }
                                 }
                             });
                             comboBox.setValue(item);

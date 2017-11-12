@@ -65,6 +65,16 @@ public class ProductController {
         return new ResponseEntity<Product>(product1, HttpStatus.ACCEPTED);
     }
 
+    @RequestMapping(value = "/saveOrUpdate",
+            method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Product> saveOrUpdate(@RequestBody Product product) {
+        Product product1 = service.saveOrUpdateProduct(product);
+        return new ResponseEntity<Product>(product1, HttpStatus.ACCEPTED);
+    }
+
     @RequestMapping(value = "/deleteObject")
     @ResponseBody
     public ResponseEntity<String> deleteProductById(@RequestParam Integer id) {

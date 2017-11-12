@@ -48,4 +48,9 @@ public class ProductServiceImpl implements IProductService {
     public Product updateProduct(Product product) {
        return dao.updateObject(product);
     }
+
+    @Override
+    public Product saveOrUpdateProduct(Product product) {
+        return dao.saveOrUpdateObject(product);
+    }
 }

@@ -3,6 +3,7 @@ package com.taimsoft.desktopui.controllers.overview;
 import com.taim.client.IClient;
 import com.taim.client.ProductClient;
 import com.taim.dto.ProductDTO;
+import com.taimsoft.desktopui.controllers.edit.ProductEditDialogController;
 import com.taimsoft.desktopui.util.AlertBuilder;
 import com.taimsoft.desktopui.util.RestClientFactory;
 import com.taimsoft.desktopui.util.TransactionPanelLoader;
@@ -80,7 +81,10 @@ public class ProductOverviewController extends IOverviewController<ProductDTO> {
                                 if(newValue.equals("VIEW DETAILS")){
                                     VistaNavigator.loadDetailVista(VistaNavigator.VISTA_PRODUCT_DETAIL, productDTO);
                                 }else if(newValue.equals("EDIT")){
-
+                                    ProductEditDialogController controller = TransactionPanelLoader.showProductEditor(productDTO);
+                                    if(controller != null && controller.isOKClicked()){
+                                        getTableView().getItems().set(getIndex(), controller.getProduct());
+                                    }
                                 }
                             });
                             comboBox.setValue(item);
@@ -95,38 +99,11 @@ public class ProductOverviewController extends IOverviewController<ProductDTO> {
     @FXML
     public void handleAddProduct(){
         ProductDTO newProduct = new ProductDTO();
-        boolean okClicked = TransactionPanelLoader.showProductEditor(newProduct,true);
-        if(okClicked){
-            boolean flag = true;
-            try{
-                newProduct.setDateCreated(DateTime.now());
-                newProduct.setDateModified(DateTime.now());
-                RestClientFactory.getProductClient().add(newProduct);
-                new AlertBuilder()
-                        .alertHeaderText("Product Created successfully!")
-                        .alertType(Alert.AlertType.INFORMATION)
-                        .alertTitle("Product")
-                        .alertContentText(newProduct.getDisplayName())
-                        .build()
-                        .showAndWait();
-
-            }catch(Exception e){
-                e.printStackTrace();
-                flag = false;
-                new AlertBuilder()
-                        .alertType(Alert.AlertType.ERROR)
-                        .alertTitle("Error")
-                        .alertHeaderText("Add New Product Error")
-                        .alertContentText("Unable To Add New Product" + newProduct.getDisplayName() )
-                        .build()
-                        .showAndWait();
-            }finally{
-//                if(flag){
-//                    this.customer = newCustomer;
-//                    customerList.add(this.customer);
-//                    showCustomerDetails();
-//                }
-            }
+        newProduct.setDateCreated(DateTime.now());
+        newProduct.setDateModified(DateTime.now());
+        ProductEditDialogController controller = TransactionPanelLoader.showProductEditor(newProduct);
+        if(controller != null && controller.isOKClicked()){
+            getOverviewTable().getItems().add(controller.getProduct());
         }
     }
 

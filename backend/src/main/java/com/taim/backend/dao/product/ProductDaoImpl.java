@@ -44,7 +44,8 @@ public class ProductDaoImpl extends AbstractDao implements IDao<Product> {
 
     @Override
     public Product saveOrUpdateObject(Product object) {
-        return null;
+        saveOrUpdate(object);
+        return object;
     }
 
     @Override

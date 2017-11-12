@@ -108,11 +108,7 @@ public class GeneralSettingsController implements ISettingsController{
                                     int selectedIndex = getTableRow().getIndex();
                                     getTableView().getItems().remove(selectedIndex);
                                 }else if(newValue.equals("ADD NEW")){
-                                    PropertyDTO.CustomerClassDTO newCustomerClassDTO = new PropertyDTO.CustomerClassDTO();
-                                    newCustomerClassDTO.setCustomerClassName("Please change customer class name");
-                                    newCustomerClassDTO.setCustomerDiscount(0);
-                                    newCustomerClassDTO.setDateCreated(DateTime.now());
-                                    newCustomerClassDTO.setDateModified(newCustomerClassDTO.getDateCreated());
+                                    PropertyDTO.CustomerClassDTO newCustomerClassDTO = createCustomerClass();
                                     customerClassTable.getItems().add(newCustomerClassDTO);
                                 }
                             }));
@@ -200,6 +196,10 @@ public class GeneralSettingsController implements ISettingsController{
                 this.property = getPropertyTask.getValue().get(0);
                 customerClassTable.setItems(FXCollections.observableArrayList(this.property.getCustomerClasses()));
                 initGeneralInfoTextFields();
+            }else{
+                PropertyDTO.CustomerClassDTO newCustomerClassDTO = createCustomerClass();
+                customerClassTable.setItems(FXCollections.observableArrayList());
+                customerClassTable.getItems().add(newCustomerClassDTO);
             }
         });
 
@@ -304,5 +304,15 @@ public class GeneralSettingsController implements ISettingsController{
         gstNumField.textProperty().bindBidirectional(this.property.gstNumberProperty());
         gstRateField.textProperty().bindBidirectional(this.property.gstRateProperty(), new NumberStringConverter());
         pstRateField.textProperty().bindBidirectional(this.property.pstRateProperty(), new NumberStringConverter());
+    }
+
+    private PropertyDTO.CustomerClassDTO createCustomerClass(){
+        PropertyDTO.CustomerClassDTO newCustomerClassDTO = new PropertyDTO.CustomerClassDTO();
+        newCustomerClassDTO.setCustomerClassName("Please change customer class name");
+        newCustomerClassDTO.setCustomerDiscount(0);
+        newCustomerClassDTO.setDateCreated(DateTime.now());
+        newCustomerClassDTO.setDateModified(newCustomerClassDTO.getDateCreated());
+
+        return newCustomerClassDTO;
     }
 }
