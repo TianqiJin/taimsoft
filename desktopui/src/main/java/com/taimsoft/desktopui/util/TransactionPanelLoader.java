@@ -94,9 +94,17 @@ public class TransactionPanelLoader {
         AnchorPane page = null;
         try {
             page = loader.load();
+            page.getStylesheets().add(TransactionPanelLoader.class.getResource("/css/bootstrap3.css").toExternalForm());
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Transaction Panel");
             dialogStage.initModality(Modality.WINDOW_MODAL);
+            //Set the primaryStage bound to the maximum of the screen
+            Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
+            dialogStage.setX(bounds.getMinX());
+            dialogStage.setY(bounds.getMinY());
+            dialogStage.setWidth(bounds.getWidth());
+            dialogStage.setHeight(bounds.getHeight());
+
             Scene scene = new Scene(page);
             dialogStage.setScene(scene);
 
@@ -153,9 +161,17 @@ public class TransactionPanelLoader {
         AnchorPane page = null;
         try {
             page = loader.load();
+            page.getStylesheets().add(TransactionPanelLoader.class.getResource("/css/bootstrap3.css").toExternalForm());
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Transaction Panel");
             dialogStage.initModality(Modality.WINDOW_MODAL);
+            //Set the primaryStage bound to the maximum of the screen
+            Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
+            dialogStage.setX(bounds.getMinX());
+            dialogStage.setY(bounds.getMinY());
+            dialogStage.setWidth(bounds.getWidth());
+            dialogStage.setHeight(bounds.getHeight());
+
             Scene scene = new Scene(page);
             dialogStage.setScene(scene);
 
@@ -181,9 +197,17 @@ public class TransactionPanelLoader {
         AnchorPane page = null;
         try {
             page = loader.load();
+            page.getStylesheets().add(TransactionPanelLoader.class.getResource("/css/bootstrap3.css").toExternalForm());
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Transaction Panel");
             dialogStage.initModality(Modality.WINDOW_MODAL);
+            //Set the primaryStage bound to the maximum of the screen
+            Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
+            dialogStage.setX(bounds.getMinX());
+            dialogStage.setY(bounds.getMinY());
+            dialogStage.setWidth(bounds.getWidth());
+            dialogStage.setHeight(bounds.getHeight());
+
             Scene scene = new Scene(page);
             dialogStage.setScene(scene);
 

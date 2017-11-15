@@ -10,7 +10,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="830.0" prefWidth="1700.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taimsoft.desktopui.controllers.transactions.GenerateQuotationController">
     <children>
-      <SplitPane fx:id="transactionGeneratePane" dividerPositions="0.8" focusTraversable="true" layoutX="10.0" layoutY="10.0" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0">
+      <SplitPane fx:id="transactionGeneratePane" dividerPositions="0.8" focusTraversable="true" layoutX="10.0" layoutY="10.0" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
          <items>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                <children>
@@ -133,7 +133,7 @@
                                           <TableColumn fx:id="unitPriceCol" prefWidth="65.0" text="Price" />
                                           <TableColumn fx:id="virtualNumCol" prefWidth="65.0" text="Virtual Number" />
                                           <TableColumn fx:id="actualNumCol" prefWidth="65.0" text="Actual Number" />
-                                          <TableColumn fx:id="sizeCol" prefWidth="75.0" text="Size (per piece)LxWxH" />
+                                          <TableColumn fx:id="sizeCol" prefWidth="75.0" text="Size (per piece)" />
                                           <TableColumn fx:id="qtyCol" editable="true" prefWidth="65.0" text="Purchased" />
                                           <TableColumn fx:id="subTotalCol" prefWidth="75.0" text="SubTotal" />
                                           <TableColumn fx:id="discountCol" prefWidth="75.0" text="Discount" />

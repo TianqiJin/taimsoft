@@ -846,15 +846,16 @@ VBox > .split-menu-button.last > .arrow-button {
     /*-fx-box-border: transparent;*/
 /*}*/
 /*split pane*/
-.split-pane > .split-pane-divider {
-    -fx-background-color: white;
-    -fx-border-color: #eeeeee;
-    -fx-pref-width: 3;
-}
+/*.split-pane > .split-pane-divider {*/
+    /*-fx-background-color: white;*/
+    /*-fx-border-color: #eeeeee;*/
+    /*-fx-pref-width: 3;*/
+/*}*/
 /* vertical the two nodes are placed on top of each other. */
 .split-pane:vertical > .split-pane-divider {
     -fx-background-insets: 0, 1 0 1 0;
     -fx-border-width: 1 0 1 0;
+    -fx-background-color: transparent;
 }
 .split-pane > .split-pane-divider:hover {
     -fx-background-color: #E0E0E0;
