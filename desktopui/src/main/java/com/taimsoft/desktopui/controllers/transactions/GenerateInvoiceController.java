@@ -41,12 +41,7 @@ import java.util.stream.Collectors;
 /**
  * Created by jiawei.liu on 9/17/17.
  */
-//HardCoded several stuff here for now:
-    // Discount mapping A: 0-30
-    //                  B: 0-20
-    //                  C: 0-10
-    // PST:   7%
-    // GST:   5%
+
 public class GenerateInvoiceController {
 
     private Stage dialogStage;
@@ -672,6 +667,8 @@ public class GenerateInvoiceController {
             payment.setDateModified(DateTime.now());
             payment.setPaymentAmount(new BigDecimal(paymentField.getText()).doubleValue());
             payment.setDeposit(isDepositCheckBox.isSelected());
+            payment.setPaymentType(Payment.PaymentType.getValue(paymentTypeChoiceBox.getValue()));
+
         }
         transaction.getTransactionDetails().addAll(transactionDetailDTOObservableList);
         transaction.setSaleAmount(Double.valueOf(totalLabel.getText()));

@@ -570,6 +570,8 @@ public class GenerateReturnController {
             payment.setDateCreated(DateTime.now());
             payment.setDateModified(DateTime.now());
             payment.setPaymentAmount(new BigDecimal(paymentField.getText()).doubleValue());
+            payment.setPaymentType(Payment.PaymentType.getValue(paymentTypeChoiceBox.getValue()));
+
         }
         transaction.getTransactionDetails().addAll(transactionDetailDTOObservableList);
         transaction.setSaleAmount(Double.valueOf(totalLabel.getText()));
