@@ -3,6 +3,7 @@ package com.taimsoft.desktopui.controllers.transactions;
 import com.taim.dto.*;
 import com.taim.model.DeliveryStatus;
 import com.taim.model.PackageInfo;
+import com.taim.model.Payment;
 import com.taim.model.Transaction;
 import com.taimsoft.desktopui.controllers.edit.VendorEditDialogController;
 import com.taimsoft.desktopui.util.*;
@@ -28,6 +29,7 @@ import org.joda.time.DateTime;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -54,6 +56,7 @@ public class GenerateStockController {
     private ObservableList<TransactionDetailDTO> transactionDetailDTOObservableList;
     private TransactionDTO transaction;
     private StringBuffer errorMsgBuilder;
+    private PaymentDTO payment;
     private boolean confirmedClicked;
     private BooleanBinding confimButtonBinding;
     private Executor executor;
@@ -106,7 +109,7 @@ public class GenerateStockController {
     @FXML
     private ChoiceBox<String> deliveryStatusChoiceBox;
     @FXML
-    private ChoiceBox<String> paymentStatusChoiceBox;
+    private Label paymentStatusLabel;
 
     //Staff Information Labels
     @FXML
@@ -127,6 +130,16 @@ public class GenerateStockController {
     private Label emailLabel;
     @FXML
     private Label phoneLabel;
+
+    //payment details
+    @FXML
+    private Label balanceLabel;
+    @FXML
+    private ChoiceBox<String> paymentTypeChoiceBox;
+    @FXML
+    private TextField paymentField;
+    @FXML
+    private Label paidAmountLabel;
 
 
     //Items Information Labels
@@ -271,11 +284,17 @@ public class GenerateStockController {
                 }
             }
         });
-        paymentStatusChoiceBox.setItems(paymentDue);
-        paymentStatusChoiceBox.valueProperty().addListener(new ChangeListener<String>() {
+        paymentField.textProperty().addListener(new ChangeListener<String>() {
             @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,String newValue) {
-                transaction.setPaymentStatus(Transaction.PaymentStatus.getStatus(newValue));
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                showBalanceDetails();
+            }
+        });
+        paymentTypeChoiceBox.getSelectionModel().selectFirst();
+        paymentTypeChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                payment.setPaymentType(Payment.PaymentType.getValue(newValue));
             }
         });
 
@@ -442,6 +461,7 @@ public class GenerateStockController {
             this.staff = transactionFromAbove.getStaff();
             this.vendor = transactionFromAbove.getVendor();
             //updatePrevProductCount();
+            this.payment = new PaymentDTO();
 
             if (prevStats== DeliveryStatus.Status.DELIVERED){
                 qtyCol.setEditable(false);
@@ -597,7 +617,7 @@ public class GenerateStockController {
         paymentDueDatePicker.setValue(DateUtils.toLocalDate(this.transaction.getPaymentDueDate()));
         deliveryDueDatePicker.setValue(DateUtils.toLocalDate(this.transaction.getDeliveryDueDate()));
         deliveryStatusChoiceBox.getSelectionModel().select(transaction.getDeliveryStatus().getStatus().getValue());
-        paymentStatusChoiceBox.getSelectionModel().select(transaction.getPaymentStatus().name());
+        paymentStatusLabel.setText(this.transaction.getPaymentStatus().name());
     }
 
     /**
@@ -647,6 +667,7 @@ public class GenerateStockController {
             pstTaxLabel.setText(String.valueOf(pstTax.floatValue()));
             gstTaxLabel.setText(String.valueOf(gstTax.floatValue()));
             totalLabel.setText(String.valueOf(total.floatValue()));
+            showBalanceDetails();
         }
         else{
             itemsCountLabel.setText("");
@@ -657,6 +678,20 @@ public class GenerateStockController {
         }
     }
 
+    private void showBalanceDetails(){
+        BigDecimal balance = new BigDecimal(totalLabel.getText()).setScale(2, BigDecimal.ROUND_HALF_EVEN);
+        BigDecimal paid = new BigDecimal(BigInteger.ZERO);
+        for (PaymentDTO prevPayment : transaction.getPayments()){
+            paid= paid.add(new BigDecimal(prevPayment.getPaymentAmount()));
+        }
+        balance = balance.subtract(paid);
+        paidAmountLabel.setText(paid.toString());
+
+        if(!paymentField.getText().trim().isEmpty() && isPaymentValid()){
+            balance = balance.subtract(new BigDecimal(paymentField.getText()));
+        }
+        balanceLabel.setText(balance.toString());
+    }
 
     private void generateTransaction() throws IOException, SQLException{
         transaction.getTransactionDetails().clear();
@@ -667,7 +702,13 @@ public class GenerateStockController {
             t.setDateModified(DateTime.now());
         });
 
-
+        if(!paymentField.getText().trim().isEmpty()){
+            payment.setDateCreated(DateTime.now());
+            payment.setDateModified(DateTime.now());
+            payment.setPaymentAmount(new BigDecimal(paymentField.getText()).doubleValue());
+            payment.setPaymentType(Payment.PaymentType.getValue(paymentTypeChoiceBox.getValue()));
+            payment.setDeposit(false);
+        }
         transaction.getTransactionDetails().addAll(transactionDetailDTOObservableList);
         transaction.setSaleAmount(Double.valueOf(totalLabel.getText()));
         transaction.setGst(Double.valueOf(gstTaxLabel.getText()));
@@ -677,6 +718,18 @@ public class GenerateStockController {
         transaction.setStaff(staff);
         transaction.setDateModified(DateTime.now());
 
+        if (this.payment.getPaymentAmount()!=0){
+            transaction.getPayments().add(payment);
+            double paid = 0.0;
+            for (PaymentDTO p : transaction.getPayments()){
+                paid+=p.getPaymentAmount();
+            }
+            if (paid >= transaction.getSaleAmount()){
+                transaction.setPaymentStatus(Transaction.PaymentStatus.PAID);
+            }else if (paid >0){
+                transaction.setPaymentStatus(Transaction.PaymentStatus.PARTIALLY_PAID);
+            }
+        }
         Optional<ButtonType> result = new AlertBuilder()
                 .alertType(Alert.AlertType.CONFIRMATION)
                 .alertTitle("Transaction Confirmation")
@@ -777,7 +830,14 @@ public class GenerateStockController {
     }
 
 
-
+    private boolean isPaymentValid(){
+        try{
+            Double.parseDouble(paymentField.getText());
+        }catch(NumberFormatException e){
+            return false;
+        }
+        return true;
+    }
 
 //    private void updatePrevProductCount(){
 //        oldProductQuantityMap = new HashMap<>();
