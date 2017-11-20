@@ -37,6 +37,10 @@ public class VistaNavigator {
         VistaNavigator.rootLayoutController = rootLayoutController;
     }
 
+    public static RootLayoutController getRootLayoutController() {
+        return rootLayoutController;
+    }
+
     @SuppressWarnings("unchecked")
     public static void loadVista(String fxml, boolean fetchTransactionsForSummary){
         FXMLLoader loader = new FXMLLoader();

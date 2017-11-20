@@ -1,10 +1,12 @@
 package com.taim.backend.configuration;
 
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import com.taim.backend.controller.model.ExceptionResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -19,6 +21,16 @@ public class ControllerExceptionHandler {
         @ExceptionHandler(Exception.class)
         public ResponseEntity<ExceptionResponse> handleGenericException(Exception ex){
             return exceptionResponse(ex, HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+        }
+    }
+
+    @ControllerAdvice
+    @Order(Ordered.HIGHEST_PRECEDENCE)
+    public static class DetailedExceptionHandler{
+        @ExceptionHandler(DataIntegrityViolationException.class)
+        public ResponseEntity<ExceptionResponse> handleDataIntegrityViolationException
+                (DataIntegrityViolationException ex){
+            return exceptionResponse(ex, HttpStatus.INTERNAL_SERVER_ERROR, ex.getRootCause().getMessage());
         }
     }
 

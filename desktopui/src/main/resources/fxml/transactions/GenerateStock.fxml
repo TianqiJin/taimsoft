@@ -168,7 +168,7 @@
                                     </AnchorPane>
                                     <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                        <children>
-                                            <TitledPane animated="false" collapsible="false" prefHeight="197.0" prefWidth="248.0" text="Additional Note" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
+                                            <TitledPane animated="false" collapsible="false" prefHeight="197.0" prefWidth="248.0" text="Additional Note" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0">
                                                 <content>
                                                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="120.0" prefWidth="236.0">
                                                         <children>

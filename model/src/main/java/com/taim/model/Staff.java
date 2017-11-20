@@ -46,7 +46,7 @@ public class Staff extends UserBaseModel {
     private String password;
     @Column(name = "picture_url")
     private String picUrl;
-    @Column
+    @Column(nullable = false)
     private Position position;
 
     public Staff(){}

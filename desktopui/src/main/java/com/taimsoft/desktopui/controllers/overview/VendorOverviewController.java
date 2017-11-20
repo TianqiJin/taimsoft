@@ -5,8 +5,10 @@ import com.taim.client.VendorClient;
 import com.taim.dto.OrganizationDTO;
 import com.taim.dto.TransactionDTO;
 import com.taim.dto.VendorDTO;
+import com.taim.model.DeliveryStatus;
 import com.taim.model.Transaction;
 import com.taim.model.Vendor;
+import com.taim.model.basemodels.UserBaseModel;
 import com.taimsoft.desktopui.controllers.edit.StaffEditDialogController;
 import com.taimsoft.desktopui.controllers.edit.VendorEditDialogController;
 import com.taimsoft.desktopui.uicomponents.LiveComboBoxTableCell;
@@ -17,12 +19,18 @@ import com.taimsoft.desktopui.util.VistaNavigator;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
+import javafx.util.StringConverter;
 import org.joda.time.DateTime;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.taimsoft.desktopui.controllers.overview.IOverviewController.SummaryLabelMode.*;
 
@@ -34,6 +42,8 @@ public class VendorOverviewController extends IOverviewController<VendorDTO> {
 
     @FXML
     private TableColumn<VendorDTO, String> nameCol;
+    @FXML
+    private TableColumn<VendorDTO, String> typeCol;
     @FXML
     private TableColumn<VendorDTO, String> phoneCol;
     @FXML
@@ -48,6 +58,12 @@ public class VendorOverviewController extends IOverviewController<VendorDTO> {
     private Label totalUnpaidLabel;
     @FXML
     private Label totalPaidLabel;
+    @FXML
+    private ComboBox<UserBaseModel.UserType> vendorTypeComboBox;
+    @FXML
+    private CheckBox paymentOverdueCheckBox;
+    @FXML
+    private CheckBox deliveryOverdueCheckBox;
 
     public VendorOverviewController(){
         this.vendorClient = RestClientFactory.getVendorClient();
@@ -56,6 +72,7 @@ public class VendorOverviewController extends IOverviewController<VendorDTO> {
     @FXML
     public void initialize(){
         nameCol.setCellValueFactory(new PropertyValueFactory<>("fullname"));
+        typeCol.setCellValueFactory(new PropertyValueFactory<>("userType"));
         phoneCol.setCellValueFactory(new PropertyValueFactory<>("phone"));
         emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
         checkedCol.setCellValueFactory(new PropertyValueFactory<>("isChecked"));
@@ -93,6 +110,24 @@ public class VendorOverviewController extends IOverviewController<VendorDTO> {
                 };
             }
         });
+        vendorTypeComboBox.setItems(FXCollections.observableArrayList(UserBaseModel.UserType.values()));
+        vendorTypeComboBox.setConverter(new StringConverter<UserBaseModel.UserType>() {
+            @Override
+            public String toString(UserBaseModel.UserType object) {
+                if(object == null){
+                    return null;
+                }
+                return object.toString();
+            }
+
+            @Override
+            public UserBaseModel.UserType fromString(String string) {
+                if(string == null){
+                    return null;
+                }
+                return UserBaseModel.UserType.valueOf(string);
+            }
+        });
     }
 
     @FXML
@@ -109,8 +144,70 @@ public class VendorOverviewController extends IOverviewController<VendorDTO> {
         }
     }
 
+    @FXML
+    private void handleFilterVendor(){
+        UserBaseModel.UserType vendorType = vendorTypeComboBox.getValue();
+
+        ObservableList<VendorDTO> subList = FXCollections.observableArrayList(getOverviewDTOList());
+        if(vendorType != null){
+            subList = subList.stream().filter(customerDTO -> customerDTO.getUserType().equals(vendorType)).collect(Collectors.toCollection(FXCollections::observableArrayList));
+        }
+        if(deliveryOverdueCheckBox.isSelected()){
+            List<TransactionDTO> transactions = getTransactionList().stream()
+                    .filter(transactionDTO -> transactionDTO.getDeliveryDueDate() != null
+                            && transactionDTO.getDeliveryDueDate().isBefore(DateTime.now())
+                            && transactionDTO.getDeliveryStatus() != null
+                            && !transactionDTO.getDeliveryStatus().getStatus().equals(DeliveryStatus.Status.DELIVERED))
+                    .collect(Collectors.toList());
+            subList = subList.stream().
+                    filter(vendorDTO -> transactions.stream().anyMatch(transactionDTO -> transactionDTO.getVendor().getId() == vendorDTO.getId()))
+                    .collect(Collectors.toCollection(FXCollections::observableArrayList));
+        }
+        if(paymentOverdueCheckBox.isSelected()){
+            List<TransactionDTO> transactions = getTransactionList().stream()
+                    .filter(transactionDTO -> transactionDTO.getPaymentDueDate() != null
+                            && transactionDTO.getPaymentDueDate().isBefore(DateTime.now())
+                            && transactionDTO.getPaymentStatus() != null
+                            && !transactionDTO.getPaymentStatus().equals(Transaction.PaymentStatus.PAID))
+                    .collect(Collectors.toList());
+            subList = subList.stream().
+                    filter(vendorDTO -> transactions.stream().anyMatch(transactionDTO -> transactionDTO.getVendor().getId() == vendorDTO.getId()))
+                    .collect(Collectors.toCollection(FXCollections::observableArrayList));
+        }
+
+        getOverviewTable().setItems(subList);
+    }
+
+    @FXML
+    private void handleClearFilter(){
+        vendorTypeComboBox.getEditor().clear();
+        deliveryOverdueCheckBox.setSelected(false);
+        paymentOverdueCheckBox.setSelected(false);
+        getOverviewTable().setItems(FXCollections.observableArrayList(getOverviewDTOList()));
+    }
+
     @Override
-    public void initSearchField() {}
+    public void initSearchField() {
+        FilteredList<VendorDTO> filteredData = new FilteredList<>(FXCollections.observableArrayList(getOverviewDTOList()), p->true);
+        VistaNavigator.getRootLayoutController().getSearchField().textProperty().addListener((observable,oldVal,newVal)->{
+            filteredData.setPredicate(vendorDTO -> {
+                if (newVal == null || newVal.isEmpty()){
+                    return true;
+                }
+                String lowerCase = newVal.toLowerCase();
+                if(vendorDTO.getFullname().toLowerCase().contains(lowerCase)){
+                    return true;
+                }else if(vendorDTO.getPhone().toLowerCase().contains(lowerCase)){
+                    return true;
+                }else if(vendorDTO.getEmail().toLowerCase().contains(lowerCase)){
+                    return true;
+                }
+
+                return false;
+            });
+            getOverviewTable().setItems(filteredData);
+        });
+    }
 
     @Override
     public IClient<VendorDTO> getOverviewClient(){

@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
@@ -13,9 +17,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" prefHeight="1000.0" prefWidth="1000.0" stylesheets="@/css/bootstrap3.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taimsoft.desktopui.controllers.overview.TransactionOverviewController">
+<AnchorPane id="AnchorPane" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" prefHeight="1000.0" prefWidth="1000.0" stylesheets="@/css/bootstrap3.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taimsoft.desktopui.controllers.overview.TransactionOverviewController">
   <children>
-      <SplitPane dividerPositions="0.2, 0.35" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <SplitPane fx:id="summarySplitPane" dividerPositions="0.2, 0.35" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
@@ -144,20 +148,21 @@
                     <content>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
-                        <HBox id="HBox" prefHeight="25.0" prefWidth="627.0" spacing="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
-                          <children>
-                            <Label text="Search:" />
-                            <TextField fx:id="searchField" prefWidth="-1.0" HBox.hgrow="ALWAYS" />
-                          </children>
-                        </HBox>
-                              <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="40.0">
+                              <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="10.0">
                                  <children>
-                                    <Label text="Advanced Search:" />
+                                    <Label text="Transaction Type:" />
                                     <ComboBox fx:id="transactionTypeComboBox" editable="true" promptText="Select Transaction Type" />
+                                    <Label text="Transaction Create Date:" />
                                     <DatePicker fx:id="fromDatePicker" promptText="From Date" />
                                     <DatePicker fx:id="toDatePicker" promptText="To Date" />
                                     <Button mnemonicParsing="false" onAction="#handleFilterTransaction" text="Filter" />
                                     <Button mnemonicParsing="false" onAction="#handleClearFilter" text="Clear" />
+                                 </children>
+                              </HBox>
+                              <HBox layoutX="15.0" layoutY="20.0" spacing="10.0" AnchorPane.topAnchor="50.0">
+                                 <children>
+                                    <CheckBox fx:id="paymentOverDueCheckBox" mnemonicParsing="false" text="Payment Overdue" />
+                                    <CheckBox fx:id="deliveryOverDueCheckBox" mnemonicParsing="false" text="Delivery Overdue" />
                                  </children>
                               </HBox>
                            </children>
@@ -180,7 +185,8 @@
                        <TableColumn fx:id="idCol" prefWidth="64.0" text="TRANSACTION ID" />
                        <TableColumn fx:id="totalCol" prefWidth="64.0" text="TOTAL" />
                        <TableColumn fx:id="balanceCol" prefWidth="75.0" text="BALANCE" />
-                        <TableColumn fx:id="statusCol" prefWidth="75.0" text="STATUS" />
+                        <TableColumn fx:id="paymentStatusCol" prefWidth="75.0" text="PAYMENT STATUS" />
+                        <TableColumn fx:id="deliveryStatusCol" prefWidth="75.0" text="DELIVERY STATUS" />
                         <TableColumn fx:id="actionCol" prefWidth="75.0" text="ACTION" />
                    </columns>
                </TableView>

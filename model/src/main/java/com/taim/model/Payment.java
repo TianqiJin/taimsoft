@@ -40,11 +40,11 @@ public class Payment extends BaseModel {
             return null;
         }
     }
-    @Column(name = "payment_amount")
+    @Column(name = "payment_amount", nullable = false)
     private double paymentAmount;
-    @Column(name = "payment_type")
+    @Column(name = "payment_type", nullable = false)
     private PaymentType paymentType;
-    @Column(name = "is_deposit")
+    @Column(name = "is_deposit", nullable = false)
     private boolean deposit;
 
     public Payment(){}

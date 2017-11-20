@@ -24,9 +24,9 @@ public class Customer extends UserBaseModel {
     @Column(name = "store_credit")
     private double storeCredit;
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "customer_class_id")
+    @JoinColumn(name = "customer_class_id", nullable = false)
     private Property.CustomerClass customerClass;
-    @Column(name = "user_type")
+    @Column(name = "user_type", nullable = false)
     private UserType userType;
     @Column(name = "pst_num")
     private String pstNumber;

@@ -5,16 +5,20 @@ import com.taim.client.TransactionClient;
 import com.taim.dto.PaymentDTO;
 import com.taim.dto.StaffDTO;
 import com.taim.dto.TransactionDTO;
+import com.taim.model.DeliveryStatus;
 import com.taim.model.Transaction;
 import com.taimsoft.desktopui.TaimDesktop;
 import com.taimsoft.desktopui.controllers.pdfs.InvoiceGenerationController;
 import com.taimsoft.desktopui.controllers.settings.ResetPasswordController;
+import com.taimsoft.desktopui.util.DateUtils;
 import com.taimsoft.desktopui.util.RestClientFactory;
 import com.taimsoft.desktopui.util.TransactionPanelLoader;
 import com.taimsoft.desktopui.util.VistaNavigator;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -59,7 +63,9 @@ public class TransactionOverviewController extends IOverviewController<Transacti
     @FXML
     private TableColumn<TransactionDTO, Double> balanceCol;
     @FXML
-    private TableColumn<TransactionDTO, String> statusCol;
+    private TableColumn<TransactionDTO, String> paymentStatusCol;
+    @FXML
+    private TableColumn<TransactionDTO, String> deliveryStatusCol;
     @FXML
     private TableColumn<TransactionDTO, String> actionCol;
     @FXML
@@ -77,13 +83,16 @@ public class TransactionOverviewController extends IOverviewController<Transacti
     @FXML
     private Label totalStockPaidLabel;
     @FXML
-    private TextField searchField;
-    @FXML
     private DatePicker fromDatePicker;
     @FXML
     private DatePicker toDatePicker;
     @FXML
     private ComboBox<Transaction.TransactionType> transactionTypeComboBox;
+    @FXML
+    private CheckBox paymentOverDueCheckBox;
+    @FXML
+    private CheckBox deliveryOverDueCheckBox;
+
     @FXML
     private ComboBox<Transaction.TransactionType> createNewTransactionComboBox;
 
@@ -106,7 +115,13 @@ public class TransactionOverviewController extends IOverviewController<Transacti
             }
             return new SimpleDoubleProperty(roundedBalance.setScale(2, BigDecimal.ROUND_HALF_EVEN).doubleValue()).asObject();
         });
-        statusCol.setCellValueFactory(new PropertyValueFactory<>("paymentStatus"));
+        paymentStatusCol.setCellValueFactory(new PropertyValueFactory<>("paymentStatus"));
+        deliveryStatusCol.setCellValueFactory(param -> {
+            if(param.getValue().getDeliveryStatus() != null){
+                return param.getValue().getDeliveryStatus().statusProperty().asString();
+            }
+            return null;
+        });
         checkedCol.setCellValueFactory(new PropertyValueFactory<>("isChecked"));
         checkedCol.setCellFactory(CheckBoxTableCell.forTableColumn(checkedCol));
         actionCol.setCellValueFactory(new PropertyValueFactory<>("action"));
@@ -145,6 +160,7 @@ public class TransactionOverviewController extends IOverviewController<Transacti
                                     VistaNavigator.loadDetailVista(VistaNavigator.VISTA_TRANSACTION_DETAIL, transactionDTO);
                                 }else if(newValue.equals("PRINT")){
                                     try {
+
                                         FXMLLoader loader = new FXMLLoader();
                                         loader.setLocation(TaimDesktop.class.getResource("/fxml/pdfs/InvoiceGeneration.fxml"));
                                         AnchorPane page = loader.load();
@@ -204,7 +220,6 @@ public class TransactionOverviewController extends IOverviewController<Transacti
             switch (createNewTransactionComboBox.getSelectionModel().getSelectedItem()){
                 case QUOTATION:
                     TransactionPanelLoader.loadQuotation(null);
-//
                     break;
                 case INVOICE:
                     TransactionPanelLoader.showNewTransactionDialog(Transaction.TransactionType.INVOICE);
@@ -248,10 +263,24 @@ public class TransactionOverviewController extends IOverviewController<Transacti
             subList = subList.stream().filter(transaction -> transaction.getTransactionType().equals(type)).collect(Collectors.toCollection(FXCollections::observableArrayList));
         }
         if(fromDate != null){
-            subList = subList.stream().filter(transaction -> transaction.getDateCreated().isAfter(new DateTime(fromDate))).collect(Collectors.toCollection(FXCollections::observableArrayList));
+            subList = subList.stream().filter(transaction -> transaction.getDateCreated().isAfter(DateUtils.toDateTime(fromDate))).collect(Collectors.toCollection(FXCollections::observableArrayList));
         }
         if(toDate != null){
-            subList = subList.stream().filter(transaction -> transaction.getDateCreated().isBefore(new DateTime(toDate))).collect(Collectors.toCollection(FXCollections::observableArrayList));
+            subList = subList.stream().filter(transaction -> transaction.getDateCreated().isBefore(DateUtils.toDateTime(toDate))).collect(Collectors.toCollection(FXCollections::observableArrayList));
+        }
+        if(paymentOverDueCheckBox.isSelected()){
+            subList = subList.stream().filter(transaction -> transaction.getPaymentDueDate() != null
+                    && transaction.getPaymentDueDate().isBefore(DateTime.now())
+                    && transaction.getPaymentStatus() != null
+                    && !transaction.getPaymentStatus().equals(Transaction.PaymentStatus.PAID))
+                    .collect(Collectors.toCollection(FXCollections::observableArrayList));
+        }
+        if(deliveryOverDueCheckBox.isSelected()){
+            subList = subList.stream().filter(transaction -> transaction.getDeliveryDueDate() != null
+                    && transaction.getDeliveryDueDate().isBefore(DateTime.now())
+                    && transaction.getDeliveryStatus() != null
+                    && !transaction.getDeliveryStatus().getStatus().equals(DeliveryStatus.Status.DELIVERED))
+                    .collect(Collectors.toCollection(FXCollections::observableArrayList));
         }
 
         getOverviewTable().setItems(subList);
@@ -262,13 +291,15 @@ public class TransactionOverviewController extends IOverviewController<Transacti
         transactionTypeComboBox.getEditor().clear();
         fromDatePicker.getEditor().clear();
         toDatePicker.getEditor().clear();
+        paymentOverDueCheckBox.setSelected(false);
+        deliveryOverDueCheckBox.setSelected(false);
         getOverviewTable().setItems(FXCollections.observableArrayList(getOverviewDTOList()));
     }
 
     @Override
     public void initSearchField() {
         FilteredList<TransactionDTO> filteredData = new FilteredList<TransactionDTO>(FXCollections.observableArrayList(getOverviewDTOList()), p->true);
-        searchField.textProperty().addListener((observable,oldVal,newVal)->{
+        VistaNavigator.getRootLayoutController().getSearchField().textProperty().addListener((observable,oldVal,newVal)->{
             filteredData.setPredicate(transactionDTO -> {
                 if (newVal == null || newVal.isEmpty()){
                     return true;
@@ -282,7 +313,8 @@ public class TransactionOverviewController extends IOverviewController<Transacti
                     return true;
                 }else if(String.valueOf(transactionDTO.getSaleAmount()).contains(lowerCase)){
                     return true;
-                }else if(transactionDTO.getPaymentStatus().getValue().toLowerCase().contains(lowerCase)){
+                }else if(transactionDTO.getPaymentStatus() != null &&
+                        transactionDTO.getPaymentStatus().getValue().toLowerCase().contains(lowerCase)){
                     return true;
                 }else{
                     BigDecimal roundedBalance = new BigDecimal(transactionDTO.getSaleAmount());

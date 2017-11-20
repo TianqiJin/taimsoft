@@ -4,8 +4,12 @@ import com.taim.client.CustomerClient;
 import com.taim.client.IClient;
 import com.taim.dto.CustomerDTO;
 import com.taim.dto.OrganizationDTO;
+import com.taim.dto.PropertyDTO;
 import com.taim.dto.TransactionDTO;
+import com.taim.model.DeliveryStatus;
+import com.taim.model.Property;
 import com.taim.model.Transaction;
+import com.taim.model.basemodels.UserBaseModel;
 import com.taimsoft.desktopui.controllers.edit.CustomerEditDialogController;
 import com.taimsoft.desktopui.uicomponents.LiveComboBoxTableCell;
 import com.taimsoft.desktopui.util.AlertBuilder;
@@ -14,13 +18,20 @@ import com.taimsoft.desktopui.util.TransactionPanelLoader;
 import com.taimsoft.desktopui.util.VistaNavigator;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
+import javafx.util.StringConverter;
 import org.joda.time.DateTime;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -28,9 +39,14 @@ import org.joda.time.DateTime;
  */
 public class CustomerOverviewController extends IOverviewController<CustomerDTO> {
     private CustomerClient customerClient;
+    private ObservableList<String> customerClassList;
 
     @FXML
     private TableColumn<CustomerDTO, String> nameCol;
+    @FXML
+    private TableColumn<CustomerDTO, String> typeCol;
+    @FXML
+    private TableColumn<CustomerDTO, String> classCol;
     @FXML
     private TableColumn<CustomerDTO, String> phoneCol;
     @FXML
@@ -49,14 +65,36 @@ public class CustomerOverviewController extends IOverviewController<CustomerDTO>
     private Label totalUnpaidLabel;
     @FXML
     private Label totalPaidLabel;
+    @FXML
+    private ComboBox<String> customerClassComboBox;
+    @FXML
+    private ComboBox<UserBaseModel.UserType> customerTypeComboBox;
+    @FXML
+    private CheckBox paymentOverdueCheckBox;
+    @FXML
+    private CheckBox deliveryOverdueCheckBox;
 
     public CustomerOverviewController(){
         customerClient = RestClientFactory.getCustomerClient();
+        customerClassList = FXCollections.observableArrayList(VistaNavigator.getGlobalProperty().getCustomerClasses().stream()
+                .map(PropertyDTO.CustomerClassDTO::getCustomerClassName)
+                .collect(Collectors.toList()));
     }
 
     @FXML
     public void initialize(){
         nameCol.setCellValueFactory(new PropertyValueFactory<>("fullname"));
+        typeCol.setCellValueFactory(new PropertyValueFactory<>("userType"));
+        classCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<CustomerDTO, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<CustomerDTO, String> param) {
+                if(param.getValue().getCustomerClass() != null){
+                    return param.getValue().getCustomerClass().customerClassNameProperty();
+                }
+
+                return null;
+            }
+        });
         phoneCol.setCellValueFactory(new PropertyValueFactory<>("phone"));
         emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
         storeCreditCol.setCellValueFactory(new PropertyValueFactory<>("storeCredit"));
@@ -95,10 +133,51 @@ public class CustomerOverviewController extends IOverviewController<CustomerDTO>
                 };
             }
         });
+        customerClassComboBox.setItems(customerClassList);
+        customerTypeComboBox.setItems(FXCollections.observableArrayList(UserBaseModel.UserType.values()));
+        customerTypeComboBox.setConverter(new StringConverter<UserBaseModel.UserType>() {
+            @Override
+            public String toString(UserBaseModel.UserType object) {
+                if(object == null){
+                    return null;
+                }
+                return object.toString();
+            }
+
+            @Override
+            public UserBaseModel.UserType fromString(String string) {
+                if(string == null){
+                    return null;
+                }
+                return UserBaseModel.UserType.valueOf(string);
+            }
+        });
     }
 
     @Override
-    public void initSearchField() {}
+    public void initSearchField() {
+        FilteredList<CustomerDTO> filteredData = new FilteredList<>(FXCollections.observableArrayList(getOverviewDTOList()), p->true);
+        VistaNavigator.getRootLayoutController().getSearchField().textProperty().addListener((observable,oldVal,newVal)->{
+            filteredData.setPredicate(customerDTO -> {
+                if (newVal == null || newVal.isEmpty()){
+                    return true;
+                }
+                String lowerCase = newVal.toLowerCase();
+                if(customerDTO.getFullname().toLowerCase().contains(lowerCase)){
+                    return true;
+                }else if(customerDTO.getPhone().toLowerCase().contains(lowerCase)){
+                    return true;
+                }else if(customerDTO.getEmail().toLowerCase().contains(lowerCase)){
+                    return true;
+                }else if(String.valueOf(customerDTO.getStoreCredit()).contains(lowerCase)){
+                    return true;
+                }
+
+                return false;
+            });
+            getOverviewTable().setItems(filteredData);
+        });
+    }
 
     @Override
     public IClient<CustomerDTO> getOverviewClient(){
@@ -124,6 +203,53 @@ public class CustomerOverviewController extends IOverviewController<CustomerDTO>
         if(controller != null && controller.isOKClicked()){
             getOverviewTable().getItems().add(controller.getCustomer());
         }
+    }
+
+    @FXML
+    private void handleFilterCustomer(){
+        String customerClass = customerClassComboBox.getValue();
+        UserBaseModel.UserType customerType = customerTypeComboBox.getValue();
+
+        ObservableList<CustomerDTO> subList = FXCollections.observableArrayList(getOverviewDTOList());
+        if(customerClass != null){
+            subList = subList.stream().filter(customerDTO -> customerDTO.getCustomerClass().getCustomerClassName().equals(customerClass)).collect(Collectors.toCollection(FXCollections::observableArrayList));
+        }
+        if(customerType != null){
+            subList = subList.stream().filter(customerDTO -> customerDTO.getUserType().equals(customerType)).collect(Collectors.toCollection(FXCollections::observableArrayList));
+        }
+        if(deliveryOverdueCheckBox.isSelected()){
+            List<TransactionDTO> transactions = getTransactionList().stream()
+                    .filter(transactionDTO -> transactionDTO.getDeliveryDueDate() != null
+                            && transactionDTO.getDeliveryDueDate().isBefore(DateTime.now())
+                            && transactionDTO.getDeliveryStatus() != null
+                            && !transactionDTO.getDeliveryStatus().getStatus().equals(DeliveryStatus.Status.DELIVERED))
+                    .collect(Collectors.toList());
+            subList = subList.stream().
+                    filter(customerDTO -> transactions.stream().anyMatch(transactionDTO -> transactionDTO.getCustomer().getId() == customerDTO.getId()))
+                    .collect(Collectors.toCollection(FXCollections::observableArrayList));
+        }
+        if(paymentOverdueCheckBox.isSelected()){
+            List<TransactionDTO> transactions = getTransactionList().stream()
+                    .filter(transactionDTO -> transactionDTO.getPaymentDueDate() != null
+                            && transactionDTO.getPaymentDueDate().isBefore(DateTime.now())
+                            && transactionDTO.getPaymentStatus() != null
+                            && !transactionDTO.getPaymentStatus().equals(Transaction.PaymentStatus.PAID))
+                    .collect(Collectors.toList());
+            subList = subList.stream().
+                    filter(customerDTO -> transactions.stream().anyMatch(transactionDTO -> transactionDTO.getCustomer().getId() == customerDTO.getId()))
+                    .collect(Collectors.toCollection(FXCollections::observableArrayList));
+        }
+
+        getOverviewTable().setItems(subList);
+    }
+
+    @FXML
+    private void handleClearFilter(){
+        customerClassComboBox.getEditor().clear();
+        customerTypeComboBox.getEditor().clear();
+        deliveryOverdueCheckBox.setSelected(false);
+        paymentOverdueCheckBox.setSelected(false);
+        getOverviewTable().setItems(FXCollections.observableArrayList(getOverviewDTOList()));
     }
 
 

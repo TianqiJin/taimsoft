@@ -15,7 +15,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "product")
 public class Product extends BaseModel {
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String sku;
     @Column
     private double length;
@@ -33,7 +33,7 @@ public class Product extends BaseModel {
     private double totalNum;
     @Column(name = "total_num_virtual")
     private double virtualTotalNum;
-    @Column(name = "unit_price")
+    @Column(name = "unit_price", nullable = false)
     private double unitPrice;
     @Column(name = "piece_per_box")
     private int piecePerBox;

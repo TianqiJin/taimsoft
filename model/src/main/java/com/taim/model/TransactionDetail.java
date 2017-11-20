@@ -12,11 +12,11 @@ import javax.persistence.*;
 @Table(name = "transaction_detail")
 public class TransactionDetail extends BaseModel {
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
-    @Column
+    @Column(nullable = false)
     private double quantity;
-    @Column(name = "sale_amount")
+    @Column(name = "sale_amount", nullable = false)
     private double saleAmount;
     @Column
     private int discount;

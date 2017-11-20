@@ -12,6 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
@@ -31,9 +32,13 @@ public class RootLayoutController {
     @FXML
     private Button menu;
     @FXML
+    private TextField searchField;
+    @FXML
     private AnchorPane menuList;
     @FXML
     private AnchorPane vistaPane;
+    @FXML
+    private AnchorPane titlePane;
 
     @FXML
     public void initialize() {
@@ -87,6 +92,10 @@ public class RootLayoutController {
         tmpPane.prefHeightProperty().bind(vistaPane.heightProperty());
         tmpPane.prefWidthProperty().bind(vistaPane.widthProperty());
         vistaPane.getChildren().setAll(tmpPane);
+    }
+
+    public TextField getSearchField() {
+        return searchField;
     }
 
     private void prepareSlideMenuAnimation() {

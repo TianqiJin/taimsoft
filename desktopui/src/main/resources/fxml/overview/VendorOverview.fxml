@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
@@ -12,9 +16,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" prefHeight="1000.0" prefWidth="1000.0" stylesheets="@/css/bootstrap3.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taimsoft.desktopui.controllers.overview.VendorOverviewController">
+<AnchorPane id="AnchorPane" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" prefHeight="1000.0" prefWidth="1000.0" stylesheets="@/css/bootstrap3.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taimsoft.desktopui.controllers.overview.VendorOverviewController">
   <children>
-      <SplitPane dividerPositions="0.2, 0.35" layoutX="10.0" layoutY="10.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <SplitPane fx:id="summarySplitPane" dividerPositions="0.2, 0.35" layoutX="10.0" layoutY="10.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <items>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
@@ -69,7 +73,7 @@
                         <Font name="System Bold" size="18.0" />
                      </font>
                   </Label>
-                  <Button fx:id="addNewVendor" onAction="#handleAddVendor" layoutX="923.0" layoutY="11.0" mnemonicParsing="false" text="New Vendor" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                  <Button fx:id="addNewVendor" layoutX="923.0" layoutY="11.0" mnemonicParsing="false" onAction="#handleAddVendor" text="New Vendor" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
                </children>
             </AnchorPane>
             <AnchorPane prefHeight="200.0" prefWidth="200.0">
@@ -78,19 +82,18 @@
                     <content>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
-                        <HBox id="HBox" alignment="CENTER" spacing="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
-                          <children>
-                            <Label text="Search:" />
-                            <TextField fx:id="filterField" prefWidth="-1.0" HBox.hgrow="ALWAYS" />
-                          </children>
-                        </HBox>
-                              <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="40.0">
+                              <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="10.0">
                                  <children>
-                                    <Label text="Advanced Search:" />
-                                    <DatePicker fx:id="fromDatePicker" promptText="From Date" />
-                                    <DatePicker fx:id="toDatePicker" promptText="To Date" />
-                                    <Button mnemonicParsing="false" text="Filter" />
-                                    <Button mnemonicParsing="false" text="Clear" />
+                                    <Label text="Vendor Type:" />
+                                    <ComboBox fx:id="vendorTypeComboBox" editable="true" prefWidth="150.0" promptText="Select Vendor Type" />
+                                    <Button mnemonicParsing="false" onAction="#handleFilterVendor" text="Filter" />
+                                    <Button mnemonicParsing="false" onAction="#handleClearFilter" text="Clear" />
+                                 </children>
+                              </HBox>
+                              <HBox spacing="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="50.0">
+                                 <children>
+                                    <CheckBox fx:id="paymentOverdueCheckBox" mnemonicParsing="false" text="Has Payment Overdue Transactions" />
+                                    <CheckBox fx:id="deliveryOverdueCheckBox" mnemonicParsing="false" text="Has Devlivery Overdue Transactions" />
                                  </children>
                               </HBox>
                            </children>
@@ -108,6 +111,7 @@
               <columns>
                         <TableColumn fx:id="checkedCol" prefWidth="75.0" />
                 <TableColumn fx:id="nameCol" prefWidth="128.0" text="VENDOR" />
+                        <TableColumn fx:id="typeCol" prefWidth="75.0" text="TYPE" />
                 <TableColumn fx:id="phoneCol" prefWidth="128.0" text="PHONE" />
                         <TableColumn fx:id="emailCol" prefWidth="75.0" text="EMAIL" />
                         <TableColumn fx:id="actionCol" prefWidth="75.0" text="ACTION" />

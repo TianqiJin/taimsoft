@@ -6,6 +6,7 @@ import com.taimsoft.desktopui.util.RestClientFactory;
 import com.taimsoft.desktopui.util.TransactionPanelLoader;
 import org.joda.time.DateTime;
 import org.junit.Test;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -137,7 +138,7 @@ public class dummyTest {
     public void addStaff()throws Exception{
         StaffDTO staff = new StaffDTO();
         staff.setDateCreated(DateTime.now());
-        staff.setDateModified(DateTime.now());
+//        staff.setDateModified(DateTime.now());
         staff.setEmail("staff@gmail.com");
         staff.setFullname("admin");
         staff.setPhone("1234567890");
@@ -154,7 +155,7 @@ public class dummyTest {
         organization.setStreetNum("123");
         organization.setPostalCode("T3P1A1");
         staff.setOrganization(organization);
-        RestClientFactory.getStaffClient().add(staff);
+
     }
 
 //    public void addCustomerTransactionDTOTest()throws Exception{

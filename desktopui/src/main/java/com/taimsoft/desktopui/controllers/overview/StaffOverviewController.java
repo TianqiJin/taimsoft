@@ -12,6 +12,7 @@ import com.taimsoft.desktopui.util.RestClientFactory;
 import com.taimsoft.desktopui.util.TransactionPanelLoader;
 import com.taimsoft.desktopui.util.VistaNavigator;
 import javafx.collections.FXCollections;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
@@ -97,7 +98,32 @@ public class StaffOverviewController extends IOverviewController<StaffDTO> {
     }
 
     @Override
-    public void initSearchField() {}
+    public void initSearchField() {
+        FilteredList<StaffDTO> filteredData = new FilteredList<>(FXCollections.observableArrayList(getOverviewDTOList()), p->true);
+        VistaNavigator.getRootLayoutController().getSearchField().textProperty().addListener((observable,oldVal,newVal)->{
+            filteredData.setPredicate(staffDTO -> {
+                if (newVal == null || newVal.isEmpty()){
+                    return true;
+                }
+                String lowerCase = newVal.toLowerCase();
+                if(staffDTO.getFullname().toLowerCase().contains(lowerCase)){
+                    return true;
+                }else if(staffDTO.getPhone().toLowerCase().contains(lowerCase)){
+                    return true;
+                }else if(staffDTO.getEmail().toLowerCase().contains(lowerCase)){
+                    return true;
+                }else if(staffDTO.getPosition().name().toLowerCase().contains(lowerCase)){
+                    return true;
+                }else if(staffDTO.getOrganization() != null &&
+                        staffDTO.getOrganization().getOrgName().toLowerCase().contains(lowerCase)){
+                    return true;
+                }
+
+                return false;
+            });
+            getOverviewTable().setItems(filteredData);
+        });
+    }
 
     @Override
     public void initSummaryLabel() {}

@@ -71,14 +71,14 @@ public class Transaction extends BaseModel {
         }
     }
 
-    @Column(name = "sale_amount")
+    @Column(name = "sale_amount", nullable = false)
     private double saleAmount;
     @Column
     private double gst;
     @Column
     private double pst;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "staff_id")
+    @JoinColumn(name = "staff_id", nullable = false)
     private Staff staff;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_id")
@@ -86,9 +86,9 @@ public class Transaction extends BaseModel {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "vendor_id")
     private Vendor vendor;
-    @Column(name = "transaction_type")
+    @Column(name = "transaction_type", nullable = false)
     private TransactionType transactionType;
-    @Column(name = "payment_status")
+    @Column(name = "payment_status", nullable = false)
     private PaymentStatus paymentStatus;
     @JoinColumn(name = "delivery_status_id")
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -109,7 +109,7 @@ public class Transaction extends BaseModel {
     private List<Payment> payments;
     @Column(name = "ref_id")
     private int refId;
-    @Column(name = "is_finalized")
+    @Column(name = "is_finalized", nullable = false)
     private boolean finalized;
     @Column
     private String note;

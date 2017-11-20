@@ -13,13 +13,13 @@ import java.util.Set;
 public class Property extends BaseModel{
     @Column(name = "product_warn_limit")
     private int productWarnLimit;
-    @Column(name = "pst_rate")
+    @Column(name = "pst_rate", nullable = false)
     private int pstRate;
-    @Column(name = "gst_rate")
+    @Column(name = "gst_rate", nullable = false)
     private int gstRate;
     @Column(name = "gst_num")
     private String gstNumber;
-    @Column(name = "company_name")
+    @Column(name = "company_name", nullable = false)
     private String companyName;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @Fetch(FetchMode.SUBSELECT)

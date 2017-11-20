@@ -842,6 +842,11 @@ VBox > .split-menu-button.last > .arrow-button {
     -fx-box-border: transparent;
     -fx-padding: 0 0 0 0;
 }
+
+/*title pane*/
+#titlePane{
+    -fx-background-color: #5DBCD2;
+}
 /*.split-pane{*/
     /*-fx-box-border: transparent;*/
 /*}*/
