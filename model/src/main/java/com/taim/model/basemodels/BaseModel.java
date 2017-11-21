@@ -20,6 +20,7 @@ public class BaseModel {
     private DateTime dateCreated;
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     @Column(name = "date_modified" ,nullable = false)
+    @Version
     private DateTime dateModified;
     @Column(nullable = false)
     private boolean deleted;

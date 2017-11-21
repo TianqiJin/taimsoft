@@ -1,5 +1,8 @@
 package com.taimsoft.desktopui.controllers.edit;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.util.JSONPObject;
+import com.taim.client.IClient;
 import com.taim.dto.ProductDTO;
 import com.taim.model.Product;
 import com.taim.model.Staff;
@@ -16,8 +19,11 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.converter.NumberStringConverter;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.client.ResourceAccessException;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -150,10 +156,18 @@ public class ProductEditDialogController {
                 okClicked = true;
                 dialogStage.close();
             });
-            saveUpdateProductTask.setOnFailed(event -> {
-                logger.error(saveUpdateProductTask.getException().getMessage(), saveUpdateProductTask.getException());
-                FadingStatusMessage.flash("FAILED TO SAVE Product", root);
-            });
+//            saveUpdateProductTask.exceptionProperty().addListener((observable, oldValue, newValue) -> {
+//                if(newValue != null) {
+//                    Exception ex = (Exception) newValue;
+//
+////                    logger.error(ExceptionUtils.getRootCause(ex).getMessage());
+//                    logger.error(new JSONObject(ExceptionUtils.getRootCause(ex).getMessage()).toString(2));
+//                }
+//            });
+//            saveUpdateProductTask.setOnFailed(event -> {
+////                logger.error("ERROR IS : " + saveUpdateProductTask.getException().getMessage(), saveUpdateProductTask.getException());
+//                FadingStatusMessage.flash("FAILED TO SAVE PRODUCT", root);
+//            });
 
             executor.execute(saveUpdateProductTask);
         }

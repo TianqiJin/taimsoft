@@ -35,6 +35,7 @@ public class ClientResponseErrorHandler implements ResponseErrorHandler {
         } catch (IOException e) {
             logger.error("Error reading response body: ", e);
         }
+
         return result.toString();
     }
 }
