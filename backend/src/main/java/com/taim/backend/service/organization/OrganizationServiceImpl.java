@@ -2,6 +2,7 @@ package com.taim.backend.service.organization;
 
 
 import com.taim.backend.dao.IDao;
+import com.taim.backend.dao.organization.OrganizationDaoImpl;
 import com.taim.model.Organization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,7 @@ import java.util.List;
 @Transactional
 public class OrganizationServiceImpl implements IOrganizationService{
     @Autowired
-    private IDao<Organization> organizationDao;
+    private OrganizationDaoImpl organizationDao;
 
     @Override
     public List<Organization> getAllOrganizations() {

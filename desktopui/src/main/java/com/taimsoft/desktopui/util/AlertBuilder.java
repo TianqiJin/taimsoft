@@ -15,9 +15,8 @@ public class AlertBuilder {
     public AlertBuilder(){
         alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText(null);
-        alert.setTitle(null);
+        alert.setTitle("TAIM SOFTWARE ERROR DIALOG");
         alert.setContentText(null);
-        alert.setTitle(null);
         Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
         alertStage.getIcons().add(new Image(AlertBuilder.class.getResourceAsStream(Constant.Image.appIconPath)));
         alert.getDialogPane().getStylesheets().add(AlertBuilder.class.getResource("/css/bootstrap3.css").toExternalForm());
@@ -44,6 +43,15 @@ public class AlertBuilder {
         return this;
     }
     public Alert build(){
+        if(alert.getAlertType().equals(Alert.AlertType.INFORMATION) && alert.getHeaderText() == null){
+            alert.setHeaderText("INFORMATION");
+        }else if(alert.getAlertType().equals(Alert.AlertType.CONFIRMATION) && alert.getHeaderText() == null){
+            alert.setHeaderText("CONFIRMATION");
+        }else if (alert.getAlertType().equals(Alert.AlertType.WARNING) && alert.getHeaderText() == null){
+            alert.setHeaderText("WARNING");
+        }else if (alert.getAlertType().equals(Alert.AlertType.ERROR) && alert.getHeaderText() == null){
+            alert.setHeaderText("ERROR");
+        }
         return alert;
     }
 }

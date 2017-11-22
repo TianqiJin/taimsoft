@@ -2,6 +2,7 @@ package com.taim.backend.service.staff;
 
 
 import com.taim.backend.dao.IDao;
+import com.taim.backend.dao.staff.StaffDaoImpl;
 import com.taim.model.Staff;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ import java.util.List;
 public class StaffServiceImpl implements IStaffService {
 
     @Autowired
-    private IDao<Staff> dao;
+    private StaffDaoImpl dao;
 
     public List<Staff> getAllStaffs() {
         return dao.getAll();
@@ -41,7 +42,11 @@ public class StaffServiceImpl implements IStaffService {
 
     @Override
     public Staff saveOrUpdateStaff(Staff staff) {
-        return dao.saveOrUpdateObject(staff);
+        dao.saveOrUpdateObject(staff);
+        dao.flush();
+        dao.refresh(staff);
+
+        return staff;
     }
 
     @Override

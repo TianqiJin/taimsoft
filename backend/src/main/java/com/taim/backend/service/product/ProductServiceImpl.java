@@ -14,7 +14,7 @@ import java.util.List;
  */
 
 @Service("productService")
-@Transactional
+@Transactional()
 public class ProductServiceImpl implements IProductService {
     @Autowired
     private ProductDaoImpl dao;
@@ -51,6 +51,9 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public Product saveOrUpdateProduct(Product product) {
-        return dao.saveOrUpdateObject(product);
+        dao.saveOrUpdateObject(product);
+        dao.flush();
+        dao.refresh(product);
+        return product;
     }
 }

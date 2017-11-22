@@ -1,6 +1,8 @@
 package com.taim.model.basemodels;
 
 
+import jdk.nashorn.internal.objects.annotations.Optimistic;
+import org.hibernate.annotations.OptimisticLock;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 

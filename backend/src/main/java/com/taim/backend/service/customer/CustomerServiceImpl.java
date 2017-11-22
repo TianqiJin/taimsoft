@@ -2,6 +2,7 @@ package com.taim.backend.service.customer;
 
 
 import com.taim.backend.dao.IDao;
+import com.taim.backend.dao.customer.CustomerDaoImpl;
 import com.taim.model.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,7 @@ import java.util.List;
 @Transactional
 public class CustomerServiceImpl implements ICustomerService{
     @Autowired
-    private IDao<Customer> dao;
+    private CustomerDaoImpl dao;
 
     @Override
     public List<Customer> getAllCustomers() {
@@ -46,6 +47,10 @@ public class CustomerServiceImpl implements ICustomerService{
 
     @Override
     public Customer saveOrUpdateCustomer(Customer customer) {
-        return dao.saveOrUpdateObject(customer);
+        dao.saveOrUpdateObject(customer);
+        dao.flush();
+        dao.refresh(customer);
+
+        return customer;
     }
 }

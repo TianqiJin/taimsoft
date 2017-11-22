@@ -1,6 +1,7 @@
 package com.taim.backend.service.vendor;
 
 import com.taim.backend.dao.IDao;
+import com.taim.backend.dao.vendor.VendorDaoImpl;
 import com.taim.model.Vendor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,7 @@ import java.util.List;
 @Transactional
 public class VendorServiceImpl implements IVendorService{
     @Autowired
-    private IDao<Vendor> dao;
+    private VendorDaoImpl dao;
 
     @Override
     public List<Vendor> getAllVendors() {
@@ -45,6 +46,10 @@ public class VendorServiceImpl implements IVendorService{
 
     @Override
     public Vendor saveOrUpdateVendor(Vendor vendor) {
-        return dao.saveOrUpdateObject(vendor);
+        dao.saveOrUpdateObject(vendor);
+        dao.flush();
+        dao.saveOrUpdate(vendor);
+
+        return vendor;
     }
 }

@@ -29,9 +29,9 @@ public class ControllerExceptionHandler {
                     TaimErrorCodes.DB_SAVE_ERROR.getCode(), TaimErrorCodes.DB_SAVE_ERROR.getMessage());
         }
 
-        @ExceptionHandler(HibernateOptimisticLockingFailureException.class)
+        @ExceptionHandler({StaleObjectStateException.class, HibernateOptimisticLockingFailureException.class})
         public ResponseEntity<ExceptionResponse> handleStaleObjectSateException
-                (HibernateOptimisticLockingFailureException ex){
+                (Exception ex){
             return exceptionResponse(ex, HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(),
                     TaimErrorCodes.DB_OPTIMISTIC_LOCKING_ERROR.getCode(), TaimErrorCodes.DB_OPTIMISTIC_LOCKING_ERROR.getMessage());
         }

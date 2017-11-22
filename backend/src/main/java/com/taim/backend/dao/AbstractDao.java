@@ -11,7 +11,7 @@ public abstract class AbstractDao {
     @Autowired
     private SessionFactory sessionFactory;
 
-    protected Session getSession() {
+    public Session getSession() {
         return sessionFactory.getCurrentSession();
     }
 
@@ -27,6 +27,14 @@ public abstract class AbstractDao {
 
     public void saveOrUpdate(Object entity){
         getSession().saveOrUpdate(entity);
+    }
+
+    public void flush(){
+        getSession().flush();
+    }
+
+    public void refresh(Object entity){
+        getSession().refresh(entity);
     }
 
 }

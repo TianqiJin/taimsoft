@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 import javafx.util.converter.NumberStringConverter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.joda.time.DateTime;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -153,21 +154,46 @@ public class ProductEditDialogController {
                 }
             };
             saveUpdateProductTask.setOnSucceeded(event -> {
+                this.product = saveUpdateProductTask.getValue();
                 okClicked = true;
                 dialogStage.close();
             });
-//            saveUpdateProductTask.exceptionProperty().addListener((observable, oldValue, newValue) -> {
-//                if(newValue != null) {
-//                    Exception ex = (Exception) newValue;
-//
-////                    logger.error(ExceptionUtils.getRootCause(ex).getMessage());
-//                    logger.error(new JSONObject(ExceptionUtils.getRootCause(ex).getMessage()).toString(2));
-//                }
-//            });
-//            saveUpdateProductTask.setOnFailed(event -> {
-////                logger.error("ERROR IS : " + saveUpdateProductTask.getException().getMessage(), saveUpdateProductTask.getException());
-//                FadingStatusMessage.flash("FAILED TO SAVE PRODUCT", root);
-//            });
+
+            saveUpdateProductTask.exceptionProperty().addListener((observable, oldValue, newValue) -> {
+                if(newValue != null) {
+                    Exception ex = (Exception) newValue;
+                    logger.error(ExceptionUtils.getRootCause(ex).getMessage());
+                    JSONObject errorMsg = new JSONObject(ExceptionUtils.getRootCause(ex).getMessage());
+                    new AlertBuilder().alertType(Alert.AlertType.ERROR)
+                            .alertContentText(errorMsg.getString("taimErrorMessage"))
+                            .build()
+                            .showAndWait();
+                    if(errorMsg.getInt("taimErrorCode") == 1){
+                        Task<ProductDTO> getProductTask = new Task<ProductDTO>() {
+                            @Override
+                            protected ProductDTO call() throws Exception {
+                                return RestClientFactory.getProductClient().getById(product.getId());
+                            }
+                        };
+                        getProductTask.setOnSucceeded(event -> {
+                            initData(getProductTask.getValue());
+                        });
+                        getProductTask.exceptionProperty().addListener((observable1, oldValue1, newValue1) -> {
+                            if(newValue1 != null) {
+                                Exception newEx = (Exception) newValue1;
+                                String newExMsg = ExceptionUtils.getRootCause(newEx).getMessage();
+                                logger.error(newExMsg);
+                                JSONObject newErrorMessage = new JSONObject(newExMsg);
+                                new AlertBuilder().alertType(Alert.AlertType.ERROR)
+                                        .alertHeaderText(newErrorMessage.getString("taimErrorMessage"))
+                                        .build()
+                                        .showAndWait();
+                        }});
+
+                        executor.execute(getProductTask);
+                    }
+                }
+            });
 
             executor.execute(saveUpdateProductTask);
         }
@@ -214,6 +240,6 @@ public class ProductEditDialogController {
     }
 
     public ProductDTO getProduct() {
-        return product;
+        return this.product;
     }
 }
