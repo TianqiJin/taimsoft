@@ -46,9 +46,9 @@ public class InvRetController {
         if (isIdtValid()){
             transactionDTO = RestClientFactory.getTransactionClient().getById(Integer.parseInt(transactionIdField.getText()));
             if (transactionDTO.getTransactionType()== Transaction.TransactionType.QUOTATION && transactionType == Transaction.TransactionType.INVOICE){
-                TransactionPanelLoader.loadInvoice(transactionDTO);
+                transactionDTO = TransactionPanelLoader.loadInvoice(transactionDTO);
             }else if (transactionDTO.getTransactionType() == Transaction.TransactionType.INVOICE && transactionType == Transaction.TransactionType.RETURN){
-                TransactionPanelLoader.loadReturn(transactionDTO);
+                transactionDTO = TransactionPanelLoader.loadReturn(transactionDTO);
             }
             confirmedClicked = true;
             dialogStage.close();
@@ -87,5 +87,9 @@ public class InvRetController {
             return false;
         }
         return true;
+    }
+
+    public TransactionDTO getTransactionDTO() {
+        return transactionDTO;
     }
 }

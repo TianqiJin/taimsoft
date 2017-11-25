@@ -219,16 +219,28 @@ public class TransactionOverviewController extends IOverviewController<Transacti
         createNewTransactionComboBox.setOnAction(event -> {
             switch (createNewTransactionComboBox.getSelectionModel().getSelectedItem()){
                 case QUOTATION:
-                    TransactionPanelLoader.loadQuotation(null);
+                    TransactionDTO newQuot = TransactionPanelLoader.loadQuotation(null);
+                    if (newQuot!=null){
+                        getOverviewTable().getItems().add(newQuot);
+                    }
                     break;
                 case INVOICE:
-                    TransactionPanelLoader.showNewTransactionDialog(Transaction.TransactionType.INVOICE);
+                    TransactionDTO newInvo = TransactionPanelLoader.showNewTransactionDialog(Transaction.TransactionType.INVOICE);
+                    if (newInvo !=null){
+                        getOverviewTable().getItems().add(newInvo);
+                    }
                     break;
                 case STOCK:
-                    TransactionPanelLoader.loadStock(null);
+                    TransactionDTO newStok = TransactionPanelLoader.loadStock(null);
+                    if (newStok!=null){
+                        getOverviewTable().getItems().add(newStok);
+                    }
                     break;
                 case RETURN:
-                    TransactionPanelLoader.showNewTransactionDialog(Transaction.TransactionType.RETURN);
+                    TransactionDTO newRet = TransactionPanelLoader.showNewTransactionDialog(Transaction.TransactionType.RETURN);
+                    if (newRet!=null){
+                        getOverviewTable().getItems().add(newRet);
+                    }
                     break;
             }
         });

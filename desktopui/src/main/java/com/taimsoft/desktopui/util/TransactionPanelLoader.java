@@ -378,7 +378,7 @@ public class TransactionPanelLoader {
         return null;
     }
 
-    public static void showNewTransactionDialog(Transaction.TransactionType type){
+    public static TransactionDTO showNewTransactionDialog(Transaction.TransactionType type){
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(TransactionPanelLoader.class.getResource("/fxml/InvoiceReturnTransaction.fxml"));
         TitledPane page = null;
@@ -394,10 +394,12 @@ public class TransactionPanelLoader {
             controller.setDialogStage(dialogStage);
             controller.assignType(type);
             dialogStage.showAndWait();
-            controller.isConfirmedClicked();
-
+            if (controller.isConfirmedClicked()){
+                return controller.getTransactionDTO();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return null;
     }
 }
