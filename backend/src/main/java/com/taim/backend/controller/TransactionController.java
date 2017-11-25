@@ -1,7 +1,8 @@
 package com.taim.backend.controller;
 
-import com.taim.model.Transaction;
+import com.taim.model.*;
 import com.taim.backend.service.transaction.ITransactionService;
+import com.taim.model.basemodels.UserBaseModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -93,6 +94,16 @@ public class TransactionController {
     @ResponseBody
     public ResponseEntity<Transaction> update(@RequestBody Transaction transaction) {
         Transaction transaction1 = service.updateTransaction(transaction);
+        return new ResponseEntity<Transaction>(transaction1, HttpStatus.ACCEPTED);
+    }
+
+    @RequestMapping(value = "/saveOrUpdateAll",
+            method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Transaction> updateAll(@RequestBody Transaction transaction) {
+        Transaction transaction1 = service.saveOrUpdateAll(transaction);
         return new ResponseEntity<Transaction>(transaction1, HttpStatus.ACCEPTED);
     }
 

@@ -1,6 +1,8 @@
 package com.taim.backend.service.transaction;
 
+import com.taim.model.Product;
 import com.taim.model.Transaction;
+import com.taim.model.basemodels.UserBaseModel;
 
 import java.util.List;
 
@@ -16,5 +18,6 @@ public interface ITransactionService {
     List<Transaction> getAllTransactionsByCustomerId(Integer id);
     List<Transaction> getAllTransactionsByVendorId(Integer id);
     List<Transaction> getAllTransactionsByStaffId(Integer id);
-
+    Transaction saveOrUpdateTransaction(Transaction transaction);
+    Transaction saveOrUpdateAll(Transaction transaction);
 }

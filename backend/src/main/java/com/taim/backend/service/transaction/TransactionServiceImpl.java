@@ -2,8 +2,15 @@ package com.taim.backend.service.transaction;
 
 
 import com.taim.backend.dao.IDao;
+import com.taim.backend.dao.customer.CustomerDaoImpl;
+import com.taim.backend.dao.product.ProductDaoImpl;
 import com.taim.backend.dao.transaction.TransactionDaoImpl;
+import com.taim.backend.dao.vendor.VendorDaoImpl;
+import com.taim.model.Customer;
+import com.taim.model.Product;
 import com.taim.model.Transaction;
+import com.taim.model.Vendor;
+import com.taim.model.basemodels.UserBaseModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,52 +24,77 @@ import java.util.List;
 @Service("transactionService")
 @Transactional
 public class TransactionServiceImpl implements ITransactionService{
-    @Autowired
-    //private IDao<Transaction> dao;
-    private TransactionDaoImpl dao;
 
+    @Autowired
+    private CustomerDaoImpl customerDao;
+    @Autowired
+    private ProductDaoImpl productDao;
+    @Autowired
+    private TransactionDaoImpl transactionDao;
+    @Autowired
+    private VendorDaoImpl vendorDao;
     @Override
     public List<Transaction> getAllTransactions() {
-        return dao.getAll();
+        return transactionDao.getAll();
     }
 
     @Override
     public Transaction saveTransaction(Transaction transaction) {
-        return dao.save(transaction);
+        return transactionDao.save(transaction);
     }
 
     @Override
     public Transaction getTransactionById(Integer id) {
-       return dao.findByID(id);
+       return transactionDao.findByID(id);
     }
 
     @Override
     public void deleteTransaction(Transaction transaction) {
-        dao.deleteObject(transaction);
+        transactionDao.deleteObject(transaction);
     }
 
     @Override
     public Transaction updateTransaction(Transaction transaction) {
 
-       return dao.updateObject(transaction);
+       return transactionDao.updateObject(transaction);
     }
 
     @Override
     public List<Transaction> getAllTransactionsByCustomerId(Integer id) {
-        return dao.getByCustomerId(id);
+        return transactionDao.getByCustomerId(id);
     }
 
     @Override
     public List<Transaction> getAllTransactionsByVendorId(Integer id) {
-        return dao.getByVendorId(id);
+        return transactionDao.getByVendorId(id);
     }
 
     @Override
     public List<Transaction> getAllTransactionsByStaffId(Integer id) {
-        return dao.getByStaffId(id);
+        return transactionDao.getByStaffId(id);
+    }
+    @Override
+    public Transaction saveOrUpdateTransaction(Transaction transaction) {
+        transactionDao.saveOrUpdateObject(transaction);
+        transactionDao.flush();
+        transactionDao.refresh(transaction);
+        return transaction;
     }
 
-
+    @Override
+    public Transaction saveOrUpdateAll(Transaction transaction) {
+        if (transaction.getCustomer()!=null) {
+            customerDao.updateObject(transaction.getCustomer());
+        }
+        if (transaction.getVendor()!=null){
+            vendorDao.updateObject(transaction.getVendor());
+        }
+        transaction.getTransactionDetails().forEach(d->productDao.updateObject(d.getProduct()));
+        transactionDao.saveOrUpdateObject(transaction);
+        transactionDao.flush();
+        transactionDao.refresh(transaction);
+        return transaction;
+    }
 }
 
 

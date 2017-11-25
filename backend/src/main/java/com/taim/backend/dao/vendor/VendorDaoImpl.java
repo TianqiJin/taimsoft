@@ -27,6 +27,7 @@ public class VendorDaoImpl extends AbstractDao implements IDao<Vendor> {
     @SuppressWarnings("unchecked")
     public List<Vendor> getAll() {
         Criteria criteria = getSession().createCriteria(Vendor.class);
+        criteria.add(Restrictions.eq("deleted",false));
         return (List<Vendor>) criteria.list();
     }
 
@@ -34,6 +35,7 @@ public class VendorDaoImpl extends AbstractDao implements IDao<Vendor> {
     public Vendor findByID(Integer id) {
         Criteria criteria = getSession().createCriteria(Vendor.class);
         criteria.add(Restrictions.eq("id", id));
+        criteria.add(Restrictions.eq("deleted",false));
         return (Vendor) criteria.uniqueResult();
     }
 
@@ -53,6 +55,7 @@ public class VendorDaoImpl extends AbstractDao implements IDao<Vendor> {
     public Vendor findByName(String name) {
         Criteria criteria = getSession().createCriteria(Vendor.class);
         criteria.add(Restrictions.eq("fullname", name));
+        criteria.add(Restrictions.eq("deleted",false));
         return (Vendor)criteria.uniqueResult();
 
     }

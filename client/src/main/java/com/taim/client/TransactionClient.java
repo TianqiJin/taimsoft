@@ -3,9 +3,12 @@ package com.taim.client;
 import com.taim.client.configuration.LoggingRequestInterceptor;
 import com.taim.client.util.BeanMapper;
 import com.taim.client.util.PropertiesProcessor;
-import com.taim.client.util.RestTemplateFactory;
+import com.taim.dto.CustomerDTO;
+import com.taim.dto.ProductDTO;
 import com.taim.dto.TransactionDTO;
-import com.taim.model.Transaction;
+import com.taim.dto.VendorDTO;
+import com.taim.dto.basedtos.UserBaseModelDTO;
+import com.taim.model.*;
 import org.springframework.http.*;
 import org.springframework.http.client.BufferingClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
@@ -123,4 +126,12 @@ public class TransactionClient implements IClient<TransactionDTO>{
 
         return transactionList;
     }
+
+    public TransactionDTO saveOrUpdateAll(TransactionDTO transactionDTO){
+        String url = TRANSACTION_PATH+"/saveOrUpdateAll";
+        HttpEntity<Transaction> requestEntity = new HttpEntity<>(BeanMapper.map(transactionDTO,Transaction.class), headers);
+        ResponseEntity<Transaction> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Transaction.class);
+        return BeanMapper.map(responseEntity.getBody(), TransactionDTO.class);
+    }
+
 }

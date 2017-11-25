@@ -28,6 +28,7 @@ public class TransactionDaoImpl extends AbstractDao implements IDao<Transaction>
     @SuppressWarnings("unchecked")
     public List<Transaction> getAll() {
         Criteria criteria = getSession().createCriteria(Transaction.class);
+        criteria.add(Restrictions.eq("deleted",false));
         return (List<Transaction>) criteria.list();
     }
 
@@ -35,6 +36,7 @@ public class TransactionDaoImpl extends AbstractDao implements IDao<Transaction>
     public Transaction findByID(Integer id) {
         Criteria criteria = getSession().createCriteria(Transaction.class);
         criteria.add(Restrictions.eq("id", id));
+        criteria.add(Restrictions.eq("deleted",false));
         return (Transaction) criteria.uniqueResult();
     }
 
@@ -46,7 +48,8 @@ public class TransactionDaoImpl extends AbstractDao implements IDao<Transaction>
 
     @Override
     public Transaction saveOrUpdateObject(Transaction object) {
-        return null;
+        saveOrUpdate(object);
+        return object;
     }
 
     @Override
@@ -62,15 +65,18 @@ public class TransactionDaoImpl extends AbstractDao implements IDao<Transaction>
     public List<Transaction> getByCustomerId(Integer id){
         Criteria criteria = getSession().createCriteria(Transaction.class);
         criteria.add(Restrictions.eq("customer.id",id));
+        criteria.add(Restrictions.eq("deleted",false));
         return (List<Transaction>) criteria.list();
     }
     public List<Transaction> getByStaffId(Integer id){
         Criteria criteria = getSession().createCriteria(Transaction.class);
+        criteria.add(Restrictions.eq("deleted",false));
         criteria.add(Restrictions.eq("staff.id",id));
         return (List<Transaction>) criteria.list();
     }
     public List<Transaction> getByVendorId(Integer id){
         Criteria criteria = getSession().createCriteria(Transaction.class);
+        criteria.add(Restrictions.eq("deleted",false));
         criteria.add(Restrictions.eq("vendor.id",id));
         return (List<Transaction>) criteria.list();
     }

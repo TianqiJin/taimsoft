@@ -21,7 +21,12 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.joda.time.DateTime;
+import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -43,6 +48,7 @@ import java.util.stream.Collectors;
  */
 
 public class GenerateInvoiceController {
+    private static final Logger logger = LoggerFactory.getLogger(GenerateInvoiceController.class);
 
     private Stage dialogStage;
 
@@ -60,7 +66,10 @@ public class GenerateInvoiceController {
     private int discount;
     private Executor executor;
     private Mode mode;
-    //private Map<Integer, Double> oldProductQuantityMap;
+    private Map<Integer, Double> oldProductVirtualNumMap;
+    private Map<Integer, Double> oldProductActualNumMap;
+    private double oldStoreCredit;
+
     private DeliveryStatus.Status prevStats;
 
     private static final String DATE_PATTERN = "yyyy-MM-dd";
@@ -300,7 +309,7 @@ public class GenerateInvoiceController {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,String newValue) {
                 transaction.getDeliveryStatus().setStatus(DeliveryStatus.getStatus(newValue));
-                transaction.getDeliveryStatus().setDateModified(DateTime.now());
+                //transaction.getDeliveryStatus().setDateModified(DateTime.now());
                 if (DeliveryStatus.getStatus(newValue)== DeliveryStatus.Status.DELIVERING && DeliveryStatus.getStatus(oldValue)== DeliveryStatus.Status.UNDELIVERED){
                     transactionTableView.getItems().forEach(e->e.getProduct().setTotalNum(e.getProduct().getTotalNum()-e.getQuantity()));
                     qtyCol.setEditable(false);
@@ -408,6 +417,8 @@ public class GenerateInvoiceController {
             newProductTransaction.setSaleAmount(selectedProduct.getUnitPrice()*newProductTransaction.getQuantity());
             newProductTransaction.setPackageInfo(initiatePkgInfo(newProductTransaction));
             transactionDetailDTOObservableList.add(newProductTransaction);
+            oldProductActualNumMap.put(selectedProduct.getId(),selectedProduct.getTotalNum());
+            oldProductVirtualNumMap.put(selectedProduct.getId(),selectedProduct.getVirtualTotalNum());
         }
     }
 
@@ -417,14 +428,14 @@ public class GenerateInvoiceController {
         this.dialogStage.close();
     }
 
-    @FXML
-    public TransactionDTO handleConfirmButton() throws IOException, SQLException {
-        generateTransaction();
-        if(isConfirmedClicked()) {
-            dialogStage.close();
-        }
-        return this.transaction;
-    }
+//    @FXML
+//    public TransactionDTO handleConfirmButton() throws IOException, SQLException {
+//        generateTransaction();
+//        if(isConfirmedClicked()) {
+//            dialogStage.close();
+//        }
+//        return this.transaction;
+//    }
 
 
     public GenerateInvoiceController(){
@@ -474,9 +485,9 @@ public class GenerateInvoiceController {
             }
         }
         this.staff = transactionFromAbove.getStaff();
-        //updatePrevProductCount();
         this.payment = new PaymentDTO();
         this.customer = transactionFromAbove.getCustomer();
+        updatePrevProductNum();
         this.transactionDetailDTOObservableList = FXCollections.observableArrayList(transaction.getTransactionDetails());
         transactionTableView.setItems(transactionDetailDTOObservableList);
         transactionDetailDTOObservableList.addListener(new ListChangeListener<TransactionDetailDTO>() {
@@ -649,19 +660,19 @@ public class GenerateInvoiceController {
     }
 
 
-    private void generateTransaction() throws IOException, SQLException{
+    @FXML
+    public void handleConfirmButton() throws IOException, SQLException{
         transaction.getTransactionDetails().clear();
         transactionDetailDTOObservableList.forEach(t->{
             if (t.getDateCreated()==null){
                 t.setDateCreated(DateTime.now());
             }
-            t.setDateModified(DateTime.now());
+            //t.setDateModified(DateTime.now());
         });
 
         if(!paymentField.getText().trim().isEmpty()){
             if(payment.getPaymentType()== Payment.PaymentType.STORE_CREDIT){
                 customer.setStoreCredit(new BigDecimal(customer.getStoreCredit()).setScale(2,BigDecimal.ROUND_HALF_EVEN).subtract(new BigDecimal(paymentField.getText())).doubleValue());
-                RestClientFactory.getCustomerClient().update(customer);
             }
             payment.setDateCreated(DateTime.now());
             payment.setDateModified(DateTime.now());
@@ -677,7 +688,7 @@ public class GenerateInvoiceController {
         transaction.setNote(textArea.getText());
         transaction.setCustomer(customer);
         transaction.setStaff(staff);
-        transaction.setDateModified(DateTime.now());
+        //transaction.setDateModified(DateTime.now());
         if (this.payment.getPaymentAmount()!=0){
             transaction.getPayments().add(payment);
             double paid = 0.0;
@@ -700,68 +711,82 @@ public class GenerateInvoiceController {
                 .build()
                 .showAndWait();
         if(result.isPresent() && result.get() == ButtonType.OK){
-            System.out.println("There: "+transaction.getDeliveryStatus().getStatus().getValue());
+            CustomerDTO tmpCustomer = RestClientFactory.getCustomerClient().getByName(customer.getFullname());
+            tmpCustomer.setStoreCredit(this.customer.getStoreCredit()-oldStoreCredit+tmpCustomer.getStoreCredit());
+            this.customer = tmpCustomer;
+            transaction.setCustomer(customer);
+            transaction.setStaff(RestClientFactory.getStaffClient().getByName(staff.getUserName()));
+            transaction.getTransactionDetails().forEach(t->{
+                ProductDTO tmpProduct = RestClientFactory.getProductClient().getById(t.getProduct().getId());
+                double newVirtNum = t.getProduct().getVirtualTotalNum()-oldProductVirtualNumMap.get(tmpProduct.getId())+tmpProduct.getVirtualTotalNum();
+                double newActualNum = t.getProduct().getTotalNum()-oldProductActualNumMap.get(tmpProduct.getId())+tmpProduct.getTotalNum();
+                tmpProduct.setVirtualTotalNum(newVirtNum);
+                tmpProduct.setTotalNum(newActualNum);
+                t.setProduct(tmpProduct);
+            });
             if (transaction.getDeliveryStatus().getStatus()== DeliveryStatus.Status.DELIVERED && transaction.getPaymentStatus()== Transaction.PaymentStatus.PAID){
                 transaction.setFinalized(true);
             }
             if(mode== Mode.CREATE) {
                 transaction.setRefId(oldTransaction.getId());
-                int refNum = RestClientFactory.getTransactionClient().add(transaction).getId();
-                oldTransaction.setRefId(refNum);
-                oldTransaction.setDateModified(DateTime.now());
-                oldTransaction.setFinalized(true);
-                RestClientFactory.getTransactionClient().update(oldTransaction);
-            }else{
-                RestClientFactory.getTransactionClient().update(transaction);
             }
-            updateProduct();
 
-            confirmedClicked = true;
+            Task<TransactionDTO> saveUpdateTransactionTask = new Task<TransactionDTO>() {
+                @Override
+                protected TransactionDTO call() throws Exception {
+                    return RestClientFactory.getTransactionClient().saveOrUpdateAll(transaction);
+                }
+            };
+            saveUpdateTransactionTask.setOnSucceeded(event -> {
+                this.transaction = saveUpdateTransactionTask.getValue();
+                if(mode== Mode.CREATE) {
+                    int refNum = transaction.getId();
+                    oldTransaction.setRefId(refNum);
+                    oldTransaction.setFinalized(true);
+                    RestClientFactory.getTransactionClient().update(oldTransaction);
+                }
+                confirmedClicked = true;
+                dialogStage.close();
+            });
+            saveUpdateTransactionTask.exceptionProperty().addListener((observable, oldValue, newValue) -> {
+                if(newValue != null) {
+                    Exception ex = (Exception) newValue;
+                    logger.error(ExceptionUtils.getRootCause(ex).getMessage());
+                    JSONObject errorMsg = new JSONObject(ExceptionUtils.getRootCause(ex).getMessage());
+                    new AlertBuilder().alertType(Alert.AlertType.ERROR)
+                            .alertContentText(errorMsg.getString("taimErrorMessage"))
+                            .build()
+                            .showAndWait();
+                    if(errorMsg.getInt("taimErrorCode") == 1){
+                        Task<TransactionDTO> getTransactionTask = new Task<TransactionDTO>() {
+                            @Override
+                            protected TransactionDTO call() throws Exception {
+                                return RestClientFactory.getTransactionClient().getById(transaction.getId());
+                            }
+                        };
+                        getTransactionTask.setOnSucceeded(event -> {
+                            setMainClass(getTransactionTask.getValue());
+                            initPanelDetails();
+                        });
+                        getTransactionTask.exceptionProperty().addListener((observable1, oldValue1, newValue1) -> {
+                            if(newValue1 != null) {
+                                Exception newEx = (Exception) newValue1;
+                                String newExMsg = ExceptionUtils.getRootCause(newEx).getMessage();
+                                logger.error(newExMsg);
+                                JSONObject newErrorMessage = new JSONObject(newExMsg);
+                                new AlertBuilder().alertType(Alert.AlertType.ERROR)
+                                        .alertHeaderText(newErrorMessage.getString("taimErrorMessage"))
+                                        .build()
+                                        .showAndWait();
+                            }});
+                        executor.execute(getTransactionTask);
+                    }
+                }
+            });
+            executor.execute(saveUpdateTransactionTask);
         }
     }
 
-    private void updateProduct(){
-        transaction.getTransactionDetails().forEach(p->{
-            RestClientFactory.getProductClient().update(p.getProduct());
-        });
-//        if (transaction.getDeliveryStatus().getStatus()== DeliveryStatus.Status.DELIVERING) {
-//            if (mode == Mode.CREATE) {
-//                transaction.getTransactionDetails().forEach(p -> {
-//                    double newVirtualNum = p.getProduct().getVirtualTotalNum() - p.getQuantity();
-//                    if (oldProductQuantityMap.containsKey(p.getProduct().getId())) {
-//                        newVirtualNum += oldProductQuantityMap.get(p.getProduct().getId());
-//                    }
-//                    p.getProduct().setVirtualTotalNum(newVirtualNum);
-//                    double newActualNum = p.getProduct().getTotalNum() - p.getQuantity();
-//                    p.getProduct().setTotalNum(newActualNum);
-//                    RestClientFactory.getProductClient().update(p.getProduct());
-//                });
-//            } else {
-//                transaction.getTransactionDetails().forEach(p -> {
-//                    double newVirtualNum = p.getProduct().getVirtualTotalNum() - p.getQuantity();
-//                    if (oldProductQuantityMap.containsKey(p.getProduct().getId())) {
-//                        newVirtualNum += oldProductQuantityMap.get(p.getProduct().getId());
-//                    }
-//                        p.getProduct().setVirtualTotalNum(newVirtualNum);
-//                    if (prevStats != DeliveryStatus.Status.DELIVERING) {
-//                        double newActualNum = p.getProduct().getTotalNum() - p.getQuantity();
-//                        p.getProduct().setTotalNum(newActualNum);
-//                    }
-//                    RestClientFactory.getProductClient().update(p.getProduct());
-//                });
-//            }
-//        }else if (transaction.getDeliveryStatus().getStatus()== DeliveryStatus.Status.UNDELIVERED){
-//            transaction.getTransactionDetails().forEach(p -> {
-//                double newVirtualNum = p.getProduct().getVirtualTotalNum() - p.getQuantity();
-//                if (oldProductQuantityMap.containsKey(p.getProduct().getId())) {
-//                    newVirtualNum += oldProductQuantityMap.get(p.getProduct().getId());
-//                }
-//                p.getProduct().setVirtualTotalNum(newVirtualNum);
-//                RestClientFactory.getProductClient().update(p.getProduct());
-//            });
-//        }
-
-    }
 
 
     public boolean isConfirmedClicked(){
@@ -853,11 +878,14 @@ public class GenerateInvoiceController {
         return true;
     }
 
-//    private void updatePrevProductCount(){
-//        oldProductQuantityMap = new HashMap<>();
-//        this.transaction.getTransactionDetails().forEach(t->{
-//            oldProductQuantityMap.put(t.getProduct().getId(),t.getQuantity());
-//        });
-//    }
+    private void updatePrevProductNum(){
+        oldProductVirtualNumMap= new HashMap<>();
+        oldProductActualNumMap = new HashMap<>();
+        oldStoreCredit=customer.getStoreCredit();
+        this.transaction.getTransactionDetails().forEach(t->{
+            oldProductVirtualNumMap.put(t.getProduct().getId(),t.getProduct().getVirtualTotalNum());
+            oldProductActualNumMap.put(t.getProduct().getId(),t.getProduct().getTotalNum());
+        });
+    }
 }
 

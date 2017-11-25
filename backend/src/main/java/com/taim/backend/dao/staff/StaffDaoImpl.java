@@ -20,6 +20,7 @@ public class StaffDaoImpl extends AbstractDao implements IDao<Staff> {
     @SuppressWarnings("unchecked")
     public List<Staff> getAll() {
         Criteria criteria = getSession().createCriteria(Staff.class);
+        criteria.add(Restrictions.eq("deleted",false));
         return (List<Staff>) criteria.list();
     }
 
@@ -33,6 +34,7 @@ public class StaffDaoImpl extends AbstractDao implements IDao<Staff> {
     public Staff findByID(Integer staffID) {
         Criteria criteria = getSession().createCriteria(Staff.class);
         criteria.add(Restrictions.eq("id", staffID));
+        criteria.add(Restrictions.eq("deleted",false));
         return (Staff) criteria.uniqueResult();
     }
 
@@ -52,6 +54,7 @@ public class StaffDaoImpl extends AbstractDao implements IDao<Staff> {
     public Staff findByName(String name){
     Criteria criteria = getSession().createCriteria(Staff.class);
     criteria.add(Restrictions.eq("userName", name));
+    criteria.add(Restrictions.eq("deleted",false));
     return (Staff)criteria.uniqueResult();
     }
 

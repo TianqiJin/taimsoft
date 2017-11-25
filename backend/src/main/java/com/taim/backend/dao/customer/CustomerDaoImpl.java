@@ -26,6 +26,7 @@ public class CustomerDaoImpl extends AbstractDao implements IDao<Customer> {
     @SuppressWarnings("unchecked")
     public List<Customer> getAll() {
         Criteria criteria = getSession().createCriteria(Customer.class);
+        criteria.add(Restrictions.eq("deleted",false));
         return (List<Customer>) criteria.list();
     }
 
@@ -33,6 +34,7 @@ public class CustomerDaoImpl extends AbstractDao implements IDao<Customer> {
     public Customer findByID(Integer id) {
         Criteria criteria = getSession().createCriteria(Customer.class);
         criteria.add(Restrictions.eq("id", id));
+        criteria.add(Restrictions.eq("deleted",false));
         return (Customer) criteria.uniqueResult();
     }
 
@@ -52,6 +54,7 @@ public class CustomerDaoImpl extends AbstractDao implements IDao<Customer> {
     public Customer findByName(String name) {
         Criteria criteria = getSession().createCriteria(Customer.class);
         criteria.add(Restrictions.eq("fullname", name));
+        criteria.add(Restrictions.eq("deleted",false));
         return (Customer)criteria.uniqueResult();
 
     }

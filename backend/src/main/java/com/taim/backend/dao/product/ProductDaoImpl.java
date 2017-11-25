@@ -26,6 +26,7 @@ public class ProductDaoImpl extends AbstractDao implements IDao<Product> {
     @SuppressWarnings("unchecked")
     public List<Product> getAll() {
         Criteria criteria = getSession().createCriteria(Product.class);
+        criteria.add(Restrictions.eq("deleted",false));
         return (List<Product>) criteria.list();
     }
 
@@ -33,6 +34,7 @@ public class ProductDaoImpl extends AbstractDao implements IDao<Product> {
     public Product findByID(Integer id) {
         Criteria criteria = getSession().createCriteria(Product.class);
         criteria.add(Restrictions.eq("id", id));
+        criteria.add(Restrictions.eq("deleted",false));
         return (Product) criteria.uniqueResult();
     }
 
@@ -56,6 +58,7 @@ public class ProductDaoImpl extends AbstractDao implements IDao<Product> {
     public Product findByTexture(String texture) {
         Criteria criteria = getSession().createCriteria(Product.class);
         criteria.add(Restrictions.eq("texture", texture));
+        criteria.add(Restrictions.eq("deleted",false));
         return (Product)criteria.uniqueResult();
     }
 
