@@ -229,22 +229,28 @@ public class TransactionOverviewController extends IOverviewController<Transacti
             TransactionDTO transaction;
             switch (createNewTransactionComboBox.getSelectionModel().getSelectedItem()){
                 case QUOTATION:
-                    transaction = TransactionPanelLoader.loadQuotation(null);
-                    if(transaction != null){
-                        getOverviewTable().getItems().add(transaction);
+                    TransactionDTO newQuot = TransactionPanelLoader.loadQuotation(null);
+                    if (newQuot!=null){
+                        getOverviewTable().getItems().add(newQuot);
                     }
                     break;
                 case INVOICE:
-                    TransactionPanelLoader.showNewTransactionDialog(Transaction.TransactionType.INVOICE);
+                    TransactionDTO newInvo = TransactionPanelLoader.showNewTransactionDialog(Transaction.TransactionType.INVOICE);
+                    if (newInvo !=null){
+                        getOverviewTable().getItems().add(newInvo);
+                    }
                     break;
                 case STOCK:
-                    transaction = TransactionPanelLoader.loadStock(null);
-                    if(transaction != null){
-                        getOverviewTable().getItems().add(transaction);
+                    TransactionDTO newStok = TransactionPanelLoader.loadStock(null);
+                    if (newStok!=null){
+                        getOverviewTable().getItems().add(newStok);
                     }
                     break;
                 case RETURN:
-                    TransactionPanelLoader.showNewTransactionDialog(Transaction.TransactionType.RETURN);
+                    TransactionDTO newRet = TransactionPanelLoader.showNewTransactionDialog(Transaction.TransactionType.RETURN);
+                    if (newRet!=null){
+                        getOverviewTable().getItems().add(newRet);
+                    }
                     break;
             }
         });
