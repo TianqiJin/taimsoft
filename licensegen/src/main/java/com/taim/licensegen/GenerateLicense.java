@@ -1,24 +1,24 @@
-package com.taimsoft.licensetools;
+package com.taim.licensegen;
 
-import com.taimsoft.licensetools.model.CryptKey;
-import com.taimsoft.licensetools.model.LicenseFile;
-import com.taimsoft.licensetools.model.LicenseXML;
-import com.taimsoft.licensetools.model.XMLWriter;
-import com.coverity.licensetools.model.licensever.*;
-import com.taimsoft.licensetools.model.licensever.LicenseV1;
-import com.taimsoft.licensetools.util.ToolCommandLineParser;
-import com.taimsoft.licensetools.model.licensever.License;
-import com.taimsoft.licensetools.model.licensever.LicenseBase;
-import com.taimsoft.licensetools.util.XmlProperty;
+import com.taim.licensegen.model.licensever.License;
+import com.taim.licensegen.util.XmlProperty;
+import com.taim.licensegen.model.CryptKey;
+import com.taim.licensegen.model.LicenseFile;
+import com.taim.licensegen.model.LicenseXML;
+import com.taim.licensegen.model.XMLWriter;
+import com.taim.licensegen.model.licensever.LicenseV1;
+import com.taim.licensegen.model.licensever.LicenseBase;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.Seconds;
 import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -31,7 +31,7 @@ import java.io.*;
 import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
@@ -50,12 +50,13 @@ public class GenerateLicense {
     private static final String LICENSE_REFERENCE_DATE = "2005-03-13 00:00:00";
     private static final String PST_TIMEZONE = "America/Los_Angeles";
     private static final String START_ANNOATION = StringUtils.repeat("#", 15);
-    private static Logger logger = LogManager.getLogger(GenerateLicense.class);
+    private static final Logger logger = LoggerFactory.getLogger(GenerateLicense.class);
     private List<String> taimProductList;
     private File tempDir;
     private File workingDir;
     private File targetFile;
     private File privateKeyFile;
+    private File publicKeyFile;
     private LicenseXML licenseXML;
     private License licenses;
     private String fileComment;
@@ -76,6 +77,7 @@ public class GenerateLicense {
 
         targetFile = new File(tempDir, "license.dat");
         privateKeyFile = new File(workingDir, "private.key");
+
         licenseXML = new LicenseXML();
         licenses = new License();
     }
@@ -307,6 +309,14 @@ public class GenerateLicense {
 
     public void setPrivateKeyFile(File privateKeyFile) {
         this.privateKeyFile = privateKeyFile;
+    }
+
+    public File getPublicKeyFile() {
+        return publicKeyFile;
+    }
+
+    public void setPublicKeyFile(File publicKeyFile) {
+        this.publicKeyFile = publicKeyFile;
     }
 
     public LicenseXML getLicenseXML() {
@@ -567,63 +577,111 @@ public class GenerateLicense {
         }
     }
 
-    private boolean verifyLicenseSignature(CryptKey<PublicKey> publicKeyCrypteKey, LicenseBase licenseBase) throws GenerateLicenseException{
+    public void verifyLicense(File licenseFile, String product) throws GenerateLicenseException {
         try{
-            LicenseV1 license = (LicenseV1) licenseBase;
-            String taim1 = license.getSignature();
-            license.setSignature(null);
-            Signature signature = Signature.getInstance("SHA1withRSA");
-            signature.initVerify(publicKeyCrypteKey.getKeyData());
-            List<String> inputs = license.generateSignatureInput();
-            for(String s: inputs)
-                signature.update(s.getBytes(StandardCharsets.UTF_8));
+            publicKeyFile = Files.createTempFile("tmpPublicKey", null).toFile();
+            Files.copy(getClass().getClassLoader().getResourceAsStream("taimPublicKey"), publicKeyFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
-            return signature.verify(Base64.getDecoder().decode(taim1));
+            setTargetFile(licenseFile);
+            unmarshall();
 
-        } catch (NoSuchAlgorithmException | SignatureException | InvalidKeyException | LicenseFile.LicenseException e) {
+            byte[] tmpPublicKeyBytes = Files.readAllBytes(getPublicKeyFile().toPath());
+            PublicKey publicKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(tmpPublicKeyBytes));
+            CryptKey<PublicKey> publicKeyCryptKey = new CryptKey<>();
+            publicKeyCryptKey.setKeyData(publicKey);
+            boolean isProductFound = false;
+            for(LicenseBase licenseBase: getLicenses().getLicense()){
+                LicenseV1 license = (LicenseV1) licenseBase;
+                if(license.getProduct().equals(product)){
+                    isProductFound = true;
+                    String taim1 = license.getSignature();
+                    license.setSignature(null);
+                    Signature signature = Signature.getInstance("SHA1withRSA");
+                    signature.initVerify(publicKeyCryptKey.getKeyData());
+                    List<String> inputs = license.generateSignatureInput();
+                    for(String s: inputs)
+                        signature.update(s.getBytes(StandardCharsets.UTF_8));
+
+                    //Check signature
+                    if(!signature.verify(Base64.getDecoder().decode(taim1))){
+                        throw new GenerateLicenseException("License authorization failure. The signature is invalid");
+                    }
+                    //Check valid-from field
+                    boolean isValidFromFound = false;
+                    DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyyMMdd");
+                    for(LicenseV1.Option option: license.getOptions()){
+                        if(option.getName().equals("valid-from")){
+                            isValidFromFound = true;
+                            if(dtf.parseDateTime(String.valueOf(option.getValue())).isAfter(DateTime.now())){
+                                throw new GenerateLicenseException("License starts in the future");
+                            }
+                        }
+                    }
+
+                    //Check valid-until field
+                    dtf = DateTimeFormat.forPattern("yyyy-MMM-dd HH:mm:ss z");
+                    if(DateTime.now().withZoneRetainFields(DateTimeZone.UTC).isAfter(dtf.parseDateTime(license.getValidUntil()))){
+                        throw new GenerateLicenseException("License is expired");
+                    }
+
+                    if(!isValidFromFound){
+                        throw new GenerateLicenseException("Field valid-from is not found in the license");
+                    }
+
+                }
+            }
+            if(!isProductFound){ throw new GenerateLicenseException("License for product - " + product+ " is not found");
+            }
+        } catch (NoSuchAlgorithmException | SignatureException | InvalidKeyException | InvalidKeySpecException | IOException | LicenseFile.LicenseException e) {
             throw new GenerateLicenseException(e.getMessage(), e);
+        }finally {
+            if(publicKeyFile.exists()){
+                publicKeyFile.delete();
+            }
         }
     }
 
     public static void main(String[] args){
-        ToolCommandLineParser commandLineParser = new ToolCommandLineParser();
-        switch(commandLineParser.parse(args)){
-            case success:
-                GenerateLicense generateLicense = new GenerateLicense();
-                String securityFile = commandLineParser.getStringValue(ToolCommandLineParser.SECURITY_FILE);
-                String privateKeyFile = commandLineParser.getStringValue(ToolCommandLineParser.PRIVATE_KEY_FILE);
-                String requestFile = commandLineParser.getStringValue(ToolCommandLineParser.LICENSE_REQUEST);
-
-                generateLicense.setTargetFile(new File(securityFile));
-                generateLicense.setPrivateKeyFile(new File(privateKeyFile));
-
-                try {
-                    JSONObject jsonObject = new JSONObject(new String(Files.readAllBytes(Paths.get(requestFile)), StandardCharsets.UTF_8));
-                    generateLicense.initializeLicense(jsonObject).initializeSignature().marshall();
-
-                    generateLicense.setLicenses(null);
-                    generateLicense.setTargetFile(new File(generateLicense.getWorkingDir().getAbsolutePath(), "license.dat"));
-                    generateLicense.unmarshall();
-
-                    byte[] tmpPublicKeyBytes = Files.readAllBytes(Paths.get(generateLicense.getWorkingDir().getAbsolutePath(), "taimPublicKey"));
-                    PublicKey publicKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(tmpPublicKeyBytes));
-                    CryptKey<PublicKey> publicKeyCryptKey = new CryptKey<>();
-                    publicKeyCryptKey.setKeyData(publicKey);
-
-                    for(LicenseBase licenseBase: generateLicense.getLicenses().getLicense()){
-                        System.out.println(generateLicense.verifyLicenseSignature(publicKeyCryptKey, licenseBase));
-                    }
-                } catch (IOException | XMLWriter.XMLWriterException | GenerateLicenseException | CryptKey.CryptKeyException
-                        | InvalidKeySpecException  |NoSuchAlgorithmException | LicenseFile.LicenseException e) {
-                    e.printStackTrace();
-                    System.exit(1);
-                }
-                break;
-            case failFriendly:
-                System.exit(1);
-            case failBadly:
-                System.exit(1);
+        GenerateLicense generateLicense = new GenerateLicense();
+        try {
+            generateLicense.verifyLicense(new File("license.dat"), "Taim Desktop");
+        } catch (GenerateLicenseException e) {
+            e.printStackTrace();
         }
+
+//        ToolCommandLineParser commandLineParser = new ToolCommandLineParser();
+//        switch(commandLineParser.parse(args)){
+//            case success:
+//                GenerateLicense generateLicense = new GenerateLicense();
+//                String securityFile = commandLineParser.getStringValue(ToolCommandLineParser.SECURITY_FILE);
+//                String privateKeyFile = commandLineParser.getStringValue(ToolCommandLineParser.PRIVATE_KEY_FILE);
+//                String requestFile = commandLineParser.getStringValue(ToolCommandLineParser.LICENSE_REQUEST);
+//
+//                generateLicense.setTargetFile(new File(securityFile));
+//                generateLicense.setPrivateKeyFile(new File(privateKeyFile));
+//
+//                try {
+//                    JSONObject jsonObject = new JSONObject(new String(Files.readAllBytes(Paths.get(requestFile)), StandardCharsets.UTF_8));
+//                    generateLicense.initializeLicense(jsonObject).initializeSignature().marshall();
+//
+//                    generateLicense.setLicenses(null);
+//                    generateLicense.setTargetFile(new File(generateLicense.getWorkingDir().getAbsolutePath(), "license.dat"));
+//                    generateLicense.unmarshall();
+//
+//                    for(LicenseBase licenseBase: generateLicense.getLicenses().getLicense()){
+//                        System.out.println(generateLicense.verifyLicenseSignature(licenseBase));
+//                    }
+//                } catch (IOException | XMLWriter.XMLWriterException | GenerateLicenseException | CryptKey.CryptKeyException
+//                        | LicenseFile.LicenseException e) {
+//                    e.printStackTrace();
+//                    System.exit(1);
+//                }
+//                break;
+//            case failFriendly:
+//                System.exit(1);
+//            case failBadly:
+//                System.exit(1);
+//        }
     }
 
     public License getLicenses() {

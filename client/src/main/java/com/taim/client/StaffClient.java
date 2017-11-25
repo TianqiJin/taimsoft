@@ -52,6 +52,14 @@ public class StaffClient implements IClient<StaffDTO>{
         return BeanMapper.map(responseEntity.getBody(), StaffDTO.class);
     }
 
+    public StaffDTO getById(Integer id){
+        String url = STAFF_PATH+"/getById"+"?id="+id;
+        HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
+
+        ResponseEntity<Staff> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity,Staff.class);
+        return BeanMapper.map(responseEntity.getBody(), StaffDTO.class);
+    }
+
     public String deleteByName(String name){
         String url = STAFF_PATH+"/deleteObject"+"?name="+name;
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);

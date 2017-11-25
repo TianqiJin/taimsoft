@@ -16,7 +16,9 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.joda.time.DateTime;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -109,12 +111,45 @@ public class VendorEditDialogController {
                 }
             };
             saveUpdateVendorTask.setOnSucceeded(event -> {
+                this.vendor = saveUpdateVendorTask.getValue();
                 okClicked = true;
                 dialogStage.close();
             });
-            saveUpdateVendorTask.setOnFailed(event -> {
-                logger.error(saveUpdateVendorTask.getException().getMessage(), saveUpdateVendorTask.getException());
-                FadingStatusMessage.flash("FAILED TO SAVE VENDOR", root);
+
+            saveUpdateVendorTask.exceptionProperty().addListener((observable, oldValue, newValue) -> {
+                if(newValue != null) {
+                    Exception ex = (Exception) newValue;
+                    logger.error(ExceptionUtils.getRootCause(ex).getMessage());
+                    JSONObject errorMsg = new JSONObject(ExceptionUtils.getRootCause(ex).getMessage());
+                    new AlertBuilder().alertType(Alert.AlertType.ERROR)
+                            .alertContentText(errorMsg.getString("taimErrorMessage"))
+                            .build()
+                            .showAndWait();
+                    if(errorMsg.getInt("taimErrorCode") == 1){
+                        Task<VendorDTO> getVendorTask = new Task<VendorDTO>() {
+                            @Override
+                            protected VendorDTO call() throws Exception {
+                                return RestClientFactory.getVendorClient().getById(vendor.getId());
+                            }
+                        };
+                        getVendorTask.setOnSucceeded(event -> {
+                            initData(getVendorTask.getValue());
+                        });
+                        getVendorTask.exceptionProperty().addListener((observable1, oldValue1, newValue1) -> {
+                            if(newValue1 != null) {
+                                Exception newEx = (Exception) newValue1;
+                                String newExMsg = ExceptionUtils.getRootCause(newEx).getMessage();
+                                logger.error(newExMsg);
+                                JSONObject newErrorMessage = new JSONObject(newExMsg);
+                                new AlertBuilder().alertType(Alert.AlertType.ERROR)
+                                        .alertHeaderText(newErrorMessage.getString("taimErrorMessage"))
+                                        .build()
+                                        .showAndWait();
+                            }});
+
+                        executor.execute(getVendorTask);
+                    }
+                }
             });
 
             executor.execute(saveUpdateVendorTask);

@@ -38,6 +38,8 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -51,6 +53,7 @@ import static com.taimsoft.desktopui.controllers.overview.IOverviewController.Su
  */
 public class TransactionOverviewController extends IOverviewController<TransactionDTO> {
     private TransactionClient transactionClient;
+    private static final DateTimeFormatter dtf = DateTimeFormat.forPattern("MMM-dd-yyyy");
 
     @FXML
     private TableColumn<TransactionDTO, String> dateCol;
@@ -104,8 +107,8 @@ public class TransactionOverviewController extends IOverviewController<Transacti
     @FXML
     @SuppressWarnings("unchecked")
     public void initialize(){
-        dateCol.setCellValueFactory(new PropertyValueFactory<>("dateCreated"));
-        typeCol.setCellValueFactory(new PropertyValueFactory<>("transactionType"));
+        dateCol.setCellValueFactory(param -> new SimpleStringProperty(dtf.print(param.getValue().getDateCreated())));
+        typeCol.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getTransactionType().getValue()));
         idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         totalCol.setCellValueFactory(new PropertyValueFactory<>("saleAmount"));
         balanceCol.setCellValueFactory((TableColumn.CellDataFeatures<TransactionDTO, Double> param) -> {
@@ -115,10 +118,16 @@ public class TransactionOverviewController extends IOverviewController<Transacti
             }
             return new SimpleDoubleProperty(roundedBalance.setScale(2, BigDecimal.ROUND_HALF_EVEN).doubleValue()).asObject();
         });
-        paymentStatusCol.setCellValueFactory(new PropertyValueFactory<>("paymentStatus"));
+        paymentStatusCol.setCellValueFactory(param -> {
+            if(param.getValue().getPaymentStatus() != null){
+                return new SimpleStringProperty(param.getValue().getPaymentStatus().getValue());
+            }
+
+            return null;
+        });
         deliveryStatusCol.setCellValueFactory(param -> {
             if(param.getValue().getDeliveryStatus() != null){
-                return param.getValue().getDeliveryStatus().statusProperty().asString();
+                return new SimpleStringProperty(param.getValue().getDeliveryStatus().getStatus().getValue());
             }
             return null;
         });
@@ -217,15 +226,22 @@ public class TransactionOverviewController extends IOverviewController<Transacti
 
         createNewTransactionComboBox.setItems(FXCollections.observableArrayList(Transaction.TransactionType.values()));
         createNewTransactionComboBox.setOnAction(event -> {
+            TransactionDTO transaction;
             switch (createNewTransactionComboBox.getSelectionModel().getSelectedItem()){
                 case QUOTATION:
-                    TransactionPanelLoader.loadQuotation(null);
+                    transaction = TransactionPanelLoader.loadQuotation(null);
+                    if(transaction != null){
+                        getOverviewTable().getItems().add(transaction);
+                    }
                     break;
                 case INVOICE:
                     TransactionPanelLoader.showNewTransactionDialog(Transaction.TransactionType.INVOICE);
                     break;
                 case STOCK:
-                    TransactionPanelLoader.loadStock(null);
+                    transaction = TransactionPanelLoader.loadStock(null);
+                    if(transaction != null){
+                        getOverviewTable().getItems().add(transaction);
+                    }
                     break;
                 case RETURN:
                     TransactionPanelLoader.showNewTransactionDialog(Transaction.TransactionType.RETURN);

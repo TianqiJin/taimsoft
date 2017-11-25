@@ -4,6 +4,7 @@ import com.taim.client.StaffClient;
 import com.taim.dto.StaffDTO;
 import com.taim.model.Staff;
 import com.taimsoft.desktopui.uicomponents.FadingStatusMessage;
+import com.taimsoft.desktopui.util.AlertBuilder;
 import com.taimsoft.desktopui.util.RestClientFactory;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
@@ -13,6 +14,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -95,12 +98,44 @@ public class StaffEditDialogController {
                 }
             };
             saveUpdateStaffTask.setOnSucceeded(event -> {
+                this.staff = saveUpdateStaffTask.getValue();
                 okClicked = true;
                 stage.close();
             });
-            saveUpdateStaffTask.setOnFailed(event -> {
-                logger.error(saveUpdateStaffTask.getException().getMessage(), saveUpdateStaffTask.getException());
-                FadingStatusMessage.flash("FAILED TO SAVE STAFF", root);
+            saveUpdateStaffTask.exceptionProperty().addListener((observable, oldValue, newValue) -> {
+                if(newValue != null) {
+                    Exception ex = (Exception) newValue;
+                    logger.error(ExceptionUtils.getRootCause(ex).getMessage());
+                    JSONObject errorMsg = new JSONObject(ExceptionUtils.getRootCause(ex).getMessage());
+                    new AlertBuilder().alertType(Alert.AlertType.ERROR)
+                            .alertContentText(errorMsg.getString("taimErrorMessage"))
+                            .build()
+                            .showAndWait();
+                    if(errorMsg.getInt("taimErrorCode") == 1){
+                        Task<StaffDTO> getStaffTask = new Task<StaffDTO>() {
+                            @Override
+                            protected StaffDTO call() throws Exception {
+                                return RestClientFactory.getStaffClient().getById(staff.getId());
+                            }
+                        };
+                        getStaffTask.setOnSucceeded(event -> {
+                            initData(getStaffTask.getValue());
+                        });
+                        getStaffTask.exceptionProperty().addListener((observable1, oldValue1, newValue1) -> {
+                            if(newValue1 != null) {
+                                Exception newEx = (Exception) newValue1;
+                                String newExMsg = ExceptionUtils.getRootCause(newEx).getMessage();
+                                logger.error(newExMsg);
+                                JSONObject newErrorMessage = new JSONObject(newExMsg);
+                                new AlertBuilder().alertType(Alert.AlertType.ERROR)
+                                        .alertHeaderText(newErrorMessage.getString("taimErrorMessage"))
+                                        .build()
+                                        .showAndWait();
+                            }});
+
+                        executor.execute(getStaffTask);
+                    }
+                }
             });
 
             executor.execute(saveUpdateStaffTask);

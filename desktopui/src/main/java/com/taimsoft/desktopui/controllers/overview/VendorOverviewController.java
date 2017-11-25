@@ -18,6 +18,7 @@ import com.taimsoft.desktopui.util.TransactionPanelLoader;
 import com.taimsoft.desktopui.util.VistaNavigator;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -72,7 +73,7 @@ public class VendorOverviewController extends IOverviewController<VendorDTO> {
     @FXML
     public void initialize(){
         nameCol.setCellValueFactory(new PropertyValueFactory<>("fullname"));
-        typeCol.setCellValueFactory(new PropertyValueFactory<>("userType"));
+        typeCol.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getUserType().getValue()));
         phoneCol.setCellValueFactory(new PropertyValueFactory<>("phone"));
         emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
         checkedCol.setCellValueFactory(new PropertyValueFactory<>("isChecked"));

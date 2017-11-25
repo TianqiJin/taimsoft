@@ -54,6 +54,16 @@ public class PropertyController {
         return new ResponseEntity<>(Property1, HttpStatus.ACCEPTED);
     }
 
+    @RequestMapping(value = "/saveOrUpdate",
+            method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Property> saveOrUpdate(@RequestBody Property property) {
+        Property property1 = service.saveOrUpdateProperty(property);
+        return new ResponseEntity<>(property1, HttpStatus.ACCEPTED);
+    }
+
     @RequestMapping(value = "/deleteObject")
     @ResponseBody
     public ResponseEntity<String> deletePropertyById(@RequestParam Integer id) {

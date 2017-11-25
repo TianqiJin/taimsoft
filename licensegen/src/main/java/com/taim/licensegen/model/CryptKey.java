@@ -1,6 +1,6 @@
-package com.taimsoft.licensetools.model;
+package com.taim.licensegen.model;
 
-import com.taimsoft.licensetools.constant.CryptSession;
+import com.taim.licensegen.constant.CryptSession;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;

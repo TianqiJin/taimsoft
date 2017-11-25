@@ -36,6 +36,14 @@ public class CustomerController {
         return new ResponseEntity<Customer>(customer, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/getById",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Customer> getCustomerById(@RequestParam Integer id) {
+        Customer customer = service.getCustomerById(id);
+        return new ResponseEntity<>(customer, HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/add",
             method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE,

@@ -36,6 +36,14 @@ public class StaffController {
         return new ResponseEntity<>(staff, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/getById",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Staff> getStaffById(@RequestParam Integer id) {
+        Staff staff = service.getStaffById(id);
+        return new ResponseEntity<>(staff, HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/add",
             method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE,

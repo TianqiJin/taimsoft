@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane fx:id="rootPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taimsoft.desktopui.controllers.settings.GeneralSettingsController">
+<AnchorPane fx:id="rootPane" prefHeight="800.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taimsoft.desktopui.controllers.settings.GeneralSettingsController">
     <children>
         <SplitPane fx:id="generalSettingPane" dividerPositions="0.3, 0.6" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
             <items>
@@ -165,20 +165,20 @@
                                                 <Label text="Customer" GridPane.rowIndex="1" />
                                                 <Label text="Valid From" GridPane.rowIndex="3" />
                                                 <Label text="Valid Until" GridPane.rowIndex="4" />
-                                                <Label text="Label" GridPane.columnIndex="1" />
-                                                <Label text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                <Label text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                                <Label text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                                <Label text="Label" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                                <Label fx:id="licenseProductLabel" GridPane.columnIndex="1" />
+                                                <Label fx:id="licenseCustomerLabel" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                <Label fx:id="licenseProjectLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                                <Label fx:id="licenseValidFromLabel" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                                <Label fx:id="licenseValidUntilLabel" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                                                 <Label text="Maximum Transactions" GridPane.rowIndex="6" />
-                                                <Label text="Label" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                                <Label fx:id="licenseRecordIdLabel" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                                                 <Label text="Record ID" GridPane.rowIndex="5" />
-                                                <Label text="Label" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                                                <Label fx:id="licenseMaxTransactionsLabel" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                                                 <Label text="Maximum Users" GridPane.rowIndex="7" />
-                                                <Label text="Label" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                                                <Label fx:id="licenseMaxUsersLabel" GridPane.columnIndex="1" GridPane.rowIndex="7" />
                                             </children>
                                         </GridPane>
-                                        <Button layoutX="890.0" layoutY="232.0" mnemonicParsing="false" text="Upload" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                                        <Button fx:id="uploadLicenseButton" layoutX="890.0" layoutY="232.0" mnemonicParsing="false" onAction="#handleUploadLicenseButton" text="Upload" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
                                     </children>
                                 </AnchorPane>
                             </content>

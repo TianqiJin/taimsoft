@@ -1,7 +1,7 @@
-package com.taimsoft.licensetools.model;
+package com.taim.licensegen.model;
 
 import com.sun.xml.txw2.output.IndentingXMLStreamWriter;
-import com.taimsoft.licensetools.model.licensever.License;
+import com.taim.licensegen.model.licensever.License;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.xml.bind.JAXBContext;

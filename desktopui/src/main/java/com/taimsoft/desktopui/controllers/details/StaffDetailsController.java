@@ -4,8 +4,10 @@ import com.taim.dto.CustomerDTO;
 import com.taim.dto.StaffDTO;
 import com.taim.dto.TransactionDTO;
 import com.taim.model.Transaction;
+import com.taimsoft.desktopui.controllers.edit.StaffEditDialogController;
 import com.taimsoft.desktopui.util.AlertBuilder;
 import com.taimsoft.desktopui.util.RestClientFactory;
+import com.taimsoft.desktopui.util.TransactionPanelLoader;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.value.ObservableBooleanValue;
@@ -79,6 +81,14 @@ public class StaffDetailsController implements IDetailController<StaffDTO> {
     @FXML
     public void initialize(){
         actionComboBox.setItems(FXCollections.observableArrayList("EDIT", "DELETE"));
+        actionComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue.equals("EDIT")){
+                StaffEditDialogController controller = TransactionPanelLoader.showStaffEditor(staffDTO);
+                if(controller != null && controller.isOkClicked()){
+                    initDetailData(controller.getStaff());
+                }
+            }
+        });
     }
 
     @Override

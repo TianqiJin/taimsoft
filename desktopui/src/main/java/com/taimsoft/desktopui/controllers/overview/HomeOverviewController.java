@@ -24,6 +24,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.text.DateFormatSymbols;
 import java.time.Year;
@@ -38,6 +39,7 @@ import static com.taimsoft.desktopui.controllers.overview.IOverviewController.Su
 
 public class HomeOverviewController {
     private static final int YEAR_RANGE = 20;
+    private static final DateTimeFormatter dtf = DateTimeFormat.forPattern("MMM-dd-yyyy");
     private TransactionClient transactionClient;
     private ObservableList<TransactionDTO> yearlyTransactions;
     private List<TransactionDTO> transactions;
@@ -104,13 +106,23 @@ public class HomeOverviewController {
     @FXML
     private void initialize(){
         paymentDueIDCol.setCellValueFactory(new PropertyValueFactory<>("id"));
-        paymentDueDateCol.setCellValueFactory(new PropertyValueFactory<>("paymentDueDate"));
-        paymentStatusCol.setCellValueFactory(new PropertyValueFactory<>("paymentStatus"));
+        paymentDueDateCol.setCellValueFactory(param -> new SimpleStringProperty(dtf.print(param.getValue().getPaymentDueDate())));
+        paymentStatusCol.setCellValueFactory(param -> {
+            if(param.getValue().getPaymentStatus() != null){
+                return new SimpleStringProperty(param.getValue().getPaymentStatus().getValue());
+            }
+            return null;
+        });
         paymentDueActionCol.setCellValueFactory(new PropertyValueFactory<>("action"));
         paymentDueActionCol.setCellFactory(param -> generateActionTableCell());
         deliveryDueIDCol.setCellValueFactory(new PropertyValueFactory<>("id"));
-        deliveryDueDateCol.setCellValueFactory(new PropertyValueFactory<>("deliveryDueDate"));
-        deliveryStatusCol.setCellValueFactory(param -> param.getValue().getDeliveryStatus().statusProperty().asString());
+        deliveryDueDateCol.setCellValueFactory(param -> new SimpleStringProperty(dtf.print(param.getValue().getDeliveryDueDate())));
+        deliveryStatusCol.setCellValueFactory(param -> {
+            if(param.getValue().getDeliveryStatus() != null){
+                return new SimpleStringProperty(param.getValue().getDeliveryStatus().getStatus().getValue());
+            }
+            return null;
+        });
         deliveryDueActionCol.setCellValueFactory(new PropertyValueFactory<>("action"));
         deliveryDueActionCol.setCellFactory(param -> generateActionTableCell());
         companyNameLabel.textProperty().bind(VistaNavigator.getGlobalProperty().companyNameProperty());

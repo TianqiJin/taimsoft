@@ -25,7 +25,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.converter.NumberStringConverter;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.joda.time.DateTime;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -155,12 +157,45 @@ public class CustomerEditDialogController {
                 }
             };
             saveUpdateCustomerTask.setOnSucceeded(event -> {
+                this.customer = saveUpdateCustomerTask.getValue();
                 okClicked = true;
                 dialogStage.close();
             });
-            saveUpdateCustomerTask.setOnFailed(event -> {
-                logger.error(saveUpdateCustomerTask.getException().getMessage(), saveUpdateCustomerTask.getException());
-                FadingStatusMessage.flash("FAILED TO SAVE CUSTOMER", root);
+
+            saveUpdateCustomerTask.exceptionProperty().addListener((observable, oldValue, newValue) -> {
+                if(newValue != null) {
+                    Exception ex = (Exception) newValue;
+                    logger.error(ExceptionUtils.getRootCause(ex).getMessage());
+                    JSONObject errorMsg = new JSONObject(ExceptionUtils.getRootCause(ex).getMessage());
+                    new AlertBuilder().alertType(Alert.AlertType.ERROR)
+                            .alertContentText(errorMsg.getString("taimErrorMessage"))
+                            .build()
+                            .showAndWait();
+                    if(errorMsg.getInt("taimErrorCode") == 1){
+                        Task<CustomerDTO> getCustomerTask = new Task<CustomerDTO>() {
+                            @Override
+                            protected CustomerDTO call() throws Exception {
+                                return RestClientFactory.getCustomerClient().getById(customer.getId());
+                            }
+                        };
+                        getCustomerTask.setOnSucceeded(event -> {
+                            initData(getCustomerTask.getValue());
+                        });
+                        getCustomerTask.exceptionProperty().addListener((observable1, oldValue1, newValue1) -> {
+                            if(newValue1 != null) {
+                                Exception newEx = (Exception) newValue1;
+                                String newExMsg = ExceptionUtils.getRootCause(newEx).getMessage();
+                                logger.error(newExMsg);
+                                JSONObject newErrorMessage = new JSONObject(newExMsg);
+                                new AlertBuilder().alertType(Alert.AlertType.ERROR)
+                                        .alertHeaderText(newErrorMessage.getString("taimErrorMessage"))
+                                        .build()
+                                        .showAndWait();
+                            }});
+
+                        executor.execute(getCustomerTask);
+                    }
+                }
             });
 
             executor.execute(saveUpdateCustomerTask);

@@ -1,4 +1,4 @@
-package com.taimsoft.licensetools.util;
+package com.taim.licensegen.util;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;

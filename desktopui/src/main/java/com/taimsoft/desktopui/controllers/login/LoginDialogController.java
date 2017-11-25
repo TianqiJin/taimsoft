@@ -1,12 +1,16 @@
 package com.taimsoft.desktopui.controllers.login;
 
+import com.taim.client.LicenseClient;
 import com.taim.client.PropertyClient;
 import com.taim.client.StaffClient;
+import com.taim.dto.LicenseDTO;
 import com.taim.dto.OrganizationDTO;
 import com.taim.dto.PropertyDTO;
 import com.taim.dto.StaffDTO;
+import com.taim.licensegen.GenerateLicense;
 import com.taimsoft.desktopui.constants.Constant;
 import com.taimsoft.desktopui.controllers.edit.StaffEditDialogController;
+import com.taimsoft.desktopui.util.AlertBuilder;
 import com.taimsoft.desktopui.util.RestClientFactory;
 import com.taimsoft.desktopui.util.VistaNavigator;
 import javafx.beans.value.ChangeListener;
@@ -21,11 +25,16 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.joda.time.DateTime;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -51,15 +60,12 @@ public class LoginDialogController {
 
     @FXML
     private void initialize(){
-        userNameField.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if(!userNameField.getText().trim().isEmpty()){
-                    loginButton.setDisable(false);
-                }
-                else{
-                    loginButton.setDisable(true);
-                }
+        userNameField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(!userNameField.getText().trim().isEmpty()){
+                loginButton.setDisable(false);
+            }
+            else{
+                loginButton.setDisable(true);
             }
         });
         userNameField.focusedProperty().addListener((observable, oldValue, newValue) -> {
@@ -130,9 +136,36 @@ public class LoginDialogController {
 
         propertyTask.setOnSucceeded(event -> {
             if(propertyTask.getValue().size() != 0){
-                VistaNavigator.setGlobalProperty(propertyTask.getValue().get(0));
-                successful = true;
-                dialogStage.close();
+                PropertyDTO property = propertyTask.getValue().get(0);
+                Path tmpLicenseFile = null;
+                boolean isLicenseValid = false;
+                try {
+                    tmpLicenseFile = Files.createTempFile("tmpLicenseFile", null);
+                    Files.write(tmpLicenseFile, property.getLicense().getLicenseFile());
+                    GenerateLicense generateLicense = new GenerateLicense();
+                    try {
+                        generateLicense.verifyLicense(tmpLicenseFile.toFile(), "Taim Desktop");
+                        isLicenseValid = true;
+                    } catch (GenerateLicense.GenerateLicenseException e) {
+                        new AlertBuilder().alertType(Alert.AlertType.ERROR)
+                                .alertContentText(e.getMessage())
+                                .build()
+                                .showAndWait();
+                    }
+
+                } catch (IOException e) {
+                    logger.error(e.getMessage(), e);
+                }finally {
+                    if(tmpLicenseFile != null && tmpLicenseFile.toFile().exists()){
+                        tmpLicenseFile.toFile().delete();
+                    }
+                }
+
+                if(isLicenseValid){
+                    VistaNavigator.setGlobalProperty(propertyTask.getValue().get(0));
+                    successful = true;
+                    dialogStage.close();
+                }
             }else{
                 try {
                     FXMLLoader fXMLLoader = new FXMLLoader();
@@ -152,8 +185,20 @@ public class LoginDialogController {
                     successful = true;
                     dialogStage.close();
                 } catch (IOException ex) {
-                    ex.printStackTrace();
+                    logger.error(ex.getMessage(), ex);
                 }
+            }
+        });
+
+        propertyTask.exceptionProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue != null) {
+                Exception ex = (Exception) newValue;
+                logger.error(ExceptionUtils.getRootCause(ex).getMessage());
+                JSONObject errorMsg = new JSONObject(ExceptionUtils.getRootCause(ex).getMessage());
+                new AlertBuilder().alertType(Alert.AlertType.ERROR)
+                        .alertContentText(errorMsg.getString("taimErrorMessage"))
+                        .build()
+                        .showAndWait();
             }
         });
 
@@ -169,8 +214,8 @@ public class LoginDialogController {
         });
 
         staffDTOTask.setOnFailed(event -> {
-            System.out.println(event.getSource().exceptionProperty().toString());
-            errorLMsgLabel.setText("Username does not exist");
+            logger.error(staffDTOTask.getException().getMessage());
+            errorLMsgLabel.setText("Unable to retrieve staff information");
             errorLMsgLabel.setStyle(Constant.FXStyle.FX_ERROR_LABEL_COLOR);
         });
 

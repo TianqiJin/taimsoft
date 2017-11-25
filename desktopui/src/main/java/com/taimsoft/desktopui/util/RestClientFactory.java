@@ -14,6 +14,7 @@ public class RestClientFactory {
     private static StaffClient staffClient;
     private static PropertyClient propertyClient;
     private static OrganizationClient organizationClient;
+    private static LicenseClient licenseClient;
 
     public static TransactionClient getTransactionClient(){
         if(transactionClient == null){
@@ -79,6 +80,17 @@ public class RestClientFactory {
             }
         }
         return propertyClient;
+    }
+
+    public static LicenseClient getLicenseClient(){
+        if(licenseClient == null){
+            synchronized (RestClientFactory.class){
+                if(licenseClient == null){
+                    licenseClient = new LicenseClient();
+                }
+            }
+        }
+        return licenseClient;
     }
 
     public static OrganizationClient getOrganizationClient(){

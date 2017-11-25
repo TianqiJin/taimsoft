@@ -1,10 +1,10 @@
-package com.taimsoft.licensetools.model;
+package com.taim.licensegen.model;
 
+import com.taim.licensegen.util.AsciiConvert;
+import com.taim.licensegen.util.XmlProperty;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import com.taimsoft.licensetools.util.AsciiConvert;
-import com.taimsoft.licensetools.util.XmlProperty;
 
 import java.util.ArrayList;
 import java.util.List;

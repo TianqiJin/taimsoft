@@ -1,8 +1,8 @@
-package com.taimsoft.licensetools.model.licensever;
+package com.taim.licensegen.model.licensever;
 
-import com.taimsoft.licensetools.model.LicenseFile;
-import com.taimsoft.licensetools.model.LicenseXML;
-import com.taimsoft.licensetools.util.XmlProperty;
+import com.taim.licensegen.model.LicenseFile;
+import com.taim.licensegen.model.LicenseXML;
+import com.taim.licensegen.util.XmlProperty;
 import org.eclipse.persistence.jaxb.JAXBContext;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

@@ -1,4 +1,4 @@
-package com.taimsoft.licensetools.util;
+package com.taim.licensegen.util;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

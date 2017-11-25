@@ -1,6 +1,6 @@
-package com.taimsoft.licensetools.model.licensever;
+package com.taim.licensegen.model.licensever;
 
-import com.taimsoft.licensetools.model.LicenseFile;
+import com.taim.licensegen.model.LicenseFile;
 
 /**
  * Created by tjin on 2017-02-09.

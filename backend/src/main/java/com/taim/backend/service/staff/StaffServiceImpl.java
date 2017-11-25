@@ -41,6 +41,11 @@ public class StaffServiceImpl implements IStaffService {
     }
 
     @Override
+    public Staff getStaffById(Integer id) {
+        return dao.findByID(id);
+    }
+
+    @Override
     public Staff saveOrUpdateStaff(Staff staff) {
         dao.saveOrUpdateObject(staff);
         dao.flush();

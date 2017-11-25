@@ -18,6 +18,7 @@ import com.taimsoft.desktopui.util.TransactionPanelLoader;
 import com.taimsoft.desktopui.util.VistaNavigator;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -84,16 +85,13 @@ public class CustomerOverviewController extends IOverviewController<CustomerDTO>
     @FXML
     public void initialize(){
         nameCol.setCellValueFactory(new PropertyValueFactory<>("fullname"));
-        typeCol.setCellValueFactory(new PropertyValueFactory<>("userType"));
-        classCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<CustomerDTO, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TableColumn.CellDataFeatures<CustomerDTO, String> param) {
-                if(param.getValue().getCustomerClass() != null){
-                    return param.getValue().getCustomerClass().customerClassNameProperty();
-                }
-
-                return null;
+        typeCol.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getUserType().getValue()));
+        classCol.setCellValueFactory(param -> {
+            if(param.getValue().getCustomerClass() != null){
+                return param.getValue().getCustomerClass().customerClassNameProperty();
             }
+
+            return null;
         });
         phoneCol.setCellValueFactory(new PropertyValueFactory<>("phone"));
         emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));

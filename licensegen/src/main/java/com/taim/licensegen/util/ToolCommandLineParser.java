@@ -1,11 +1,9 @@
-package com.taimsoft.licensetools.util;
+package com.taim.licensegen.util;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.*;
 import java.util.HashMap;

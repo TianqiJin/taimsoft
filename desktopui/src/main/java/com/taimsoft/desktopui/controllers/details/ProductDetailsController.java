@@ -4,7 +4,9 @@ import com.taim.client.TransactionClient;
 import com.taim.dto.ProductDTO;
 import com.taim.dto.TransactionDTO;
 import com.taim.model.Transaction;
+import com.taimsoft.desktopui.controllers.edit.ProductEditDialogController;
 import com.taimsoft.desktopui.util.RestClientFactory;
+import com.taimsoft.desktopui.util.TransactionPanelLoader;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.value.ObservableBooleanValue;
@@ -76,6 +78,14 @@ public class ProductDetailsController implements IDetailController<ProductDTO> {
     @FXML
     public void initialize(){
         actionComboBox.setItems(FXCollections.observableArrayList("EDIT", "DELETE"));
+        actionComboBox.valueProperty().addListener(((observable, oldValue, newValue) -> {
+            if(newValue.equals("EDIT")){
+                ProductEditDialogController controller = TransactionPanelLoader.showProductEditor(productDTO);
+                if(controller != null && controller.isOKClicked()){
+                    initDetailData(controller.getProduct());
+                }
+            }
+        }));
     }
 
     @Override

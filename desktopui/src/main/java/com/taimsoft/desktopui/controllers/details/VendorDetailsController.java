@@ -4,8 +4,10 @@ import com.taim.dto.TransactionDTO;
 import com.taim.dto.VendorDTO;
 import com.taim.model.Transaction;
 import com.taim.model.Vendor;
+import com.taimsoft.desktopui.controllers.edit.VendorEditDialogController;
 import com.taimsoft.desktopui.util.AlertBuilder;
 import com.taimsoft.desktopui.util.RestClientFactory;
+import com.taimsoft.desktopui.util.TransactionPanelLoader;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.value.ObservableBooleanValue;
@@ -72,6 +74,14 @@ public class VendorDetailsController implements IDetailController<VendorDTO> {
     @FXML
     public void initialize(){
         actionComboBox.setItems(FXCollections.observableArrayList("EDIT", "DELETE"));
+        actionComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue.equals("EDIT")){
+                VendorEditDialogController controller = TransactionPanelLoader.showVendorEditor(vendorDTO);
+                if(controller != null && controller.isOKClicked()){
+                    initDetailData(controller.getVendor());
+                }
+            }
+        });
     }
 
     @Override

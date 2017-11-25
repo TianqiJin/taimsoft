@@ -38,6 +38,10 @@ public class Staff extends UserBaseModel {
             }
             return null;
         }
+
+        public String getValue() {
+            return pos;
+        }
     }
 
     @Column(nullable = false)

@@ -1,13 +1,13 @@
-package com.taimsoft.licensetools.model.licensever;
+package com.taim.licensegen.model.licensever;
 
-import com.taimsoft.licensetools.model.LicenseFile;
-import com.taimsoft.licensetools.model.LicenseXML;
-import com.taimsoft.licensetools.util.XmlProperty;
+import com.taim.licensegen.model.LicenseFile;
+import com.taim.licensegen.model.LicenseXML;
+import com.taim.licensegen.util.XmlOrderManual;
+import com.taim.licensegen.util.XmlProperty;
 import org.json.JSONArray;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import com.taimsoft.licensetools.util.XmlOrderManual;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;

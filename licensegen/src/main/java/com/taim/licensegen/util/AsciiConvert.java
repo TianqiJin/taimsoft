@@ -1,4 +1,4 @@
-package com.taimsoft.licensetools.util;
+package com.taim.licensegen.util;
 
 /**
  * Created by tjin on 2016-12-02.

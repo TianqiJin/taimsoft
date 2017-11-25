@@ -1,4 +1,4 @@
-package com.taimsoft.licensetools.constant;
+package com.taim.licensegen.constant;
 
 /**
  * Created by tjin on 2017-01-31.

@@ -36,6 +36,11 @@ public class CustomerServiceImpl implements ICustomerService{
     }
 
     @Override
+    public Customer getCustomerById(Integer id) {
+        return dao.findByID(id);
+    }
+
+    @Override
     public void deleteCustomer(Customer customer) {
         dao.deleteObject(customer);
     }

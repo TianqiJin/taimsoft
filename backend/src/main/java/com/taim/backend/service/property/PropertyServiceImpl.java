@@ -36,6 +36,18 @@ public class PropertyServiceImpl implements IPropertyService {
 
     @Override
     public Property updateProperty(Property property) {
-        return dao.updateObject(property);
+        dao.updateObject(property);
+        dao.flush();
+        dao.refresh(property);
+
+        return property;
+    }
+
+    @Override
+    public Property saveOrUpdateProperty(Property property) {
+        dao.saveOrUpdate(property);
+        dao.flush();
+        dao.refresh(property);
+        return property;
     }
 }

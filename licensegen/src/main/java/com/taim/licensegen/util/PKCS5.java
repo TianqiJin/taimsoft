@@ -1,4 +1,4 @@
-package com.taimsoft.licensetools.util;
+package com.taim.licensegen.util;
 
 import org.bouncycastle.crypto.BufferedBlockCipher;
 import org.bouncycastle.crypto.CryptoException;

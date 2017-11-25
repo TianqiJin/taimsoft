@@ -66,4 +66,11 @@ public class PropertyClient implements IClient<PropertyDTO> {
         ResponseEntity<Property> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Property.class);
         return BeanMapper.map(responseEntity.getBody(), PropertyDTO.class);
     }
+
+    public PropertyDTO saveOrUpdate(PropertyDTO PropertyDTO){
+        String url = PROPERTY_PATH+"/saveOrUpdate";
+        HttpEntity<Property> requestEntity = new HttpEntity<Property>(BeanMapper.map(PropertyDTO, Property.class), headers);
+        ResponseEntity<Property> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Property.class);
+        return BeanMapper.map(responseEntity.getBody(), PropertyDTO.class);
+    }
 }

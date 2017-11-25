@@ -10,4 +10,5 @@ public interface IPropertyService {
     Property getPropertyById(Integer id);
     void deleteProperty(Property property);
     Property updateProperty(Property property);
+    Property saveOrUpdateProperty(Property property);
 }

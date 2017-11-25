@@ -37,6 +37,14 @@ public class VendorController {
         return new ResponseEntity<Vendor>(vendor, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/getById",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Vendor> getVendorByName(@RequestParam Integer id) {
+        Vendor vendor = service.getVendorById(id);
+        return new ResponseEntity<Vendor>(vendor, HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/add",
             method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE,

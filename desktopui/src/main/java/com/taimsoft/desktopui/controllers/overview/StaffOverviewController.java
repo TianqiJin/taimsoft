@@ -11,6 +11,7 @@ import com.taimsoft.desktopui.uicomponents.LiveComboBoxTableCell;
 import com.taimsoft.desktopui.util.RestClientFactory;
 import com.taimsoft.desktopui.util.TransactionPanelLoader;
 import com.taimsoft.desktopui.util.VistaNavigator;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
@@ -33,7 +34,7 @@ public class StaffOverviewController extends IOverviewController<StaffDTO> {
     @FXML
     private TableColumn<StaffDTO, String> emailCol;
     @FXML
-    private TableColumn<StaffDTO, Staff.Position> titleCol;
+    private TableColumn<StaffDTO, String> titleCol;
     @FXML
     private TableColumn<StaffDTO, String> orgCol;
     @FXML
@@ -52,7 +53,7 @@ public class StaffOverviewController extends IOverviewController<StaffDTO> {
         nameCol.setCellValueFactory(new PropertyValueFactory<>("fullname"));
         phoneCol.setCellValueFactory(new PropertyValueFactory<>("phone"));
         emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
-        titleCol.setCellValueFactory(new PropertyValueFactory<>("position"));
+        titleCol.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getPosition().getValue()));
         orgCol.setCellValueFactory(param-> {
             if(param.getValue().getOrganization() != null){
                 return param.getValue().getOrganization().orgNameProperty();

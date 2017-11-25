@@ -15,11 +15,14 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.math.BigDecimal;
 
 public class TransactionDetailsController implements IDetailController<TransactionDTO> {
     private TransactionDTO transactionDTO;
+    private static final DateTimeFormatter dtf = DateTimeFormat.forPattern("MMM-dd-yyyy");
 
     @FXML
     private Label transactionIdLabel;
@@ -108,9 +111,9 @@ public class TransactionDetailsController implements IDetailController<Transacti
             transactionIdLabel.textProperty().bind(initStringBinding(Bindings.isNull(transactionDTO.idProperty().asObject()),
                     "", transactionDTO.idProperty().asString()));
             transactionTypeLabel.textProperty().bind(initStringBinding(Bindings.isNull(transactionDTO.transactionTypeProperty()),
-                    "", transactionDTO.transactionTypeProperty().asString()));
+                    "", new SimpleStringProperty(transactionDTO.getTransactionType().getValue())));
             dateCreatedLabel.textProperty().bind(initStringBinding(transactionDTO.dateCreatedProperty().isNull(),
-                    "", transactionDTO.dateCreatedProperty().asString()));
+                    "", new SimpleStringProperty(dtf.print(transactionDTO.getDateCreated()))));
             gstLabel.textProperty().bind(initStringBinding(Bindings.isNull(transactionDTO.gstProperty().asObject()),
                     "", transactionDTO.gstProperty().asString()));
             pstLabel.textProperty().bind(initStringBinding(Bindings.isNull(transactionDTO.pstProperty().asObject()),
@@ -120,15 +123,19 @@ public class TransactionDetailsController implements IDetailController<Transacti
             staffLabel.textProperty().bind(initStringBinding(transactionDTO.getStaff().fullnameProperty().isEmpty(),
                     "", transactionDTO.getStaff().fullnameProperty()));
             paymentDueDateLabel.textProperty().bind((initStringBinding(transactionDTO.paymentDueDateProperty().isNull(),
-                    "", transactionDTO.paymentDueDateProperty().asString())));
+                    "", new SimpleStringProperty(dtf.print(transactionDTO.getPaymentDueDate())))));
             paymentStatusLabel.textProperty().bind(initStringBinding(transactionDTO.paymentStatusProperty().isNull(),
-                    "", transactionDTO.paymentStatusProperty().asString()));
+                    "", transactionDTO.getPaymentStatus() != null?
+                            new SimpleStringProperty(transactionDTO.getPaymentStatus().getValue()):
+                            new SimpleStringProperty("")));
             deliveryDueDateLabel.textProperty().bind(initStringBinding(transactionDTO.deliveryDueDateProperty().isNull(),
-                    "", transactionDTO.deliveryDueDateProperty().asString()));
+                    "", new SimpleStringProperty(dtf.print(transactionDTO.getDeliveryDueDate()))));
             deliveryStatusLabel.textProperty().bind(initStringBinding(transactionDTO.deliveryStatusProperty().isNull(),
-                    "", transactionDTO.deliveryStatusProperty().asString()));
+                    "", transactionDTO.getDeliveryStatus() != null?
+                            new SimpleStringProperty(transactionDTO.getDeliveryStatus().getStatus().getValue()):
+                            new SimpleStringProperty("")));
             finalizedLabel.textProperty().bind(initStringBinding(Bindings.isNull(transactionDTO.finalizedProperty().asObject()),
-                    "", transactionDTO.finalizedProperty().asString()));
+                    "", transactionDTO.isFinalized()? new SimpleStringProperty("YES"): new SimpleStringProperty("NO")));
             noteLabel.textProperty().bind(initStringBinding(transactionDTO.noteProperty().isEmpty(),
                     "", transactionDTO.noteProperty()));
             if(transactionDTO.getCustomer() != null){
@@ -170,8 +177,8 @@ public class TransactionDetailsController implements IDetailController<Transacti
     }
 
     private void bindPaymentTable(){
-        paymentDateCol.setCellValueFactory(new PropertyValueFactory<>("dateCreated"));
-        paymentTypeCol.setCellValueFactory(new PropertyValueFactory<>("paymentType"));
+        paymentDateCol.setCellValueFactory(param -> new SimpleStringProperty(dtf.print(param.getValue().getDateCreated())));
+        paymentTypeCol.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getPaymentType().getValue()));
         paymentAmountCol.setCellValueFactory(new PropertyValueFactory<>("paymentAmount"));
         paymentIsDepositCol.setCellValueFactory(param -> param.getValue().isDeposit()? new SimpleStringProperty("Yes") : new SimpleStringProperty("No"));
     }

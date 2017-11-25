@@ -1,7 +1,7 @@
-package com.taimsoft.licensetools.util;
+package com.taim.licensegen.util;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,7 +13,7 @@ import java.util.Properties;
  * Created by tjin on 2016-12-21.
  */
 public class PropertySys {
-    private static Logger logger = LogManager.getLogger(PropertySys.class);
+    private static Logger logger = LoggerFactory.getLogger(PropertySys.class);
 
     public static Properties getProperties(File file){
         Properties properties = new Properties();

@@ -51,6 +51,14 @@ public class CustomerClient implements IClient<CustomerDTO> {
         return BeanMapper.map(responseEntity.getBody(), CustomerDTO.class);
     }
 
+    public CustomerDTO getById(Integer id){
+        String url = CUSTOMER_PATH+"/getById"+"?id="+id;
+        HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
+
+        ResponseEntity<Customer> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity,Customer.class);
+        return BeanMapper.map(responseEntity.getBody(), CustomerDTO.class);
+    }
+
     public String deleteByName(String name){
         String url = CUSTOMER_PATH+"/deleteObject"+"?name="+name;
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);

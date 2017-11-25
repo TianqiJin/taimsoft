@@ -1,5 +1,6 @@
 package com.taim.model;
 
+import com.taim.dto.LicenseDTO;
 import com.taim.model.basemodels.BaseModel;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -25,6 +26,9 @@ public class Property extends BaseModel{
     @Fetch(FetchMode.SUBSELECT)
     @JoinColumn(name = "property_id")
     private List<CustomerClass> customerClasses;
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "license_id")
+    private License license;
 
     @Entity
     @Table(name = "customer_class")
@@ -99,5 +103,13 @@ public class Property extends BaseModel{
 
     public void setCompanyName(String companyName) {
         this.companyName = companyName;
+    }
+
+    public License getLicense() {
+        return license;
+    }
+
+    public void setLicense(License license) {
+        this.license = license;
     }
 }

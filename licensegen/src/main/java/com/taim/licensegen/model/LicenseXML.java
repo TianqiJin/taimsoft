@@ -1,4 +1,4 @@
-package com.taimsoft.licensetools.model;
+package com.taim.licensegen.model;
 
 import org.json.JSONObject;
 

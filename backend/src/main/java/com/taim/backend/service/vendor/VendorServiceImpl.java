@@ -35,6 +35,11 @@ public class VendorServiceImpl implements IVendorService{
     }
 
     @Override
+    public Vendor getVendorById(Integer id) {
+        return dao.findByID(id);
+    }
+
+    @Override
     public void deleteVendor(Vendor vendor) {
         dao.deleteObject(vendor);
     }

@@ -88,7 +88,7 @@ public class Transaction extends BaseModel {
     private Vendor vendor;
     @Column(name = "transaction_type", nullable = false)
     private TransactionType transactionType;
-    @Column(name = "payment_status", nullable = false)
+    @Column(name = "payment_status")
     private PaymentStatus paymentStatus;
     @JoinColumn(name = "delivery_status_id")
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

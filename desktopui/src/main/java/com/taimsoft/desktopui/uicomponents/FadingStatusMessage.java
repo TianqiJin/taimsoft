@@ -19,7 +19,7 @@ public class FadingStatusMessage {
         Font font = Font.font("Verdana", FontWeight.NORMAL, 20);
         Color boxColor = Color.GREY;
         Color textColor = Color.WHITE;
-        double duration = 3000;
+        double duration = 5000;
         double arcH = 5;
         double arcW = 5;
 
