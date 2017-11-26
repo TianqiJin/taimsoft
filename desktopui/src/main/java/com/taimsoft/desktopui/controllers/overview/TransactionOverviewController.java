@@ -150,16 +150,16 @@ public class TransactionOverviewController extends IOverviewController<Transacti
                             TransactionDTO transactionDTO = getTableView().getItems().get(getIndex());
                             switch (transactionDTO.getTransactionType()){
                                 case STOCK:
-                                    comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "EDIT", "PRINT", "DELETE"));
+                                    comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "EDIT", "PRINT"));
                                     break;
                                 case RETURN:
-                                    comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "EDIT", "PRINT", "DELETE"));
+                                    comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "EDIT", "PRINT"));
                                     break;
                                 case INVOICE:
-                                    comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "EDIT", "FILE RETURN","PRINT", "DELETE"));
+                                    comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "EDIT", "FILE RETURN","PRINT"));
                                     break;
                                 case QUOTATION:
-                                    comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "CONVERT TO INVOICE", "EDIT", "PRINT", "DELETE"));
+                                    comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "CONVERT TO INVOICE", "EDIT", "PRINT"));
                                     break;
                                 default:
                                     break;
