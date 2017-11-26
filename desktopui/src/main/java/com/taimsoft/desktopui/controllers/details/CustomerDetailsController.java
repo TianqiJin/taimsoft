@@ -81,7 +81,7 @@ public class CustomerDetailsController implements IDetailController<CustomerDTO>
 
     @FXML
     public void initialize(){
-        actionComboBox.setItems(FXCollections.observableArrayList("EDIT", "DELETE"));
+        actionComboBox.setItems(FXCollections.observableArrayList("EDIT"));
         actionComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue.equals("EDIT")){
                 CustomerEditDialogController controller = TransactionPanelLoader.showCustomerEditor(customerDTO);
@@ -89,6 +89,7 @@ public class CustomerDetailsController implements IDetailController<CustomerDTO>
                     initDetailData(controller.getCustomer());
                 }
             }
+            actionComboBox.getSelectionModel().clearSelection();
         });
     }
 

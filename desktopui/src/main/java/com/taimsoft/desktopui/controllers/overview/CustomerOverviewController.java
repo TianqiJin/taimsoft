@@ -6,16 +6,14 @@ import com.taim.dto.CustomerDTO;
 import com.taim.dto.OrganizationDTO;
 import com.taim.dto.PropertyDTO;
 import com.taim.dto.TransactionDTO;
+import com.taim.model.Customer;
 import com.taim.model.DeliveryStatus;
 import com.taim.model.Property;
 import com.taim.model.Transaction;
 import com.taim.model.basemodels.UserBaseModel;
 import com.taimsoft.desktopui.controllers.edit.CustomerEditDialogController;
 import com.taimsoft.desktopui.uicomponents.LiveComboBoxTableCell;
-import com.taimsoft.desktopui.util.AlertBuilder;
-import com.taimsoft.desktopui.util.RestClientFactory;
-import com.taimsoft.desktopui.util.TransactionPanelLoader;
-import com.taimsoft.desktopui.util.VistaNavigator;
+import com.taimsoft.desktopui.util.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.SimpleStringProperty;
@@ -122,6 +120,12 @@ public class CustomerOverviewController extends IOverviewController<CustomerDTO>
                                     if(controller != null && controller.isOKClicked()){
                                         getTableView().getItems().set(getIndex(), controller.getCustomer());
                                     }
+                                }else if(newValue.equals("DELETE")){
+                                    DeleteEntityUtil<CustomerDTO> deleteEntityUtil = new DeleteEntityUtil<>(customerDTO, customerClient);
+                                    deleteEntityUtil.deleteEntity(getOverviewTable(),
+                                            getIndex(),
+                                            "SUCCESSFULLY DELETED CUSTOMER",
+                                            getRootPane());
                                 }
                             });
                             comboBox.setValue(item);

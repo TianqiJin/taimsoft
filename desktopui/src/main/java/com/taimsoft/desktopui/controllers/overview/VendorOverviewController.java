@@ -12,10 +12,7 @@ import com.taim.model.basemodels.UserBaseModel;
 import com.taimsoft.desktopui.controllers.edit.StaffEditDialogController;
 import com.taimsoft.desktopui.controllers.edit.VendorEditDialogController;
 import com.taimsoft.desktopui.uicomponents.LiveComboBoxTableCell;
-import com.taimsoft.desktopui.util.AlertBuilder;
-import com.taimsoft.desktopui.util.RestClientFactory;
-import com.taimsoft.desktopui.util.TransactionPanelLoader;
-import com.taimsoft.desktopui.util.VistaNavigator;
+import com.taimsoft.desktopui.util.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.SimpleStringProperty;
@@ -102,6 +99,12 @@ public class VendorOverviewController extends IOverviewController<VendorDTO> {
                                     if(controller != null && controller.isOKClicked()){
                                         getTableView().getItems().set(getIndex(), controller.getVendor());
                                     }
+                                }else if(newValue.equals("DELETE")){
+                                    DeleteEntityUtil<VendorDTO> deleteEntityUtil = new DeleteEntityUtil<>(vendorDTO, vendorClient);
+                                    deleteEntityUtil.deleteEntity(getOverviewTable(),
+                                            getIndex(),
+                                            "SUCCESSFULLY DELETED VENDOR",
+                                            getRootPane());
                                 }
                             });
                             comboBox.setValue(item);

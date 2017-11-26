@@ -9,6 +9,7 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.layout.AnchorPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,6 +31,8 @@ public abstract class IOverviewController<T>{
 
     @FXML
     private TableView<T> overviewTable;
+    @FXML
+    private AnchorPane rootPane;
 
     enum SummaryLabelMode{
         QUOTED,
@@ -124,5 +127,9 @@ public abstract class IOverviewController<T>{
 
     public void setTransactionList(List<TransactionDTO> transactionList) {
         this.transactionList = transactionList;
+    }
+
+    public AnchorPane getRootPane() {
+        return rootPane;
     }
 }

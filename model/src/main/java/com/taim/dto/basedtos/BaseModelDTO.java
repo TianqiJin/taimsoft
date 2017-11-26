@@ -1,20 +1,19 @@
 package com.taim.dto.basedtos;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import org.joda.time.DateTime;
 
 public class BaseModelDTO {
     private IntegerProperty id;
     private ObjectProperty<DateTime> dateCreated;
     private ObjectProperty<DateTime> dateModified;
+    private BooleanProperty deleted;
 
     public BaseModelDTO(){
         id = new SimpleIntegerProperty();
-        dateCreated = new SimpleObjectProperty<DateTime>();
-        dateModified = new SimpleObjectProperty<DateTime>();
+        dateCreated = new SimpleObjectProperty<>();
+        dateModified = new SimpleObjectProperty<>();
+        deleted = new SimpleBooleanProperty();
     }
 
     public int getId() {
@@ -51,5 +50,17 @@ public class BaseModelDTO {
 
     public void setDateModified(DateTime dateModified) {
         this.dateModified.set(dateModified);
+    }
+
+    public boolean isDeleted() {
+        return deleted.get();
+    }
+
+    public BooleanProperty deletedProperty() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted.set(deleted);
     }
 }

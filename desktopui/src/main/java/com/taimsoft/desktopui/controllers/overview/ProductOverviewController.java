@@ -4,10 +4,8 @@ import com.taim.client.IClient;
 import com.taim.client.ProductClient;
 import com.taim.dto.ProductDTO;
 import com.taimsoft.desktopui.controllers.edit.ProductEditDialogController;
-import com.taimsoft.desktopui.util.AlertBuilder;
-import com.taimsoft.desktopui.util.RestClientFactory;
-import com.taimsoft.desktopui.util.TransactionPanelLoader;
-import com.taimsoft.desktopui.util.VistaNavigator;
+import com.taimsoft.desktopui.uicomponents.FadingStatusMessage;
+import com.taimsoft.desktopui.util.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,6 +15,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
 import javafx.util.Callback;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
@@ -62,7 +61,6 @@ public class ProductOverviewController extends IOverviewController<ProductDTO> {
     private Label filterErrorLabel;
     @FXML
     private CheckBox lessThanLimitCheckBox;
-
     @FXML
     private SplitPane summarySplitPane;
 
@@ -106,10 +104,16 @@ public class ProductOverviewController extends IOverviewController<ProductDTO> {
                                     VistaNavigator.loadDetailVista(VistaNavigator.VISTA_PRODUCT_DETAIL, productDTO);
                                 }else if(newValue.equals("EDIT")){
                                     ProductEditDialogController controller = TransactionPanelLoader.showProductEditor(productDTO);
-                                    if(controller != null && controller.isOKClicked()){
+                                    if(controller != null && controller.isOKClicked()) {
                                         getTableView().getItems().set(getIndex(), controller.getProduct());
 //                                        initOverviewData(productClient);
                                     }
+                                }else if(newValue.equals("DELETE")){
+                                    DeleteEntityUtil<ProductDTO> deleteEntityUtil = new DeleteEntityUtil<>(productDTO, productClient);
+                                    deleteEntityUtil.deleteEntity(getOverviewTable(),
+                                            getIndex(),
+                                            "SUCCESSFULLY DELETED PRODUCT",
+                                            getRootPane());
                                 }
                             });
                             comboBox.setValue(item);

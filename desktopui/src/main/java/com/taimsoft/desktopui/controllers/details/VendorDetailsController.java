@@ -73,7 +73,7 @@ public class VendorDetailsController implements IDetailController<VendorDTO> {
 
     @FXML
     public void initialize(){
-        actionComboBox.setItems(FXCollections.observableArrayList("EDIT", "DELETE"));
+        actionComboBox.setItems(FXCollections.observableArrayList("EDIT"));
         actionComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue.equals("EDIT")){
                 VendorEditDialogController controller = TransactionPanelLoader.showVendorEditor(vendorDTO);
@@ -81,6 +81,7 @@ public class VendorDetailsController implements IDetailController<VendorDTO> {
                     initDetailData(controller.getVendor());
                 }
             }
+            actionComboBox.getSelectionModel().clearSelection();
         });
     }
 

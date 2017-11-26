@@ -80,7 +80,7 @@ public class StaffDetailsController implements IDetailController<StaffDTO> {
 
     @FXML
     public void initialize(){
-        actionComboBox.setItems(FXCollections.observableArrayList("EDIT", "DELETE"));
+        actionComboBox.setItems(FXCollections.observableArrayList("EDIT"));
         actionComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue.equals("EDIT")){
                 StaffEditDialogController controller = TransactionPanelLoader.showStaffEditor(staffDTO);
@@ -88,6 +88,7 @@ public class StaffDetailsController implements IDetailController<StaffDTO> {
                     initDetailData(controller.getStaff());
                 }
             }
+            actionComboBox.getSelectionModel().clearSelection();
         });
     }
 

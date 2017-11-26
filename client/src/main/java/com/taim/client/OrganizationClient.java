@@ -69,4 +69,8 @@ public class OrganizationClient implements IClient<OrganizationDTO> {
         return BeanMapper.map(responseEntity.getBody(), OrganizationDTO.class);
     }
 
+    @Override
+    public OrganizationDTO getById(Integer id) {
+        return null;
+    }
 }

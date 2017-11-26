@@ -78,7 +78,7 @@ public class StaffOverviewController extends IOverviewController<StaffDTO> {
                             comboBox.setPromptText("SET ACTION");
                             comboBox.prefWidthProperty().bind(this.widthProperty());
                             StaffDTO staffDTO = getTableView().getItems().get(getIndex());
-                            comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "EDIT", "DELETE"));
+                            comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "EDIT"));
                             comboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
                                 if(newValue.equals("VIEW DETAILS")){
                                     VistaNavigator.loadDetailVista(VistaNavigator.VISTA_STAFF_DETAIL, staffDTO);
