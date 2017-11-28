@@ -23,12 +23,15 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.*;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 /**
  * Created by tjin on 2/5/2016.
  */
 public class InvoiceGenerator {
     private static Logger logger = Logger.getLogger(InvoiceGenerator.class);
+    private static final DateTimeFormatter dtf = DateTimeFormat.forPattern("MMM-dd-yyyy");
 
     private static Font catFont = new Font(Font.FontFamily.TIMES_ROMAN, 20);
     private static Font subFont = new Font(Font.FontFamily.TIMES_ROMAN, 18);
@@ -306,7 +309,7 @@ public class InvoiceGenerator {
     }
 
     private void createHeader(Document document, InvoiceData.AdvancedProfileImp profileImp, InvoiceType type, TransactionDTO transaction){
-        Paragraph pCompany = new Paragraph("Milan Building Supply LTD.",catFont);
+        Paragraph pCompany = new Paragraph(VistaNavigator.getGlobalProperty().getCompanyName(), catFont);
         pCompany.setAlignment(Element.HEADER);
         String typeString = null;
         String invoiceId = null;
@@ -513,8 +516,8 @@ public class InvoiceGenerator {
             table.addCell(getCellTitle("Type", Element.ALIGN_CENTER, tableTitle,BaseColor.BLACK));
             row = 0;
             for (PaymentDTO paymentRecord : invoice.getTransaction().getPayments()){
-                table.addCell(getCellwithBackground(paymentRecord.getDateModified().toString(), Element.ALIGN_LEFT, totalFont, row));
-                table.addCell(getCellwithBackground(paymentRecord.getPaymentType().toString(), Element.ALIGN_LEFT, totalFont, row));
+                table.addCell(getCellwithBackground(dtf.print(paymentRecord.getDateCreated()), Element.ALIGN_LEFT, totalFont, row));
+                table.addCell(getCellwithBackground(paymentRecord.getPaymentType().getValue(), Element.ALIGN_LEFT, totalFont, row));
                 row++;
             }
             p.add(table);
@@ -535,9 +538,9 @@ public class InvoiceGenerator {
                 table.addCell(getCellTitle("Type", Element.ALIGN_CENTER, tableTitle,BaseColor.BLACK));
                 table.addCell(getCellTitle("Deposit", Element.ALIGN_CENTER, tableTitle,BaseColor.BLACK));
                 for (PaymentDTO paymentRecord : invoice.getTransaction().getPayments()){
-                    table.addCell(getCellwithBackground(paymentRecord.getDateModified().toString(), Element.ALIGN_LEFT, totalFont, row));
+                    table.addCell(getCellwithBackground(dtf.print(paymentRecord.getDateCreated()), Element.ALIGN_LEFT, totalFont, row));
                     table.addCell(getCellwithBackground(InvoiceData.format2dec(InvoiceData.round(paymentRecord.getPaymentAmount())), Element.ALIGN_LEFT, totalFont, row));
-                    table.addCell(getCellwithBackground(paymentRecord.getPaymentType().toString(), Element.ALIGN_LEFT, totalFont, row));
+                    table.addCell(getCellwithBackground(paymentRecord.getPaymentType().getValue(), Element.ALIGN_LEFT, totalFont, row));
                     table.addCell(getCellwithBackground(paymentRecord.isDeposit()? "YES" : "NO", Element.ALIGN_LEFT, totalFont, row));
                     row++;
                 }
@@ -556,9 +559,9 @@ public class InvoiceGenerator {
                 table.addCell(getCellTitle("Amount", Element.ALIGN_CENTER, tableTitle,BaseColor.BLACK));
                 table.addCell(getCellTitle("Type", Element.ALIGN_CENTER, tableTitle,BaseColor.BLACK));
                 for (PaymentDTO paymentRecord : invoice.getTransaction().getPayments()){
-                    table.addCell(getCellwithBackground(paymentRecord.getDateModified().toString(), Element.ALIGN_LEFT, totalFont, row));
+                    table.addCell(getCellwithBackground(dtf.print(paymentRecord.getDateCreated()), Element.ALIGN_LEFT, totalFont, row));
                     table.addCell(getCellwithBackground(InvoiceData.format2dec(InvoiceData.round(paymentRecord.getPaymentAmount())), Element.ALIGN_LEFT, totalFont, row));
-                    table.addCell(getCellwithBackground(paymentRecord.getPaymentType().toString(), Element.ALIGN_LEFT, totalFont, row));
+                    table.addCell(getCellwithBackground(paymentRecord.getPaymentType().getValue(), Element.ALIGN_LEFT, totalFont, row));
                     row++;
                 }
             }

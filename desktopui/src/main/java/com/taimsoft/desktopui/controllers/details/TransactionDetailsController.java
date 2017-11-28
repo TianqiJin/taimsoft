@@ -3,6 +3,7 @@ package com.taimsoft.desktopui.controllers.details;
 import com.taim.dto.PaymentDTO;
 import com.taim.dto.TransactionDTO;
 import com.taim.dto.TransactionDetailDTO;
+import com.taimsoft.desktopui.util.TransactionPanelLoader;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.SimpleStringProperty;
@@ -96,6 +97,26 @@ public class TransactionDetailsController implements IDetailController<Transacti
         bindTransactionDetailTable();
         bindPaymentTable();
         actionComboBox.setItems(FXCollections.observableArrayList("EDIT", "PRINT"));
+        actionComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue.equals("EDIT")){
+                switch (transactionDTO.getTransactionType()){
+                    case QUOTATION:
+                        initDetailData(TransactionPanelLoader.loadQuotation(transactionDTO));
+                        break;
+                    case INVOICE:
+                        initDetailData(TransactionPanelLoader.loadInvoice(transactionDTO));
+                        break;
+                    case RETURN:
+                        initDetailData(TransactionPanelLoader.loadReturn(transactionDTO));
+                        break;
+                    case STOCK:
+                        initDetailData(TransactionPanelLoader.loadStock(transactionDTO));
+                        break;
+                }
+            }else if(newValue.equals("PRINT")){
+                TransactionPanelLoader.showPrintTransactionDialog(transactionDTO);
+            }
+        });
     }
 
     @Override

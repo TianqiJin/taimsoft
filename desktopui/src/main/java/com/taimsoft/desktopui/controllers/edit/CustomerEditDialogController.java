@@ -70,10 +70,6 @@ public class CustomerEditDialogController {
     @FXML
     private Label fullnameErrorLabel;
     @FXML
-    private Label phoneErrorLabel;
-    @FXML
-    private Label emailErrorLabel;
-    @FXML
     private Label storeCreditErrorLabel;
     @FXML
     private AnchorPane root;
@@ -85,8 +81,6 @@ public class CustomerEditDialogController {
     @FXML
     private void initialize(){
         initErrorLabel(fullNameField, fullnameErrorLabel, "Full name must not be empty!");
-        initErrorLabel(phoneField, phoneErrorLabel, "Phone must not be empty!");
-        initErrorLabel(emailField, emailErrorLabel, "Email name must not be empty!");
         storeCreditField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if(!newValue) { // we only care about loosing focus
                 try{
@@ -215,8 +209,6 @@ public class CustomerEditDialogController {
 
     private boolean isInputValid(){
        return StringUtils.isEmpty(fullnameErrorLabel.getText())
-               && StringUtils.isEmpty(emailErrorLabel.getText())
-               && StringUtils.isEmpty(phoneErrorLabel.getText())
                && StringUtils.isEmpty(storeCreditErrorLabel.getText());
 
     }

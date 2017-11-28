@@ -123,6 +123,11 @@ public class ProductEditDialogController {
                     piecesPerBoxErrorLabel.setText("Pieces per box must be an integer!");
                     piecesPerBoxErrorLabel.setStyle(FX_ERROR_LABEL_COLOR);
                 }
+
+                if(Double.parseDouble(piecesPerBoxField.getText()) <= 0){
+                    piecesPerBoxErrorLabel.setText("Pieces per box must be greater than 0!");
+                    piecesPerBoxErrorLabel.setStyle(FX_ERROR_LABEL_COLOR);
+                }
             }
         });
     }

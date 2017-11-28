@@ -15,6 +15,7 @@ import com.taim.model.Transaction;
 import com.taimsoft.desktopui.util.AlertBuilder;
 import com.taimsoft.desktopui.util.InvoiceGenerator;
 import com.taimsoft.desktopui.util.VistaNavigator;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,6 +24,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.io.File;
 import java.io.IOException;
@@ -48,14 +51,13 @@ public class InvoiceGenerationController {
         }
     }
 
+    private static final DateTimeFormatter dtf = DateTimeFormat.forPattern("MMM-dd-yyyy");
     private Stage dialogStage;
     private File newInvoice;
     private TransactionDTO transaction;
     private BillingInfoController billFromController;
     private BillingInfoController billToController;
-//
-//    @FXML
-//    private Label invoiceDirectoryLabel;
+
     @FXML
     private Label invoiceCreationDateLabel;
     @FXML
@@ -113,8 +115,8 @@ public class InvoiceGenerationController {
 
     private void initInvoiceInfo(){
         invoiceCreationDateLabel.textProperty().bind(this.transaction.dateCreatedProperty().asString());
-        paymentDueDateLabel.textProperty().bind(this.transaction.paymentDueDateProperty().asString());
-        deliveryDueDateLabel.textProperty().bind(this.transaction.deliveryDueDateProperty().asString());
+        paymentDueDateLabel.textProperty().bind(new SimpleStringProperty(dtf.print(this.transaction.getPaymentDueDate())));
+        deliveryDueDateLabel.textProperty().bind(new SimpleStringProperty(dtf.print(this.transaction.getDeliveryDueDate())));
         invoiceNumLabel.textProperty().bind(this.transaction.idProperty().asString());
     }
 

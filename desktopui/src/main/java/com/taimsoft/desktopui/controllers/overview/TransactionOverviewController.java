@@ -168,30 +168,7 @@ public class TransactionOverviewController extends IOverviewController<Transacti
                                 if(newValue.equals("VIEW DETAILS")){
                                     VistaNavigator.loadDetailVista(VistaNavigator.VISTA_TRANSACTION_DETAIL, transactionDTO);
                                 }else if(newValue.equals("PRINT")){
-                                    try {
-
-                                        FXMLLoader loader = new FXMLLoader();
-                                        loader.setLocation(TaimDesktop.class.getResource("/fxml/pdfs/InvoiceGeneration.fxml"));
-                                        AnchorPane page = loader.load();
-                                        Stage dialogStage = new Stage();
-                                        //Set the dialog stage bound to the maximum of the screen
-                                        Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
-                                        dialogStage.setX(bounds.getMinX());
-                                        dialogStage.setY(bounds.getMinY());
-                                        dialogStage.setWidth(bounds.getWidth());
-                                        dialogStage.setHeight(bounds.getHeight());
-                                        dialogStage.setTitle("PRINT INVOICES");
-                                        page.getStylesheets().add(TaimDesktop.class.getResource("/css/bootstrap3.css").toExternalForm());
-                                        Scene scene = new Scene(page);
-                                        dialogStage.setScene(scene);
-                                        dialogStage.initModality(Modality.WINDOW_MODAL);
-                                        InvoiceGenerationController controller = loader.getController();
-                                        controller.setDialogStage(dialogStage);
-                                        controller.initData(transactionDTO);
-                                        dialogStage.showAndWait();
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
+                                    TransactionPanelLoader.showPrintTransactionDialog(transactionDTO);
                                 }else if(newValue.equalsIgnoreCase("EDIT")){
                                     getOverviewTable().getItems().remove(transactionDTO);
                                     switch (transactionDTO.getTransactionType()){

@@ -341,7 +341,11 @@ public class GenerateQuotationController {
             this.transaction = transactionFromAbove;
             this.customer = transactionFromAbove.getCustomer();
             if(transaction.isFinalized()){
-                System.out.println("This transaction is already finalized! You cannot edit on it anymore.");
+                new AlertBuilder()
+                        .alertType(Alert.AlertType.ERROR)
+                        .alertContentText("This transaction is already finalized! You cannot edit on it anymore")
+                        .build()
+                        .showAndWait();
                 confirmButton.setDisable(true);
             }
 

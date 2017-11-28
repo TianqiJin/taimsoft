@@ -3,6 +3,7 @@ package com.taimsoft.desktopui.util;
 import com.taim.dto.*;
 import com.taim.model.Transaction;
 import com.taimsoft.desktopui.controllers.edit.*;
+import com.taimsoft.desktopui.controllers.pdfs.InvoiceGenerationController;
 import com.taimsoft.desktopui.controllers.transactions.*;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
@@ -55,7 +56,7 @@ public class TransactionPanelLoader {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
         return transaction;
     }
@@ -120,7 +121,7 @@ public class TransactionPanelLoader {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
         return transaction;
     }
@@ -186,7 +187,7 @@ public class TransactionPanelLoader {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
         return transaction;
     }
@@ -223,7 +224,7 @@ public class TransactionPanelLoader {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
         return transaction;
     }
@@ -317,7 +318,7 @@ public class TransactionPanelLoader {
             return controller;
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
         return null;
     }
@@ -342,7 +343,7 @@ public class TransactionPanelLoader {
 //            return controller.isOKClicked();
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
         return false;
     }
@@ -373,7 +374,7 @@ public class TransactionPanelLoader {
             return controller;
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
         return null;
     }
@@ -398,8 +399,34 @@ public class TransactionPanelLoader {
                 return controller.getTransactionDTO();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
         return null;
+    }
+
+    public static void showPrintTransactionDialog(TransactionDTO transactionDTO){
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(TransactionPanelLoader.class.getResource("/fxml/pdfs/InvoiceGeneration.fxml"));
+            AnchorPane page = loader.load();
+            Stage dialogStage = new Stage();
+            //Set the dialog stage bound to the maximum of the screen
+            Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
+            dialogStage.setX(bounds.getMinX());
+            dialogStage.setY(bounds.getMinY());
+            dialogStage.setWidth(bounds.getWidth());
+            dialogStage.setHeight(bounds.getHeight());
+            dialogStage.setTitle("PRINT INVOICES");
+            page.getStylesheets().add(TransactionPanelLoader.class.getResource("/css/bootstrap3.css").toExternalForm());
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            InvoiceGenerationController controller = loader.getController();
+            controller.setDialogStage(dialogStage);
+            controller.initData(transactionDTO);
+            dialogStage.showAndWait();
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
+        }
     }
 }

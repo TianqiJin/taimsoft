@@ -30,7 +30,7 @@
     <logger name="org.dozer" level="warn" />
     <logger name="org.apache.commons.beanutils.converters" level="warn" />
 
-    <root level="debug">
+    <root level="INFO">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="FILE" />
     </root>
