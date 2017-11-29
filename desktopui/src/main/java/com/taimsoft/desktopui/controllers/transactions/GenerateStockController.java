@@ -269,7 +269,7 @@ public class GenerateStockController {
                 new Callback<TableColumn<TransactionDetailDTO, Boolean>, TableCell<TransactionDetailDTO, Boolean>>() {
                     @Override
                     public TableCell<TransactionDetailDTO, Boolean> call(TableColumn<TransactionDetailDTO, Boolean> p) {
-                        return new ButtonCell(transactionTableView);
+                        return new ButtonCell(transactionTableView,oldProductVirtualNumMap,mode==Mode.EDIT,false);
                     }
 
                 });
@@ -606,6 +606,7 @@ public class GenerateStockController {
     private void showTransactionDetails(){
         typeLabel.setText(transaction.getTransactionType().getValue());
         dateLabel.setText(new SimpleDateFormat("yyyy-MM-dd").format(transaction.getDateCreated().toDate()));
+        textArea.setText(transaction.getNote());
     }
 
     private void showStaffDetails(){

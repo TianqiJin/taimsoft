@@ -281,7 +281,7 @@ public class GenerateInvoiceController {
             showPaymentDetails();
             refreshTable();
 
-            (event.getTableView().getItems().get(event.getTablePosition().getRow())).setDiscount(event.getNewValue().intValue());
+            (event.getTableView().getItems().get(event.getTablePosition().getRow())).setDiscount(newDiscount);
             });
 
         totalCol.setCellValueFactory(param ->
@@ -301,7 +301,7 @@ public class GenerateInvoiceController {
                 new Callback<TableColumn<TransactionDetailDTO, Boolean>, TableCell<TransactionDetailDTO, Boolean>>() {
                     @Override
                     public TableCell<TransactionDetailDTO, Boolean> call(TableColumn<TransactionDetailDTO, Boolean> p) {
-                        return new ButtonCell(transactionTableView);
+                        return new ButtonCell(transactionTableView,oldProductVirtualNumMap,true,true);
                     }
 
                 });
@@ -553,6 +553,7 @@ public class GenerateInvoiceController {
     private void showTransactionDetails(){
         typeLabel.setText(transaction.getTransactionType().getValue());
         dateLabel.setText(new SimpleDateFormat("yyyy-MM-dd").format(transaction.getDateCreated().toDate()));
+        textArea.setText(transaction.getNote());
     }
 
     private void showStaffDetails(){
@@ -811,6 +812,13 @@ public class GenerateInvoiceController {
         if (this.customer!=null && this.customer.getCustomerClass()!=null) {
             if(newValue <= this.customer.getCustomerClass().getCustomerDiscount()){
                 return newValue;
+            }else{
+                new AlertBuilder()
+                        .alertType(Alert.AlertType.ERROR)
+                        .alertHeaderText("Discount Error!")
+                        .alertContentText("Exceed Max discount rate for this customer!")
+                        .build()
+                        .showAndWait();
             }
         }
         return oldValue;

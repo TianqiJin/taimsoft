@@ -256,11 +256,11 @@ public class GenerateReturnController {
             refreshTable();
         });
         subTotalCol.setCellValueFactory(param ->
-                new SimpleFloatProperty(new BigDecimal(param.getValue().getSaleAmount()).floatValue()));
+                new SimpleFloatProperty(new BigDecimal(param.getValue().getQuantity()).multiply(new BigDecimal(param.getValue().getProduct().getUnitPrice())).floatValue()));
 
 
         totalCol.setCellValueFactory(param ->
-                new SimpleFloatProperty(new BigDecimal(param.getValue().getSaleAmount()* (100 - param.getValue().getDiscount()) / 100)
+                new SimpleFloatProperty(new BigDecimal(param.getValue().getQuantity()*param.getValue().getProduct().getUnitPrice()* (100 - param.getValue().getDiscount()) / 100)
                         .setScale(2, RoundingMode.HALF_EVEN).floatValue()));
 
         deleteCol.setCellValueFactory(
@@ -276,7 +276,7 @@ public class GenerateReturnController {
                 new Callback<TableColumn<TransactionDetailDTO, Boolean>, TableCell<TransactionDetailDTO, Boolean>>() {
                     @Override
                     public TableCell<TransactionDetailDTO, Boolean> call(TableColumn<TransactionDetailDTO, Boolean> p) {
-                        return new ButtonCell(transactionTableView);
+                        return new ButtonCell(transactionTableView,oldProductVirtualNumMap,mode==Mode.EDIT,false);
                     }
 
                 });
@@ -461,6 +461,7 @@ public class GenerateReturnController {
     private void showTransactionDetails(){
         typeLabel.setText(transaction.getTransactionType().getValue());
         dateLabel.setText(new SimpleDateFormat("yyyy-MM-dd").format(transaction.getDateCreated().toDate()));
+        textArea.setText(transaction.getNote());
     }
 
     private void showStaffDetails(){
@@ -518,8 +519,8 @@ public class GenerateReturnController {
             BigDecimal subTotalBeforeDiscount = new BigDecimal(0.00);
             while(iterator.hasNext()){
                 TransactionDetailDTO tmp = iterator.next();
-                subTotalBeforeDiscount = subTotalBeforeDiscount.add(new BigDecimal(tmp.getSaleAmount()));
-                subTotalAfterDiscount = subTotalAfterDiscount.add(new BigDecimal(tmp.getSaleAmount()* (100 - tmp.getDiscount()) / 100));
+                subTotalBeforeDiscount = subTotalBeforeDiscount.add(new BigDecimal(tmp.getQuantity()*tmp.getProduct().getUnitPrice()));
+                subTotalAfterDiscount = subTotalAfterDiscount.add(new BigDecimal(tmp.getQuantity()*tmp.getProduct().getUnitPrice()* (100 - tmp.getDiscount()) / 100));
             }
             BigDecimal paymentDiscount = subTotalBeforeDiscount.subtract(subTotalAfterDiscount).setScale(2, BigDecimal.ROUND_HALF_EVEN);
 

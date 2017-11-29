@@ -41,6 +41,11 @@
             <version>5.2.0</version>
         </dependency>
         <dependency>
+            <groupId>com.taim</groupId>
+            <artifactId>licensegen</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20160810</version>
