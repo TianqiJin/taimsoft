@@ -9,6 +9,7 @@ import com.taimsoft.desktopui.util.RestClientFactory;
 import com.taimsoft.desktopui.util.TransactionPanelLoader;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableBooleanValue;
 import javafx.beans.value.ObservableStringValue;
 import javafx.collections.FXCollections;
@@ -20,6 +21,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,6 +33,7 @@ import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 public class CustomerDetailsController implements IDetailController<CustomerDTO>{
+    private static final DateTimeFormatter dtf = DateTimeFormat.forPattern("MMM-dd-yyyy");
     private CustomerDTO customerDTO;
     private List<TransactionDTO> quotationList;
     private List<TransactionDTO> invoiceList;
@@ -164,7 +168,7 @@ public class CustomerDetailsController implements IDetailController<CustomerDTO>
             customerClassLabel.textProperty().bind(initStringBinding(customerDTO.customerClassProperty().isNull(),
                     "", customerDTO.getCustomerClass().customerClassNameProperty()));
             dateCreatedLabel.textProperty().bind(initStringBinding(customerDTO.dateCreatedProperty().isNull(),
-                    "", customerDTO.dateCreatedProperty().asString()));
+                    "", new SimpleStringProperty(dtf.print(customerDTO.getDateCreated()))));
             fullNameLabel.textProperty().bind(initStringBinding(customerDTO.fullnameProperty().isNull(),
                     "", customerDTO.fullnameProperty()));
             emailLabel.textProperty().bind(initStringBinding(customerDTO.emailProperty().isNull(),
@@ -172,7 +176,7 @@ public class CustomerDetailsController implements IDetailController<CustomerDTO>
             phoneLabel.textProperty().bind(initStringBinding(customerDTO.phoneProperty().isNull(),
                     "", customerDTO.phoneProperty()));
             customerTypeLabel.textProperty().bind(initStringBinding(customerDTO.userTypeProperty().isNull(),
-                    "", customerDTO.userTypeProperty().asString()));
+                    "", new SimpleStringProperty(customerDTO.getUserType().getValue())));
             if(customerDTO.getOrganization() != null){
                 orgNameLabel.textProperty().bind(initStringBinding(customerDTO.getOrganization().orgNameProperty().isNull(),
                         "", customerDTO.getOrganization().orgNameProperty()));

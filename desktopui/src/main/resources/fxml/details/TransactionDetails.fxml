@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.SplitPane?>
@@ -14,7 +19,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="1000.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taimsoft.desktopui.controllers.details.TransactionDetailsController">
+<AnchorPane prefHeight="1000.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taimsoft.desktopui.controllers.details.TransactionDetailsController">
    <children>
       <SplitPane dividerPositions="0.35" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="100.0">
         <items>
@@ -32,7 +37,7 @@
                         </Label>
                         <Label text="Transaction Type" GridPane.columnIndex="0" GridPane.rowIndex="3">
                         </Label>
-                        <Label text="Vendor / Customer" GridPane.columnIndex="2">
+                        <Label text="Vendor / Customer" GridPane.columnIndex="2" GridPane.rowIndex="1">
                         </Label>
                         <Label fx:id="transactionIdLabel" GridPane.columnIndex="1" GridPane.rowIndex="0">
                            <font>
@@ -59,7 +64,7 @@
                               <Font name="System Bold" size="12.0" />
                            </font>
                         </Label>
-                        <Label fx:id="cuVeLabel" GridPane.columnIndex="3">
+                        <Label fx:id="cuVeLabel" GridPane.columnIndex="3" GridPane.rowIndex="1">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
@@ -78,37 +83,37 @@
                               <Font name="System Bold" size="12.0" />
                            </font>
                         </Label>
-                        <Label text="Payment Due Date" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                        <Label text="Payment Due Date" GridPane.columnIndex="2" GridPane.rowIndex="2">
                         </Label>
-                        <Label text="Delivery Due Date" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                        <Label text="Delivery Due Date" GridPane.columnIndex="2" GridPane.rowIndex="4">
                         </Label>
-                        <Label text="Payment Status" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                        <Label text="Payment Status" GridPane.columnIndex="2" GridPane.rowIndex="3">
                         </Label>
-                        <Label text="Delivery Status" GridPane.columnIndex="2" GridPane.rowIndex="4">
+                        <Label text="Delivery Status" GridPane.columnIndex="2" GridPane.rowIndex="5">
                         </Label>
-                        <Label fx:id="paymentDueDateLabel" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                        <Label fx:id="paymentDueDateLabel" GridPane.columnIndex="3" GridPane.rowIndex="2">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
                         </Label>
-                        <Label fx:id="paymentStatusLabel" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                        <Label fx:id="paymentStatusLabel" GridPane.columnIndex="3" GridPane.rowIndex="3">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
                         </Label>
-                        <Label fx:id="deliveryDueDateLabel" GridPane.columnIndex="3" GridPane.rowIndex="3">
+                        <Label fx:id="deliveryDueDateLabel" GridPane.columnIndex="3" GridPane.rowIndex="4">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
                         </Label>
-                        <Label fx:id="deliveryStatusLabel" GridPane.columnIndex="3" GridPane.rowIndex="4">
+                        <Label fx:id="deliveryStatusLabel" GridPane.columnIndex="3" GridPane.rowIndex="5">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
                         </Label>
-                        <Label text="Finalized" GridPane.columnIndex="2" GridPane.rowIndex="5">
+                        <Label text="Finalized" GridPane.columnIndex="2" GridPane.rowIndex="6">
                         </Label>
-                        <Label fx:id="finalizedLabel" GridPane.columnIndex="3" GridPane.rowIndex="5">
+                        <Label fx:id="finalizedLabel" GridPane.columnIndex="3" GridPane.rowIndex="6">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
@@ -127,6 +132,8 @@
                                 <Font name="System Bold" size="12.0" />
                             </font>
                         </Label>
+                        <Label text="Refrence Transaction" GridPane.columnIndex="2" />
+                        <Hyperlink fx:id="refrenceTransactionLink" GridPane.columnIndex="3" />
                      </children>
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -218,6 +225,15 @@
       <HBox layoutX="786.0" layoutY="-13.0" spacing="20.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="30.0">
          <children>
             <ComboBox fx:id="actionComboBox" prefWidth="150.0" promptText="SELECT ACTION" />
+         </children>
+      </HBox>
+      <HBox AnchorPane.rightAnchor="450.0" AnchorPane.topAnchor="20.0">
+         <children>
+            <ImageView fx:id="finalizedImage" fitHeight="115.0" fitWidth="180.0" pickOnBounds="true" preserveRatio="true" rotate="-32.7" visible="false">
+               <image>
+                  <Image url="/pics/finalized.jpg" />
+               </image>
+            </ImageView>
          </children>
       </HBox>
    </children>

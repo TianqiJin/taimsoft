@@ -71,8 +71,10 @@ public class TransactionOverviewController extends IOverviewController<Transacti
     private TableColumn<TransactionDTO, String> deliveryStatusCol;
     @FXML
     private TableColumn<TransactionDTO, String> actionCol;
+//    @FXML
+//    private TableColumn<TransactionDTO, Boolean> checkedCol;
     @FXML
-    private TableColumn<TransactionDTO, Boolean> checkedCol;
+    private TableColumn<TransactionDTO, String> finalizedCol;
     @FXML
     private SplitPane summarySplitPane;
     @FXML
@@ -95,6 +97,8 @@ public class TransactionOverviewController extends IOverviewController<Transacti
     private CheckBox paymentOverDueCheckBox;
     @FXML
     private CheckBox deliveryOverDueCheckBox;
+    @FXML
+    private CheckBox finalizedCheckBox;
 
     @FXML
     private ComboBox<Transaction.TransactionType> createNewTransactionComboBox;
@@ -131,8 +135,15 @@ public class TransactionOverviewController extends IOverviewController<Transacti
             }
             return null;
         });
-        checkedCol.setCellValueFactory(new PropertyValueFactory<>("isChecked"));
-        checkedCol.setCellFactory(CheckBoxTableCell.forTableColumn(checkedCol));
+//        checkedCol.setCellValueFactory(new PropertyValueFactory<>("isChecked"));
+//        checkedCol.setCellFactory(CheckBoxTableCell.forTableColumn(checkedCol));
+        finalizedCol.setCellValueFactory(param -> {
+            if(param.getValue().isFinalized()){
+                return new SimpleStringProperty("YES");
+            }else{
+                return new SimpleStringProperty("NO");
+            }
+        });
         actionCol.setCellValueFactory(new PropertyValueFactory<>("action"));
         actionCol.setCellFactory(new Callback<TableColumn<TransactionDTO, String>, TableCell<TransactionDTO, String>>() {
             @Override
@@ -150,16 +161,33 @@ public class TransactionOverviewController extends IOverviewController<Transacti
                             TransactionDTO transactionDTO = getTableView().getItems().get(getIndex());
                             switch (transactionDTO.getTransactionType()){
                                 case STOCK:
-                                    comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "EDIT", "PRINT"));
+                                    if(transactionDTO.isFinalized()){
+                                        comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "PRINT"));
+                                    }else{
+                                        comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "EDIT", "PRINT"));
+                                    }
                                     break;
                                 case RETURN:
-                                    comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "EDIT", "PRINT"));
+                                    if(transactionDTO.isFinalized()){
+                                        comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "PRINT"));
+                                    }else{
+                                        comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "EDIT", "PRINT"));
+                                    }
                                     break;
                                 case INVOICE:
-                                    comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "EDIT", "FILE RETURN","PRINT"));
+                                    if(transactionDTO.isFinalized()){
+                                        comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "FILE RETURN","PRINT"));
+                                    }else{
+                                        comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "EDIT", "FILE RETURN","PRINT"));
+                                    }
                                     break;
                                 case QUOTATION:
-                                    comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "CONVERT TO INVOICE", "EDIT", "PRINT"));
+                                    if(transactionDTO.isFinalized()){
+                                        comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "CONVERT TO INVOICE", "PRINT"));
+                                    }else{
+                                        comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "CONVERT TO INVOICE", "EDIT", "PRINT"));
+                                    }
+
                                     break;
                                 default:
                                     break;
@@ -189,7 +217,6 @@ public class TransactionOverviewController extends IOverviewController<Transacti
                                     getOverviewTable().getItems().add(TransactionPanelLoader.loadInvoice(transactionDTO));
                                 } else if(newValue.equalsIgnoreCase("FILE RETURN") && transactionDTO.getTransactionType()== Transaction.TransactionType.INVOICE){
                                     getOverviewTable().getItems().add(TransactionPanelLoader.loadReturn(transactionDTO));
-
                                 }
                             });
                             comboBox.setValue(item);
@@ -281,6 +308,10 @@ public class TransactionOverviewController extends IOverviewController<Transacti
                     && !transaction.getDeliveryStatus().getStatus().equals(DeliveryStatus.Status.DELIVERED))
                     .collect(Collectors.toCollection(FXCollections::observableArrayList));
         }
+        if(finalizedCheckBox.isSelected()){
+            subList = subList.stream().filter(TransactionDTO::isFinalized)
+                    .collect(Collectors.toCollection(FXCollections::observableArrayList));
+        }
 
         getOverviewTable().setItems(subList);
     }
@@ -361,6 +392,11 @@ public class TransactionOverviewController extends IOverviewController<Transacti
                                 if(item.getTransactionType().equals(Transaction.TransactionType.INVOICE) &&
                                         item.getPaymentStatus().equals(Transaction.PaymentStatus.PAID)){
                                     totalValue = totalValue + item.getSaleAmount();
+                                }else if(item.getTransactionType().equals(Transaction.TransactionType.INVOICE) &&
+                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.PARTIALLY_PAID)){
+                                    for(PaymentDTO payment: item.getPayments()){
+                                        totalValue += payment.getPaymentAmount();
+                                    }
                                 }
                             }
                             break;
@@ -369,6 +405,13 @@ public class TransactionOverviewController extends IOverviewController<Transacti
                                 if(item.getTransactionType().equals(Transaction.TransactionType.INVOICE) &&
                                         item.getPaymentStatus().equals(Transaction.PaymentStatus.UNPAID)){
                                     totalValue = totalValue + item.getSaleAmount();
+                                }else if(item.getTransactionType().equals(Transaction.TransactionType.INVOICE) &&
+                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.PARTIALLY_PAID)){
+                                    double unpaid = 0;
+                                    for(PaymentDTO payment: item.getPayments()){
+                                        unpaid += payment.getPaymentAmount();
+                                    }
+                                    totalValue += unpaid;
                                 }
                             }
                             break;
@@ -377,6 +420,11 @@ public class TransactionOverviewController extends IOverviewController<Transacti
                                 if(item.getTransactionType().equals(Transaction.TransactionType.STOCK) &&
                                         item.getPaymentStatus().equals(Transaction.PaymentStatus.PAID)){
                                     totalValue = totalValue + item.getSaleAmount();
+                                }else if(item.getTransactionType().equals(Transaction.TransactionType.STOCK) &&
+                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.PARTIALLY_PAID)){
+                                    for(PaymentDTO payment: item.getPayments()){
+                                        totalValue += payment.getPaymentAmount();
+                                    }
                                 }
                             }
                             break;
@@ -385,6 +433,13 @@ public class TransactionOverviewController extends IOverviewController<Transacti
                                 if(item.getTransactionType().equals(Transaction.TransactionType.STOCK) &&
                                         item.getPaymentStatus().equals(Transaction.PaymentStatus.UNPAID)){
                                     totalValue = totalValue + item.getSaleAmount();
+                                }else if(item.getTransactionType().equals(Transaction.TransactionType.STOCK) &&
+                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.PARTIALLY_PAID)){
+                                    double unpaid = 0;
+                                    for(PaymentDTO payment: item.getPayments()){
+                                        unpaid += payment.getPaymentAmount();
+                                    }
+                                    totalValue += unpaid;
                                 }
                             }
                             break;

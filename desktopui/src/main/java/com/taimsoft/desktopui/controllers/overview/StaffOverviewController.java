@@ -39,8 +39,8 @@ public class StaffOverviewController extends IOverviewController<StaffDTO> {
     private TableColumn<StaffDTO, String> orgCol;
     @FXML
     private TableColumn<StaffDTO, String> actionCol;
-    @FXML
-    private TableColumn<StaffDTO, Boolean> checkedCol;
+//    @FXML
+//    private TableColumn<StaffDTO, Boolean> checkedCol;
     @FXML
     private SplitPane summarySplitPane;
 
@@ -61,8 +61,8 @@ public class StaffOverviewController extends IOverviewController<StaffDTO> {
                 return null;
             }
         });
-        checkedCol.setCellValueFactory(new PropertyValueFactory<>("isChecked"));
-        checkedCol.setCellFactory(CheckBoxTableCell.forTableColumn(checkedCol));
+//        checkedCol.setCellValueFactory(new PropertyValueFactory<>("isChecked"));
+//        checkedCol.setCellFactory(CheckBoxTableCell.forTableColumn(checkedCol));
         actionCol.setCellValueFactory(new PropertyValueFactory<>("action"));
         actionCol.setCellFactory(new Callback<TableColumn<StaffDTO, String>, TableCell<StaffDTO, String>>() {
             @Override

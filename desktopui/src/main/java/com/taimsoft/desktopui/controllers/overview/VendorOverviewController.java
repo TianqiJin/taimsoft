@@ -48,8 +48,8 @@ public class VendorOverviewController extends IOverviewController<VendorDTO> {
     private TableColumn<VendorDTO, String> emailCol;
     @FXML
     private TableColumn<VendorDTO, String> actionCol;
-    @FXML
-    private TableColumn<VendorDTO, Boolean> checkedCol;
+//    @FXML
+//    private TableColumn<VendorDTO, Boolean> checkedCol;
     @FXML
     private SplitPane summarySplitPane;
     @FXML
@@ -73,8 +73,8 @@ public class VendorOverviewController extends IOverviewController<VendorDTO> {
         typeCol.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getUserType().getValue()));
         phoneCol.setCellValueFactory(new PropertyValueFactory<>("phone"));
         emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
-        checkedCol.setCellValueFactory(new PropertyValueFactory<>("isChecked"));
-        checkedCol.setCellFactory(CheckBoxTableCell.forTableColumn(checkedCol));
+//        checkedCol.setCellValueFactory(new PropertyValueFactory<>("isChecked"));
+//        checkedCol.setCellFactory(CheckBoxTableCell.forTableColumn(checkedCol));
         actionCol.setCellValueFactory(new PropertyValueFactory<>("action"));
         actionCol.setCellFactory(new Callback<TableColumn<VendorDTO, String>, TableCell<VendorDTO, String>>() {
             @Override

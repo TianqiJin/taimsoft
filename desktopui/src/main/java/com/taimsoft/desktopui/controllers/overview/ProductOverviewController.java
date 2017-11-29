@@ -47,8 +47,8 @@ public class ProductOverviewController extends IOverviewController<ProductDTO> {
     private TableColumn<ProductDTO, Double> virtualQuantityCol;
     @FXML
     private TableColumn<ProductDTO, String> actionCol;
-    @FXML
-    private TableColumn<ProductDTO, Boolean> checkedCol;
+//    @FXML
+//    private TableColumn<ProductDTO, Boolean> checkedCol;
     @FXML
     private TextField productTypeField;
     @FXML
@@ -81,8 +81,8 @@ public class ProductOverviewController extends IOverviewController<ProductDTO> {
         salesPriceCol.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
         quantityCol.setCellValueFactory(new PropertyValueFactory<>("totalNum"));
         virtualQuantityCol.setCellValueFactory(new PropertyValueFactory<>("virtualTotalNum"));
-        checkedCol.setCellValueFactory(new PropertyValueFactory<>("isChecked"));
-        checkedCol.setCellFactory(CheckBoxTableCell.forTableColumn(checkedCol));
+//        checkedCol.setCellValueFactory(new PropertyValueFactory<>("isChecked"));
+//        checkedCol.setCellFactory(CheckBoxTableCell.forTableColumn(checkedCol));
         actionCol.setCellValueFactory(new PropertyValueFactory<>("action"));
         actionCol.setCellFactory(new Callback<TableColumn<ProductDTO, String>, TableCell<ProductDTO, String>>() {
             @Override
@@ -232,7 +232,9 @@ public class ProductOverviewController extends IOverviewController<ProductDTO> {
                     return true;
                 }else if(productDTO.getSku().toLowerCase().contains(lowerCase)){
                     return true;
-                }else if(String.valueOf(productDTO.getUnitPrice()).contains(lowerCase)){
+                }else if(productDTO.getTexture() != null && productDTO.getTexture().toLowerCase().contains(lowerCase)){
+                    return true;
+                } else if(String.valueOf(productDTO.getUnitPrice()).contains(lowerCase)){
                     return true;
                 }else if(String.valueOf(productDTO.getTotalNum()).contains(lowerCase)){
                     return true;
