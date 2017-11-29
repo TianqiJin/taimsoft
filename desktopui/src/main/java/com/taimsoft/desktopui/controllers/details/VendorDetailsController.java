@@ -10,6 +10,7 @@ import com.taimsoft.desktopui.util.RestClientFactory;
 import com.taimsoft.desktopui.util.TransactionPanelLoader;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableBooleanValue;
 import javafx.beans.value.ObservableStringValue;
 import javafx.collections.FXCollections;
@@ -21,6 +22,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,6 +34,7 @@ import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 public class VendorDetailsController implements IDetailController<VendorDTO> {
+    private static final DateTimeFormatter dtf = DateTimeFormat.forPattern("MMM-dd-yyyy");
     private VendorDTO vendorDTO;
     private List<TransactionDTO> stockList;
     private Executor executor;
@@ -145,7 +149,7 @@ public class VendorDetailsController implements IDetailController<VendorDTO> {
     private void bindVendorInfoLabels(){
         if(vendorDTO != null) {
             dateCreatedLabel.textProperty().bind(initStringBinding(vendorDTO.dateCreatedProperty().isNull(),
-                    "", vendorDTO.dateCreatedProperty().asString()));
+                    "", new SimpleStringProperty(dtf.print(vendorDTO.getDateCreated()))));
             fullNameLabel.textProperty().bind(initStringBinding(vendorDTO.fullnameProperty().isNull(),
                     "", vendorDTO.fullnameProperty()));
             emailLabel.textProperty().bind(initStringBinding(vendorDTO.emailProperty().isNull(),
@@ -153,7 +157,7 @@ public class VendorDetailsController implements IDetailController<VendorDTO> {
             phoneLabel.textProperty().bind(initStringBinding(vendorDTO.phoneProperty().isNull(),
                     "", vendorDTO.phoneProperty()));
             vendorTypeLabel.textProperty().bind(initStringBinding(vendorDTO.userTypeProperty().isNull(),
-                    "", vendorDTO.userTypeProperty().asString()));
+                    "", new SimpleStringProperty(vendorDTO.getUserType().getValue())));
             if(vendorDTO.getOrganization() != null){
                 orgNameLabel.textProperty().bind(initStringBinding(vendorDTO.getOrganization().orgNameProperty().isNull(),
                         "", vendorDTO.getOrganization().orgNameProperty()));

@@ -52,6 +52,7 @@ public class AlertBuilder {
         }else if (alert.getAlertType().equals(Alert.AlertType.ERROR) && alert.getHeaderText() == null){
             alert.setHeaderText("ERROR");
         }
+
         return alert;
     }
 }

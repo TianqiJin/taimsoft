@@ -385,6 +385,7 @@ public class TransactionPanelLoader {
         TitledPane page = null;
         try {
             page = loader.load();
+            page.getStylesheets().add(TransactionPanelLoader.class.getResource("/css/bootstrap3.css").toExternalForm());
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Create Transaction");
             dialogStage.initModality(Modality.WINDOW_MODAL);
@@ -394,6 +395,7 @@ public class TransactionPanelLoader {
             InvRetController controller = loader.getController();
             controller.setDialogStage(dialogStage);
             controller.assignType(type);
+            dialogStage.setResizable(false);
             dialogStage.showAndWait();
             if (controller.isConfirmedClicked()){
                 return controller.getTransactionDTO();

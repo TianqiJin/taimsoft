@@ -163,6 +163,7 @@
                                  <children>
                                     <CheckBox fx:id="paymentOverDueCheckBox" mnemonicParsing="false" text="Payment Overdue" />
                                     <CheckBox fx:id="deliveryOverDueCheckBox" mnemonicParsing="false" text="Delivery Overdue" />
+                                    <CheckBox fx:id="finalizedCheckBox" mnemonicParsing="false" text="Finalized" />
                                  </children>
                               </HBox>
                            </children>
@@ -178,15 +179,15 @@
                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                    </columnResizePolicy>
                    <columns>
-                        <TableColumn fx:id="checkedCol" prefWidth="75.0" />
-                       <TableColumn fx:id="dateCol" prefWidth="64.0" text="DATE" />
-                       <TableColumn fx:id="typeCol" prefWidth="64.0" text="TYPE" />
                        <!--<TableColumn editable="true" prefWidth="64.0" text="TransactionId" fx:id="transactionIdCol" />-->
                        <TableColumn fx:id="idCol" prefWidth="64.0" text="TRANSACTION ID" />
+                       <TableColumn fx:id="dateCol" prefWidth="64.0" text="DATE" />
+                       <TableColumn fx:id="typeCol" prefWidth="64.0" text="TYPE" />
                        <TableColumn fx:id="totalCol" prefWidth="64.0" text="TOTAL" />
                        <TableColumn fx:id="balanceCol" prefWidth="75.0" text="BALANCE" />
                         <TableColumn fx:id="paymentStatusCol" prefWidth="75.0" text="PAYMENT STATUS" />
                         <TableColumn fx:id="deliveryStatusCol" prefWidth="75.0" text="DELIVERY STATUS" />
+                        <TableColumn fx:id="finalizedCol" prefWidth="75.0" text="FINALIZED" />
                         <TableColumn fx:id="actionCol" prefWidth="75.0" text="ACTION" />
                    </columns>
                </TableView>

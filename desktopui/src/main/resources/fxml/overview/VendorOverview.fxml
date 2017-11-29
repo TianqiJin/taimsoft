@@ -109,7 +109,6 @@
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                      </columnResizePolicy>
               <columns>
-                        <TableColumn fx:id="checkedCol" prefWidth="75.0" />
                 <TableColumn fx:id="nameCol" prefWidth="128.0" text="VENDOR" />
                         <TableColumn fx:id="typeCol" prefWidth="75.0" text="TYPE" />
                 <TableColumn fx:id="phoneCol" prefWidth="128.0" text="PHONE" />

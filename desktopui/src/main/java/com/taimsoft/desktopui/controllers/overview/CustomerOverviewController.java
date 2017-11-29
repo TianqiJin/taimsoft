@@ -54,8 +54,8 @@ public class CustomerOverviewController extends IOverviewController<CustomerDTO>
     private TableColumn<CustomerDTO, Double> storeCreditCol;
     @FXML
     private TableColumn<CustomerDTO, String> actionCol;
-    @FXML
-    private TableColumn<CustomerDTO, Boolean> checkedCol;
+//    @FXML
+//    private TableColumn<CustomerDTO, Boolean> checkedCol;
     @FXML
     private SplitPane summarySplitPane;
     @FXML
@@ -94,8 +94,8 @@ public class CustomerOverviewController extends IOverviewController<CustomerDTO>
         phoneCol.setCellValueFactory(new PropertyValueFactory<>("phone"));
         emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
         storeCreditCol.setCellValueFactory(new PropertyValueFactory<>("storeCredit"));
-        checkedCol.setCellValueFactory(new PropertyValueFactory<>("isChecked"));
-        checkedCol.setCellFactory(CheckBoxTableCell.forTableColumn(checkedCol));
+//        checkedCol.setCellValueFactory(new PropertyValueFactory<>("isChecked"));
+//        checkedCol.setCellFactory(CheckBoxTableCell.forTableColumn(checkedCol));
         actionCol.setCellValueFactory(new PropertyValueFactory<>("action"));
         actionCol.setCellFactory(new Callback<TableColumn<CustomerDTO, String>, TableCell<CustomerDTO, String>>() {
             @Override

@@ -3,27 +3,35 @@ package com.taimsoft.desktopui.controllers.details;
 import com.taim.dto.PaymentDTO;
 import com.taim.dto.TransactionDTO;
 import com.taim.dto.TransactionDetailDTO;
+import com.taimsoft.desktopui.util.AlertBuilder;
+import com.taimsoft.desktopui.util.RestClientFactory;
 import com.taimsoft.desktopui.util.TransactionPanelLoader;
+import com.taimsoft.desktopui.util.VistaNavigator;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableBooleanValue;
 import javafx.beans.value.ObservableStringValue;
 import javafx.collections.FXCollections;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.ImageView;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class TransactionDetailsController implements IDetailController<TransactionDTO> {
     private TransactionDTO transactionDTO;
     private static final DateTimeFormatter dtf = DateTimeFormat.forPattern("MMM-dd-yyyy");
+    private static final Logger logger = LoggerFactory.getLogger(TransactionDetailsController.class);
+    private Executor executor;
 
     @FXML
     private Label transactionIdLabel;
@@ -55,6 +63,8 @@ public class TransactionDetailsController implements IDetailController<Transacti
     private Label finalizedLabel;
     @FXML
     private Label noteLabel;
+    @FXML
+    private Hyperlink refrenceTransactionLink;
 
     @FXML
     private TableView<TransactionDetailDTO> transactionDetaiTableView;
@@ -89,14 +99,21 @@ public class TransactionDetailsController implements IDetailController<Transacti
     private TableColumn<PaymentDTO, String> paymentIsDepositCol;
     @FXML
     private ComboBox<String> actionComboBox;
+    @FXML
+    private ImageView finalizedImage;
 
-    public TransactionDetailsController(){}
+    public TransactionDetailsController(){
+        executor = Executors.newCachedThreadPool(r -> {
+            Thread t = new Thread(r);
+            t.setDaemon(true);
+            return t;
+        });
+    }
 
     @FXML
     public void initialize() throws InterruptedException {
         bindTransactionDetailTable();
         bindPaymentTable();
-        actionComboBox.setItems(FXCollections.observableArrayList("EDIT", "PRINT"));
         actionComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue.equals("EDIT")){
                 switch (transactionDTO.getTransactionType()){
@@ -125,6 +142,35 @@ public class TransactionDetailsController implements IDetailController<Transacti
         bindTransactionInfoLabels();
         transactionDetaiTableView.setItems(FXCollections.observableArrayList(transactionDTO.getTransactionDetails()));
         paymentRecordTableView.setItems(FXCollections.observableArrayList(transactionDTO.getPayments()));
+        if(transactionDTO.isFinalized()){
+            actionComboBox.setItems(FXCollections.observableArrayList("PRINT"));
+            finalizedImage.setVisible(true);
+        }else{
+            actionComboBox.setItems(FXCollections.observableArrayList("EDIT", "PRINT"));
+        }
+        refrenceTransactionLink.setText(String.valueOf(transactionDTO.getRefId()));
+        refrenceTransactionLink.setOnAction(event -> {
+            Task<TransactionDTO> getRefTransactionTask = new Task<TransactionDTO>() {
+                @Override
+                protected TransactionDTO call() throws Exception {
+                    return RestClientFactory.getTransactionClient().getById(transactionDTO.getRefId());
+                }
+            };
+
+            getRefTransactionTask.setOnSucceeded(event1 -> {
+                VistaNavigator.loadDetailVista(VistaNavigator.VISTA_TRANSACTION_DETAIL, getRefTransactionTask.getValue());
+            });
+
+            getRefTransactionTask.setOnFailed(event1 -> {
+                logger.error(getRefTransactionTask.getException().getMessage());
+                new AlertBuilder()
+                        .alertType(Alert.AlertType.ERROR)
+                        .alertContentText("Unable to fetch reference transaction from the database")
+                        .build()
+                        .showAndWait();
+            });
+            executor.execute(getRefTransactionTask);
+        });
     }
 
     private void bindTransactionInfoLabels(){

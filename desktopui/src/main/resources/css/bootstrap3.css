@@ -991,3 +991,25 @@ VBox > .split-menu-button.last > .arrow-button {
 .dialog-pane > .content.label {
     -fx-text-fill:#333333;
 }
+
+.alert.information.dialog-pane > .header-panel{
+    -fx-background-color: #5DBCD2;
+}
+
+.alert.confirmation.dialog-pane > .header-panel{
+    -fx-background-color: #00c851;
+}
+
+.alert.error.dialog-pane > .header-panel{
+    -fx-background-color: #ff4444;
+}
+
+.alert.warning.dialog-pane > .header-panel{
+    -fx-background-color: #ffbb33;
+}
+
+.alert.dialog-pane > .header-panel .label{
+    -fx-text-fill: #EEEEEE;
+}
+
+

@@ -10,6 +10,7 @@ import com.taimsoft.desktopui.util.RestClientFactory;
 import com.taimsoft.desktopui.util.TransactionPanelLoader;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableBooleanValue;
 import javafx.beans.value.ObservableStringValue;
 import javafx.collections.FXCollections;
@@ -21,6 +22,10 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,6 +36,8 @@ import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 public class StaffDetailsController implements IDetailController<StaffDTO> {
+    private static final DateTimeFormatter dtf = DateTimeFormat.forPattern("MMM-dd-yyyy");
+    private static final Logger logger = LoggerFactory.getLogger(StaffEditDialogController.class);
     private StaffDTO staffDTO;
     private List<TransactionDTO> quotationList;
     private List<TransactionDTO> invoiceList;
@@ -114,10 +121,8 @@ public class StaffDetailsController implements IDetailController<StaffDTO> {
                 this.returnList = transactionTask.get().stream().filter(t -> t.getTransactionType().equals(Transaction.TransactionType.RETURN)).collect(Collectors.toList());
                 this.stockList = transactionTask.get().stream().filter(t -> t.getTransactionType().equals(Transaction.TransactionType.STOCK)).collect(Collectors.toList());
                 initTransactionTabPane();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
+            } catch (InterruptedException | ExecutionException e) {
+                logger.error(e.getMessage(), e);
             }
         });
         transactionTask.setOnFailed(event -> {
@@ -147,7 +152,7 @@ public class StaffDetailsController implements IDetailController<StaffDTO> {
                     controller.initTableData(invoiceList);
                 }else if(newValue.getText().equals("Return Transactions")){
                     controller.initTableData(returnList);
-                }else if(newValue.getText().equals("Stock Transaction")){
+                }else if(newValue.getText().equals("Stock Transactions")){
                     controller.initTableData(stockList);
                 }
                 newValue.setContent(root);
@@ -161,7 +166,7 @@ public class StaffDetailsController implements IDetailController<StaffDTO> {
     private void bindStaffInfoLabels(){
         if(staffDTO != null) {
             dateCreatedLabel.textProperty().bind(initStringBinding(staffDTO.dateCreatedProperty().isNull(),
-                    "", staffDTO.dateCreatedProperty().asString()));
+                    "", new SimpleStringProperty(dtf.print(staffDTO.getDateCreated()))));
             fullNameLabel.textProperty().bind(initStringBinding(staffDTO.fullnameProperty().isNull(),
                     "", staffDTO.fullnameProperty()));
             emailLabel.textProperty().bind(initStringBinding(staffDTO.emailProperty().isNull(),
@@ -169,7 +174,7 @@ public class StaffDetailsController implements IDetailController<StaffDTO> {
             phoneLabel.textProperty().bind(initStringBinding(staffDTO.phoneProperty().isNull(),
                     "", staffDTO.phoneProperty()));
             positionLabel.textProperty().bind(initStringBinding(staffDTO.positionProperty().isNull(),
-                    "", staffDTO.positionProperty().asString()));
+                    "", new SimpleStringProperty(staffDTO.getPosition().getValue())));
             if(staffDTO.getOrganization() != null){
                 orgNameLabel.textProperty().bind(initStringBinding(staffDTO.getOrganization().orgNameProperty().isNull(),
                         "", staffDTO.getOrganization().orgNameProperty()));

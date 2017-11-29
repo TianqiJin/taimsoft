@@ -1,6 +1,7 @@
 package com.taimsoft.desktopui.controllers.overview;
 
 import com.taim.client.TransactionClient;
+import com.taim.dto.PaymentDTO;
 import com.taim.dto.TransactionDTO;
 import com.taim.model.DeliveryStatus;
 import com.taim.model.Transaction;
@@ -191,6 +192,11 @@ public class HomeOverviewController {
                                 if(item.getTransactionType().equals(Transaction.TransactionType.INVOICE) &&
                                         item.getPaymentStatus().equals(Transaction.PaymentStatus.PAID)){
                                     totalValue = totalValue + item.getSaleAmount();
+                                }else if(item.getTransactionType().equals(Transaction.TransactionType.INVOICE) &&
+                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.PARTIALLY_PAID)){
+                                    for(PaymentDTO payment: item.getPayments()){
+                                        totalValue += payment.getPaymentAmount();
+                                    }
                                 }
                             }
                             break;
@@ -199,6 +205,13 @@ public class HomeOverviewController {
                                 if(item.getTransactionType().equals(Transaction.TransactionType.INVOICE) &&
                                         item.getPaymentStatus().equals(Transaction.PaymentStatus.UNPAID)){
                                     totalValue = totalValue + item.getSaleAmount();
+                                }else if(item.getTransactionType().equals(Transaction.TransactionType.INVOICE) &&
+                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.PARTIALLY_PAID)){
+                                    double unpaid = 0;
+                                    for(PaymentDTO payment: item.getPayments()){
+                                        unpaid += payment.getPaymentAmount();
+                                    }
+                                    totalValue += unpaid;
                                 }
                             }
                             break;
@@ -207,6 +220,11 @@ public class HomeOverviewController {
                                 if(item.getTransactionType().equals(Transaction.TransactionType.STOCK) &&
                                         item.getPaymentStatus().equals(Transaction.PaymentStatus.PAID)){
                                     totalValue = totalValue + item.getSaleAmount();
+                                }else if(item.getTransactionType().equals(Transaction.TransactionType.STOCK) &&
+                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.PARTIALLY_PAID)){
+                                    for(PaymentDTO payment: item.getPayments()){
+                                        totalValue += payment.getPaymentAmount();
+                                    }
                                 }
                             }
                             break;
@@ -215,6 +233,13 @@ public class HomeOverviewController {
                                 if(item.getTransactionType().equals(Transaction.TransactionType.STOCK) &&
                                         item.getPaymentStatus().equals(Transaction.PaymentStatus.UNPAID)){
                                     totalValue = totalValue + item.getSaleAmount();
+                                }else if(item.getTransactionType().equals(Transaction.TransactionType.STOCK) &&
+                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.PARTIALLY_PAID)){
+                                    double unpaid = 0;
+                                    for(PaymentDTO payment: item.getPayments()){
+                                        unpaid += payment.getPaymentAmount();
+                                    }
+                                    totalValue += unpaid;
                                 }
                             }
                             break;

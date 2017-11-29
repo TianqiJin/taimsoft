@@ -59,7 +59,6 @@
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                      </columnResizePolicy>
               <columns>
-                        <TableColumn fx:id="checkedCol" prefWidth="75.0" />
                         <TableColumn fx:id="nameCol" prefWidth="75.0" text="NAME" />
                 <TableColumn fx:id="skuCol" editable="true" prefWidth="128.0" text="SKU" />
                 <TableColumn fx:id="typeCol" prefWidth="128.0" text="TYPE" />

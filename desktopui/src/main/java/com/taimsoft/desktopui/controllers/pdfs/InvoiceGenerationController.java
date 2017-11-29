@@ -114,7 +114,7 @@ public class InvoiceGenerationController {
     }
 
     private void initInvoiceInfo(){
-        invoiceCreationDateLabel.textProperty().bind(this.transaction.dateCreatedProperty().asString());
+        invoiceCreationDateLabel.textProperty().bind(new SimpleStringProperty(dtf.print(this.transaction.getDateCreated())));
         paymentDueDateLabel.textProperty().bind(new SimpleStringProperty(dtf.print(this.transaction.getPaymentDueDate())));
         deliveryDueDateLabel.textProperty().bind(new SimpleStringProperty(dtf.print(this.transaction.getDeliveryDueDate())));
         invoiceNumLabel.textProperty().bind(this.transaction.idProperty().asString());

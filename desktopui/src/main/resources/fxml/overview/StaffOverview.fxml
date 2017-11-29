@@ -33,13 +33,11 @@
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                      </columnResizePolicy>
               <columns>
-                        <TableColumn fx:id="checkedCol" prefWidth="75.0" />
                 <TableColumn fx:id="nameCol" prefWidth="128.0" text="NAME" />
                 <TableColumn fx:id="titleCol" prefWidth="128.0" text="TITLE" />
                         <TableColumn fx:id="emailCol" prefWidth="75.0" text="EMAIL" />
                         <TableColumn fx:id="phoneCol" prefWidth="75.0" text="PHONE" />
                         <TableColumn fx:id="orgCol" prefWidth="75.0" text="ORGANIZATION" />
-                        <TableColumn prefWidth="75.0" text="ACCESS" />
                         <TableColumn fx:id="actionCol" prefWidth="75.0" text="ACTION" />
               </columns>
             </TableView>

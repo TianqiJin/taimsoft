@@ -203,7 +203,7 @@
                                             <columns>
                                               <TableColumn fx:id="paymentDueIDCol" prefWidth="75.0" text="Transaction ID" />
                                               <TableColumn fx:id="paymentDueDateCol" prefWidth="75.0" text="Payment Due Date" />
-                                                <TableColumn fx:id="deliveryStatusCol" prefWidth="75.0" text="Status" />
+                                                <TableColumn fx:id="paymentStatusCol" prefWidth="75.0" text="Status" />
                                                 <TableColumn fx:id="paymentDueActionCol" prefWidth="75.0" text="Action" />
                                             </columns>
                                              <columnResizePolicy>
@@ -226,7 +226,7 @@
                                             <columns>
                                               <TableColumn fx:id="deliveryDueIDCol" prefWidth="75.0" text="Transaction ID" />
                                               <TableColumn fx:id="deliveryDueDateCol" prefWidth="75.0" text="Delivery Due Date" />
-                                                <TableColumn fx:id="paymentStatusCol" prefWidth="75.0" text="Status" />
+                                                <TableColumn fx:id="deliveryStatusCol" prefWidth="75.0" text="Status" />
                                                 <TableColumn fx:id="deliveryDueActionCol" prefWidth="75.0" text="Action" />
                                             </columns>
                                              <columnResizePolicy>

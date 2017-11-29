@@ -9,6 +9,7 @@ import com.taimsoft.desktopui.util.RestClientFactory;
 import com.taimsoft.desktopui.util.TransactionPanelLoader;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableBooleanValue;
 import javafx.beans.value.ObservableStringValue;
 import javafx.collections.FXCollections;
@@ -19,6 +20,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,6 +31,7 @@ import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 public class ProductDetailsController implements IDetailController<ProductDTO> {
+    private static final DateTimeFormatter dtf = DateTimeFormat.forPattern("MMM-dd-yyyy");
     private ProductDTO productDTO;
     private TransactionClient transactionClient;
     private Executor executor;
@@ -145,7 +149,7 @@ public class ProductDetailsController implements IDetailController<ProductDTO> {
             textureLabel.textProperty().bind(initStringBinding(productDTO.textureProperty().isNull(),
                     "", productDTO.textureProperty()));
             dateCreatedLabel.textProperty().bind(initStringBinding(productDTO.dateCreatedProperty().isNull(),
-                    "", productDTO.dateCreatedProperty().asString()));
+                    "", new SimpleStringProperty(dtf.print(productDTO.getDateCreated()))));
             widthLabel.textProperty().bind(initStringBinding(Bindings.isNull(productDTO.widthProperty().asObject()),
                     "", productDTO.widthProperty().asString()));
             lengthLabel.textProperty().bind(initStringBinding(Bindings.isNull(productDTO.lengthProperty().asObject()),
