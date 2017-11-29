@@ -198,7 +198,7 @@ public class TransactionOverviewController extends IOverviewController<Transacti
                                 }else if(newValue.equals("PRINT")){
                                     TransactionPanelLoader.showPrintTransactionDialog(transactionDTO);
                                 }else if(newValue.equalsIgnoreCase("EDIT")){
-                                    getOverviewTable().getItems().remove(transactionDTO);
+                                    getOverviewTable().getItems().remove(getIndex());
                                     switch (transactionDTO.getTransactionType()){
                                         case QUOTATION:
                                             getOverviewTable().getItems().add(TransactionPanelLoader.loadQuotation(transactionDTO));
