@@ -150,26 +150,28 @@ public class TransactionDetailsController implements IDetailController<Transacti
         }
         refrenceTransactionLink.setText(String.valueOf(transactionDTO.getRefId()));
         refrenceTransactionLink.setOnAction(event -> {
-            Task<TransactionDTO> getRefTransactionTask = new Task<TransactionDTO>() {
-                @Override
-                protected TransactionDTO call() throws Exception {
-                    return RestClientFactory.getTransactionClient().getById(transactionDTO.getRefId());
-                }
-            };
+            if(transactionDTO.getRefId() != 0){
+                Task<TransactionDTO> getRefTransactionTask = new Task<TransactionDTO>() {
+                    @Override
+                    protected TransactionDTO call() throws Exception {
+                        return RestClientFactory.getTransactionClient().getById(transactionDTO.getRefId());
+                    }
+                };
 
-            getRefTransactionTask.setOnSucceeded(event1 -> {
-                VistaNavigator.loadDetailVista(VistaNavigator.VISTA_TRANSACTION_DETAIL, getRefTransactionTask.getValue());
-            });
+                getRefTransactionTask.setOnSucceeded(event1 -> {
+                    VistaNavigator.loadDetailVista(VistaNavigator.VISTA_TRANSACTION_DETAIL, getRefTransactionTask.getValue());
+                });
 
-            getRefTransactionTask.setOnFailed(event1 -> {
-                logger.error(getRefTransactionTask.getException().getMessage());
-                new AlertBuilder()
-                        .alertType(Alert.AlertType.ERROR)
-                        .alertContentText("Unable to fetch reference transaction from the database")
-                        .build()
-                        .showAndWait();
-            });
-            executor.execute(getRefTransactionTask);
+                getRefTransactionTask.setOnFailed(event1 -> {
+                    logger.error(getRefTransactionTask.getException().getMessage());
+                    new AlertBuilder()
+                            .alertType(Alert.AlertType.ERROR)
+                            .alertContentText("Unable to fetch reference transaction from the database")
+                            .build()
+                            .showAndWait();
+                });
+                executor.execute(getRefTransactionTask);
+            }
         });
     }
 

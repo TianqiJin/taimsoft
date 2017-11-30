@@ -992,6 +992,7 @@ VBox > .split-menu-button.last > .arrow-button {
     -fx-text-fill:#333333;
 }
 
+
 .alert.information.dialog-pane > .header-panel{
     -fx-background-color: #5DBCD2;
 }

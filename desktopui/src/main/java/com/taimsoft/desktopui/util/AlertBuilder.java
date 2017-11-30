@@ -5,6 +5,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 /**
  * Created by jiawei.liu on 9/18/17.
@@ -52,6 +53,8 @@ public class AlertBuilder {
         }else if (alert.getAlertType().equals(Alert.AlertType.ERROR) && alert.getHeaderText() == null){
             alert.setHeaderText("ERROR");
         }
+
+        alert.initStyle(StageStyle.UNIFIED);
 
         return alert;
     }
