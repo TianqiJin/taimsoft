@@ -16,10 +16,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.scene.chart.BarChart;
-import javafx.scene.chart.CategoryAxis;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart;
+import javafx.scene.chart.*;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
@@ -48,6 +45,7 @@ public class HomeOverviewController {
     private XYChart.Series<String, Double> incomeSeries;
     private XYChart.Series<String, Double> expenseSeries;
     private XYChart.Series<String, Double> quoteSeries;
+    private XYChart.Series<String, Double> revenueSeries;
 
     @FXML
     private Label companyNameLabel;
@@ -68,9 +66,7 @@ public class HomeOverviewController {
     @FXML
     private BarChart<String, Double> incomeExpenseBarChart;
     @FXML
-    private CategoryAxis monthAxis;
-    @FXML
-    private NumberAxis numberAxis;
+    private LineChart<String, Double> revenueLineChart;
     @FXML
     private SplitPane summarySplitPane;
     @FXML
@@ -128,13 +124,15 @@ public class HomeOverviewController {
         deliveryDueActionCol.setCellFactory(param -> generateActionTableCell());
         companyNameLabel.textProperty().bind(VistaNavigator.getGlobalProperty().companyNameProperty());
         dateLabel.textProperty().bind(new SimpleStringProperty(DateTimeFormat.forPattern("EEEE, MMMM dd yyyy").print(DateTime.now())));
-        incomeExpenseBarChart.setAnimated(false);
+//        incomeExpenseBarChart.setAnimated(false);
         incomeSeries = new XYChart.Series<>();
         incomeSeries.setName("Income");
         expenseSeries = new XYChart.Series<>();
         expenseSeries.setName("Expense");
         quoteSeries = new XYChart.Series<>();
         quoteSeries.setName("Quotation");
+        revenueSeries = new XYChart.Series<>();
+        revenueSeries.setName("Revenue");
     }
 
     public void initTransactionData(){
@@ -161,6 +159,7 @@ public class HomeOverviewController {
                         .filter(transactionDTO -> transactionDTO.getDateCreated().year().get() == new DateTime().withYear(newValue).year().get())
                         .collect(Collectors.toList()));
                 initOverviewBarChart(newValue);
+                initRevenueBarChart(newValue);
             });
             yearComboBox.getSelectionModel().selectFirst();
         });
@@ -282,6 +281,32 @@ public class HomeOverviewController {
         incomeExpenseBarChart.getData().add(quoteSeries);
         incomeExpenseBarChart.getData().add(incomeSeries);
         incomeExpenseBarChart.getData().add(expenseSeries);
+        incomeExpenseBarChart.setTitle("Income Expense Graph For " + year);
+    }
+
+    private void initRevenueBarChart(int year){
+        revenueSeries.getData().clear();
+        for(int i = 1; i <= 12; i++){
+            String month = new DateFormatSymbols().getShortMonths()[i - 1];
+            DateTime startDate = new DateTime().withYear(year).withMonthOfYear(i).withDayOfMonth(1);
+            DateTime endDate = startDate.plusMonths(1).minusDays(1);
+            List<TransactionDTO> monthTransactions = transactions.stream().filter(transactionDTO ->
+                    !transactionDTO.getDateCreated().isBefore(startDate) && !transactionDTO.getDateCreated().isAfter(endDate))
+                    .collect(Collectors.toList());
+
+            double income = monthTransactions.stream()
+                    .filter(transactionDTO -> transactionDTO.getTransactionType().equals(Transaction.TransactionType.INVOICE))
+                    .mapToDouble(TransactionDTO::getSaleAmount).sum();
+            double expense = monthTransactions.stream()
+                    .filter(transactionDTO -> transactionDTO.getTransactionType().equals(Transaction.TransactionType.STOCK))
+                    .mapToDouble(TransactionDTO::getSaleAmount).sum();
+
+            revenueSeries.getData().add(new XYChart.Data<>(month, (income - expense)));
+        }
+
+        revenueLineChart.getData().clear();
+        revenueLineChart.getData().add(revenueSeries);
+        revenueLineChart.setTitle("Revenue Graph For " + year);
     }
 
     private void initActivitiesList(){
