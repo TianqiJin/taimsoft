@@ -6,6 +6,7 @@ import com.taim.dto.ProductDTO;
 import com.taimsoft.desktopui.controllers.edit.ProductEditDialogController;
 import com.taimsoft.desktopui.uicomponents.FadingStatusMessage;
 import com.taimsoft.desktopui.util.*;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -100,21 +101,24 @@ public class ProductOverviewController extends IOverviewController<ProductDTO> {
                             ProductDTO productDTO = getTableView().getItems().get(getIndex());
                             comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "EDIT", "DELETE"));
                             comboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-                                if(newValue.equals("VIEW DETAILS")){
-                                    VistaNavigator.loadDetailVista(VistaNavigator.VISTA_PRODUCT_DETAIL, productDTO);
-                                }else if(newValue.equals("EDIT")){
-                                    ProductEditDialogController controller = TransactionPanelLoader.showProductEditor(productDTO);
-                                    if(controller != null && controller.isOKClicked()) {
-                                        getTableView().getItems().set(getIndex(), controller.getProduct());
+                                if(newValue != null){
+                                    if(newValue.equals("VIEW DETAILS")){
+                                        VistaNavigator.loadDetailVista(VistaNavigator.VISTA_PRODUCT_DETAIL, productDTO);
+                                    }else if(newValue.equals("EDIT")){
+                                        ProductEditDialogController controller = TransactionPanelLoader.showProductEditor(productDTO);
+                                        if(controller != null && controller.isOKClicked()) {
+                                            getTableView().getItems().set(getIndex(), controller.getProduct());
 //                                        initOverviewData(productClient);
+                                        }
+                                    }else if(newValue.equals("DELETE")){
+                                        DeleteEntityUtil<ProductDTO> deleteEntityUtil = new DeleteEntityUtil<>(productDTO, productClient);
+                                        deleteEntityUtil.deleteEntity(getOverviewTable(),
+                                                getIndex(),
+                                                "SUCCESSFULLY DELETED PRODUCT",
+                                                getRootPane());
                                     }
-                                }else if(newValue.equals("DELETE")){
-                                    DeleteEntityUtil<ProductDTO> deleteEntityUtil = new DeleteEntityUtil<>(productDTO, productClient);
-                                    deleteEntityUtil.deleteEntity(getOverviewTable(),
-                                            getIndex(),
-                                            "SUCCESSFULLY DELETED PRODUCT",
-                                            getRootPane());
                                 }
+                                Platform.runLater(() -> comboBox.getSelectionModel().clearSelection());
                             });
                             comboBox.setValue(item);
                             setGraphic(comboBox);

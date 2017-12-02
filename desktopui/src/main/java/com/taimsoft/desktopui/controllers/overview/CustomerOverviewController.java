@@ -14,6 +14,7 @@ import com.taim.model.basemodels.UserBaseModel;
 import com.taimsoft.desktopui.controllers.edit.CustomerEditDialogController;
 import com.taimsoft.desktopui.uicomponents.LiveComboBoxTableCell;
 import com.taimsoft.desktopui.util.*;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.SimpleStringProperty;
@@ -113,20 +114,23 @@ public class CustomerOverviewController extends IOverviewController<CustomerDTO>
                             CustomerDTO customerDTO = getTableView().getItems().get(getIndex());
                             comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "EDIT", "DELETE"));
                             comboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-                                if (newValue.equals("VIEW DETAILS")) {
-                                    VistaNavigator.loadDetailVista(VistaNavigator.VISTA_CUSTOMER_DETAIL, customerDTO);
-                                }else if(newValue.equals("EDIT")){
-                                    CustomerEditDialogController controller = TransactionPanelLoader.showCustomerEditor(customerDTO);
-                                    if(controller != null && controller.isOKClicked()){
-                                        getTableView().getItems().set(getIndex(), controller.getCustomer());
+                                if(newValue != null){
+                                    if (newValue.equals("VIEW DETAILS")) {
+                                        VistaNavigator.loadDetailVista(VistaNavigator.VISTA_CUSTOMER_DETAIL, customerDTO);
+                                    }else if(newValue.equals("EDIT")){
+                                        CustomerEditDialogController controller = TransactionPanelLoader.showCustomerEditor(customerDTO);
+                                        if(controller != null && controller.isOKClicked()){
+                                            getTableView().getItems().set(getIndex(), controller.getCustomer());
+                                        }
+                                    }else if(newValue.equals("DELETE")){
+                                        DeleteEntityUtil<CustomerDTO> deleteEntityUtil = new DeleteEntityUtil<>(customerDTO, customerClient);
+                                        deleteEntityUtil.deleteEntity(getOverviewTable(),
+                                                getIndex(),
+                                                "SUCCESSFULLY DELETED CUSTOMER",
+                                                getRootPane());
                                     }
-                                }else if(newValue.equals("DELETE")){
-                                    DeleteEntityUtil<CustomerDTO> deleteEntityUtil = new DeleteEntityUtil<>(customerDTO, customerClient);
-                                    deleteEntityUtil.deleteEntity(getOverviewTable(),
-                                            getIndex(),
-                                            "SUCCESSFULLY DELETED CUSTOMER",
-                                            getRootPane());
                                 }
+                                Platform.runLater(() -> comboBox.getSelectionModel().clearSelection());
                             });
                             comboBox.setValue(item);
                             setGraphic(comboBox);

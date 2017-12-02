@@ -84,6 +84,9 @@ public class StaffEditDialogController {
         positionComboBox.setOnAction(event -> {
             staff.setPosition(positionComboBox.getSelectionModel().getSelectedItem());
         });
+        positionComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            staff.setPosition(newValue);
+        });
     }
 
     @FXML

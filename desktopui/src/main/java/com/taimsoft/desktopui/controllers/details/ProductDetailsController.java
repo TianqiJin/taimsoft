@@ -7,6 +7,7 @@ import com.taim.model.Transaction;
 import com.taimsoft.desktopui.controllers.edit.ProductEditDialogController;
 import com.taimsoft.desktopui.util.RestClientFactory;
 import com.taimsoft.desktopui.util.TransactionPanelLoader;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.SimpleStringProperty;
@@ -83,13 +84,15 @@ public class ProductDetailsController implements IDetailController<ProductDTO> {
     public void initialize(){
         actionComboBox.setItems(FXCollections.observableArrayList("EDIT"));
         actionComboBox.valueProperty().addListener(((observable, oldValue, newValue) -> {
-            if(newValue.equals("EDIT")){
-                ProductEditDialogController controller = TransactionPanelLoader.showProductEditor(productDTO);
-                if(controller != null && controller.isOKClicked()){
-                    initDetailData(controller.getProduct());
+            if(newValue != null){
+                if(newValue.equals("EDIT")){
+                    ProductEditDialogController controller = TransactionPanelLoader.showProductEditor(productDTO);
+                    if(controller != null && controller.isOKClicked()){
+                        initDetailData(controller.getProduct());
+                    }
                 }
             }
-            actionComboBox.getSelectionModel().clearSelection();
+            Platform.runLater(() -> actionComboBox.getSelectionModel().clearSelection());
         }));
     }
 

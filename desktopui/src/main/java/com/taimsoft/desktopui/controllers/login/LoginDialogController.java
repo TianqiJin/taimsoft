@@ -57,6 +57,8 @@ public class LoginDialogController {
     private Label errorLMsgLabel;
     @FXML
     private Hyperlink signUpLink;
+    @FXML
+    private AnchorPane logingRoot;
 
     @FXML
     private void initialize(){

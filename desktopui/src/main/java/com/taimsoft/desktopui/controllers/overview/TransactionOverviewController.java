@@ -14,6 +14,7 @@ import com.taimsoft.desktopui.util.DateUtils;
 import com.taimsoft.desktopui.util.RestClientFactory;
 import com.taimsoft.desktopui.util.TransactionPanelLoader;
 import com.taimsoft.desktopui.util.VistaNavigator;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -99,7 +100,6 @@ public class TransactionOverviewController extends IOverviewController<Transacti
     private CheckBox deliveryOverDueCheckBox;
     @FXML
     private CheckBox finalizedCheckBox;
-
     @FXML
     private ComboBox<Transaction.TransactionType> createNewTransactionComboBox;
 
@@ -193,31 +193,36 @@ public class TransactionOverviewController extends IOverviewController<Transacti
                                     break;
                             }
                             comboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-                                if(newValue.equals("VIEW DETAILS")){
-                                    VistaNavigator.loadDetailVista(VistaNavigator.VISTA_TRANSACTION_DETAIL, transactionDTO);
-                                }else if(newValue.equals("PRINT")){
-                                    TransactionPanelLoader.showPrintTransactionDialog(transactionDTO);
-                                }else if(newValue.equalsIgnoreCase("EDIT")){
-                                    getOverviewTable().getItems().remove(getIndex());
-                                    switch (transactionDTO.getTransactionType()){
-                                        case QUOTATION:
-                                            getOverviewTable().getItems().add(TransactionPanelLoader.loadQuotation(transactionDTO));
-                                            break;
-                                        case INVOICE:
-                                            getOverviewTable().getItems().add(TransactionPanelLoader.loadInvoice(transactionDTO));
-                                            break;
-                                        case RETURN:
-                                            getOverviewTable().getItems().add(TransactionPanelLoader.loadReturn(transactionDTO));
-                                            break;
-                                        case STOCK:
-                                            getOverviewTable().getItems().add(TransactionPanelLoader.loadStock(transactionDTO));
-                                            break;
+                                if(newValue != null){
+                                    if(newValue.equals("VIEW DETAILS")){
+                                        VistaNavigator.loadDetailVista(VistaNavigator.VISTA_TRANSACTION_DETAIL, transactionDTO);
+                                    }else if(newValue.equals("PRINT")){
+                                        TransactionPanelLoader.showPrintTransactionDialog(transactionDTO);
+                                    }else if(newValue.equalsIgnoreCase("EDIT")){
+                                        getOverviewTable().getItems().remove(getIndex());
+                                        switch (transactionDTO.getTransactionType()){
+                                            case QUOTATION:
+                                                getOverviewTable().getItems().add(TransactionPanelLoader.loadQuotation(transactionDTO));
+                                                break;
+                                            case INVOICE:
+                                                getOverviewTable().getItems().add(TransactionPanelLoader.loadInvoice(transactionDTO));
+                                                break;
+                                            case RETURN:
+                                                getOverviewTable().getItems().add(TransactionPanelLoader.loadReturn(transactionDTO));
+                                                break;
+                                            case STOCK:
+                                                getOverviewTable().getItems().add(TransactionPanelLoader.loadStock(transactionDTO));
+                                                break;
+                                        }
+                                    }else if(newValue.equalsIgnoreCase("CONVERT TO INVOICE") && transactionDTO.getTransactionType()== Transaction.TransactionType.QUOTATION){
+                                        getOverviewTable().getItems().remove(getIndex());
+                                        getOverviewTable().getItems().add(TransactionPanelLoader.loadInvoice(transactionDTO));
+                                    } else if(newValue.equalsIgnoreCase("FILE RETURN") && transactionDTO.getTransactionType()== Transaction.TransactionType.INVOICE){
+                                        getOverviewTable().getItems().remove(getIndex());
+                                        getOverviewTable().getItems().add(TransactionPanelLoader.loadReturn(transactionDTO));
                                     }
-                                }else if(newValue.equalsIgnoreCase("CONVERT TO INVOICE") && transactionDTO.getTransactionType()== Transaction.TransactionType.QUOTATION){
-                                    getOverviewTable().getItems().add(TransactionPanelLoader.loadInvoice(transactionDTO));
-                                } else if(newValue.equalsIgnoreCase("FILE RETURN") && transactionDTO.getTransactionType()== Transaction.TransactionType.INVOICE){
-                                    getOverviewTable().getItems().add(TransactionPanelLoader.loadReturn(transactionDTO));
                                 }
+                                Platform.runLater(() -> comboBox.getSelectionModel().clearSelection());
                             });
                             comboBox.setValue(item);
                             setGraphic(comboBox);
@@ -229,34 +234,36 @@ public class TransactionOverviewController extends IOverviewController<Transacti
         });
 
         createNewTransactionComboBox.setItems(FXCollections.observableArrayList(Transaction.TransactionType.values()));
-        createNewTransactionComboBox.setOnAction(event -> {
-            TransactionDTO transaction;
-            switch (createNewTransactionComboBox.getSelectionModel().getSelectedItem()){
-                case QUOTATION:
-                    TransactionDTO newQuot = TransactionPanelLoader.loadQuotation(null);
-                    if (newQuot!=null){
-                        getOverviewTable().getItems().add(newQuot);
-                    }
-                    break;
-                case INVOICE:
-                    TransactionDTO newInvo = TransactionPanelLoader.showNewTransactionDialog(Transaction.TransactionType.INVOICE);
-                    if (newInvo !=null){
-                        getOverviewTable().getItems().add(newInvo);
-                    }
-                    break;
-                case STOCK:
-                    TransactionDTO newStok = TransactionPanelLoader.loadStock(null);
-                    if (newStok!=null){
-                        getOverviewTable().getItems().add(newStok);
-                    }
-                    break;
-                case RETURN:
-                    TransactionDTO newRet = TransactionPanelLoader.showNewTransactionDialog(Transaction.TransactionType.RETURN);
-                    if (newRet!=null){
-                        getOverviewTable().getItems().add(newRet);
-                    }
-                    break;
+        createNewTransactionComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue != null){
+                switch (newValue){
+                    case QUOTATION:
+                        TransactionDTO newQuot = TransactionPanelLoader.loadQuotation(null);
+                        if (newQuot!=null){
+                            getOverviewTable().getItems().add(newQuot);
+                        }
+                        break;
+                    case INVOICE:
+                        TransactionDTO newInvo = TransactionPanelLoader.showNewTransactionDialog(Transaction.TransactionType.INVOICE);
+                        if (newInvo !=null){
+                            getOverviewTable().getItems().add(newInvo);
+                        }
+                        break;
+                    case STOCK:
+                        TransactionDTO newStok = TransactionPanelLoader.loadStock(null);
+                        if (newStok!=null){
+                            getOverviewTable().getItems().add(newStok);
+                        }
+                        break;
+                    case RETURN:
+                        TransactionDTO newRet = TransactionPanelLoader.showNewTransactionDialog(Transaction.TransactionType.RETURN);
+                        if (newRet!=null){
+                            getOverviewTable().getItems().add(newRet);
+                        }
+                        break;
+                }
             }
+            Platform.runLater(() -> createNewTransactionComboBox.getSelectionModel().clearSelection());
         });
         transactionTypeComboBox.setItems(FXCollections.observableArrayList(Transaction.TransactionType.values()));
         transactionTypeComboBox.setConverter(new StringConverter<Transaction.TransactionType>() {

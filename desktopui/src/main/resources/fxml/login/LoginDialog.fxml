@@ -20,7 +20,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="270.0" prefWidth="500.0" stylesheets="@/css/bootstrap3.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taimsoft.desktopui.controllers.login.LoginDialogController">
+<AnchorPane fx:id="logingRoot" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="270.0" prefWidth="500.0" stylesheets="@/css/bootstrap3.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taimsoft.desktopui.controllers.login.LoginDialogController">
    <children>
       <GridPane layoutX="184.0" layoutY="214.0" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
         <columnConstraints>
@@ -63,7 +63,7 @@
             </Button>
          </children>
       </HBox>
-      <Label layoutX="101.0" layoutY="45.0" text="TAIM SOFTWARE" AnchorPane.leftAnchor="135.0" AnchorPane.rightAnchor="135.0">
+      <Label layoutX="101.0" layoutY="45.0" text="TAIM SOFTWARE" textFill="#0d0d0d" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="135.0">
          <font>
             <Font name="System Bold" size="24.0" />
          </font>

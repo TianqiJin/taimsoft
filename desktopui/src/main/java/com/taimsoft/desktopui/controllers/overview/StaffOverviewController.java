@@ -11,6 +11,7 @@ import com.taimsoft.desktopui.uicomponents.LiveComboBoxTableCell;
 import com.taimsoft.desktopui.util.RestClientFactory;
 import com.taimsoft.desktopui.util.TransactionPanelLoader;
 import com.taimsoft.desktopui.util.VistaNavigator;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
@@ -80,14 +81,17 @@ public class StaffOverviewController extends IOverviewController<StaffDTO> {
                             StaffDTO staffDTO = getTableView().getItems().get(getIndex());
                             comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "EDIT"));
                             comboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-                                if(newValue.equals("VIEW DETAILS")){
-                                    VistaNavigator.loadDetailVista(VistaNavigator.VISTA_STAFF_DETAIL, staffDTO);
-                                }else if(newValue.equals("EDIT")){
-                                    StaffEditDialogController controller = TransactionPanelLoader.showStaffEditor(staffDTO);
-                                    if(controller != null && controller.isOkClicked()){
-                                        getTableView().getItems().set(getIndex(), controller.getStaff());
+                                if(newValue != null){
+                                    if(newValue.equals("VIEW DETAILS")){
+                                        VistaNavigator.loadDetailVista(VistaNavigator.VISTA_STAFF_DETAIL, staffDTO);
+                                    }else if(newValue.equals("EDIT")){
+                                        StaffEditDialogController controller = TransactionPanelLoader.showStaffEditor(staffDTO);
+                                        if(controller != null && controller.isOkClicked()){
+                                            getTableView().getItems().set(getIndex(), controller.getStaff());
+                                        }
                                     }
                                 }
+                                Platform.runLater(() -> comboBox.getSelectionModel().clearSelection());
                             });
                             comboBox.setValue(item);
                             setGraphic(comboBox);

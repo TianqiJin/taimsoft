@@ -7,6 +7,7 @@ import com.taimsoft.desktopui.util.AlertBuilder;
 import com.taimsoft.desktopui.util.RestClientFactory;
 import com.taimsoft.desktopui.util.TransactionPanelLoader;
 import com.taimsoft.desktopui.util.VistaNavigator;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.SimpleStringProperty;
@@ -115,24 +116,27 @@ public class TransactionDetailsController implements IDetailController<Transacti
         bindTransactionDetailTable();
         bindPaymentTable();
         actionComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue.equals("EDIT")){
-                switch (transactionDTO.getTransactionType()){
-                    case QUOTATION:
-                        initDetailData(TransactionPanelLoader.loadQuotation(transactionDTO));
-                        break;
-                    case INVOICE:
-                        initDetailData(TransactionPanelLoader.loadInvoice(transactionDTO));
-                        break;
-                    case RETURN:
-                        initDetailData(TransactionPanelLoader.loadReturn(transactionDTO));
-                        break;
-                    case STOCK:
-                        initDetailData(TransactionPanelLoader.loadStock(transactionDTO));
-                        break;
+            if(newValue != null){
+                if(newValue.equals("EDIT")){
+                    switch (transactionDTO.getTransactionType()){
+                        case QUOTATION:
+                            initDetailData(TransactionPanelLoader.loadQuotation(transactionDTO));
+                            break;
+                        case INVOICE:
+                            initDetailData(TransactionPanelLoader.loadInvoice(transactionDTO));
+                            break;
+                        case RETURN:
+                            initDetailData(TransactionPanelLoader.loadReturn(transactionDTO));
+                            break;
+                        case STOCK:
+                            initDetailData(TransactionPanelLoader.loadStock(transactionDTO));
+                            break;
+                    }
+                }else if(newValue.equals("PRINT")){
+                    TransactionPanelLoader.showPrintTransactionDialog(transactionDTO);
                 }
-            }else if(newValue.equals("PRINT")){
-                TransactionPanelLoader.showPrintTransactionDialog(transactionDTO);
             }
+            Platform.runLater(() -> actionComboBox.getSelectionModel().clearSelection());
         });
     }
 
@@ -173,6 +177,7 @@ public class TransactionDetailsController implements IDetailController<Transacti
                 executor.execute(getRefTransactionTask);
             }
         });
+
     }
 
     private void bindTransactionInfoLabels(){

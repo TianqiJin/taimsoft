@@ -13,6 +13,7 @@ import com.taimsoft.desktopui.controllers.edit.StaffEditDialogController;
 import com.taimsoft.desktopui.controllers.edit.VendorEditDialogController;
 import com.taimsoft.desktopui.uicomponents.LiveComboBoxTableCell;
 import com.taimsoft.desktopui.util.*;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.SimpleStringProperty;
@@ -92,20 +93,23 @@ public class VendorOverviewController extends IOverviewController<VendorDTO> {
                             VendorDTO vendorDTO = getTableView().getItems().get(getIndex());
                             comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "EDIT", "DELETE"));
                             comboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-                                if(newValue.equals("VIEW DETAILS")){
-                                    VistaNavigator.loadDetailVista(VistaNavigator.VISTA_VENDOR_DETAIL, vendorDTO);
-                                }else if(newValue.equals("EDIT")){
-                                    VendorEditDialogController controller = TransactionPanelLoader.showVendorEditor(vendorDTO);
-                                    if(controller != null && controller.isOKClicked()){
-                                        getTableView().getItems().set(getIndex(), controller.getVendor());
+                                if(newValue != null){
+                                    if(newValue.equals("VIEW DETAILS")){
+                                        VistaNavigator.loadDetailVista(VistaNavigator.VISTA_VENDOR_DETAIL, vendorDTO);
+                                    }else if(newValue.equals("EDIT")){
+                                        VendorEditDialogController controller = TransactionPanelLoader.showVendorEditor(vendorDTO);
+                                        if(controller != null && controller.isOKClicked()){
+                                            getTableView().getItems().set(getIndex(), controller.getVendor());
+                                        }
+                                    }else if(newValue.equals("DELETE")){
+                                        DeleteEntityUtil<VendorDTO> deleteEntityUtil = new DeleteEntityUtil<>(vendorDTO, vendorClient);
+                                        deleteEntityUtil.deleteEntity(getOverviewTable(),
+                                                getIndex(),
+                                                "SUCCESSFULLY DELETED VENDOR",
+                                                getRootPane());
                                     }
-                                }else if(newValue.equals("DELETE")){
-                                    DeleteEntityUtil<VendorDTO> deleteEntityUtil = new DeleteEntityUtil<>(vendorDTO, vendorClient);
-                                    deleteEntityUtil.deleteEntity(getOverviewTable(),
-                                            getIndex(),
-                                            "SUCCESSFULLY DELETED VENDOR",
-                                            getRootPane());
                                 }
+                                Platform.runLater(() -> comboBox.getSelectionModel().clearSelection());
                             });
                             comboBox.setValue(item);
                             setGraphic(comboBox);

@@ -139,7 +139,11 @@ public class GeneralSettingsController implements ISettingsController{
                             setGraphic(comboBox);
                             comboBox.setPromptText("SET ACTION");
                             comboBox.prefWidthProperty().bind(this.widthProperty());
-                            comboBox.setItems(FXCollections.observableArrayList("ADD NEW", "DELETE"));
+                            if(getIndex() == 0){
+                                comboBox.setItems(FXCollections.observableArrayList("ADD NEW"));
+                            }else{
+                                comboBox.setItems(FXCollections.observableArrayList("ADD NEW", "DELETE"));
+                            }
                             comboBox.valueProperty().addListener(((observable, oldValue, newValue) -> {
                                 if(newValue.equals("DELETE")){
                                     int selectedIndex = getTableRow().getIndex();
@@ -345,7 +349,7 @@ public class GeneralSettingsController implements ISettingsController{
 
                 executor.execute(savePropertyTask);
             } catch (IOException e) {
-                logger.error(e.getMessage());
+                logger.error(e.getMessage(), e);
             }
         }
     }
