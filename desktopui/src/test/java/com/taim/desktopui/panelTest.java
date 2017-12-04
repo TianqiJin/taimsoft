@@ -1,18 +1,12 @@
 package com.taim.desktopui;
 
 import com.taim.dto.TransactionDTO;
-import com.taimsoft.desktopui.util.RestClientFactory;
-import com.taimsoft.desktopui.util.TransactionPanelLoader;
+import com.taim.desktopui.util.TransactionPanelLoader;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import java.awt.*;
 
 /**
  * Created by jiawei.liu on 10/22/17.

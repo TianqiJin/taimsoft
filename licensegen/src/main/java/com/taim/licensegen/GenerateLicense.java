@@ -17,9 +17,6 @@ import org.joda.time.Seconds;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -50,7 +47,6 @@ public class GenerateLicense {
     private static final String LICENSE_REFERENCE_DATE = "2005-03-13 00:00:00";
     private static final String PST_TIMEZONE = "America/Los_Angeles";
     private static final String START_ANNOATION = StringUtils.repeat("#", 15);
-    private static final Logger logger = LoggerFactory.getLogger(GenerateLicense.class);
     private List<String> taimProductList;
     private File tempDir;
     private File workingDir;
@@ -115,11 +111,11 @@ public class GenerateLicense {
 
     public GenerateLicense initializeLicense(LicenseFile licenseFile) throws GenerateLicenseException{
         try{
-            logger.info(START_ANNOATION + "Initialize license generation" + START_ANNOATION);
-            logger.debug("Validate License request is not empty");
+            System.out.println(START_ANNOATION + "Initialize license generation" + START_ANNOATION);
+            System.out.println("Validate License request is not empty");
             validateLicenseFile(licenseFile);
 
-            logger.debug("Mapping file-attributes, license-attributes, and license into LicenseAttrCollection Object");
+            System.out.println("Mapping file-attributes, license-attributes, and license into LicenseAttrCollection Object");
             for(LicenseFile.LicenseRequest licenseRequest: licenseFile.getLicenses()){
                 LicenseXML.LicenseAttrCollection licenseAttrCollection = new LicenseXML.LicenseAttrCollection();
                 //Map all the fields in LicenseRequest
@@ -127,11 +123,11 @@ public class GenerateLicense {
                     String value = licenseRequest.getJson().get(name).toString();
                     licenseAttrCollection.getAttributes().put(name, value);
                 }
-                logger.debug("Map all the annotated fields in FileAttributes ");
+                System.out.println("Map all the annotated fields in FileAttributes ");
                 //Map all the annotated fields in FileAttributes
                 mapFromJSONToAttrCollection(licenseFile.getFileAttributes(), LicenseFile.FileAttributes.class, licenseAttrCollection);
                 //Map all the annotated fields in LicenseAttributes
-                logger.debug("Map all the annotated fields in LicenseAttributes ");
+                System.out.println("Map all the annotated fields in LicenseAttributes ");
                 mapFromJSONToAttrCollection(licenseFile.getLicenseAttributes(), LicenseFile.LicenseAttributes.class, licenseAttrCollection);
                 licenseXML.getLicenses().add(licenseAttrCollection);
             }
@@ -139,12 +135,12 @@ public class GenerateLicense {
                 //Validate license attributes defined in licenseAttrCollection
                 validateLicenseXml(licenseAttrCollection);
                 //Generate final taim-0 and valid-until fields based on valid-from, duration, and valid-until fields
-                logger.debug("Generate taim-0 and valid-until fields");
+                System.out.println("Generate taim-0 and valid-until fields");
                 generateTaim0(licenseAttrCollection);
                 //Generate license version based on the given license attributes
-                logger.debug("Generate license version");
+                System.out.println("Generate license version");
                 //Remove file comment from the licenseAttrCollection in case that it is mapped into Options for LicenseV1
-                logger.debug("Remove file-comment from the licenseAttrCollection");
+                System.out.println("Remove file-comment from the licenseAttrCollection");
                 this.fileComment = String.valueOf(licenseAttrCollection.getAttributes().get("file-comment"));
                 licenseAttrCollection.getAttributes().remove("file-comment");
 
@@ -234,7 +230,7 @@ public class GenerateLicense {
     public void generateLicenseInstance(LicenseXML.LicenseAttrCollection licenseAttrCollection) throws LicenseFile.LicenseException, IllegalAccessException {
         //Generate license instance and add it into license list
         int version = Integer.parseInt((String) licenseAttrCollection.getAttributes().get("max-version"));
-        logger.info("Start generating version " + version + " license");
+        System.out.println("Start generating version " + version + " license");
         if(version == 1){
             this.licenses.addSubLicense(licenseAttrCollection, new LicenseV1.LicenseV1Factory());
         }
@@ -247,7 +243,7 @@ public class GenerateLicense {
      */
     public GenerateLicense marshall() throws XMLWriter.XMLWriterException{
         try {
-            logger.info("Start writing licenses into " + this.getTargetFile().getName());
+            System.out.println("Start writing licenses into " + this.getTargetFile().getName());
             XMLWriter xmlWriter = new XMLWriter(new FileOutputStream(this.getTargetFile().getPath()));
             xmlWriter.marshall(this.getLicenses(), XMLWriter.Mode.NON_TRIAL, this.getFileComment());
         } catch ( FileNotFoundException e) {

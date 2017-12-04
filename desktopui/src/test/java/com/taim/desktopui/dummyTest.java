@@ -2,11 +2,9 @@ package com.taim.desktopui;
 
 import com.taim.dto.*;
 import com.taim.model.Staff;
-import com.taimsoft.desktopui.util.RestClientFactory;
-import com.taimsoft.desktopui.util.TransactionPanelLoader;
+import com.taim.desktopui.util.RestClientFactory;
 import org.joda.time.DateTime;
 import org.junit.Test;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.ArrayList;
 import java.util.List;

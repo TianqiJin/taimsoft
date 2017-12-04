@@ -1,0 +1,60 @@
+#!/bin/bash
+
+### BEGIN INIT INFO
+# Provides:          taimsoft-backend
+# Required-Start:    $local_fs $network $syslog
+# Required-Stop:     $local_fs $network $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: TAIM Software Backend Server Daemon
+# Description:       TAIM Software Backend Server Daemon
+### END INIT INFO
+
+# Source function library.
+set -e
+. /lib/lsb/init-functions
+
+base=TAIM-BACKEND-SERVER-BASE-GOES-HERE
+
+start()
+{
+        echo -n $'Starting license-server: \n' > /dev/console
+        PATH=/usr/local/bin:$PATH $base/bin/taimsoft-backend JDBC-URL JDBC-USER JDBC-PASSWORD SERVER-PORT & sleep 1
+        ps -p $! >/dev/null 2>&1
+        if [ $? == 0 ]; then
+	    echo $! > $base/pid
+            log_success_msg "Taim backend server started ok" > /dev/console
+        else
+            log_failure_msg "Taim backend server started failed" > /dev/console
+        fi
+        echo
+}
+
+stop()
+{
+        echo -n $'Shutting down Taim backend server: \n' > /dev/console
+        killproc -p $base/pid
+        echo
+}
+
+# See how we were called.
+case "$1" in
+  start)
+	start
+        ;;
+  stop)
+	stop
+        ;;
+  restart|reload)
+	stop
+	start
+	;;
+  status)
+  	status -p $base/pid
+	;;
+  *)
+        echo $"Usage: $0 {start|stop|restart|reload}"
+        exit 1
+esac
+
+exit 0
