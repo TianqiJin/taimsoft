@@ -8,6 +8,10 @@ public class Constant {
     public static class Image{
         public static final String appIconPath = "/pics/logo.png";
     }
+
+    public static class Product{
+        public static final String TAIM_DESKTOP = "Taim Desktop";
+    }
     public static class CopyRight{
         public static final String copyRightConntent =
                 "Copyright © Tianqi Jin, Jiawei Liu. All rights reserved.\n"

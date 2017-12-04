@@ -6,6 +6,7 @@
 
     <groupId>com.taim</groupId>
     <artifactId>taimsoft</artifactId>
+    <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
 
 
@@ -24,4 +25,7 @@
             </plugins>
         </pluginManagement>
     </build>
+    <modules>
+        <module>keygen</module>
+    </modules>
 </project>

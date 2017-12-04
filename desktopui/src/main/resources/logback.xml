@@ -3,7 +3,7 @@
         <file>C:/TaimDesktop/.taimlogs/TaimDesktop.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
-            <fileNamePattern>${user.home}/.taimlogs/TaimDesktop.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>C:/TaimDesktop/.taimlogs/TaimDesktop.%d{yyyy-MM-dd}.log</fileNamePattern>
             <!-- keep 30 days' worth of history capped at 3GB total size -->
             <maxHistory>360</maxHistory>
             <totalSizeCap>3GB</totalSizeCap>

@@ -135,7 +135,7 @@ public class InvoiceGenerator {
         signTable.writeSelectedRows(0, -1, (document.left()+document.right()-signTable.getTotalWidth())/2f, document.bottom() + signTable.getTotalHeight()*3f, writer.getDirectContent());
 
         //Create CompanyClaims
-        createCompanyClaims(document);
+//        createCompanyClaims(document);
         document.close();
         openPDF(this.destination);
     }
@@ -161,7 +161,7 @@ public class InvoiceGenerator {
         //Add PaymentInfo
         createPaymentInfo(document, InvoiceType.INVOICE);
         //Add Company Claims
-        createCompanyClaims(document);
+//        createCompanyClaims(document);
         document.close();
         openPDF(this.destination);
     }
@@ -182,7 +182,7 @@ public class InvoiceGenerator {
         // line items
         createItemList(document, InvoiceType.QUOTATION);
         //Create CompanyClaims
-        createCompanyClaims(document);
+//        createCompanyClaims(document);
         document.close();
         openPDF(this.destination);
     }

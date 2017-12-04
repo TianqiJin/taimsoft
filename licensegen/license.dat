@@ -13,16 +13,16 @@ the Licensed Product beyond the licensed period.  Any attempt to do so will be
 considered an infringement of intellectual property rights that may be subject
 to legal action.-->
 
-<!--This is the Jack Spratt license file of 20111228.-->
+<!--A trial license for LV CHENG Company-->
 <!DOCTYPE taim SYSTEM "license.dtd">
 <taim>
-    <license><!--This is a license comment-->
+    <license>
         <version>1</version>
         <product>Taim Desktop</product>
-        <valid-until>2018-Jan-01 08:00:00 UTC</valid-until>
-        <customer>Jack Spratt Weight Loss Centre</customer>
-        <project>Mrs. Spratt</project>
-        <taim-0>404121600</taim-0>
+        <valid-until>2018-Jan-15 08:00:00 UTC</valid-until>
+        <customer>LV CHENG</customer>
+        <project>LV CHENG</project>
+        <taim-0>405331200</taim-0>
         <options>
             <option>
                 <name>max-transactions</name>
@@ -38,9 +38,9 @@ to legal action.-->
             </option>
             <option>
                 <name>valid-from</name>
-                <value>20130413</value>
+                <value>20171203</value>
             </option>
         </options>
-        <taim-1>IRPsF4AXECjSETKmJPVjxc7jusffY+YGWXCHU7IeZyO90Pkrj7KZIB8jyicmILripmkS5Q/3lTgZ+STADr8u6FmM2baObLh481FnNYdHC9gkyhAG+BuiDdQGTVO3BWUQSCb8PmqS5XXMyOxTwlGicziYu6tH8FZmYJcJOlBoI5g=</taim-1>
+        <taim-1>gnMOEKPmKPlwjCX5jajk8RCTmugA7yJ0XO0n86Gn2GrIQut31hMSrUW+j+DgJ3a1jc/KVbjevq2HM106gDFdPwQSpzsvTWTLpdRE3jZTLXUnQ4r1x4uxOxus030jh53camiVaP1RdJyENaaVd9k3FH+bcLgBR/mOiHJWVPYwb9O5AdAWJ3TTn5ljJoSOLaN5NZgPWDl5QG4aB4Oqo+gJHQjSvKD2zrexBltUG4vmcsulHa00kzsPRYIDNIx8j9sFu18FbYsixcFOz4IMqg9Tju9fvDz/r7ovgUF4pIHk9ldfFPkl7Tb3dSKJQVsY3OqBMdRHv5YhcsRXHmWID+ZX/A==</taim-1>
     </license>
 </taim>

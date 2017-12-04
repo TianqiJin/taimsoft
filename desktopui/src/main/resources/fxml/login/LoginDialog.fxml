@@ -68,6 +68,11 @@
             <Font name="System Bold" size="24.0" />
          </font>
       </Label>
-      <Hyperlink fx:id="signUpLink" layoutX="427.0" layoutY="179.0" text="Don't have an account?" AnchorPane.bottomAnchor="70.0" AnchorPane.rightAnchor="10.0" />
+      <HBox layoutX="300.0" layoutY="127.0" spacing="20.0" AnchorPane.bottomAnchor="70.0" AnchorPane.rightAnchor="10.0">
+         <children>
+            <Hyperlink fx:id="uploadLicenseLink" text="Upload license" />
+            <Hyperlink fx:id="signUpLink" text="Don't have an account?" />
+         </children>
+      </HBox>
    </children>
 </AnchorPane>

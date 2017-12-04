@@ -1,6 +1,7 @@
 package com.taim.licensegen;
 
 import com.taim.licensegen.model.licensever.License;
+import com.taim.licensegen.util.ToolCommandLineParser;
 import com.taim.licensegen.util.XmlProperty;
 import com.taim.licensegen.model.CryptKey;
 import com.taim.licensegen.model.LicenseFile;
@@ -28,6 +29,7 @@ import java.io.*;
 import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
@@ -638,46 +640,40 @@ public class GenerateLicense {
     }
 
     public static void main(String[] args){
-        GenerateLicense generateLicense = new GenerateLicense();
-        try {
-            generateLicense.verifyLicense(new File("license.dat"), "Taim Desktop");
-        } catch (GenerateLicenseException e) {
-            e.printStackTrace();
-        }
-
-//        ToolCommandLineParser commandLineParser = new ToolCommandLineParser();
-//        switch(commandLineParser.parse(args)){
-//            case success:
-//                GenerateLicense generateLicense = new GenerateLicense();
-//                String securityFile = commandLineParser.getStringValue(ToolCommandLineParser.SECURITY_FILE);
-//                String privateKeyFile = commandLineParser.getStringValue(ToolCommandLineParser.PRIVATE_KEY_FILE);
-//                String requestFile = commandLineParser.getStringValue(ToolCommandLineParser.LICENSE_REQUEST);
-//
-//                generateLicense.setTargetFile(new File(securityFile));
-//                generateLicense.setPrivateKeyFile(new File(privateKeyFile));
-//
-//                try {
-//                    JSONObject jsonObject = new JSONObject(new String(Files.readAllBytes(Paths.get(requestFile)), StandardCharsets.UTF_8));
-//                    generateLicense.initializeLicense(jsonObject).initializeSignature().marshall();
-//
-//                    generateLicense.setLicenses(null);
-//                    generateLicense.setTargetFile(new File(generateLicense.getWorkingDir().getAbsolutePath(), "license.dat"));
-//                    generateLicense.unmarshall();
-//
-//                    for(LicenseBase licenseBase: generateLicense.getLicenses().getLicense()){
-//                        System.out.println(generateLicense.verifyLicenseSignature(licenseBase));
-//                    }
-//                } catch (IOException | XMLWriter.XMLWriterException | GenerateLicenseException | CryptKey.CryptKeyException
-//                        | LicenseFile.LicenseException e) {
-//                    e.printStackTrace();
-//                    System.exit(1);
-//                }
-//                break;
-//            case failFriendly:
-//                System.exit(1);
-//            case failBadly:
-//                System.exit(1);
+//        GenerateLicense generateLicense = new GenerateLicense();
+//        try {
+//            generateLicense.verifyLicense(new File("license.dat"), "Taim Desktop");
+//        } catch (GenerateLicenseException e) {
+//            e.printStackTrace();
 //        }
+
+        ToolCommandLineParser commandLineParser = new ToolCommandLineParser();
+        switch(commandLineParser.parse(args)){
+            case success:
+                GenerateLicense generateLicense = new GenerateLicense();
+                String securityFile = commandLineParser.getStringValue(ToolCommandLineParser.SECURITY_FILE);
+                String privateKeyFile = commandLineParser.getStringValue(ToolCommandLineParser.PRIVATE_KEY_FILE);
+                String requestFile = commandLineParser.getStringValue(ToolCommandLineParser.LICENSE_REQUEST);
+
+                generateLicense.setTargetFile(new File(securityFile));
+                generateLicense.setPrivateKeyFile(new File(privateKeyFile));
+
+                try {
+                    JSONObject jsonObject = new JSONObject(new String(Files.readAllBytes(Paths.get(requestFile)), StandardCharsets.UTF_8));
+                    generateLicense.initializeLicense(jsonObject).initializeSignature().marshall();
+
+                    generateLicense.setLicenses(null);
+                    generateLicense.verifyLicense(new File("license.dat"), "Taim Desktop");
+                } catch (IOException | XMLWriter.XMLWriterException | GenerateLicenseException | CryptKey.CryptKeyException  e) {
+                    e.printStackTrace();
+                    System.exit(1);
+                }
+                break;
+            case failFriendly:
+                System.exit(1);
+            case failBadly:
+                System.exit(1);
+        }
     }
 
     public License getLicenses() {

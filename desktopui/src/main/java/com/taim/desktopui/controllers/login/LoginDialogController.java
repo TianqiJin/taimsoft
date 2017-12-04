@@ -2,6 +2,7 @@ package com.taim.desktopui.controllers.login;
 
 import com.taim.client.PropertyClient;
 import com.taim.client.StaffClient;
+import com.taim.desktopui.uicomponents.FadingStatusMessage;
 import com.taim.dto.OrganizationDTO;
 import com.taim.dto.PropertyDTO;
 import com.taim.dto.StaffDTO;
@@ -17,7 +18,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -27,10 +32,13 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -52,6 +60,8 @@ public class LoginDialogController {
     private Label errorLMsgLabel;
     @FXML
     private Hyperlink signUpLink;
+    @FXML
+    private Hyperlink uploadLicenseLink;
     @FXML
     private AnchorPane logingRoot;
 
@@ -110,6 +120,8 @@ public class LoginDialogController {
             }
 
         });
+
+        uploadLicenseLink.setOnAction(event -> handleUploadLicenseLink());
     }
 
     @FXML
@@ -133,23 +145,22 @@ public class LoginDialogController {
 
         propertyTask.setOnSucceeded(event -> {
             if(propertyTask.getValue().size() != 0){
-                PropertyDTO property = propertyTask.getValue().get(0);
+                VistaNavigator.setGlobalProperty(propertyTask.getValue().get(0));
                 Path tmpLicenseFile = null;
                 boolean isLicenseValid = false;
                 try {
                     tmpLicenseFile = Files.createTempFile("tmpLicenseFile", null);
-                    Files.write(tmpLicenseFile, property.getLicense().getLicenseFile());
+                    Files.write(tmpLicenseFile, VistaNavigator.getGlobalProperty().getLicense().getLicenseFile());
                     GenerateLicense generateLicense = new GenerateLicense();
                     try {
                         generateLicense.verifyLicense(tmpLicenseFile.toFile(), "Taim Desktop");
                         isLicenseValid = true;
                     } catch (GenerateLicense.GenerateLicenseException e) {
                         new AlertBuilder().alertType(Alert.AlertType.ERROR)
-                                .alertContentText(e.getMessage())
+                                .alertContentText("Please upload a new license!\n\n" + e.getMessage())
                                 .build()
                                 .showAndWait();
                     }
-
                 } catch (IOException e) {
                     logger.error(e.getMessage(), e);
                 }finally {
@@ -159,7 +170,6 @@ public class LoginDialogController {
                 }
 
                 if(isLicenseValid){
-                    VistaNavigator.setGlobalProperty(propertyTask.getValue().get(0));
                     successful = true;
                     dialogStage.close();
                 }
@@ -222,6 +232,64 @@ public class LoginDialogController {
     @FXML
     public void handleCancel(){
         dialogStage.close();
+    }
+
+    public void handleUploadLicenseLink(){
+        if(VistaNavigator.getGlobalProperty() == null){
+            new AlertBuilder()
+                    .alertType(Alert.AlertType.WARNING)
+                    .alertContentText("Please login first to obtain original license information")
+                    .build()
+                    .showAndWait();
+        }else{
+            FileChooser fileChooser = new FileChooser();
+            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("DAT files (*.dat)", "*.dat");
+            fileChooser.getExtensionFilters().add(extFilter);
+            fileChooser.setTitle("Upload New License");
+            File licenseFile = fileChooser.showOpenDialog(logingRoot.getScene().getWindow());
+
+            boolean isLicenseValid = false;
+            GenerateLicense generateLicense = new GenerateLicense();
+            try{
+                generateLicense.verifyLicense(licenseFile, Constant.Product.TAIM_DESKTOP);
+                isLicenseValid = true;
+            }catch (GenerateLicense.GenerateLicenseException e){
+                logger.error(e.getMessage(), e);
+                new AlertBuilder()
+                        .alertType(Alert.AlertType.ERROR)
+                        .alertContentText(e.getMessage())
+                        .build()
+                        .showAndWait();
+            }
+
+            if(isLicenseValid){
+                try {
+                    VistaNavigator.getGlobalProperty().getLicense().setLicenseFile(Files.readAllBytes(licenseFile.toPath()));
+                    Task<PropertyDTO> savePropertyTask = new Task<PropertyDTO>() {
+                        @Override
+                        protected PropertyDTO call() throws Exception {
+                            return propertyClient.update(VistaNavigator.getGlobalProperty());
+                        }
+                    };
+
+                    savePropertyTask.setOnSucceeded(event -> {FadingStatusMessage.flash("SUCCESSFULLY UPLOADED LICENSE", logingRoot);});
+
+                    savePropertyTask.setOnFailed(event -> {
+                        logger.error(savePropertyTask.getException().getMessage());
+                        new AlertBuilder()
+                                .alertType(Alert.AlertType.ERROR)
+                                .alertContentText("Failed to upload license. Please try again later")
+                                .build()
+                                .showAndWait();
+                    });
+
+                    executor.execute(savePropertyTask);
+                } catch (IOException e) {
+                    logger.error(e.getMessage(), e);
+                }
+            }
+        }
+
     }
 
     public LoginDialogController() {
