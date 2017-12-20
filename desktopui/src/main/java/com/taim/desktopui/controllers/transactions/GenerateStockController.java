@@ -9,7 +9,6 @@ import com.taim.desktopui.controllers.edit.VendorEditDialogController;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
@@ -182,25 +181,7 @@ public class GenerateStockController {
         confimButtonBinding = Bindings.size(transactionTableView.getItems()).greaterThan(0);
         confirmButton.disableProperty().bind(confimButtonBinding);
         productIdCol.setCellValueFactory(p->new SimpleStringProperty(p.getValue().getProduct().getSku()));
-        unitPriceCol.setCellValueFactory(h->new SimpleDoubleProperty(h.getValue().getDiscount()));
-        unitPriceCol.setCellFactory(TextFieldTableCell.forTableColumn(new StringConverter<Number>() {
-            @Override
-            public String toString(Number object) {
-                return String.valueOf(object.doubleValue()/100);
-            }
-
-            @Override
-            public Float fromString(String string) {
-                return Float.valueOf(string)*100;
-            }
-        }));
-        unitPriceCol.setOnEditCommit(event -> {
-            TransactionDetailDTO p = event.getTableView().getItems().get(event.getTablePosition().getRow());
-            p.setDiscount(event.getNewValue().intValue());
-            p.setSaleAmount(new BigDecimal(p.getQuantity() * p.getDiscount()/100).setScale(2, BigDecimal.ROUND_HALF_EVEN).floatValue());
-            showPaymentDetails();
-            refreshTable();
-        });
+        unitPriceCol.setCellValueFactory(h->new SimpleFloatProperty(new BigDecimal(h.getValue().getProduct().getStockUnitPrice()).floatValue()));
         qtyCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         qtyCol.setCellFactory(TextFieldTableCell.forTableColumn(new StringConverter<Number>() {
             @Override
@@ -213,12 +194,11 @@ public class GenerateStockController {
                 return Float.valueOf(string);
             }
         }));
-
         qtyCol.setOnEditCommit(event -> {
             int oldValue = event.getOldValue().intValue();
             TransactionDetailDTO p = event.getTableView().getItems().get(event.getTablePosition().getRow());
             p.setQuantity(event.getNewValue().floatValue());
-            p.setSaleAmount(new BigDecimal(p.getQuantity() * p.getDiscount()/100).setScale(2, BigDecimal.ROUND_HALF_EVEN).floatValue());
+            p.setSaleAmount(new BigDecimal(p.getQuantity() * p.getProduct().getStockUnitPrice()).setScale(2, BigDecimal.ROUND_HALF_EVEN).floatValue());
             p.getPackageInfo().setBox(new BigDecimal(p.getQuantity()/p.getProduct().getPiecePerBox()).intValue());
             p.getPackageInfo().setPieces(new BigDecimal(p.getQuantity()-p.getProduct().getPiecePerBox()*p.getPackageInfo().getBox()).intValue());
             showPaymentDetails();
@@ -402,7 +382,7 @@ public class GenerateStockController {
             newProductTransaction.setProduct(selectedProduct);
             newProductTransaction.setDiscount(0);
             newProductTransaction.setQuantity(0);
-            newProductTransaction.setSaleAmount(0);
+            newProductTransaction.setSaleAmount(selectedProduct.getStockUnitPrice()*newProductTransaction.getQuantity());
             newProductTransaction.setPackageInfo(initiatePkgInfo(newProductTransaction));
             transactionDetailDTOObservableList.add(newProductTransaction);
             oldProductActualNumMap.put(selectedProduct.getId(),selectedProduct.getTotalNum());
