@@ -58,6 +58,8 @@ public class ProductDetailsController implements IDetailController<ProductDTO> {
     @FXML
     private Label unitPriceLabel;
     @FXML
+    private Label stockUnitPriceLabel;
+    @FXML
     private Label displayNameLabel;
     @FXML
     private ComboBox<String> actionComboBox;
@@ -165,6 +167,8 @@ public class ProductDetailsController implements IDetailController<ProductDTO> {
                     "", productDTO.virtualTotalNumProperty().asString()));
             unitPriceLabel.textProperty().bind(initStringBinding(Bindings.isNull(productDTO.unitPriceProperty().asObject()),
                     "", productDTO.unitPriceProperty().asString()));
+            stockUnitPriceLabel.textProperty().bind(initStringBinding(Bindings.isNull(productDTO.stockUnitPriceProperty().asObject()),
+                    "", productDTO.stockUnitPriceProperty().asString()));
             displayNameLabel.textProperty().bind(initStringBinding(productDTO.displayNameProperty().isNull(),
                     "", productDTO.displayNameProperty()));
         }

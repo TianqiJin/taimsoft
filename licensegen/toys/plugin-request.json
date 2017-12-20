@@ -13,8 +13,8 @@
         "product" : "Taim Desktop",
         "user-count" : 5,
         "max-transactions" : 1000,
-        "valid-from": "20171203",
-        "max-version" : 1,
+        "valid-from": "20171201",
+        "max-version" : 1
       }
     ]
 }

@@ -216,7 +216,7 @@ public class GenerateLicense {
         //fields in the given licenseAttrCollection object
         Seconds seconds = Seconds.secondsBetween(referenceTime, expireDate);
         licenseAttrCollection.getAttributes().put("taim-0", seconds.getSeconds());
-        licenseAttrCollection.getAttributes().put("valid-until", expireDate.toString("yyyy-MMM-dd HH:mm:ss") + " UTC");
+        licenseAttrCollection.getAttributes().put("valid-until", expireDate.toString("yyyy-MM-dd HH:mm:ss") + " UTC");
         //Remove duration if existed since it is not supposed to be existed
         licenseAttrCollection.getAttributes().remove("duration");
     }
@@ -617,7 +617,7 @@ public class GenerateLicense {
                     }
 
                     //Check valid-until field
-                    dtf = DateTimeFormat.forPattern("yyyy-MMM-dd HH:mm:ss z");
+                    dtf = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss z");
                     if(DateTime.now().withZoneRetainFields(DateTimeZone.UTC).isAfter(dtf.parseDateTime(license.getValidUntil()))){
                         throw new GenerateLicenseException("License is expired");
                     }

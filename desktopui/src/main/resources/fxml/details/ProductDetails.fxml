@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.SplitPane?>
@@ -15,9 +20,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="1000.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taim.desktopui.controllers.details.ProductDetailsController">
+<AnchorPane prefHeight="1000.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taim.desktopui.controllers.details.ProductDetailsController">
    <children>
-      <SplitPane dividerPositions="0.35" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="100.0">
+      <SplitPane dividerPositions="0.4" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="100.0">
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
@@ -25,7 +30,7 @@
                     <items>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                            <children>
-                              <GridPane AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+                              <GridPane layoutX="14.0" layoutY="14.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="6.0" AnchorPane.topAnchor="14.0">
                                  <children>
                                     <Label text="Product SKU" GridPane.columnIndex="0" GridPane.rowIndex="0">
                                     </Label>
@@ -35,7 +40,7 @@
                                     </Label>
                                     <Label text="Length" GridPane.columnIndex="0" GridPane.rowIndex="3">
                                     </Label>
-                                    <Label text="Total Quantity" GridPane.rowIndex="8">
+                                    <Label text="Total Quantity" GridPane.rowIndex="9">
                                     </Label>
                                     <Label fx:id="skuLabel" GridPane.columnIndex="1" GridPane.rowIndex="0">
                                        <font>
@@ -57,7 +62,7 @@
                                           <Font name="System Bold" size="12.0" />
                                        </font>
                                     </Label>
-                                    <Label fx:id="quantityLabel" GridPane.columnIndex="1" GridPane.rowIndex="8">
+                                    <Label fx:id="quantityLabel" GridPane.columnIndex="1" GridPane.rowIndex="9">
                                        <font>
                                           <Font name="System Bold" size="12.0" />
                                        </font>
@@ -69,9 +74,9 @@
                                           <Font name="System Bold" size="12.0" />
                                        </font>
                                     </Label>
-                                    <Label text="Total Virtual Quantity" GridPane.rowIndex="9">
+                                    <Label text="Total Virtual Quantity" GridPane.rowIndex="10">
                                     </Label>
-                                    <Label fx:id="virtualQuantityLabel" GridPane.columnIndex="1" GridPane.rowIndex="9">
+                                    <Label fx:id="virtualQuantityLabel" GridPane.columnIndex="1" GridPane.rowIndex="10">
                                        <font>
                                           <Font name="System Bold" size="12.0" />
                                        </font>
@@ -97,6 +102,12 @@
                                           <Font name="System Bold" size="12.0" />
                                        </font>
                                     </Label>
+                                    <Label text="Stock Unit Price" GridPane.rowIndex="8" />
+                                    <Label fx:id="stockUnitPriceLabel" GridPane.columnIndex="1" GridPane.rowIndex="8">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Label>
                                  </children>
                                  <columnConstraints>
                                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -108,6 +119,7 @@
                                     <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" />
                                     <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" />
                                     <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" />
+                                    <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                     <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                     <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                     <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />

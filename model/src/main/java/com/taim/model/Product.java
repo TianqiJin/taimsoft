@@ -35,6 +35,8 @@ public class Product extends BaseModel {
     private double virtualTotalNum;
     @Column(name = "unit_price", nullable = false)
     private double unitPrice;
+    @Column(name = "stock_unit_price")
+    private double stockUnitPrice;
     @Column(name = "piece_per_box")
     private int piecePerBox;
 
@@ -96,6 +98,14 @@ public class Product extends BaseModel {
         this.displayName = displayName;
     }
 
+    public double getStockUnitPrice() {
+        return stockUnitPrice;
+    }
+
+    public void setStockUnitPrice(double stockUnitPrice) {
+        this.stockUnitPrice = stockUnitPrice;
+    }
+
     public String getPicUrl() {
         return picUrl;
     }
@@ -127,4 +137,6 @@ public class Product extends BaseModel {
     public void setPiecePerBox(int piecePerBox) {
         this.piecePerBox = piecePerBox;
     }
+
+
 }

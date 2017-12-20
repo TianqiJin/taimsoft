@@ -14,11 +14,13 @@ public class ProductDTO extends BaseModelDTO{
     private DoubleProperty totalNum;
     private DoubleProperty virtualTotalNum;
     private DoubleProperty unitPrice;
+    private DoubleProperty stockUnitPrice;
     private BooleanProperty checked;
     private IntegerProperty piecePerBox;
 
     public ProductDTO(){
         unitPrice = new SimpleDoubleProperty();
+        stockUnitPrice = new SimpleDoubleProperty();
         sku = new SimpleStringProperty();
         length = new SimpleDoubleProperty();
         width = new SimpleDoubleProperty();
@@ -174,5 +176,17 @@ public class ProductDTO extends BaseModelDTO{
 
     public void setVirtualTotalNum(double virtualTotalNum) {
         this.virtualTotalNum.set(virtualTotalNum);
+    }
+
+    public double getStockUnitPrice() {
+        return stockUnitPrice.get();
+    }
+
+    public DoubleProperty stockUnitPriceProperty() {
+        return stockUnitPrice;
+    }
+
+    public void setStockUnitPrice(double stockUnitPrice) {
+        this.stockUnitPrice.set(stockUnitPrice);
     }
 }

@@ -75,6 +75,14 @@ public class LoginDialogController {
                 loginButton.setDisable(true);
             }
         });
+        passwordField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(!passwordField.getText().trim().isEmpty()){
+                loginButton.setDisable(false);
+            }
+            else{
+                loginButton.setDisable(true);
+            }
+        });
         userNameField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue) { // we only care about loosing focus
                errorLMsgLabel.setText("");

@@ -42,6 +42,8 @@ public class ProductEditDialogController {
     @FXML
     private TextField unitPriceField;
     @FXML
+    private TextField stockUnitPriceField;
+    @FXML
     private TextField lengthField;
     @FXML
     private TextField widthField;
@@ -59,6 +61,8 @@ public class ProductEditDialogController {
     private Label unitPriceErrorLabel;
     @FXML
     private Label piecesPerBoxErrorLabel;
+    @FXML
+    private Label stockUnitPriceErrorLabel;
     @FXML
     private AnchorPane root;
 
@@ -111,15 +115,30 @@ public class ProductEditDialogController {
                 }
 
                 try{
-                    Double.parseDouble(piecesPerBoxField.getText());
+                    Integer.parseInt(piecesPerBoxField.getText());
                 }catch (NumberFormatException e){
                     piecesPerBoxErrorLabel.setText("Pieces per box must be an integer!");
                     piecesPerBoxErrorLabel.setStyle(FX_ERROR_LABEL_COLOR);
                 }
 
-                if(Double.parseDouble(piecesPerBoxField.getText()) <= 0){
+                if(Integer.parseInt(piecesPerBoxField.getText()) <= 0){
                     piecesPerBoxErrorLabel.setText("Pieces per box must be greater than 0!");
                     piecesPerBoxErrorLabel.setStyle(FX_ERROR_LABEL_COLOR);
+                }
+            }
+        });
+        stockUnitPriceField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if(!newValue) { // we only care about loosing focus
+                if(StringUtils.isNotEmpty(stockUnitPriceField.getText())){
+                    try{
+                        Double.parseDouble(stockUnitPriceField.getText());
+                        stockUnitPriceErrorLabel.setText("");
+                    }catch (NumberFormatException e){
+                        stockUnitPriceErrorLabel.setText("Stock unit price must be a number!");
+                        stockUnitPriceErrorLabel.setStyle(FX_ERROR_LABEL_COLOR);
+                    }
+                }else{
+                    stockUnitPriceErrorLabel.setText("");
                 }
             }
         });
@@ -151,6 +170,7 @@ public class ProductEditDialogController {
                     return RestClientFactory.getProductClient().saveOrUpdate(product);
                 }
             };
+            
             saveUpdateProductTask.setOnSucceeded(event -> {
                 this.product = saveUpdateProductTask.getValue();
                 okClicked = true;
@@ -209,7 +229,8 @@ public class ProductEditDialogController {
         return StringUtils.isEmpty(productIdErrorLabel.getText())
                 && StringUtils.isEmpty(displayNameErrorLabel.getText())
                 && StringUtils.isEmpty(piecesPerBoxErrorLabel.getText())
-                && StringUtils.isEmpty(unitPriceErrorLabel.getText());
+                && StringUtils.isEmpty(unitPriceErrorLabel.getText())
+                && StringUtils.isEmpty(stockUnitPriceErrorLabel.getText());
     }
 
     private void scanBasicInfoFields(){
@@ -217,6 +238,7 @@ public class ProductEditDialogController {
         displayNameField.requestFocus();
         piecesPerBoxField.requestFocus();
         unitPriceField.requestFocus();
+        stockUnitPriceField.requestFocus();
     }
 
     private void initProductInfoTextFields(){
@@ -228,10 +250,11 @@ public class ProductEditDialogController {
         piecesPerBoxField.textProperty().bindBidirectional(this.product.piecePerBoxProperty(), new NumberStringConverter());
         textureField.textProperty().bindBidirectional(this.product.textureProperty());
         unitPriceField.textProperty().bindBidirectional(this.product.unitPriceProperty(), new NumberStringConverter());
+        stockUnitPriceField.textProperty().bindBidirectional(this.product.stockUnitPriceProperty(), new NumberStringConverter());
 
         if(this.product.getId() != 0){
-            if(VistaNavigator.getGlobalStaff().getPosition()!= Staff.Position.MANAGER){
-                unitPriceField.setDisable(true);
+            if(VistaNavigator.getGlobalStaff().getPosition().equals(Staff.Position.MANAGER)){
+                unitPriceField.setDisable(false);
             }
             productIdField.setDisable(true);
         }
