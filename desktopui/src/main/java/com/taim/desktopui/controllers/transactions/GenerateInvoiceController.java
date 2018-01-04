@@ -313,7 +313,8 @@ public class GenerateInvoiceController {
                     transactionTableView.getItems().forEach(e->e.getProduct().setTotalNum(e.getProduct().getTotalNum()-e.getQuantity()));
                     qtyCol.setEditable(false);
                     refreshTable();
-                }else if (DeliveryStatus.getStatus(oldValue)== DeliveryStatus.Status.DELIVERING && DeliveryStatus.getStatus(newValue)== DeliveryStatus.Status.UNDELIVERED){
+                }else if ((DeliveryStatus.getStatus(oldValue)== DeliveryStatus.Status.DELIVERING || DeliveryStatus.getStatus(oldValue)== DeliveryStatus.Status.DELIVERED)
+                        && DeliveryStatus.getStatus(newValue)== DeliveryStatus.Status.UNDELIVERED){
                     transactionTableView.getItems().forEach(e->e.getProduct().setTotalNum(e.getProduct().getTotalNum()+e.getQuantity()));
                     qtyCol.setEditable(true);
                     refreshTable();

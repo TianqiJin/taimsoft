@@ -167,7 +167,7 @@ public class TransactionOverviewController extends IOverviewController<Transacti
                                     break;
                                 case QUOTATION:
                                     if(transactionDTO.isFinalized()){
-                                        comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "CONVERT TO INVOICE", "PRINT"));
+                                        comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "PRINT"));
                                     }else{
                                         comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "CONVERT TO INVOICE", "EDIT", "PRINT"));
                                     }

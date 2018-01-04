@@ -170,7 +170,7 @@ public class ProductEditDialogController {
                     return RestClientFactory.getProductClient().saveOrUpdate(product);
                 }
             };
-            
+
             saveUpdateProductTask.setOnSucceeded(event -> {
                 this.product = saveUpdateProductTask.getValue();
                 okClicked = true;
