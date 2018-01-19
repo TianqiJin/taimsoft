@@ -5,7 +5,6 @@ import com.taim.client.TransactionClient;
 import com.taim.desktopui.util.TransactionPanelLoader;
 import com.taim.dto.PaymentDTO;
 import com.taim.dto.TransactionDTO;
-import com.taim.model.DeliveryStatus;
 import com.taim.model.Transaction;
 import com.taim.desktopui.util.DateUtils;
 import com.taim.desktopui.util.RestClientFactory;
@@ -115,7 +114,7 @@ public class TransactionOverviewController extends IOverviewController<Transacti
         });
         deliveryStatusCol.setCellValueFactory(param -> {
             if(param.getValue().getDeliveryStatus() != null){
-                return new SimpleStringProperty(param.getValue().getDeliveryStatus().getStatus().getValue());
+                return new SimpleStringProperty(param.getValue().getDeliveryStatus().getValue());
             }
             return null;
         });
@@ -296,7 +295,7 @@ public class TransactionOverviewController extends IOverviewController<Transacti
             subList = subList.stream().filter(transaction -> transaction.getDeliveryDueDate() != null
                     && transaction.getDeliveryDueDate().isBefore(DateTime.now())
                     && transaction.getDeliveryStatus() != null
-                    && !transaction.getDeliveryStatus().getStatus().equals(DeliveryStatus.Status.DELIVERED))
+                    && !transaction.getDeliveryStatus().equals(Transaction.DeliveryStatus.DELIVERED))
                     .collect(Collectors.toCollection(FXCollections::observableArrayList));
         }
         if(finalizedCheckBox.isSelected()){

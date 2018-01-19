@@ -206,7 +206,7 @@ public class TransactionDetailsController implements IDetailController<Transacti
                     "", new SimpleStringProperty(dtf.print(transactionDTO.getDeliveryDueDate()))));
             deliveryStatusLabel.textProperty().bind(initStringBinding(transactionDTO.deliveryStatusProperty().isNull(),
                     "", transactionDTO.getDeliveryStatus() != null?
-                            new SimpleStringProperty(transactionDTO.getDeliveryStatus().getStatus().getValue()):
+                            new SimpleStringProperty(transactionDTO.getDeliveryStatus().getValue()):
                             new SimpleStringProperty("")));
             finalizedLabel.textProperty().bind(initStringBinding(Bindings.isNull(transactionDTO.finalizedProperty().asObject()),
                     "", transactionDTO.isFinalized()? new SimpleStringProperty("YES"): new SimpleStringProperty("NO")));

@@ -71,6 +71,31 @@ public class Transaction extends BaseModel {
         }
     }
 
+    public enum DeliveryStatus{
+        UNDELIVERED("Undelivered"),
+        DELIVERING("Delivering"),
+        DELIVERED("Delivered");
+
+        private String value;
+
+        DeliveryStatus(String vvalue){
+            this.value = vvalue;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public static DeliveryStatus getStatus(String value){
+            for (DeliveryStatus ps : DeliveryStatus.values()){
+                if (value.equalsIgnoreCase(ps.name())){
+                    return ps;
+                }
+            }
+            return null;
+        }
+    }
+
     @Column(name = "sale_amount", nullable = false)
     private double saleAmount;
     @Column
@@ -90,8 +115,7 @@ public class Transaction extends BaseModel {
     private TransactionType transactionType;
     @Column(name = "payment_status")
     private PaymentStatus paymentStatus;
-    @JoinColumn(name = "delivery_status_id")
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @Column(name = "delivery_status")
     private DeliveryStatus deliveryStatus;
     @Column(name = "payment_due_date")
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
@@ -243,6 +267,5 @@ public class Transaction extends BaseModel {
     public void setFinalized(boolean finalized) {
         this.finalized = finalized;
     }
-
 
 }

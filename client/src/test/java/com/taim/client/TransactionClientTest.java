@@ -2,10 +2,7 @@ package com.taim.client;
 
 import com.taim.dto.CustomerDTO;
 import com.taim.dto.TransactionDTO;
-import com.taim.dto.TransactionDetailDTO;
-import com.taim.model.DeliveryStatus;
 import com.taim.model.Transaction;
-import com.taim.model.TransactionDetail;
 import junit.framework.Assert;
 import org.joda.time.DateTime;
 import org.junit.BeforeClass;

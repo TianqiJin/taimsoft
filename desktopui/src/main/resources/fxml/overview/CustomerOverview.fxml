@@ -19,7 +19,7 @@
 
 <AnchorPane id="AnchorPane" fx:id="rootPane" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" prefHeight="1000.0" prefWidth="1000.0" stylesheets="@/css/bootstrap3.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taim.desktopui.controllers.overview.CustomerOverviewController">
   <children>
-      <SplitPane fx:id="summarySplitPane" dividerPositions="0.2, 0.35" layoutX="10.0" layoutY="10.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <SplitPane fx:id="summarySplitPane" dividerPositions="0.2, 0.43" layoutX="10.0" layoutY="10.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <items>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
@@ -100,7 +100,7 @@
             </AnchorPane>
             <AnchorPane prefHeight="200.0" prefWidth="200.0">
                <children>
-                  <TitledPane animated="false" collapsible="false" text="Filter By" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0">
+                  <TitledPane animated="false" collapsible="false" text="Filter By" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
                     <content>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
@@ -114,7 +114,13 @@
                                     <Button mnemonicParsing="false" onAction="#handleClearFilter" text="Clear" />
                                  </children>
                               </HBox>
-                              <HBox layoutX="14.0" layoutY="9.0" spacing="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="50.0">
+                              <HBox alignment="CENTER_LEFT" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="50.0">
+                                 <children>
+                                    <Label text="Address: " />
+                                    <TextField fx:id="addressFilterField" prefHeight="25.0" prefWidth="300.0" />
+                                 </children>
+                              </HBox>
+                              <HBox layoutX="14.0" layoutY="9.0" spacing="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="90.0">
                                  <children>
                                     <CheckBox fx:id="paymentOverdueCheckBox" mnemonicParsing="false" text="Has Payment Overdue Transactions" />
                                     <CheckBox fx:id="deliveryOverdueCheckBox" mnemonicParsing="false" text="Has Devlivery Overdue Transactions" />

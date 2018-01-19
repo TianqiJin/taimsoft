@@ -2,7 +2,6 @@ package com.taim.desktopui.controllers.transactions;
 
 import com.taim.desktopui.util.*;
 import com.taim.dto.*;
-import com.taim.model.DeliveryStatus;
 import com.taim.model.Payment;
 import com.taim.model.Transaction;
 import com.taim.desktopui.controllers.edit.VendorEditDialogController;
@@ -68,7 +67,7 @@ public class GenerateStockController {
     //private Map<Integer, Double> oldProductQuantityMap;
     private ObservableList<String> paymentDue;
     private ObservableList<String> deliveryDue;
-    private DeliveryStatus.Status prevStats;
+    private Transaction.DeliveryStatus prevStats;
     private Map<Integer, Double> oldProductVirtualNumMap;
     private Map<Integer, Double> oldProductActualNumMap;
 
@@ -272,20 +271,17 @@ public class GenerateStockController {
 
                 });
         deliveryStatusChoiceBox.setItems(deliveryDue);
-        deliveryStatusChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,String newValue) {
-                transaction.getDeliveryStatus().setStatus(DeliveryStatus.getStatus(newValue));
-                //transaction.getDeliveryStatus().setDateModified(DateTime.now());
-                if (DeliveryStatus.getStatus(newValue)== DeliveryStatus.Status.DELIVERED && oldValue!=null){
-                    transactionTableView.getItems().forEach(e->e.getProduct().setTotalNum(e.getProduct().getTotalNum()+e.getQuantity()));
-                    qtyCol.setEditable(false);
-                    refreshTable();
-                }else if (DeliveryStatus.getStatus(oldValue)== DeliveryStatus.Status.DELIVERED){
-                    transactionTableView.getItems().forEach(e->e.getProduct().setTotalNum(e.getProduct().getTotalNum()-e.getQuantity()));
-                    qtyCol.setEditable(true);
-                    refreshTable();
-                }
+        deliveryStatusChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            transaction.setDeliveryStatus(Transaction.DeliveryStatus.getStatus(newValue));
+            //transaction.getDeliveryStatus().setDateModified(DateTime.now());
+            if (Transaction.DeliveryStatus.getStatus(newValue) == Transaction.DeliveryStatus.DELIVERED && oldValue!=null){
+                transactionTableView.getItems().forEach(e->e.getProduct().setTotalNum(e.getProduct().getTotalNum()+e.getQuantity()));
+                qtyCol.setEditable(false);
+                refreshTable();
+            }else if (Transaction.DeliveryStatus.getStatus(oldValue) == Transaction.DeliveryStatus.DELIVERED){
+                transactionTableView.getItems().forEach(e->e.getProduct().setTotalNum(e.getProduct().getTotalNum()-e.getQuantity()));
+                qtyCol.setEditable(true);
+                refreshTable();
             }
         });
         paymentField.textProperty().addListener(new ChangeListener<String>() {
@@ -427,7 +423,7 @@ public class GenerateStockController {
         paymentDue = FXCollections.observableArrayList(
                 Arrays.stream(Transaction.PaymentStatus.values()).map(Transaction.PaymentStatus::name).collect(Collectors.toList()));
         deliveryDue = FXCollections.observableArrayList(
-                Arrays.stream(DeliveryStatus.Status.values()).map(DeliveryStatus.Status::getValue).collect(Collectors.toList()));
+                Arrays.stream(Transaction.DeliveryStatus.values()).map(Transaction.DeliveryStatus::getValue).collect(Collectors.toList()));
     }
 
 
@@ -452,23 +448,19 @@ public class GenerateStockController {
             transaction.setStaff(staff);
             transaction.setDateCreated(DateTime.now());
 
-            DeliveryStatusDTO currentDeliveryStatus = new DeliveryStatusDTO();
-            currentDeliveryStatus.setStatus(DeliveryStatus.Status.UNDELIVERED);
-            currentDeliveryStatus.setDateCreated(DateTime.now());
-            currentDeliveryStatus.setDateModified(DateTime.now());
-            this.transaction.setDeliveryStatus(currentDeliveryStatus);
+            this.transaction.setDeliveryStatus(Transaction.DeliveryStatus.UNDELIVERED);
             this.transaction.setPaymentDueDate(transaction.getDateCreated());
             this.transaction.setDeliveryDueDate(transaction.getDateCreated());
             this.transaction.setPaymentStatus(Transaction.PaymentStatus.UNPAID);
 
         }else{
             this.mode= Mode.EDIT;
-            prevStats = transactionFromAbove.getDeliveryStatus().getStatus();
+            prevStats = transactionFromAbove.getDeliveryStatus();
             this.transaction = transactionFromAbove;
             this.staff = transactionFromAbove.getStaff();
             this.vendor = transactionFromAbove.getVendor();
 
-            if (prevStats== DeliveryStatus.Status.DELIVERED){
+            if (prevStats== Transaction.DeliveryStatus.DELIVERED){
                 qtyCol.setEditable(false);
             }
             if(transaction.isFinalized()){
@@ -623,7 +615,7 @@ public class GenerateStockController {
     private void showPaymentDeliveryDetail(){
         paymentDueDatePicker.setValue(DateUtils.toLocalDate(this.transaction.getPaymentDueDate()));
         deliveryDueDatePicker.setValue(DateUtils.toLocalDate(this.transaction.getDeliveryDueDate()));
-        deliveryStatusChoiceBox.getSelectionModel().select(transaction.getDeliveryStatus().getStatus().getValue());
+        deliveryStatusChoiceBox.getSelectionModel().select(transaction.getDeliveryStatus().getValue());
         paymentStatusLabel.setText(this.transaction.getPaymentStatus().name());
     }
 
@@ -756,7 +748,7 @@ public class GenerateStockController {
                 tmpProduct.setTotalNum(newActualNum);
                 t.setProduct(tmpProduct);
             });
-            if (transaction.getDeliveryStatus().getStatus()== DeliveryStatus.Status.DELIVERED && transaction.getPaymentStatus()== Transaction.PaymentStatus.PAID){
+            if (transaction.getDeliveryStatus()== Transaction.DeliveryStatus.DELIVERED && transaction.getPaymentStatus()== Transaction.PaymentStatus.PAID){
                 transaction.setFinalized(true);
             }
             Task<TransactionDTO> saveUpdateTransactionTask = new Task<TransactionDTO>() {

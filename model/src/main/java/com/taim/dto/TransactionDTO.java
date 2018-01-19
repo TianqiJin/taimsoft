@@ -18,7 +18,7 @@ public class TransactionDTO extends BaseModelDTO {
     private ObjectProperty<Transaction.TransactionType> transactionType;
     private ObjectProperty<Transaction.PaymentStatus> paymentStatus;
     private ObjectProperty<DateTime> paymentDueDate;
-    private ObjectProperty<DeliveryStatusDTO> deliveryStatus;
+    private ObjectProperty<Transaction.DeliveryStatus> deliveryStatus;
     private ObjectProperty<DateTime> deliveryDueDate;
     private List<TransactionDetailDTO> transactionDetails;
     private List<PaymentDTO> payments;
@@ -163,15 +163,15 @@ public class TransactionDTO extends BaseModelDTO {
         this.vendor.set(vendor);
     }
 
-    public DeliveryStatusDTO getDeliveryStatus() {
+    public Transaction.DeliveryStatus getDeliveryStatus() {
         return deliveryStatus.get();
     }
 
-    public ObjectProperty<DeliveryStatusDTO> deliveryStatusProperty() {
+    public ObjectProperty<Transaction.DeliveryStatus> deliveryStatusProperty() {
         return deliveryStatus;
     }
 
-    public void setDeliveryStatus(DeliveryStatusDTO deliveryStatus) {
+    public void setDeliveryStatus(Transaction.DeliveryStatus deliveryStatus) {
         this.deliveryStatus.set(deliveryStatus);
     }
 

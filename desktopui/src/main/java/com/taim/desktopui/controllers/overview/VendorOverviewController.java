@@ -10,7 +10,6 @@ import com.taim.desktopui.util.VistaNavigator;
 import com.taim.dto.OrganizationDTO;
 import com.taim.dto.TransactionDTO;
 import com.taim.dto.VendorDTO;
-import com.taim.model.DeliveryStatus;
 import com.taim.model.Transaction;
 import com.taim.model.basemodels.UserBaseModel;
 import javafx.application.Platform;
@@ -25,6 +24,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 
 import java.util.List;
@@ -62,6 +62,8 @@ public class VendorOverviewController extends IOverviewController<VendorDTO> {
     private CheckBox paymentOverdueCheckBox;
     @FXML
     private CheckBox deliveryOverdueCheckBox;
+    @FXML
+    private TextField addressFilterField;
 
     public VendorOverviewController(){
         this.vendorClient = RestClientFactory.getVendorClient();
@@ -164,7 +166,7 @@ public class VendorOverviewController extends IOverviewController<VendorDTO> {
                     .filter(transactionDTO -> transactionDTO.getDeliveryDueDate() != null
                             && transactionDTO.getDeliveryDueDate().isBefore(DateTime.now())
                             && transactionDTO.getDeliveryStatus() != null
-                            && !transactionDTO.getDeliveryStatus().getStatus().equals(DeliveryStatus.Status.DELIVERED))
+                            && !transactionDTO.getDeliveryStatus().getValue().equals(Transaction.DeliveryStatus.DELIVERED))
                     .collect(Collectors.toList());
             subList = subList.stream().
                     filter(vendorDTO -> transactions.stream().anyMatch(transactionDTO -> transactionDTO.getVendor().getId() == vendorDTO.getId()))
@@ -179,6 +181,13 @@ public class VendorOverviewController extends IOverviewController<VendorDTO> {
                     .collect(Collectors.toList());
             subList = subList.stream().
                     filter(vendorDTO -> transactions.stream().anyMatch(transactionDTO -> transactionDTO.getVendor().getId() == vendorDTO.getId()))
+                    .collect(Collectors.toCollection(FXCollections::observableArrayList));
+        }
+        if(StringUtils.isNotEmpty(addressFilterField.getText())){
+            subList = subList.stream().filter(customerDTO -> {
+                OrganizationDTO customerOrg = customerDTO.getOrganization();
+                String address = customerOrg.getStreetNum() + customerOrg.getStreet() + customerOrg.getCity() + customerOrg.getCountry() + customerOrg.getPostalCode();
+                return address.contains(addressFilterField.getText());})
                     .collect(Collectors.toCollection(FXCollections::observableArrayList));
         }
 

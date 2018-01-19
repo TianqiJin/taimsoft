@@ -1,11 +1,17 @@
 package com.taim.desktopui.controllers.details;
 
+import com.taim.desktopui.util.TransactionPanelLoader;
+import com.taim.desktopui.util.VistaNavigator;
 import com.taim.dto.TransactionDTO;
 import com.taim.model.Transaction;
+import com.taim.model.TransactionDetail;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -36,6 +42,8 @@ public class TransactionTableViewController {
     private TableColumn<TransactionDTO, String> paymentStatusCol;
     @FXML
     private TableColumn<TransactionDTO, String> finalizedCol;
+    @FXML
+    private TableColumn<TransactionDTO, String> actionCol;
 
     @FXML
     public void initialize(){
@@ -58,7 +66,7 @@ public class TransactionTableViewController {
         saleAmountCol.setCellValueFactory(new PropertyValueFactory<>("saleAmount"));
         deliveryStatusCol.setCellValueFactory(param -> {
             if (param.getValue().getDeliveryStatus() != null) {
-                return new SimpleStringProperty(param.getValue().getDeliveryStatus().getStatus().getValue());
+                return new SimpleStringProperty(param.getValue().getDeliveryStatus().getValue());
             }
             return null;
         });
@@ -74,6 +82,38 @@ public class TransactionTableViewController {
                 return new SimpleStringProperty("YES");
             }else{
                 return new SimpleStringProperty("NO");
+            }
+        });
+        actionCol.setCellValueFactory(new PropertyValueFactory<>("action"));
+        actionCol.setCellFactory(new Callback<TableColumn<TransactionDTO, String>, TableCell<TransactionDTO, String>>() {
+            @Override
+            public TableCell<TransactionDTO, String> call(TableColumn<TransactionDTO, String> param) {
+                return new TableCell<TransactionDTO, String>() {
+                    @Override
+                    public void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            ComboBox<String> comboBox = new ComboBox<>();
+                            comboBox.setPromptText("SET ACTION");
+                            comboBox.prefWidthProperty().bind(this.widthProperty());
+                            TransactionDTO transactionDTO = getTableView().getItems().get(getIndex());
+                            comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS"));
+                            comboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+                                if (newValue != null) {
+                                    if (newValue.equals("VIEW DETAILS")) {
+                                        VistaNavigator.loadDetailVista(VistaNavigator.VISTA_TRANSACTION_DETAIL, transactionDTO);
+                                    }
+                                    Platform.runLater(() -> comboBox.getSelectionModel().clearSelection());
+                                }
+                            });
+                            comboBox.setValue(item);
+                            setGraphic(comboBox);
+                        }
+                    }
+
+                };
             }
         });
     }

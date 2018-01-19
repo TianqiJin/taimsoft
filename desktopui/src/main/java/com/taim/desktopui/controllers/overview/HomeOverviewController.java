@@ -4,7 +4,6 @@ import com.taim.client.TransactionClient;
 import com.taim.desktopui.util.TransactionPanelLoader;
 import com.taim.dto.PaymentDTO;
 import com.taim.dto.TransactionDTO;
-import com.taim.model.DeliveryStatus;
 import com.taim.model.Transaction;
 import com.taim.desktopui.util.RestClientFactory;
 import com.taim.desktopui.util.VistaNavigator;
@@ -114,7 +113,7 @@ public class HomeOverviewController {
         deliveryDueDateCol.setCellValueFactory(param -> new SimpleStringProperty(dtf.print(param.getValue().getDeliveryDueDate())));
         deliveryStatusCol.setCellValueFactory(param -> {
             if(param.getValue().getDeliveryStatus() != null){
-                return new SimpleStringProperty(param.getValue().getDeliveryStatus().getStatus().getValue());
+                return new SimpleStringProperty(param.getValue().getDeliveryStatus().getValue());
             }
             return null;
         });
@@ -325,7 +324,7 @@ public class HomeOverviewController {
                 return transactions.stream()
                         .filter(transactionDTO -> !transactionDTO.getTransactionType().equals(Transaction.TransactionType.QUOTATION)
                                 && transactionDTO.getDeliveryDueDate().isBefore(DateTime.now())
-                                && !transactionDTO.getDeliveryStatus().getStatus().equals(DeliveryStatus.Status.DELIVERED))
+                                && !transactionDTO.getDeliveryStatus().equals(Transaction.DeliveryStatus.DELIVERED))
                         .collect(Collectors.toList());
             }
         };
@@ -354,7 +353,16 @@ public class HomeOverviewController {
                         if(newValue.equals("VIEW DETAILS")){
                             VistaNavigator.loadDetailVista(VistaNavigator.VISTA_TRANSACTION_DETAIL, transactionDTO);
                         }else if(newValue.equals("EDIT")){
-                            TransactionDTO editedTrans = TransactionPanelLoader.loadQuotation(transactionDTO);
+                            switch(transactionDTO.getTransactionType()) {
+                                case INVOICE:
+                                    TransactionPanelLoader.loadInvoice(transactionDTO);
+                                case RETURN:
+                                    TransactionPanelLoader.loadQuotation(transactionDTO);
+                                case STOCK:
+                                    TransactionPanelLoader.loadStock(transactionDTO);
+                                default:
+                                    break;
+                            }
                         }
                     });
                     comboBox.setValue(item);

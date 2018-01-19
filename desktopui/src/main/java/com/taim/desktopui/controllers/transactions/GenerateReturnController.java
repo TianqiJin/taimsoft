@@ -2,7 +2,6 @@ package com.taim.desktopui.controllers.transactions;
 
 import com.taim.desktopui.util.*;
 import com.taim.dto.*;
-import com.taim.model.DeliveryStatus;
 import com.taim.model.Payment;
 import com.taim.model.Transaction;
 import javafx.beans.binding.Bindings;
@@ -67,7 +66,7 @@ public class GenerateReturnController {
     private Map<Integer, Double> oldProductVirtualNumMap;
     private Map<Integer, Double> oldProductActualNumMap;
     private double oldStoreCredit;
-    private DeliveryStatus.Status prevStats;
+    private Transaction.DeliveryStatus prevStats;
     private Map<Integer, Integer> purchasedValueMap;
 
     private static final String DATE_PATTERN = "yyyy-MM-dd";
@@ -281,13 +280,13 @@ public class GenerateReturnController {
         deliveryStatusChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,String newValue) {
-                transaction.getDeliveryStatus().setStatus(DeliveryStatus.getStatus(newValue));
+                transaction.setDeliveryStatus(Transaction.DeliveryStatus.getStatus(newValue));
                 //transaction.getDeliveryStatus().setDateModified(DateTime.now());
-                if (DeliveryStatus.getStatus(newValue)== DeliveryStatus.Status.DELIVERED && oldValue!=null){
+                if (Transaction.DeliveryStatus.getStatus(newValue)== Transaction.DeliveryStatus.DELIVERED && oldValue!=null){
                     transactionTableView.getItems().forEach(e->e.getProduct().setTotalNum(e.getProduct().getTotalNum()+e.getQuantity()));
                     qtyCol.setEditable(false);
                     refreshTable();
-                }else if (DeliveryStatus.getStatus(oldValue)== DeliveryStatus.Status.DELIVERED){
+                }else if (Transaction.DeliveryStatus.getStatus(oldValue)== Transaction.DeliveryStatus.DELIVERED){
                     transactionTableView.getItems().forEach(e->e.getProduct().setTotalNum(e.getProduct().getTotalNum()-e.getQuantity()));
                     qtyCol.setEditable(true);
                     refreshTable();
@@ -399,11 +398,7 @@ public class GenerateReturnController {
             this.mode= Mode.CREATE;
             this.oldTransaction = transactionFromAbove;
             this.transaction = copyTransaction(transactionFromAbove);
-            DeliveryStatusDTO currentDeliveryStatus = new DeliveryStatusDTO();
-            currentDeliveryStatus.setStatus(DeliveryStatus.Status.UNDELIVERED);
-            currentDeliveryStatus.setDateCreated(DateTime.now());
-            currentDeliveryStatus.setDateModified(DateTime.now());
-            this.transaction.setDeliveryStatus(currentDeliveryStatus);
+            this.transaction.setDeliveryStatus(Transaction.DeliveryStatus.UNDELIVERED);
             this.transaction.setPaymentDueDate(transaction.getDateCreated());
             this.transaction.setDeliveryDueDate(transaction.getDateCreated());
             this.transaction.setPayments(new ArrayList<>());
@@ -412,9 +407,9 @@ public class GenerateReturnController {
         }else{
             this.mode= Mode.EDIT;
             this.oldTransaction = RestClientFactory.getTransactionClient().getById(transactionFromAbove.getRefId());
-            prevStats = transactionFromAbove.getDeliveryStatus().getStatus();
+            prevStats = transactionFromAbove.getDeliveryStatus();
             this.transaction = transactionFromAbove;
-            if (prevStats== DeliveryStatus.Status.DELIVERED){
+            if (prevStats== Transaction.DeliveryStatus.DELIVERED){
                 qtyCol.setEditable(false);
                 discountCol.setEditable(false);
             }
@@ -477,7 +472,7 @@ public class GenerateReturnController {
     private void showPaymentDeliveryDetail(){
         paymentDueDatePicker.setValue(DateUtils.toLocalDate(this.transaction.getPaymentDueDate()));
         deliveryDueDatePicker.setValue(DateUtils.toLocalDate(this.transaction.getDeliveryDueDate()));
-        deliveryStatusChoiceBox.getSelectionModel().select(transaction.getDeliveryStatus().getStatus().getValue());
+        deliveryStatusChoiceBox.getSelectionModel().select(transaction.getDeliveryStatus().getValue());
         paymentStatusLabel.setText(this.transaction.getPaymentStatus().name());
     }
 
@@ -622,13 +617,13 @@ public class GenerateReturnController {
                 tmpProduct.setTotalNum(newActualNum);
                 t.setProduct(tmpProduct);
             });
-            if (transaction.getDeliveryStatus().getStatus()== DeliveryStatus.Status.DELIVERED && transaction.getPaymentStatus()== Transaction.PaymentStatus.PAID){
+            if (transaction.getDeliveryStatus() == Transaction.DeliveryStatus.DELIVERED && transaction.getPaymentStatus()== Transaction.PaymentStatus.PAID){
                 transaction.setFinalized(true);
             }
             if(mode== Mode.CREATE) {
                 transaction.setRefId(oldTransaction.getId());
             }
-            if (transaction.getDeliveryStatus().getStatus()== DeliveryStatus.Status.DELIVERED && transaction.getPaymentStatus()== Transaction.PaymentStatus.PAID){
+            if (transaction.getDeliveryStatus() == Transaction.DeliveryStatus.DELIVERED && transaction.getPaymentStatus()== Transaction.PaymentStatus.PAID){
                 transaction.setFinalized(true);
             }
 

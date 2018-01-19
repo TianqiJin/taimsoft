@@ -6,11 +6,13 @@ import com.taim.model.basemodels.BaseModel;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "license")
 public class License extends BaseModel {
+    @Lob
     @Column(name = "license_file", nullable = false)
     private byte[] licenseFile;
 

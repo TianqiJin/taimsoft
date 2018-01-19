@@ -29,6 +29,9 @@ public class Property extends BaseModel{
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "license_id")
     private License license;
+    @Lob
+    @Column(name = "terms")
+    private String terms;
 
     @Entity
     @Table(name = "customer_class")
@@ -111,5 +114,13 @@ public class Property extends BaseModel{
 
     public void setLicense(License license) {
         this.license = license;
+    }
+
+    public String getTerms() {
+        return terms;
+    }
+
+    public void setTerms(String terms) {
+        this.terms = terms;
     }
 }

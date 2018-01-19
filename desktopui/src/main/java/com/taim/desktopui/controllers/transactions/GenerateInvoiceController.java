@@ -69,7 +69,7 @@ public class GenerateInvoiceController {
     private Map<Integer, Double> oldProductActualNumMap;
     private double oldStoreCredit;
 
-    private DeliveryStatus.Status prevStats;
+    private Transaction.DeliveryStatus prevStats;
 
     private static final String DATE_PATTERN = "yyyy-MM-dd";
 
@@ -307,14 +307,14 @@ public class GenerateInvoiceController {
         deliveryStatusChoiceBox.valueProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,String newValue) {
-                transaction.getDeliveryStatus().setStatus(DeliveryStatus.getStatus(newValue));
+                transaction.setDeliveryStatus(Transaction.DeliveryStatus.getStatus(newValue));
                 //transaction.getDeliveryStatus().setDateModified(DateTime.now());
-                if (DeliveryStatus.getStatus(newValue)== DeliveryStatus.Status.DELIVERING && DeliveryStatus.getStatus(oldValue)== DeliveryStatus.Status.UNDELIVERED){
+                if (Transaction.DeliveryStatus.getStatus(newValue)== Transaction.DeliveryStatus.DELIVERING && Transaction.DeliveryStatus.getStatus(oldValue)== Transaction.DeliveryStatus.UNDELIVERED){
                     transactionTableView.getItems().forEach(e->e.getProduct().setTotalNum(e.getProduct().getTotalNum()-e.getQuantity()));
                     qtyCol.setEditable(false);
                     refreshTable();
-                }else if ((DeliveryStatus.getStatus(oldValue)== DeliveryStatus.Status.DELIVERING || DeliveryStatus.getStatus(oldValue)== DeliveryStatus.Status.DELIVERED)
-                        && DeliveryStatus.getStatus(newValue)== DeliveryStatus.Status.UNDELIVERED){
+                }else if ((Transaction.DeliveryStatus.getStatus(oldValue)== Transaction.DeliveryStatus.DELIVERING || Transaction.DeliveryStatus.getStatus(oldValue)== Transaction.DeliveryStatus.DELIVERED)
+                        && Transaction.DeliveryStatus.getStatus(newValue)== Transaction.DeliveryStatus.UNDELIVERED){
                     transactionTableView.getItems().forEach(e->e.getProduct().setTotalNum(e.getProduct().getTotalNum()+e.getQuantity()));
                     qtyCol.setEditable(true);
                     refreshTable();
@@ -460,11 +460,7 @@ public class GenerateInvoiceController {
             this.mode= Mode.CREATE;
             this.oldTransaction = transactionFromAbove;
             this.transaction = copyTransaction(transactionFromAbove);
-            DeliveryStatusDTO currentDeliveryStatus = new DeliveryStatusDTO();
-            currentDeliveryStatus.setStatus(DeliveryStatus.Status.UNDELIVERED);
-            currentDeliveryStatus.setDateCreated(DateTime.now());
-            currentDeliveryStatus.setDateModified(DateTime.now());
-            this.transaction.setDeliveryStatus(currentDeliveryStatus);
+            this.transaction.setDeliveryStatus(Transaction.DeliveryStatus.UNDELIVERED);
             this.transaction.setPaymentDueDate(transaction.getDateCreated());
             this.transaction.setDeliveryDueDate(transaction.getDateCreated());
             this.transaction.setPayments(new ArrayList<>());
@@ -472,12 +468,12 @@ public class GenerateInvoiceController {
 
         }else{
             this.mode= Mode.EDIT;
-            prevStats = transactionFromAbove.getDeliveryStatus().getStatus();
+            prevStats = transactionFromAbove.getDeliveryStatus();
             this.transaction = transactionFromAbove;
             if(transaction.isFinalized()){
                 confirmButton.setDisable(true);
             }
-            if (prevStats== DeliveryStatus.Status.DELIVERING || prevStats== DeliveryStatus.Status.DELIVERED){
+            if (prevStats== Transaction.DeliveryStatus.DELIVERING || prevStats== Transaction.DeliveryStatus.DELIVERED){
                 deliveryStatusChoiceBox.getItems().remove("Undelivered");
                 qtyCol.setEditable(false);
                 discountCol.setEditable(false);
@@ -572,7 +568,7 @@ public class GenerateInvoiceController {
     private void showPaymentDeliveryDetail(){
         paymentDueDatePicker.setValue(DateUtils.toLocalDate(this.transaction.getPaymentDueDate()));
         deliveryDueDatePicker.setValue(DateUtils.toLocalDate(this.transaction.getDeliveryDueDate()));
-        deliveryStatusChoiceBox.getSelectionModel().select(transaction.getDeliveryStatus().getStatus().getValue());
+        deliveryStatusChoiceBox.getSelectionModel().select(transaction.getDeliveryStatus().getValue());
         paymentStatusLabel.setText(this.transaction.getPaymentStatus().name());
     }
 
@@ -724,7 +720,7 @@ public class GenerateInvoiceController {
                 tmpProduct.setTotalNum(newActualNum);
                 t.setProduct(tmpProduct);
             });
-            if (transaction.getDeliveryStatus().getStatus()== DeliveryStatus.Status.DELIVERED && transaction.getPaymentStatus()== Transaction.PaymentStatus.PAID){
+            if (transaction.getDeliveryStatus() == Transaction.DeliveryStatus.DELIVERED && transaction.getPaymentStatus()== Transaction.PaymentStatus.PAID){
                 transaction.setFinalized(true);
             }
             if(mode== Mode.CREATE) {
