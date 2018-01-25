@@ -2,6 +2,7 @@ package com.taim.desktopui.controllers.settings;
 
 import com.taim.client.StaffClient;
 import com.taim.desktopui.TaimDesktop;
+import com.taim.desktopui.constants.Constant;
 import com.taim.desktopui.uicomponents.FadingStatusMessage;
 import com.taim.desktopui.util.RestClientFactory;
 import com.taim.dto.StaffDTO;
@@ -12,6 +13,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -161,6 +163,7 @@ public class AccountSettingsController implements ISettingsController {
             controller.setDialogStage(dialogStage);
             controller.initData(this.staff, this.executor, this.staffClient);
             dialogStage.setResizable(false);
+            dialogStage.getIcons().add(new Image(TaimDesktop.class.getResourceAsStream(Constant.Image.appIconPath)));
             dialogStage.showAndWait();
 
             return controller.getStaffDTO();

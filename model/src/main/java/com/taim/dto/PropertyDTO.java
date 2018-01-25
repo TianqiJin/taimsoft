@@ -16,6 +16,7 @@ public class PropertyDTO extends BaseModelDTO {
     private StringProperty companyName;
     private List<CustomerClassDTO> customerClasses;
     private ObjectProperty<LicenseDTO> license;
+    private StringProperty terms;
 
     public PropertyDTO(){
         productWarnLimit = new SimpleIntegerProperty();
@@ -25,6 +26,7 @@ public class PropertyDTO extends BaseModelDTO {
         companyName = new SimpleStringProperty();
         customerClasses = new ArrayList<>();
         license = new SimpleObjectProperty<>();
+        terms = new SimpleStringProperty();
     }
 
     public static class CustomerClassDTO extends BaseModelDTO{
@@ -139,5 +141,17 @@ public class PropertyDTO extends BaseModelDTO {
 
     public void setLicense(LicenseDTO license) {
         this.license.set(license);
+    }
+
+    public String getTerms() {
+        return terms.get();
+    }
+
+    public StringProperty termsProperty() {
+        return terms;
+    }
+
+    public void setTerms(String terms) {
+        this.terms.set(terms);
     }
 }

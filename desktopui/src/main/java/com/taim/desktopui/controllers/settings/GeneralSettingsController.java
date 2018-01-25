@@ -2,6 +2,8 @@ package com.taim.desktopui.controllers.settings;
 
 import com.taim.client.LicenseClient;
 import com.taim.client.PropertyClient;
+import com.taim.desktopui.TaimDesktop;
+import com.taim.desktopui.constants.Constant;
 import com.taim.desktopui.uicomponents.FadingStatusMessage;
 import com.taim.desktopui.util.AlertBuilder;
 import com.taim.desktopui.util.RestClientFactory;
@@ -14,11 +16,16 @@ import com.taim.desktopui.util.VistaNavigator;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 import javafx.util.converter.NumberStringConverter;
@@ -319,6 +326,33 @@ public class GeneralSettingsController implements ISettingsController{
         Task<PropertyDTO> saveCustomerClassTask = generateSavePropertyTask("SUCCESSFULLY UPDATED CUSTOMER CLASS PROPERTY");
 
         executor.execute(saveCustomerClassTask);
+    }
+
+    @FXML
+    public void handleModifyTermsButton(){
+        try{
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(TaimDesktop.class.getResource("/fxml/settings/ModifyTerms.fxml"));
+            AnchorPane page = loader.load();
+
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Modify Invoice Terms");
+            page.getStylesheets().add(TaimDesktop.class.getResource("/css/bootstrap3.css").toExternalForm());
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+
+            ModifyTermsController controller = loader.getController();
+            controller.setDialogStage(dialogStage);
+            controller.initData(this.property, this.executor, this.propertyClient);
+            dialogStage.setResizable(false);
+            dialogStage.getIcons().add(new Image(TaimDesktop.class.getResourceAsStream(Constant.Image.appIconPath)));
+            dialogStage.showAndWait();
+
+            initUI(controller.getProperty());
+        }catch(IOException e){
+            logger.error(e.getMessage(), e);
+        }
     }
 
     @FXML
