@@ -152,9 +152,9 @@ public class GenerateStockController {
     @FXML
     private Label subTotalLabel;
     @FXML
-    private Label pstTaxLabel;
+    private TextField pstTaxField;
     @FXML
-    private Label gstTaxLabel;
+    private TextField gstTaxField;
     @FXML
     private Label totalLabel;
 
@@ -663,16 +663,16 @@ public class GenerateStockController {
 
             itemsCountLabel.setText(String.valueOf(this.transactionDetailDTOObservableList.size()));
             subTotalLabel.setText(String.valueOf(subTotal.floatValue()));
-            pstTaxLabel.setText(String.valueOf(pstTax.floatValue()));
-            gstTaxLabel.setText(String.valueOf(gstTax.floatValue()));
+            pstTaxField.setText(String.valueOf(pstTax.floatValue()));
+            gstTaxField.setText(String.valueOf(gstTax.floatValue()));
             totalLabel.setText(String.valueOf(total.floatValue()));
             showBalanceDetails();
         }
         else{
             itemsCountLabel.setText("");
             subTotalLabel.setText("");
-            pstTaxLabel.setText("");
-            gstTaxLabel.setText("");
+            pstTaxField.setText("");
+            gstTaxField.setText("");
             totalLabel.setText("");
         }
     }
@@ -711,8 +711,8 @@ public class GenerateStockController {
         }
         transaction.getTransactionDetails().addAll(transactionDetailDTOObservableList);
         transaction.setSaleAmount(Double.valueOf(totalLabel.getText()));
-        transaction.setGst(Double.valueOf(gstTaxLabel.getText()));
-        transaction.setPst(Double.valueOf(pstTaxLabel.getText()));
+        transaction.setGst(Double.valueOf(gstTaxField.getText()));
+        transaction.setPst(Double.valueOf(pstTaxField.getText()));
         transaction.setNote(textArea.getText());
         transaction.setVendor(vendor);
         transaction.setStaff(staff);

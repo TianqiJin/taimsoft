@@ -3,11 +3,13 @@ package com.taim.desktopui.controllers.overview;
 import com.taim.client.IClient;
 import com.taim.client.StaffClient;
 import com.taim.desktopui.controllers.edit.StaffEditDialogController;
+import com.taim.desktopui.util.DeleteEntityUtil;
 import com.taim.desktopui.util.TransactionPanelLoader;
 import com.taim.dto.OrganizationDTO;
 import com.taim.dto.StaffDTO;
 import com.taim.desktopui.util.RestClientFactory;
 import com.taim.desktopui.util.VistaNavigator;
+import com.taim.model.Staff;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -75,7 +77,12 @@ public class StaffOverviewController extends IOverviewController<StaffDTO> {
                             comboBox.setPromptText("SET ACTION");
                             comboBox.prefWidthProperty().bind(this.widthProperty());
                             StaffDTO staffDTO = getTableView().getItems().get(getIndex());
-                            comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "EDIT"));
+                            if (VistaNavigator.getGlobalStaff().getPosition()== Staff.Position.MANAGER) {
+                                comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "EDIT","DELETE"));
+                            }else{
+                                comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "EDIT"));
+
+                            }
                             comboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
                                 if(newValue != null){
                                     if(newValue.equals("VIEW DETAILS")){
@@ -85,6 +92,12 @@ public class StaffOverviewController extends IOverviewController<StaffDTO> {
                                         if(controller != null && controller.isOkClicked()){
                                             getTableView().getItems().set(getIndex(), controller.getStaff());
                                         }
+                                    }else if (newValue.endsWith("DELETE")){
+                                        DeleteEntityUtil<StaffDTO> deleteEntityUtil = new DeleteEntityUtil<>(staffDTO, staffClient);
+                                        deleteEntityUtil.deleteEntity(getOverviewTable(),
+                                                getIndex(),
+                                                "SUCCESSFULLY DELETED STAFF",
+                                                getRootPane());
                                     }
                                 }
                                 Platform.runLater(() -> comboBox.getSelectionModel().clearSelection());

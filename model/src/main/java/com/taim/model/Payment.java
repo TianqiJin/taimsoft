@@ -17,6 +17,7 @@ public class Payment extends BaseModel {
         CREDIT("Credit"),
         DEBIT("Debit"),
         CHEQUE("Cheque"),
+        VOID("Void"),
         STORE_CREDIT("Store Credit");
 
         private String value;

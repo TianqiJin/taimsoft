@@ -281,7 +281,6 @@
                                                             </font>
                                                         </Label>
                                                         <Label text="GST Tax" GridPane.rowIndex="2" />
-                                                        <Label fx:id="gstTaxLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                                         <Label text="Discount" GridPane.rowIndex="4">
                                                             <font>
                                                                 <Font name="System Bold" size="18.0" />
@@ -293,7 +292,16 @@
                                                             </font>
                                                         </Label>
                                                         <Label text="PST Tax" GridPane.rowIndex="3" />
-                                                        <Label fx:id="pstTaxLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                                <TextField fx:id="gstTaxField" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                                   <padding>
+                                                      <Insets bottom="1.0" top="1.0" />
+                                                   </padding>
+                                                </TextField>
+                                                <TextField fx:id="pstTaxField" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                                   <padding>
+                                                      <Insets bottom="1.0" top="1.0" />
+                                                   </padding>
+                                                </TextField>
                                                     </children>
                                                     <columnConstraints>
                                                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -337,6 +345,7 @@
                                                           <String fx:value="Debit" />
                                                           <String fx:value="Credit" />
                                                           <String fx:value="Cheque" />
+                                                          <String fx:value="Void" />
                                                           <String fx:value="Store_Credit" />
                                                       </FXCollections>
                                                    </items>

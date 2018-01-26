@@ -158,9 +158,9 @@ public class GenerateReturnController {
     @FXML
     private Label paymentDiscountLabel;
     @FXML
-    private Label pstTaxLabel;
+    private TextField pstTaxField;
     @FXML
-    private Label gstTaxLabel;
+    private TextField gstTaxField;
     @FXML
     private Label totalLabel;
 
@@ -524,8 +524,8 @@ public class GenerateReturnController {
             itemsCountLabel.setText(String.valueOf(this.transactionDetailDTOObservableList.size()));
             subTotalLabel.setText(String.valueOf(subTotalBeforeDiscount.floatValue()));
             paymentDiscountLabel.setText(String.valueOf(paymentDiscount.floatValue()));
-            pstTaxLabel.setText(String.valueOf(pstTax.floatValue()));
-            gstTaxLabel.setText(String.valueOf(gstTax.floatValue()));
+            pstTaxField.setText(String.valueOf(pstTax.floatValue()));
+            gstTaxField.setText(String.valueOf(gstTax.floatValue()));
             totalLabel.setText(String.valueOf(total.floatValue()));
             showBalanceDetails();
         }
@@ -533,8 +533,8 @@ public class GenerateReturnController {
             itemsCountLabel.setText("");
             subTotalLabel.setText("");
             paymentDiscountLabel.setText("");
-            pstTaxLabel.setText("");
-            gstTaxLabel.setText("");
+            pstTaxField.setText("");
+            gstTaxField.setText("");
             totalLabel.setText("");
             balanceLabel.setText("");
         }
@@ -576,8 +576,8 @@ public class GenerateReturnController {
         }
         transaction.getTransactionDetails().addAll(transactionDetailDTOObservableList);
         transaction.setSaleAmount(Double.valueOf(totalLabel.getText()));
-        transaction.setGst(Double.valueOf(gstTaxLabel.getText()));
-        transaction.setPst(Double.valueOf(pstTaxLabel.getText()));
+        transaction.setGst(Double.valueOf(gstTaxField.getText()));
+        transaction.setPst(Double.valueOf(pstTaxField.getText()));
         transaction.setNote(textArea.getText());
         transaction.setCustomer(customer);
         transaction.setStaff(staff);
