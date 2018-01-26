@@ -135,7 +135,7 @@ public class InvoiceGenerator {
         signTable.writeSelectedRows(0, -1, (document.left()+document.right()-signTable.getTotalWidth())/2f, document.bottom() + signTable.getTotalHeight()*3f, writer.getDirectContent());
 
         //Create CompanyClaims
-//        createCompanyClaims(document);
+        createCompanyClaims(document);
         document.close();
         openPDF(this.destination);
     }
@@ -161,7 +161,7 @@ public class InvoiceGenerator {
         //Add PaymentInfo
         createPaymentInfo(document, InvoiceType.INVOICE);
         //Add Company Claims
-//        createCompanyClaims(document);
+        createCompanyClaims(document);
         document.close();
         openPDF(this.destination);
     }
@@ -182,7 +182,7 @@ public class InvoiceGenerator {
         // line items
         createItemList(document, InvoiceType.QUOTATION);
         //Create CompanyClaims
-//        createCompanyClaims(document);
+        createCompanyClaims(document);
         document.close();
         openPDF(this.destination);
     }
@@ -597,39 +597,7 @@ public class InvoiceGenerator {
             logger.error(e.getMessage() + "\nThe full stack trace is: ", e);
             errorMsg.append(e.getMessage()).append("\n");
         }
-        p = new Paragraph("1. Payments\n" +
-                "-  A 50% deposit is required on all orders.\n" +
-                "-  Full payment is required six days prior to delivery or pickup.\n" +
-                "-  Credit card payments are accepted in sore and by phone.\n" +
-                "-  Milan Tiles does not accept payment upon delivery\n" +
-                "\n" +
-                "2. Return and Cancellation\n" +
-                "-  A refund will be issued for full boxes of current tile returned in good box condition within 2 \n" +
-                "months of the date product were received.\n" +
-                "-  No returns or refund allowed on discontinued or special order items.\n" +
-                "-  Milan Tiles Ltd is under no obligation to accept the cancellation of any special order items.\n" +
-                "-  All returns must be in their original packaging and in the condition in which it was received.\n" +
-                "\n" +
-                "3. Delivery\n" +
-                "-  All deliveries should be arranged through the store of purchase.\n" +
-                "-  We are unable to provide you with specific delivery times �?only that it will be a morning or \n" +
-                "afternoon delivery.\n" +
-                "-  Delivery on stocked products will be charge from $50 delivery fee which depends on the location.\n" +
-                "-  Special orders will be take more than 6 weeks to delivery.\n" +
-                "\n" +
-                "4. Pick-Ups\n" +
-                "This is generally arranged through our Milan Tile warehouse. You must check in at the reception \n" +
-                "desk before goods can be released. Once your goods have left our facility, Milan will not accept \n" +
-                "any claims of damage. If someone other than the name on the invoice is picking up yours tiles, \n" +
-                "you must notify us in advance.\n"+
-                "\n" +
-                "5. Third-Party Pick-Ups\n" +
-                "Milan will not accept any damage claims once a third-party carrier has deceived the goods. Please \n" +
-                "note tile installers are considered a third party.\n" +
-                "\n" +
-                "6. Installations\n" +
-                "Milan will not provide any tile installers for customers. Milan do not have responsibility on any \n" +
-                "installation issues.",largeText);
+        p = new Paragraph(this.invoice.getProperty().getTerms(), largeText);
         p.setAlignment(Element.ALIGN_LEFT);
         try {
             document.add(p);
