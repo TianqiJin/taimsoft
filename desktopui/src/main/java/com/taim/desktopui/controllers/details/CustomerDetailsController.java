@@ -1,5 +1,6 @@
 package com.taim.desktopui.controllers.details;
 
+import com.jfoenix.controls.JFXComboBox;
 import com.taim.desktopui.controllers.edit.CustomerEditDialogController;
 import com.taim.desktopui.util.AlertBuilder;
 import com.taim.desktopui.util.RestClientFactory;
@@ -71,7 +72,7 @@ public class CustomerDetailsController implements IDetailController<CustomerDTO>
     @FXML
     private Label dateCreatedLabel;
     @FXML
-    private ComboBox<String> actionComboBox;
+    private JFXComboBox<String> actionComboBox;
     @FXML
     private TabPane transactionTabPane;
 

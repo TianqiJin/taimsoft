@@ -1,6 +1,7 @@
 package com.taim.desktopui.controllers.overview;
 
 import com.jfoenix.controls.JFXCheckBox;
+import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import com.taim.client.IClient;
 import com.taim.client.ProductClient;
@@ -96,7 +97,7 @@ public class ProductOverviewController extends IOverviewController<ProductDTO> {
                         if (empty) {
                             setGraphic(null);
                         } else {
-                            ComboBox<String> comboBox = new ComboBox<>();
+                            JFXComboBox<String> comboBox = new JFXComboBox<>();
                             comboBox.setPromptText("SET ACTION");
                             comboBox.prefWidthProperty().bind(this.widthProperty());
                             ProductDTO productDTO = getTableView().getItems().get(getIndex());

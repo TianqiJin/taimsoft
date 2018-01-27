@@ -1,5 +1,7 @@
 package com.taim.desktopui.controllers.edit;
 
+import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXTextField;
 import com.taim.dto.VendorDTO;
 import com.taim.model.basemodels.UserBaseModel;
 import com.taim.desktopui.util.AlertBuilder;
@@ -31,13 +33,13 @@ import static com.taim.desktopui.constants.Constant.FXStyle.FX_ERROR_LABEL_COLOR
  */
 public class VendorEditDialogController {
     @FXML
-    private TextField fullNameField;
+    private JFXTextField fullNameField;
     @FXML
-    private TextField phoneField;
+    private JFXTextField phoneField;
     @FXML
-    private ComboBox<String> userTypeComboBox;
+    private JFXComboBox<String> userTypeComboBox;
     @FXML
-    private TextField emailField;
+    private JFXTextField emailField;
     @FXML
     private Label fullNameErrorLabel;
     @FXML

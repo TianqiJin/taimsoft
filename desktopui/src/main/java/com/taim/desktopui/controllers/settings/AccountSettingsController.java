@@ -1,5 +1,6 @@
 package com.taim.desktopui.controllers.settings;
 
+import com.jfoenix.controls.JFXTextField;
 import com.taim.client.StaffClient;
 import com.taim.desktopui.TaimDesktop;
 import com.taim.desktopui.constants.Constant;
@@ -39,13 +40,13 @@ public class AccountSettingsController implements ISettingsController {
     private static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
                     + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
     @FXML
-    private TextField userNameField;
+    private JFXTextField userNameField;
     @FXML
-    private TextField fullNameField;
+    private JFXTextField fullNameField;
     @FXML
-    private TextField phoneField;
+    private JFXTextField phoneField;
     @FXML
-    private TextField emailField;
+    private JFXTextField emailField;
     @FXML
     private Label positionLabel;
     @FXML
@@ -154,7 +155,6 @@ public class AccountSettingsController implements ISettingsController {
 
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Reset Password");
-            page.getStylesheets().add(TaimDesktop.class.getResource("/css/bootstrap3.css").toExternalForm());
             Scene scene = new Scene(page);
             dialogStage.setScene(scene);
             dialogStage.initModality(Modality.WINDOW_MODAL);

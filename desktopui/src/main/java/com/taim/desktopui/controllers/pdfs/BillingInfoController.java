@@ -1,5 +1,7 @@
 package com.taim.desktopui.controllers.pdfs;
 
+import com.jfoenix.controls.JFXCheckBox;
+import com.jfoenix.controls.JFXTextField;
 import com.taim.dto.CustomerDTO;
 import com.taim.dto.OrganizationDTO;
 import com.taim.dto.StaffDTO;
@@ -24,23 +26,23 @@ public class BillingInfoController {
     private UserBaseModelDTO inputUser;
 
     @FXML
-    private TextField nameField;
+    private JFXTextField nameField;
     @FXML
-    private TextField phoneField;
+    private JFXTextField phoneField;
     @FXML
-    private TextField emailField;
+    private JFXTextField emailField;
     @FXML
-    private TextField streetField;
+    private JFXTextField streetField;
     @FXML
-    private TextField cityField;
+    private JFXTextField cityField;
     @FXML
-    private TextField postalCodeField;
+    private JFXTextField postalCodeField;
     @FXML
-    private TextField countryField;
+    private JFXTextField countryField;
     @FXML
-    private TextField streetNumField;
+    private JFXTextField streetNumField;
     @FXML
-    private CheckBox infoCheckbox;
+    private JFXCheckBox infoCheckbox;
     @FXML
     private Label nameErrorLabel;
     @FXML

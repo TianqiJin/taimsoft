@@ -1,5 +1,6 @@
 package com.taim.desktopui.controllers.details;
 
+import com.jfoenix.controls.JFXComboBox;
 import com.taim.desktopui.util.AlertBuilder;
 import com.taim.desktopui.util.RestClientFactory;
 import com.taim.desktopui.util.TransactionPanelLoader;
@@ -99,7 +100,7 @@ public class TransactionDetailsController implements IDetailController<Transacti
     @FXML
     private TableColumn<PaymentDTO, String> paymentIsDepositCol;
     @FXML
-    private ComboBox<String> actionComboBox;
+    private JFXComboBox<String> actionComboBox;
     @FXML
     private ImageView finalizedImage;
 

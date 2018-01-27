@@ -1,5 +1,7 @@
 package com.taim.desktopui.controllers.settings;
 
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXTextField;
 import com.taim.client.LicenseClient;
 import com.taim.client.PropertyClient;
 import com.taim.desktopui.TaimDesktop;
@@ -64,15 +66,15 @@ public class GeneralSettingsController implements ISettingsController{
     @FXML
     private TableColumn<PropertyDTO.CustomerClassDTO, String> actionCol;
     @FXML
-    private TextField companyNameField;
+    private JFXTextField companyNameField;
     @FXML
-    private TextField productWarnLimitField;
+    private JFXTextField productWarnLimitField;
     @FXML
-    private TextField gstNumField;
+    private JFXTextField gstNumField;
     @FXML
-    private TextField gstRateField;
+    private JFXTextField gstRateField;
     @FXML
-    private TextField pstRateField;
+    private JFXTextField pstRateField;
     @FXML
     private Label gstRateErrorLabel;
     @FXML
@@ -84,11 +86,11 @@ public class GeneralSettingsController implements ISettingsController{
     @FXML
     private Label pstRateErrorLabel;
     @FXML
-    private Button saveCompanyInfoButton;
+    private JFXButton saveCompanyInfoButton;
     @FXML
-    private Button saveCustomerClassInfoButton;
+    private JFXButton saveCustomerClassInfoButton;
     @FXML
-    private Button uploadLicenseButton;
+    private JFXButton uploadLicenseButton;
     @FXML
     private Label licenseProductLabel;
     @FXML
@@ -337,7 +339,6 @@ public class GeneralSettingsController implements ISettingsController{
 
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Modify Invoice Terms");
-            page.getStylesheets().add(TaimDesktop.class.getResource("/css/bootstrap3.css").toExternalForm());
             Scene scene = new Scene(page);
             dialogStage.setScene(scene);
             dialogStage.initModality(Modality.WINDOW_MODAL);

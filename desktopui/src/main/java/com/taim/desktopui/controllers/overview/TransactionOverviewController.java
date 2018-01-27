@@ -141,7 +141,7 @@ public class TransactionOverviewController extends IOverviewController<Transacti
                         if (empty) {
                             setGraphic(null);
                         } else {
-                            ComboBox<String> comboBox = new ComboBox<>();
+                            JFXComboBox<String> comboBox = new JFXComboBox<>();
                             comboBox.setPromptText("SET ACTION");
                             comboBox.prefWidthProperty().bind(this.widthProperty());
                             TransactionDTO transactionDTO = getTableView().getItems().get(getIndex());

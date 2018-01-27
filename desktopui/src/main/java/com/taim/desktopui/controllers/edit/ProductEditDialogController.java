@@ -1,5 +1,6 @@
 package com.taim.desktopui.controllers.edit;
 
+import com.jfoenix.controls.JFXTextField;
 import com.taim.desktopui.util.AlertBuilder;
 import com.taim.desktopui.util.RestClientFactory;
 import com.taim.dto.ProductDTO;
@@ -36,23 +37,23 @@ public class ProductEditDialogController {
     private Executor executor;
 
     @FXML
-    private TextField productIdField;
+    private JFXTextField productIdField;
     @FXML
-    private TextField textureField;
+    private JFXTextField textureField;
     @FXML
-    private TextField unitPriceField;
+    private JFXTextField unitPriceField;
     @FXML
-    private TextField stockUnitPriceField;
+    private JFXTextField stockUnitPriceField;
     @FXML
-    private TextField lengthField;
+    private JFXTextField lengthField;
     @FXML
-    private TextField widthField;
+    private JFXTextField widthField;
     @FXML
-    private TextField piecesPerBoxField;
+    private JFXTextField piecesPerBoxField;
     @FXML
-    private TextField heightField;
+    private JFXTextField heightField;
     @FXML
-    private TextField displayNameField;
+    private JFXTextField displayNameField;
     @FXML
     private Label productIdErrorLabel;
     @FXML

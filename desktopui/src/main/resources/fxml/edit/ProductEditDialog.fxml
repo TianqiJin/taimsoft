@@ -20,7 +20,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0" prefWidth="600.0" stylesheets="@/css/bootstrap3.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taim.desktopui.controllers.edit.ProductEditDialogController">
+<?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.JFXButton?>
+<AnchorPane id="AnchorPane" fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0" prefWidth="600.0" stylesheets="@/css/jfoneix.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taim.desktopui.controllers.edit.ProductEditDialogController">
   <children>
       <Label text="Edit Product Information" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
          <font>
@@ -29,28 +31,16 @@
       </Label>
     <HBox prefHeight="-1.0" prefWidth="-1.0" AnchorPane.bottomAnchor="450.0" AnchorPane.rightAnchor="10.0">
       <children>
-        <Button mnemonicParsing="false" onAction="#handleOk" text="Confirm">
+        <JFXButton mnemonicParsing="false" onAction="#handleOk" text="Confirm" styleClass="button-raised">
             <HBox.margin>
                 <Insets right="5.0" />
             </HBox.margin>
-           <text>
-               <Image fx:id="confirmImg" url="/pics/confirm.png" />
-           </text>
-            <graphic>
-                <ImageView fitHeight="20.0" fitWidth="25.0" image="$confirmImg" />
-            </graphic>
-        </Button>
-        <Button mnemonicParsing="false" onAction="#handleCancel" text="Cancel">
+        </JFXButton>
+        <JFXButton mnemonicParsing="false" onAction="#handleCancel" text="Cancel">
             <HBox.margin>
                 <Insets left="5.0" />
             </HBox.margin>
-           <text>
-               <Image fx:id="cancelImg" url="/pics/cancel.png" />
-           </text>
-            <graphic>
-                <ImageView fitHeight="20.0" fitWidth="25.0" image="$cancelImg" />
-            </graphic>
-        </Button>
+        </JFXButton>
       </children>
     </HBox>
       <TitledPane animated="false" collapsible="false" text="Product Information" AnchorPane.bottomAnchor="500.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="80.0">
@@ -61,56 +51,56 @@
                   <children>
                     <Label text="Sku *" GridPane.columnIndex="0" GridPane.rowIndex="0" />
             
-                      <TextField fx:id="productIdField" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                      <JFXTextField fx:id="productIdField" GridPane.columnIndex="1" GridPane.rowIndex="0">
                            <GridPane.margin>
                               <Insets />
                            </GridPane.margin>
-                        </TextField>
-                      <TextField fx:id="displayNameField" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        </JFXTextField>
+                      <JFXTextField fx:id="displayNameField" GridPane.columnIndex="1" GridPane.rowIndex="1">
                           <GridPane.margin>
                               <Insets />
                           </GridPane.margin>
-                      </TextField>
+                      </JFXTextField>
                         <Label text="Length" GridPane.rowIndex="2" />
-                        <TextField fx:id="lengthField" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                        <JFXTextField fx:id="lengthField" GridPane.columnIndex="1" GridPane.rowIndex="2">
                            <GridPane.margin>
                               <Insets />
                            </GridPane.margin>
-                        </TextField>
+                        </JFXTextField>
                         <Label text="Width" GridPane.rowIndex="3" />
-                        <TextField fx:id="widthField" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                        <JFXTextField fx:id="widthField" GridPane.columnIndex="1" GridPane.rowIndex="3">
                            <GridPane.margin>
                               <Insets />
                            </GridPane.margin>
-                        </TextField>
-                      <TextField fx:id="heightField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        </JFXTextField>
+                      <JFXTextField fx:id="heightField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                         <Label text="Pieces Per Box *" GridPane.rowIndex="5" />
-                        <TextField fx:id="piecesPerBoxField" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                        <JFXTextField fx:id="piecesPerBoxField" GridPane.columnIndex="1" GridPane.rowIndex="5">
                            <GridPane.margin>
                               <Insets />
                            </GridPane.margin>
-                        </TextField>
+                        </JFXTextField>
                     <Label text="Texture" GridPane.rowIndex="6">
                            <GridPane.margin>
                               <Insets />
                            </GridPane.margin>
                         </Label>
-                    <TextField fx:id="textureField" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                    <JFXTextField fx:id="textureField" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
                            <GridPane.margin>
                               <Insets />
                            </GridPane.margin>
-                        </TextField>
+                        </JFXTextField>
                     <Label text="UnitPrice *" GridPane.rowIndex="7" />
-                    <TextField fx:id="unitPriceField" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
+                    <JFXTextField fx:id="unitPriceField" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
                            <GridPane.margin>
                               <Insets />
                            </GridPane.margin>
-                    </TextField>
-                      <TextField fx:id="stockUnitPriceField" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="8">
+                    </JFXTextField>
+                      <JFXTextField fx:id="stockUnitPriceField" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="8">
                           <GridPane.margin>
                               <Insets />
                           </GridPane.margin>
-                      </TextField>
+                      </JFXTextField>
                         <Label text="Display Name *" GridPane.rowIndex="1" />
                         <Label text="Height" GridPane.rowIndex="4" />
                         <Label fx:id="productIdErrorLabel" GridPane.columnIndex="2">

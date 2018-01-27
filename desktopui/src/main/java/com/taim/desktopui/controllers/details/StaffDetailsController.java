@@ -1,5 +1,6 @@
 package com.taim.desktopui.controllers.details;
 
+import com.jfoenix.controls.JFXComboBox;
 import com.taim.dto.StaffDTO;
 import com.taim.dto.TransactionDTO;
 import com.taim.model.Transaction;
@@ -68,7 +69,7 @@ public class StaffDetailsController implements IDetailController<StaffDTO> {
     @FXML
     private Label dateCreatedLabel;
     @FXML
-    private ComboBox<String> actionComboBox;
+    private JFXComboBox<String> actionComboBox;
     @FXML
     private TabPane transactionTabPane;
 

@@ -1,5 +1,6 @@
 package com.taim.desktopui.controllers.overview;
 
+import com.jfoenix.controls.JFXComboBox;
 import com.taim.client.IClient;
 import com.taim.client.StaffClient;
 import com.taim.desktopui.controllers.edit.StaffEditDialogController;
@@ -73,7 +74,7 @@ public class StaffOverviewController extends IOverviewController<StaffDTO> {
                         if (empty) {
                             setGraphic(null);
                         } else {
-                            ComboBox<String> comboBox = new ComboBox<>();
+                            JFXComboBox<String> comboBox = new JFXComboBox<>();
                             comboBox.setPromptText("SET ACTION");
                             comboBox.prefWidthProperty().bind(this.widthProperty());
                             StaffDTO staffDTO = getTableView().getItems().get(getIndex());

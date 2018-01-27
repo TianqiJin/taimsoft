@@ -244,7 +244,6 @@ public class TransactionPanelLoader {
 
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Edit Customer");
-            page.getStylesheets().add(TransactionPanelLoader.class.getResource("/css/bootstrap3.css").toExternalForm());
             Scene scene = new Scene(page);
             dialogStage.setScene(scene);
             dialogStage.getIcons().add(new Image(TransactionPanelLoader.class.getResourceAsStream(Constant.Image.appIconPath)));
@@ -276,7 +275,6 @@ public class TransactionPanelLoader {
 
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Edit Staff");
-            page.getStylesheets().add(TransactionPanelLoader.class.getResource("/css/bootstrap3.css").toExternalForm());
             Scene scene = new Scene(page);
             dialogStage.setScene(scene);
             dialogStage.getIcons().add(new Image(TransactionPanelLoader.class.getResourceAsStream(Constant.Image.appIconPath)));
@@ -431,7 +429,6 @@ public class TransactionPanelLoader {
             dialogStage.setWidth(bounds.getWidth());
             dialogStage.setHeight(bounds.getHeight());
             dialogStage.setTitle("PRINT INVOICES");
-            page.getStylesheets().add(TransactionPanelLoader.class.getResource("/css/bootstrap3.css").toExternalForm());
             Scene scene = new Scene(page);
             dialogStage.setScene(scene);
             dialogStage.getIcons().add(new Image(TransactionPanelLoader.class.getResourceAsStream(Constant.Image.appIconPath)));

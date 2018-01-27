@@ -19,6 +19,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
+<?import com.jfoenix.controls.JFXComboBox?>
 <AnchorPane prefHeight="1000.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taim.desktopui.controllers.details.TransactionDetailsController">
    <children>
       <SplitPane dividerPositions="0.35" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="100.0">
@@ -224,7 +225,7 @@
       </HBox>
       <HBox layoutX="786.0" layoutY="-13.0" spacing="20.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="30.0">
          <children>
-            <ComboBox fx:id="actionComboBox" prefWidth="150.0" promptText="SELECT ACTION" />
+            <JFXComboBox fx:id="actionComboBox" prefWidth="150.0" promptText="SELECT ACTION" />
          </children>
       </HBox>
       <HBox AnchorPane.rightAnchor="450.0" AnchorPane.topAnchor="20.0">

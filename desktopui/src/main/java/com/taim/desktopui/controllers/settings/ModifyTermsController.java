@@ -1,5 +1,6 @@
 package com.taim.desktopui.controllers.settings;
 
+import com.jfoenix.controls.JFXTextArea;
 import com.taim.client.PropertyClient;
 import com.taim.desktopui.uicomponents.FadingStatusMessage;
 import com.taim.desktopui.util.AlertBuilder;
@@ -25,7 +26,7 @@ public class ModifyTermsController {
     private Stage dialogStage;
 
     @FXML
-    private TextArea termArea;
+    private JFXTextArea termArea;
 
     @FXML
     private void initialize(){}

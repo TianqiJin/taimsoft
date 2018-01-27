@@ -1,18 +1,27 @@
 package com.taim.desktopui.controllers;
 
+import com.jfoenix.controls.JFXDrawer;
+import com.jfoenix.controls.JFXHamburger;
+import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
+import com.jfoenix.transitions.hamburger.HamburgerSlideCloseTransition;
 import com.taim.client.PropertyClient;
 import com.taim.desktopui.TaimDesktop;
 import com.taim.desktopui.util.RestClientFactory;
 import com.taim.dto.PropertyDTO;
 import com.taim.desktopui.util.VistaNavigator;
 import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
 import java.util.concurrent.Executor;
@@ -27,19 +36,38 @@ public class RootLayoutController {
     private PropertyDTO property;
 
     @FXML
-    private Button menu;
+    private JFXHamburger menu;
     @FXML
-    private TextField searchField;
+    private JFXDrawer menuList;
     @FXML
-    private AnchorPane menuList;
+    private JFXTextField searchField;
     @FXML
     private AnchorPane vistaPane;
     @FXML
     private AnchorPane titlePane;
+    @FXML
+    private VBox menulListVbox;
+    @FXML
+    private BorderPane borderPane;
 
     @FXML
     public void initialize() {
-        prepareSlideMenuAnimation();
+        menuList.setSidePane(menulListVbox);
+        borderPane.setLeft(null);
+        HamburgerBackArrowBasicTransition transition = new HamburgerBackArrowBasicTransition(menu);
+        transition.setRate(-1);
+        menu.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
+            transition.setRate(transition.getRate() * -1);
+            transition.play();
+            if(menuList.isHidden() || menuList.isHiding()){
+                borderPane.setLeft(menuList);
+                Platform.runLater(() -> menuList.open());
+            }else if(menuList.isShowing() || menuList.isShown()){
+                menuList.close();
+                Platform.runLater(() -> borderPane.setLeft(null));
+            }
+        });
+
     }
 
     public RootLayoutController(){
@@ -95,17 +123,17 @@ public class RootLayoutController {
         return searchField;
     }
 
-    private void prepareSlideMenuAnimation() {
-        TranslateTransition openNav = new TranslateTransition(new Duration(350), menuList);
-        openNav.setToX(0);
-        TranslateTransition closeNav=new TranslateTransition(new Duration(350), menuList);
-        menu.setOnAction((ActionEvent evt)->{
-            if(menuList.getTranslateX()!=0){
-                openNav.play();
-            }else{
-                closeNav.setToX(-(menuList.getWidth()));
-                closeNav.play();
-            }
-        });
-    }
+//    private void prepareSlideMenuAnimation() {
+//        TranslateTransition openNav = new TranslateTransition(new Duration(350), menuList);
+//        openNav.setToX(0);
+//        TranslateTransition closeNav=new TranslateTransition(new Duration(350), menuList);
+//        menu.setOnAction((ActionEvent evt)->{
+//            if(menuList.getTranslateX()!=0){
+//                openNav.play();
+//            }else{
+//                closeNav.setToX(-(menuList.getWidth()));
+//                closeNav.play();
+//            }
+//        });
+//    }
 }

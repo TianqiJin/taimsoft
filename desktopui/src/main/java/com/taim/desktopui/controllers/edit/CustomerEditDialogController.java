@@ -1,5 +1,7 @@
 package com.taim.desktopui.controllers.edit;
 
+import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXTextField;
 import com.taim.dto.CustomerDTO;
 import com.taim.dto.PropertyDTO;
 import com.taim.model.basemodels.UserBaseModel;
@@ -43,19 +45,19 @@ public class CustomerEditDialogController {
     private Executor executor;
 
     @FXML
-    private TextField fullNameField;
+    private JFXTextField fullNameField;
     @FXML
-    private TextField phoneField;
+    private JFXTextField phoneField;
     @FXML
-    private ComboBox<String> userTypeComboBox;
+    private JFXComboBox<String> userTypeComboBox;
     @FXML
-    private ComboBox<String> classComboBox;
+    private JFXComboBox<String> classComboBox;
     @FXML
-    private TextField emailField;
+    private JFXTextField emailField;
     @FXML
-    private TextField pstNumberField;
+    private JFXTextField pstNumberField;
     @FXML
-    private TextField storeCreditField;
+    private JFXTextField storeCreditField;
     @FXML
     private Label fullnameErrorLabel;
     @FXML

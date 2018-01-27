@@ -1,5 +1,6 @@
 package com.taim.desktopui.controllers.details;
 
+import com.jfoenix.controls.JFXComboBox;
 import com.taim.desktopui.controllers.edit.VendorEditDialogController;
 import com.taim.desktopui.util.AlertBuilder;
 import com.taim.desktopui.util.RestClientFactory;
@@ -64,7 +65,7 @@ public class VendorDetailsController implements IDetailController<VendorDTO> {
     @FXML
     private Label postalCodeLabel;
     @FXML
-    private ComboBox<String> actionComboBox;
+    private JFXComboBox<String> actionComboBox;
     @FXML
     private TabPane transactionTabPane;
 

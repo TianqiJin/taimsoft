@@ -1,5 +1,6 @@
 package com.taim.desktopui.controllers.details;
 
+import com.jfoenix.controls.JFXComboBox;
 import com.taim.client.TransactionClient;
 import com.taim.desktopui.util.RestClientFactory;
 import com.taim.desktopui.util.TransactionPanelLoader;
@@ -62,7 +63,7 @@ public class ProductDetailsController implements IDetailController<ProductDTO> {
     @FXML
     private Label displayNameLabel;
     @FXML
-    private ComboBox<String> actionComboBox;
+    private JFXComboBox<String> actionComboBox;
     @FXML
     private Label dateCreatedLabel;
     @FXML

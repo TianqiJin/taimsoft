@@ -159,9 +159,77 @@
     -fx-background-color: #2fb254;
 }
 
+.tab-pane .tab-header-background {
+    -fx-background-color: #f4f4f4;
+}
+.tab-pane.plain .tab-header-background {
+    -fx-background-color: transparent;
+}
+
+.tab-pane .tab-header-area .tab {
+    -fx-border-radius: 4 4 0 0;
+    -fx-background-radius: 5 5 0 0;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 3 10 5 10;
+    -fx-background-insets: 0;
+}
+
+.tab-pane .tab-header-area .tab .tab-label {
+    -fx-text-fill: #337ab7;
+}
+
+.tab-pane .tab-header-area .tab:hover {
+    -fx-background-color: #eeeeee;
+}
+.tab-pane .tab-header-area .tab:disabled:hover {
+    -fx-background-color: transparent;
+}
+
+.tab-pane .tab-header-area .tab:selected {
+    -fx-focus-color: transparent;
+    -fx-border-color: #dddddd #dddddd white #dddddd;
+    -fx-background-color: white;
+}
+.tab-pane .tab-header-area .tab:selected .tab-label {
+    -fx-text-fill: #333333;
+}
+.tab-pane > .tab-content-area {
+    -fx-background-color: white;
+}
+
+.tab-pane .tab-header-area .tab .tab-label {
+    -fx-focus-color: transparent;
+}
+
+.tab-pane:focused > .tab-header-area > .headers-region > .tab:selected .focus-indicator {
+    -fx-border-color: transparent;
+}
+
+.tab-pane > .tab-header-area > .headers-region > .tab > .tab-container > .tab-close-button {
+    -fx-background-color: #337ab7;
+}
+.tab-pane > .tab-header-area > .headers-region > .tab:selected > .tab-container > .tab-close-button {
+    -fx-background-color: #333333;
+}
+.tab-pane > .tab-header-area > .headers-region > .tab > .tab-container > .tab-close-button:hover {
+    -fx-background-color: red;
+    -fx-cursor: hand;
+}
+
+.scroll-bar {
+    -fx-background-color: #fafafa;
+    -fx-background-radius: 0;
+    -fx-block-increment: 50;
+}
+
 
 .jfx-text-field, .jfx-password-field, .jfx-text-area{
     -jfx-focus-color: #5DBCD2
+}
+
+.jfx-hamburger StackPane {
+    -fx-background-color: #5DBCD2;
 }
 
 .button-raised{
@@ -174,7 +242,7 @@
     -fx-padding: 0 0 0 0;
 }
 
-/*title pane*/
+/*!*title pane*!*/
 #titlePane{
-    -fx-background-color: #5DBCD2;
+    -fx-background-color: white;
 }

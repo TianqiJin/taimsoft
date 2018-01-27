@@ -1,5 +1,8 @@
 package com.taim.desktopui.controllers.edit;
 
+import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXPasswordField;
+import com.jfoenix.controls.JFXTextField;
 import com.taim.client.StaffClient;
 import com.taim.dto.StaffDTO;
 import com.taim.model.Staff;
@@ -34,17 +37,17 @@ public class StaffEditDialogController {
     private boolean okClicked;
 
     @FXML
-    private TextField usernameField;
+    private JFXTextField usernameField;
     @FXML
-    private PasswordField passwordField;
+    private JFXPasswordField passwordField;
     @FXML
-    private TextField fullnameField;
+    private JFXTextField fullnameField;
     @FXML
-    private ComboBox<Staff.Position> positionComboBox;
+    private JFXComboBox<Staff.Position> positionComboBox;
     @FXML
-    private TextField emailField;
+    private JFXTextField emailField;
     @FXML
-    private TextField phoneField;
+    private JFXTextField phoneField;
     @FXML
     private Label usernameErrorLabel;
     @FXML

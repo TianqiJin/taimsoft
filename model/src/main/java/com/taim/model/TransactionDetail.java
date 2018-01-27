@@ -16,6 +16,8 @@ public class TransactionDetail extends BaseModel {
     private Product product;
     @Column(nullable = false)
     private double quantity;
+    @Column
+    private double deliveredQuantity;
     @Column(name = "sale_amount", nullable = false)
     private double saleAmount;
     @Column
@@ -76,4 +78,11 @@ public class TransactionDetail extends BaseModel {
         this.packageInfo = packageInfo;
     }
 
+    public double getDeliveredQuantity() {
+        return deliveredQuantity;
+    }
+
+    public void setDeliveredQuantity(double deliveredQuantity) {
+        this.deliveredQuantity = deliveredQuantity;
+    }
 }

@@ -8,6 +8,7 @@
 
 package com.taim.desktopui.controllers.pdfs;
 
+import com.jfoenix.controls.JFXComboBox;
 import com.taim.dto.TransactionDTO;
 import com.taim.dto.basedtos.UserBaseModelDTO;
 import com.taim.model.Transaction;
@@ -72,7 +73,7 @@ public class InvoiceGenerationController {
     @FXML
     private TitledPane billingToPane;
     @FXML
-    private ComboBox<String> invoiceCreationComboBox;
+    private JFXComboBox<String> invoiceCreationComboBox;
     @FXML
     private SplitPane invoiceSplitPane;
 

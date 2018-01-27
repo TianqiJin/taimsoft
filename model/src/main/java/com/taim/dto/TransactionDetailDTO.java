@@ -7,6 +7,7 @@ import javafx.beans.property.*;
 public class TransactionDetailDTO extends BaseModelDTO{
     private ObjectProperty<ProductDTO> product;
     private DoubleProperty quantity;
+    private DoubleProperty deliveredQuantity;
     private DoubleProperty saleAmount;
     private IntegerProperty discount;
     private StringProperty note;
@@ -15,6 +16,7 @@ public class TransactionDetailDTO extends BaseModelDTO{
     public TransactionDetailDTO(){
         product = new SimpleObjectProperty<ProductDTO>();
         quantity = new SimpleDoubleProperty();
+        deliveredQuantity = new SimpleDoubleProperty();
         saleAmount = new SimpleDoubleProperty();
         discount = new SimpleIntegerProperty();
         note = new SimpleStringProperty();
@@ -91,5 +93,17 @@ public class TransactionDetailDTO extends BaseModelDTO{
 
     public void setPackageInfo(PackageInfoDTO packageInfo) {
         this.packageInfo.set(packageInfo);
+    }
+
+    public double getDeliveredQuantity() {
+        return deliveredQuantity.get();
+    }
+
+    public DoubleProperty deliveredQuantityProperty() {
+        return deliveredQuantity;
+    }
+
+    public void setDeliveredQuantity(double deliveredQuantity) {
+        this.deliveredQuantity.set(deliveredQuantity);
     }
 }

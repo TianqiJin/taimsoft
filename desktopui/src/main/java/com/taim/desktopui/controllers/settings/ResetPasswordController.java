@@ -1,5 +1,6 @@
 package com.taim.desktopui.controllers.settings;
 
+import com.jfoenix.controls.JFXPasswordField;
 import com.taim.client.StaffClient;
 import com.taim.dto.StaffDTO;
 import com.taim.desktopui.constants.Constant;
@@ -21,11 +22,11 @@ public class ResetPasswordController {
     private Stage dialogStage;
 
     @FXML
-    private PasswordField oldPasswordField;
+    private JFXPasswordField oldPasswordField;
     @FXML
-    private PasswordField newPasswordField;
+    private JFXPasswordField newPasswordField;
     @FXML
-    private PasswordField confirmPasswordField;
+    private JFXPasswordField confirmPasswordField;
     @FXML
     private Label oldPasswordErrorLabel;
     @FXML

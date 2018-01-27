@@ -112,7 +112,7 @@ public class CustomerOverviewController extends IOverviewController<CustomerDTO>
                         if (empty) {
                             setGraphic(null);
                         } else {
-                            ComboBox<String> comboBox = new ComboBox<>();
+                            JFXComboBox<String> comboBox = new JFXComboBox<>();
                             comboBox.setPromptText("SET ACTION");
                             comboBox.prefWidthProperty().bind(this.widthProperty());
                             CustomerDTO customerDTO = getTableView().getItems().get(getIndex());

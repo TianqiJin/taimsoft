@@ -21,7 +21,10 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0" prefWidth="600.0" stylesheets="@/css/bootstrap3.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taim.desktopui.controllers.edit.CustomerEditDialogController">
+<?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXButton?>
+<AnchorPane id="AnchorPane" fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0" prefWidth="600.0" stylesheets="@/css/jfoneix.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taim.desktopui.controllers.edit.CustomerEditDialogController">
   <children>
       <SplitPane fx:id="rootSplitPane" dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" AnchorPane.bottomAnchor="250.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="80.0">
         <items>
@@ -37,25 +40,25 @@
                                 <Label text="Contact Phone" GridPane.columnIndex="0" GridPane.rowIndex="1" />
                                 <Label text="Email" GridPane.columnIndex="0" GridPane.rowIndex="2" />
                                 <Label text="Store Credit" GridPane.columnIndex="0" GridPane.rowIndex="5" />
-                                <TextField fx:id="fullNameField" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-                                <TextField fx:id="phoneField" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                <TextField fx:id="emailField" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                <TextField fx:id="storeCreditField" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                <JFXTextField fx:id="fullNameField" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                                <JFXTextField fx:id="phoneField" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                <JFXTextField fx:id="emailField" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                <JFXTextField fx:id="storeCreditField" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                                     <Label text="Customer Type *" GridPane.rowIndex="3" />
-                                    <ComboBox fx:id="userTypeComboBox" prefWidth="290.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                    <JFXComboBox fx:id="userTypeComboBox" prefWidth="290.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                        <padding>
                                           <Insets top="5.0" />
                                        </padding>
                                        <GridPane.margin>
                                           <Insets />
-                                       </GridPane.margin></ComboBox>
+                                       </GridPane.margin></JFXComboBox>
                                     <Label text="Pst Number" GridPane.rowIndex="6" />
-                                    <TextField fx:id="pstNumberField" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                                    <JFXTextField fx:id="pstNumberField" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                                     <Label text="Customer Class *" GridPane.rowIndex="4" />
-                                    <ComboBox fx:id="classComboBox" prefWidth="290.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                    <JFXComboBox fx:id="classComboBox" prefWidth="290.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                                        <padding>
                                           <Insets bottom="5.0" top="5.0" />
-                                       </padding></ComboBox>
+                                       </padding></JFXComboBox>
                                     <Label fx:id="fullnameErrorLabel" GridPane.columnIndex="2">
                                        <padding>
                                           <Insets left="5.0" />
@@ -121,28 +124,16 @@
       </Label>
       <HBox prefHeight="-1.0" prefWidth="-1.0" AnchorPane.bottomAnchor="200.0" AnchorPane.rightAnchor="10.0">
           <children>
-              <Button mnemonicParsing="false" onAction="#handleOk" text="Confirm">
+              <JFXButton mnemonicParsing="false" onAction="#handleOk" text="Confirm" styleClass="button-raised">
                   <HBox.margin>
                       <Insets right="5.0" />
                   </HBox.margin>
-                  <text>
-                      <Image fx:id="confirmImg" url="/pics/confirm.png" />
-                  </text>
-                  <graphic>
-                      <ImageView fx:id="handleConfirmButton" fitHeight="20.0" fitWidth="25.0" image="$confirmImg" />
-                  </graphic>
-              </Button>
-              <Button mnemonicParsing="false" onAction="#handleCancel" text="Cancel">
+              </JFXButton>
+              <JFXButton mnemonicParsing="false" onAction="#handleCancel" text="Cancel">
                   <HBox.margin>
                       <Insets left="5.0" />
                   </HBox.margin>
-                  <text>
-                      <Image fx:id="cancelImg" url="/pics/cancel.png" />
-                  </text>
-                  <graphic>
-                      <ImageView fitHeight="20.0" fitWidth="25.0" image="$cancelImg" />
-                  </graphic>
-              </Button>
+              </JFXButton>
           </children>
       </HBox>
   </children>

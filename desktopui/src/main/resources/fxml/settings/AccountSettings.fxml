@@ -10,6 +10,8 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
+<?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.JFXButton?>
 <AnchorPane fx:id="rootPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taim.desktopui.controllers.settings.AccountSettingsController">
     <children>
         <TitledPane animated="false" collapsible="false" text="General Information" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
@@ -32,60 +34,60 @@
                             </rowConstraints>
                             <children>
                                 <Label text="Username" />
-                                <TextField fx:id="userNameField" GridPane.columnIndex="1">
+                                <JFXTextField fx:id="userNameField" GridPane.columnIndex="1">
                                     <GridPane.margin>
                                         <Insets />
                                     </GridPane.margin>
                                     <padding>
                                         <Insets bottom="5.0" />
                                     </padding>
-                                </TextField>
+                                </JFXTextField>
                                 <Label text="Position" GridPane.rowIndex="2" />
                                 <Label text="Password" GridPane.rowIndex="1" />
-                                <TextField fx:id="fullNameField" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                <JFXTextField fx:id="fullNameField" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                     <GridPane.margin>
                                         <Insets bottom="5.0" top="5.0" />
                                     </GridPane.margin>
                                     <padding>
                                         <Insets bottom="5.0" />
                                     </padding>
-                                </TextField>
+                                </JFXTextField>
                                 <Label text="Full Name" GridPane.rowIndex="3" />
                                 <Label text="Phone" GridPane.rowIndex="4" />
-                                <TextField fx:id="phoneField" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                <JFXTextField fx:id="phoneField" GridPane.columnIndex="1" GridPane.rowIndex="4">
                                     <GridPane.margin>
                                         <Insets bottom="5.0" top="5.0" />
                                     </GridPane.margin>
                                     <padding>
                                         <Insets bottom="5.0" />
                                     </padding>
-                                </TextField>
+                                </JFXTextField>
                                 <Label fx:id="userNameErrorLabel" GridPane.columnIndex="2">
                                     <padding>
                                         <Insets left="5.0" />
                                     </padding>
                                 </Label>
                                 <Label text="Email" GridPane.rowIndex="5" />
-                                <TextField fx:id="emailField" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                                <JFXTextField fx:id="emailField" GridPane.columnIndex="1" GridPane.rowIndex="5">
                            <GridPane.margin>
                               <Insets bottom="5.0" top="5.0" />
                            </GridPane.margin>
                            <padding>
                               <Insets bottom="5.0" />
-                           </padding></TextField>
+                           </padding></JFXTextField>
                                 <Label fx:id="emailErrorLabel" GridPane.columnIndex="2" GridPane.rowIndex="5">
                                     <padding>
                                         <Insets left="5.0" />
                                     </padding>
                                 </Label>
-                                <Button mnemonicParsing="false" onAction="#handleChangePasswordButton" text="Change Password" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                <JFXButton mnemonicParsing="false" onAction="#handleChangePasswordButton" text="Change Password" GridPane.columnIndex="1" GridPane.rowIndex="1" styleClass="button-raised">
                                     <GridPane.margin>
                                         <Insets />
-                                    </GridPane.margin></Button>
+                                    </GridPane.margin></JFXButton>
                                 <Label fx:id="positionLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                             </children>
                         </GridPane>
-                        <Button layoutX="868.0" layoutY="203.0" mnemonicParsing="false" onAction="#handleSaveStaffButton" text="Save" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                        <JFXButton layoutX="868.0" layoutY="203.0" mnemonicParsing="false" onAction="#handleSaveStaffButton" text="Save" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" styleClass="button-raised"/>
                     </children>
                 </AnchorPane>
             </content>
