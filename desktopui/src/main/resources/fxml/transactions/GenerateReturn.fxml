@@ -118,22 +118,11 @@
                                                             <Label text="Payment Due Date" GridPane.rowIndex="3" />
                                                             <Label text="Delivery Due Date" GridPane.rowIndex="1" />
                                                             <Label text="Delivery Status" />
-                                                            <ChoiceBox fx:id="deliveryStatusChoiceBox" prefHeight="27.0" prefWidth="107.0" GridPane.columnIndex="1">
-                                                               <items>
-                                                                  <FXCollections fx:factory="observableArrayList">
-                                                                     <String fx:value="Undelivered" />
-                                                                     <String fx:value="Delivering" />
-                                                                     <String fx:value="Delivered" />
-                                                                  </FXCollections>
-                                                               </items>
-                                                               <padding>
-                                                                  <Insets bottom="1.0" top="1.0" />
-                                                               </padding>
-                                                            </ChoiceBox>
                                                             <Label text="Payment Status" GridPane.rowIndex="2" />
                                                             <Label fx:id="paymentStatusLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                                             <DatePicker fx:id="deliveryDueDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                                             <DatePicker fx:id="paymentDueDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                                            <Label fx:id="deliveryStatusLabel" text="Label" GridPane.columnIndex="1" />
                                                          </children>
                                                          <columnConstraints>
                                                             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -198,6 +187,8 @@
                                           <TableColumn fx:id="subTotalCol" prefWidth="75.0" text="SubTotal" />
                                           <TableColumn fx:id="discountCol" prefWidth="75.0" text="Discount" />
                                           <TableColumn fx:id="totalCol" maxWidth="5000.0" minWidth="10.0" prefWidth="65.0" text="Total" />
+                                          <TableColumn fx:id="deliveredCol" maxWidth="5000.0" minWidth="10.0" prefWidth="65.0" text="Delivered" />
+                                          <TableColumn fx:id="toDeliverCol" maxWidth="5000.0" minWidth="10.0" prefWidth="65.0" text="To Deliver" />
                                           <TableColumn fx:id="remarkCol" prefWidth="75.0" text="Remark" />
                                           <TableColumn fx:id="deleteCol" maxWidth="5000.0" minWidth="10.0" prefWidth="45.0" sortable="false" />
                                       </columns>

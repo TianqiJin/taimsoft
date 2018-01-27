@@ -101,6 +101,10 @@ public class GenerateReturnController {
     private TableColumn deleteCol;
     @FXML
     private TableColumn<TransactionDetailDTO, String> remarkCol;
+    @FXML
+    private TableColumn<TransactionDetailDTO, Number> deliveredCol;
+    @FXML
+    private TableColumn<TransactionDetailDTO, Number> toDeliverCol;
 
 
     //Transaction Information Labels
@@ -115,7 +119,7 @@ public class GenerateReturnController {
     @FXML
     private DatePicker deliveryDueDatePicker;
     @FXML
-    private ChoiceBox<String> deliveryStatusChoiceBox;
+    private Label deliveryStatusLabel;
     @FXML
     private Label paymentStatusLabel;
 
@@ -183,6 +187,7 @@ public class GenerateReturnController {
         sizeCol.setCellValueFactory(s->new SimpleStringProperty(SizeHelper.getSizeString(s.getValue().getProduct())));
         pkgBoxCol.setCellValueFactory(u->new SimpleFloatProperty(new BigDecimal(u.getValue().getPackageInfo().getBox()).floatValue()));
         pkgPieceCol.setCellValueFactory(u->new SimpleFloatProperty(new BigDecimal(u.getValue().getPackageInfo().getPieces()).floatValue()));
+        deliveredCol.setCellValueFactory(d->new SimpleFloatProperty(new BigDecimal(d.getValue().getDeliveredQuantity()).floatValue()));
         discountCol.setCellValueFactory(p->new SimpleFloatProperty(new BigDecimal(p.getValue().getDiscount()).floatValue()));
         purchasedCol.setCellValueFactory(k->new SimpleFloatProperty(new BigDecimal(oldTransaction.getTransactionDetails().stream()
         .filter(s -> s.getProduct().getId() == k.getValue().getProduct().getId()).findFirst().get().getQuantity()).floatValue()));
@@ -277,7 +282,7 @@ public class GenerateReturnController {
                     }
 
                 });
-        deliveryStatusChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+        deliveryStatusLabel.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,String newValue) {
                 transaction.setDeliveryStatus(Transaction.DeliveryStatus.getStatus(newValue));
@@ -290,6 +295,28 @@ public class GenerateReturnController {
                     transactionTableView.getItems().forEach(e->e.getProduct().setTotalNum(e.getProduct().getTotalNum()-e.getQuantity()));
                     qtyCol.setEditable(true);
                     refreshTable();
+                }
+            }
+        });
+        toDeliverCol.setCellFactory(TextFieldTableCell.forTableColumn(new StringConverter<Number>() {
+            @Override
+            public String toString(Number object) {
+                return String.valueOf(object);
+            }
+
+            @Override
+            public Float fromString(String string) {
+                return Float.valueOf(string);
+            }
+        }));
+        toDeliverCol.setOnEditCommit(event -> {
+            if (transaction.getTransactionDetails().stream().allMatch(t->t.getQuantity()==t.getDeliveredQuantity()+event.getNewValue().intValue())) {
+                deliveryStatusLabel.setText(Transaction.DeliveryStatus.DELIVERED.getValue());
+            }else if (transaction.getTransactionDetails().stream().allMatch(t->t.getDeliveredQuantity()+event.getNewValue().intValue()==0)){
+                deliveryStatusLabel.setText(Transaction.DeliveryStatus.UNDELIVERED.getValue());
+            }else{
+                if(transaction.getDeliveryStatus()!= Transaction.DeliveryStatus.DELIVERING){
+                    deliveryStatusLabel.setText(Transaction.DeliveryStatus.DELIVERING.getValue());
                 }
             }
         });
@@ -402,6 +429,7 @@ public class GenerateReturnController {
             this.transaction.setPaymentDueDate(transaction.getDateCreated());
             this.transaction.setDeliveryDueDate(transaction.getDateCreated());
             this.transaction.setPayments(new ArrayList<>());
+            this.transaction.setDeliveries(new ArrayList<>());
             this.transaction.setPaymentStatus(Transaction.PaymentStatus.UNPAID);
 
         }else{
@@ -472,7 +500,7 @@ public class GenerateReturnController {
     private void showPaymentDeliveryDetail(){
         paymentDueDatePicker.setValue(DateUtils.toLocalDate(this.transaction.getPaymentDueDate()));
         deliveryDueDatePicker.setValue(DateUtils.toLocalDate(this.transaction.getDeliveryDueDate()));
-        deliveryStatusChoiceBox.getSelectionModel().select(transaction.getDeliveryStatus().getValue());
+        deliveryStatusLabel.setText(transaction.getDeliveryStatus().getValue());
         paymentStatusLabel.setText(this.transaction.getPaymentStatus().name());
     }
 
@@ -562,6 +590,15 @@ public class GenerateReturnController {
                 t.setDateCreated(DateTime.now());
             }
             //t.setDateModified(DateTime.now());
+            int newDeliver = toDeliverCol.getCellObservableValue(t).getValue().intValue();
+            if (newDeliver >0){
+                t.setDeliveredQuantity(t.getDeliveredQuantity()+newDeliver);
+                DeliveryDTO deliveryDTO = new DeliveryDTO();
+                deliveryDTO.setDeliveryAmount(newDeliver);
+                deliveryDTO.setProduct(t.getProduct());
+                deliveryDTO.setDateCreated(DateTime.now());
+                transaction.getDeliveries().add(deliveryDTO);
+            }
         });
 
         if(!paymentField.getText().trim().isEmpty()){
@@ -717,6 +754,7 @@ public class GenerateReturnController {
         transactionDetailDTO.setNote(oldDetail.getNote());
         transactionDetailDTO.setSaleAmount(oldDetail.getSaleAmount());
         transactionDetailDTO.setQuantity(0);
+        transactionDetailDTO.setDeliveredQuantity(0);
         transactionDetailDTO.setDiscount(oldDetail.getDiscount());
         return transactionDetailDTO;
     }

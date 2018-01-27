@@ -97,6 +97,10 @@ public class GenerateStockController {
     private TableColumn deleteCol;
     @FXML
     private TableColumn<TransactionDetailDTO, String> remarkCol;
+    @FXML
+    private TableColumn<TransactionDetailDTO, Number> deliveredCol;
+    @FXML
+    private TableColumn<TransactionDetailDTO, Number> toDeliverCol;
 
 
     //Transaction Information Labels
@@ -111,7 +115,7 @@ public class GenerateStockController {
     @FXML
     private DatePicker deliveryDueDatePicker;
     @FXML
-    private ChoiceBox<String> deliveryStatusChoiceBox;
+    private Label deliveryStatusLabel;
     @FXML
     private Label paymentStatusLabel;
 
@@ -181,6 +185,7 @@ public class GenerateStockController {
         confirmButton.disableProperty().bind(confimButtonBinding);
         productIdCol.setCellValueFactory(p->new SimpleStringProperty(p.getValue().getProduct().getSku()));
         unitPriceCol.setCellValueFactory(h->new SimpleFloatProperty(new BigDecimal(h.getValue().getProduct().getStockUnitPrice()).floatValue()));
+        deliveredCol.setCellValueFactory(d->new SimpleFloatProperty(new BigDecimal(d.getValue().getDeliveredQuantity()).floatValue()));
         qtyCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         qtyCol.setCellFactory(TextFieldTableCell.forTableColumn(new StringConverter<Number>() {
             @Override
@@ -270,8 +275,7 @@ public class GenerateStockController {
                     }
 
                 });
-        deliveryStatusChoiceBox.setItems(deliveryDue);
-        deliveryStatusChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+        deliveryStatusLabel.textProperty().addListener((observable, oldValue, newValue) -> {
             transaction.setDeliveryStatus(Transaction.DeliveryStatus.getStatus(newValue));
             //transaction.getDeliveryStatus().setDateModified(DateTime.now());
             if (Transaction.DeliveryStatus.getStatus(newValue) == Transaction.DeliveryStatus.DELIVERED && oldValue!=null){
@@ -282,6 +286,28 @@ public class GenerateStockController {
                 transactionTableView.getItems().forEach(e->e.getProduct().setTotalNum(e.getProduct().getTotalNum()-e.getQuantity()));
                 qtyCol.setEditable(true);
                 refreshTable();
+            }
+        });
+        toDeliverCol.setCellFactory(TextFieldTableCell.forTableColumn(new StringConverter<Number>() {
+            @Override
+            public String toString(Number object) {
+                return String.valueOf(object);
+            }
+
+            @Override
+            public Float fromString(String string) {
+                return Float.valueOf(string);
+            }
+        }));
+        toDeliverCol.setOnEditCommit(event -> {
+            if (transaction.getTransactionDetails().stream().allMatch(t->t.getQuantity()==t.getDeliveredQuantity()+event.getNewValue().intValue())) {
+                deliveryStatusLabel.setText(Transaction.DeliveryStatus.DELIVERED.getValue());
+            }else if (transaction.getTransactionDetails().stream().allMatch(t->t.getDeliveredQuantity()+event.getNewValue().intValue()==0)){
+                deliveryStatusLabel.setText(Transaction.DeliveryStatus.UNDELIVERED.getValue());
+            }else{
+                if(transaction.getDeliveryStatus()!= Transaction.DeliveryStatus.DELIVERING){
+                    deliveryStatusLabel.setText(Transaction.DeliveryStatus.DELIVERING.getValue());
+                }
             }
         });
         paymentField.textProperty().addListener(new ChangeListener<String>() {
@@ -451,6 +477,7 @@ public class GenerateStockController {
             this.transaction.setDeliveryStatus(Transaction.DeliveryStatus.UNDELIVERED);
             this.transaction.setPaymentDueDate(transaction.getDateCreated());
             this.transaction.setDeliveryDueDate(transaction.getDateCreated());
+            this.transaction.setDeliveries(new ArrayList<>());
             this.transaction.setPaymentStatus(Transaction.PaymentStatus.UNPAID);
 
         }else{
@@ -615,7 +642,7 @@ public class GenerateStockController {
     private void showPaymentDeliveryDetail(){
         paymentDueDatePicker.setValue(DateUtils.toLocalDate(this.transaction.getPaymentDueDate()));
         deliveryDueDatePicker.setValue(DateUtils.toLocalDate(this.transaction.getDeliveryDueDate()));
-        deliveryStatusChoiceBox.getSelectionModel().select(transaction.getDeliveryStatus().getValue());
+        deliveryStatusLabel.setText(transaction.getDeliveryStatus().getValue());
         paymentStatusLabel.setText(this.transaction.getPaymentStatus().name());
     }
 
@@ -700,6 +727,15 @@ public class GenerateStockController {
                 t.setDateCreated(DateTime.now());
             }
             //t.setDateModified(DateTime.now());
+            int newDeliver = toDeliverCol.getCellObservableValue(t).getValue().intValue();
+            if (newDeliver >0){
+                t.setDeliveredQuantity(t.getDeliveredQuantity()+newDeliver);
+                DeliveryDTO deliveryDTO = new DeliveryDTO();
+                deliveryDTO.setDeliveryAmount(newDeliver);
+                deliveryDTO.setProduct(t.getProduct());
+                deliveryDTO.setDateCreated(DateTime.now());
+                transaction.getDeliveries().add(deliveryDTO);
+            }
         });
 
         if(!paymentField.getText().trim().isEmpty()){
