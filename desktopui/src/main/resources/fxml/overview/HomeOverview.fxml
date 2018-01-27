@@ -18,6 +18,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
+<?import com.jfoenix.controls.JFXComboBox?>
 <AnchorPane prefHeight="1000.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taim.desktopui.controllers.overview.HomeOverviewController">
    <children>
       <Label fx:id="companyNameLabel" layoutX="21.0" layoutY="14.0" text="Label" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
@@ -157,7 +158,7 @@
                                           <Insets bottom="5.0" top="5.0" />
                                        </padding>
                                     </Label>
-                                    <ComboBox fx:id="yearComboBox" prefWidth="150.0" />
+                                    <JFXComboBox fx:id="yearComboBox" prefWidth="150.0" />
                                  </children>
                               </HBox>
                               <SplitPane dividerPositions="0.5" layoutX="375.0" layoutY="101.0" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">

@@ -1,5 +1,7 @@
 package com.taim.desktopui.controllers.overview;
 
+import com.jfoenix.controls.JFXCheckBox;
+import com.jfoenix.controls.JFXTextField;
 import com.taim.client.IClient;
 import com.taim.client.ProductClient;
 import com.taim.desktopui.util.DeleteEntityUtil;
@@ -50,17 +52,17 @@ public class ProductOverviewController extends IOverviewController<ProductDTO> {
 //    @FXML
 //    private TableColumn<ProductDTO, Boolean> checkedCol;
     @FXML
-    private TextField productTypeField;
+    private JFXTextField productTypeField;
     @FXML
-    private TextField lengthField;
+    private JFXTextField lengthField;
     @FXML
-    private TextField widthField;
+    private JFXTextField widthField;
     @FXML
-    private TextField heightField;
+    private JFXTextField heightField;
     @FXML
     private Label filterErrorLabel;
     @FXML
-    private CheckBox lessThanLimitCheckBox;
+    private JFXCheckBox lessThanLimitCheckBox;
     @FXML
     private SplitPane summarySplitPane;
 

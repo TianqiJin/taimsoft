@@ -1,5 +1,8 @@
 package com.taim.desktopui.controllers.overview;
 
+import com.jfoenix.controls.JFXCheckBox;
+import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXTextField;
 import com.taim.client.CustomerClient;
 import com.taim.client.IClient;
 import com.taim.desktopui.controllers.edit.CustomerEditDialogController;
@@ -65,15 +68,15 @@ public class CustomerOverviewController extends IOverviewController<CustomerDTO>
     @FXML
     private Label totalPaidLabel;
     @FXML
-    private ComboBox<String> customerClassComboBox;
+    private JFXComboBox<String> customerClassComboBox;
     @FXML
-    private ComboBox<UserBaseModel.UserType> customerTypeComboBox;
+    private JFXComboBox<UserBaseModel.UserType> customerTypeComboBox;
     @FXML
-    private CheckBox paymentOverdueCheckBox;
+    private JFXCheckBox paymentOverdueCheckBox;
     @FXML
-    private CheckBox deliveryOverdueCheckBox;
+    private JFXCheckBox deliveryOverdueCheckBox;
     @FXML
-    private TextField addressFilterField;
+    private JFXTextField addressFilterField;
 
     public CustomerOverviewController(){
         customerClient = RestClientFactory.getCustomerClient();

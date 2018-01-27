@@ -1,5 +1,8 @@
 package com.taim.desktopui.controllers.overview;
 
+import com.jfoenix.controls.JFXCheckBox;
+import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXTextField;
 import com.taim.client.IClient;
 import com.taim.client.VendorClient;
 import com.taim.desktopui.controllers.edit.VendorEditDialogController;
@@ -57,13 +60,13 @@ public class VendorOverviewController extends IOverviewController<VendorDTO> {
     @FXML
     private Label totalPaidLabel;
     @FXML
-    private ComboBox<UserBaseModel.UserType> vendorTypeComboBox;
+    private JFXComboBox<UserBaseModel.UserType> vendorTypeComboBox;
     @FXML
-    private CheckBox paymentOverdueCheckBox;
+    private JFXCheckBox paymentOverdueCheckBox;
     @FXML
-    private CheckBox deliveryOverdueCheckBox;
+    private JFXCheckBox deliveryOverdueCheckBox;
     @FXML
-    private TextField addressFilterField;
+    private JFXTextField addressFilterField;
 
     public VendorOverviewController(){
         this.vendorClient = RestClientFactory.getVendorClient();

@@ -1,5 +1,8 @@
 package com.taim.desktopui.controllers.overview;
 
+import com.jfoenix.controls.JFXCheckBox;
+import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXDatePicker;
 import com.taim.client.IClient;
 import com.taim.client.TransactionClient;
 import com.taim.desktopui.util.TransactionPanelLoader;
@@ -72,19 +75,19 @@ public class TransactionOverviewController extends IOverviewController<Transacti
     @FXML
     private Label totalStockPaidLabel;
     @FXML
-    private DatePicker fromDatePicker;
+    private JFXDatePicker fromDatePicker;
     @FXML
-    private DatePicker toDatePicker;
+    private JFXDatePicker toDatePicker;
     @FXML
-    private ComboBox<Transaction.TransactionType> transactionTypeComboBox;
+    private JFXComboBox<Transaction.TransactionType> transactionTypeComboBox;
     @FXML
-    private CheckBox paymentOverDueCheckBox;
+    private JFXCheckBox paymentOverDueCheckBox;
     @FXML
-    private CheckBox deliveryOverDueCheckBox;
+    private JFXCheckBox deliveryOverDueCheckBox;
     @FXML
-    private CheckBox finalizedCheckBox;
+    private JFXCheckBox finalizedCheckBox;
     @FXML
-    private ComboBox<Transaction.TransactionType> createNewTransactionComboBox;
+    private JFXComboBox<Transaction.TransactionType> createNewTransactionComboBox;
 
     public TransactionOverviewController(){
         super();

@@ -1,23 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.DatePicker?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXCheckBox?>
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXDatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" prefHeight="1000.0" prefWidth="1000.0" stylesheets="@/css/bootstrap3.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taim.desktopui.controllers.overview.TransactionOverviewController">
+<AnchorPane id="AnchorPane" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" prefHeight="1000.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taim.desktopui.controllers.overview.TransactionOverviewController">
   <children>
       <SplitPane fx:id="summarySplitPane" dividerPositions="0.2, 0.35" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
@@ -140,7 +136,7 @@
                         <Font name="System Bold" size="18.0" />
                      </font>
                   </Label>
-                  <ComboBox fx:id="createNewTransactionComboBox" layoutX="838.0" layoutY="11.0" prefWidth="150.0" promptText="Create New" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                  <JFXComboBox fx:id="createNewTransactionComboBox" layoutX="838.0" layoutY="11.0" prefWidth="150.0" promptText="Create New" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
                </children></AnchorPane>
             <AnchorPane prefHeight="200.0" prefWidth="200.0">
                <children>
@@ -150,20 +146,20 @@
                            <children>
                               <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="10.0">
                                  <children>
-                                    <Label text="Transaction Type:" />
-                                    <ComboBox fx:id="transactionTypeComboBox" editable="true" promptText="Select Transaction Type" />
+                                    <Label text="Transaction Type: " />
+                                    <JFXComboBox fx:id="transactionTypeComboBox" editable="true" />
                                     <Label text="Transaction Create Date:" />
-                                    <DatePicker fx:id="fromDatePicker" promptText="From Date" />
-                                    <DatePicker fx:id="toDatePicker" promptText="To Date" />
-                                    <Button mnemonicParsing="false" onAction="#handleFilterTransaction" text="Filter" />
-                                    <Button mnemonicParsing="false" onAction="#handleClearFilter" text="Clear" />
+                                    <JFXDatePicker fx:id="fromDatePicker" promptText="From Date" />
+                                    <JFXDatePicker fx:id="toDatePicker" promptText="To Date" />
+                                    <JFXButton buttonType="RAISED" onAction="#handleFilterTransaction" styleClass="button-raised" text="Filter" />
+                                    <JFXButton onAction="#handleClearFilter" text="Clear" />
                                  </children>
                               </HBox>
                               <HBox layoutX="15.0" layoutY="20.0" spacing="10.0" AnchorPane.topAnchor="50.0">
                                  <children>
-                                    <CheckBox fx:id="paymentOverDueCheckBox" mnemonicParsing="false" text="Payment Overdue" />
-                                    <CheckBox fx:id="deliveryOverDueCheckBox" mnemonicParsing="false" text="Delivery Overdue" />
-                                    <CheckBox fx:id="finalizedCheckBox" mnemonicParsing="false" text="Finalized" />
+                                    <JFXCheckBox fx:id="paymentOverDueCheckBox" text="Payment Overdue" />
+                                    <JFXCheckBox fx:id="deliveryOverDueCheckBox" text="Delivery Overdue" />
+                                    <JFXCheckBox fx:id="finalizedCheckBox" text="Finalized" />
                                  </children>
                               </HBox>
                            </children>

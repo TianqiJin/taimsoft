@@ -16,6 +16,12 @@
         </encoder>
     </appender>
 
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
 
     <!-- we use dozer default settings and don't want to see the corresponding message each startup... -->
     <logger name="org.dozer.config.GlobalSettings" level="error" />
@@ -24,6 +30,7 @@
 
     <root level="INFO">
         <appender-ref ref="FILE" />
+        <appender-ref ref="STDOUT" />
     </root>
 
 </configuration>

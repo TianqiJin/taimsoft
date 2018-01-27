@@ -1,5 +1,8 @@
 package com.taim.desktopui.controllers.login;
 
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXPasswordField;
+import com.jfoenix.controls.JFXTextField;
 import com.taim.client.PropertyClient;
 import com.taim.client.StaffClient;
 import com.taim.desktopui.uicomponents.FadingStatusMessage;
@@ -51,11 +54,11 @@ public class LoginDialogController {
     private boolean successful;
 
     @FXML
-    private TextField userNameField;
+    private JFXTextField userNameField;
     @FXML
-    private PasswordField passwordField;
+    private JFXPasswordField passwordField;
     @FXML
-    private Button loginButton;
+    private JFXButton loginButton;
     @FXML
     private Label errorLMsgLabel;
     @FXML
@@ -101,7 +104,7 @@ public class LoginDialogController {
 
                 Stage dialogStage = new Stage();
                 dialogStage.setTitle("Edit Staff");
-                page.getStylesheets().add(LoginDialogController.class.getResource("/css/bootstrap3.css").toExternalForm());
+                page.getStylesheets().add(LoginDialogController.class.getResource("/css/jfoneix.css").toExternalForm());
                 Scene scene = new Scene(page);
                 dialogStage.setScene(scene);
                 dialogStage.initModality(Modality.WINDOW_MODAL);
@@ -185,7 +188,6 @@ public class LoginDialogController {
                 try {
                     FXMLLoader fXMLLoader = new FXMLLoader();
                     AnchorPane root = fXMLLoader.load(this.getClass().getResource("/fxml/login/WelcomeDialog.fxml").openStream());
-                    root.getStylesheets().add(WelcomeDialogController.class.getResource("/css/bootstrap3.css").toExternalForm());
                     Scene scene = new Scene(root);
 
                     Stage welcomeStage = new Stage();

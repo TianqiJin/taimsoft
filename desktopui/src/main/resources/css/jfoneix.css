@@ -1,0 +1,180 @@
+.root {
+    -fx-body-color : #F5F5F5;
+    -fx-outer-border : #cecece;
+}
+
+.titled-pane > .title {
+    -fx-background-color: #f5f5f5;
+    -fx-border-color: #dddddd;
+    /*-fx-background-insets: 5, 1, 5;*/
+    -fx-background-radius: 3 3 0 0, 2 2 0 0, 1 1 0 0;
+    -fx-border-radius: 3 3 0 0, 2 2 0 0, 1 1 0 0;
+    -fx-padding: 11
+}
+
+.titled-pane > .content {
+    -fx-background-color: white;
+    -fx-background-radius: 0 0 4 4;
+    -fx-border-radius: 0 0 4 4;
+    -fx-border-color: #dddddd;
+    /*-fx-padding: -11;*/
+}
+
+.titled-pane.primary {
+    -fx-text-fill: white;
+}
+
+.titled-pane.primary > .title {
+    -fx-background-color: #337ab7;
+    -fx-border-color: #337ab7;
+}
+
+.titled-pane.primary > .content {
+    -fx-border-color: #337ab7;
+}
+
+.titled-pane.success .arrow,
+.titled-pane.info .arrow,
+.titled-pane.warning .arrow,
+.titled-pane.danger .arrow {
+    -fx-background-color: -fx-mark-highlight-color, -fx-mark-color;
+}
+
+.titled-pane.success {
+    -fx-text-fill: #3c763d;
+}
+
+.titled-pane.success > .title {
+    -fx-background-color: #dff0d8;
+    -fx-border-color: #d6e9c6;
+}
+
+.titled-pane.success > .content {
+    -fx-border-color: #d6e9c6;
+}
+
+.titled-pane.info {
+    -fx-text-fill: #31708f;
+}
+
+.titled-pane.info > .title {
+    -fx-background-color: #d9edf7;
+    -fx-border-color: #bce8f1;
+}
+
+.titled-pane.info > .content {
+    -fx-border-color: #bce8f1;
+}
+
+.titled-pane.warning {
+    -fx-text-fill: #8a6d3b;
+}
+
+.titled-pane.warning > .title {
+    -fx-background-color: #fcf8e3;
+    -fx-border-color: #faebcc;
+}
+
+.titled-pane.warning > .content {
+    -fx-border-color: #faebcc;
+}
+
+.titled-pane.danger {
+    -fx-text-fill: #a94442;
+}
+
+.titled-pane.danger > .title {
+    -fx-background-color: #f2dede;
+    -fx-border-color: #eacbd0;
+}
+
+.titled-pane.danger > .content {
+    -fx-border-color: #eacbd0;
+}
+
+.accordion > .titled-pane > .title,
+.accordion > .titled-pane > .content {
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+}
+
+.split-pane:vertical > .split-pane-divider {
+    -fx-background-insets: 0, 1 0 1 0;
+    -fx-border-width: 1 0 1 0;
+    -fx-background-color: transparent;
+}
+.split-pane > .split-pane-divider:hover {
+    -fx-background-color: #E0E0E0;
+}
+.split-pane:horizontal > .split-pane-divider {
+    -fx-background-insets: 0, 0 1 0 1;
+    -fx-border-width: 0 1 0 1;
+    -fx-background-color: transparent;
+}
+/* vertical the two nodes are placed on top of each other. */
+.split-pane:vertical > .split-pane-divider {
+    -fx-background-insets: 0, 1 0 1 0;
+    -fx-border-width: 1 0 1 0;
+    -fx-background-color: transparent;
+}
+
+.split-pane > .split-pane-divider:hover {
+    -fx-background-color: #E0E0E0;
+}
+
+.text-field-table-cell:filled {
+    /*-fx-background-color:sandybrown;*/
+    -fx-border-color: #bbbbbb #bbbbbb sandybrown #bbbbbb;
+    -fx-border-width: 0 0 1 0;
+}
+.table-cell {
+    -fx-padding: 0.166667em; /* 2px, plus border adds 1px */
+
+    -fx-background-color: transparent;
+    -fx-border-color: transparent -fx-table-cell-border-color transparent transparent;
+    -fx-border-width: 0; /* 1 */
+    -fx-cell-size: 2.0em; /* 24 */
+    -fx-text-fill: -fx-text-inner-color;
+}
+
+.table-column {
+    -fx-alignment: CENTER;
+}
+
+.filler,.column-header,.show-hide-columns-button {
+    -fx-background-color: #dddddd, white, white;
+}
+.show-hide-columns-button {
+    -fx-border-width: 0;
+    -fx-background-insets: 0 0 1 1;
+}
+.column-header:hover,.show-hide-columns-button:hover {
+    -fx-background-color: #dddddd, white, #f8f8f8;
+}
+.column-header-background > .filler {
+    -fx-border-color: transparent #dddddd transparent transparent;
+    -fx-border-insets: 0 1 0 0;
+}
+.column-drag-header {
+    -fx-background-color: #2fb254;
+}
+
+
+.jfx-text-field, .jfx-password-field, .jfx-text-area{
+    -jfx-focus-color: #5DBCD2
+}
+
+.button-raised{
+    -fx-background-color: #5DBCD2;
+    -jfx-button-type: RAISED;
+}
+/*split pane*/
+#summarySplitPane, #invoiceSplitPane, #generalSettingPane, #transactionGeneratePane, #rootSplitPane{
+    -fx-box-border: transparent;
+    -fx-padding: 0 0 0 0;
+}
+
+/*title pane*/
+#titlePane{
+    -fx-background-color: #5DBCD2;
+}

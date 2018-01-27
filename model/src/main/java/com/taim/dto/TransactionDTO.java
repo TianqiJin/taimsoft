@@ -22,6 +22,7 @@ public class TransactionDTO extends BaseModelDTO {
     private ObjectProperty<DateTime> deliveryDueDate;
     private List<TransactionDetailDTO> transactionDetails;
     private List<PaymentDTO> payments;
+    private List<DeliveryDTO> deliveries;
     private IntegerProperty refId;
     private BooleanProperty finalized;
     private StringProperty note;
@@ -39,6 +40,7 @@ public class TransactionDTO extends BaseModelDTO {
         deliveryStatus = new SimpleObjectProperty<>();
         transactionDetails = new ArrayList<>();
         payments = new ArrayList<>();
+        deliveries = new ArrayList<>();
         refId = new SimpleIntegerProperty();
         finalized = new SimpleBooleanProperty();
         note = new SimpleStringProperty();
@@ -241,5 +243,13 @@ public class TransactionDTO extends BaseModelDTO {
 
     public void setChecked(boolean checked) {
         this.checked.set(checked);
+    }
+
+    public List<DeliveryDTO> getDeliveries() {
+        return deliveries;
+    }
+
+    public void setDeliveries(List<DeliveryDTO> deliveries) {
+        this.deliveries = deliveries;
     }
 }

@@ -131,6 +131,10 @@ public class Transaction extends BaseModel {
     @Fetch(FetchMode.SUBSELECT)
     @JoinColumn(name = "transaction_id")
     private List<Payment> payments;
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @Fetch(FetchMode.SUBSELECT)
+    @JoinColumn(name = "transaction_id")
+    private List<Delivery> deliveries;
     @Column(name = "ref_id")
     private int refId;
     @Column(name = "is_finalized", nullable = false)
@@ -268,4 +272,11 @@ public class Transaction extends BaseModel {
         this.finalized = finalized;
     }
 
+    public List<Delivery> getDeliveries() {
+        return deliveries;
+    }
+
+    public void setDeliveries(List<Delivery> deliveries) {
+        this.deliveries = deliveries;
+    }
 }

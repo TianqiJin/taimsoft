@@ -1,25 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.DatePicker?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXCheckBox?>
+<?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="rootPane" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" prefHeight="1000.0" prefWidth="1000.0" stylesheets="@/css/bootstrap3.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taim.desktopui.controllers.overview.ProductOverviewController">
+<AnchorPane id="AnchorPane" fx:id="rootPane" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" prefHeight="1000.0" prefWidth="1000.0"  xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taim.desktopui.controllers.overview.ProductOverviewController">
   <children>
-      <Button fx:id="addNewProduct" mnemonicParsing="false" onAction="#handleAddProduct" text="New Product" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
+      <JFXButton fx:id="addNewProduct" buttonType="RAISED" mnemonicParsing="false" onAction="#handleAddProduct" styleClass="button-raised" text="New Product" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
       <SplitPane fx:id="summarySplitPane" dividerPositions="0.2" layoutX="10.0" layoutY="10.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="80.0">
          <items>
             <AnchorPane prefHeight="200.0" prefWidth="200.0">
@@ -31,19 +26,19 @@
                               <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="10.0">
                                  <children>
                                     <Label text="Product Type:" />
-                                    <TextField fx:id="productTypeField" />
+                                    <JFXTextField fx:id="productTypeField" />
                                     <Label text="Product Size:" />
-                                    <TextField fx:id="lengthField" prefWidth="60.0" promptText="Length" />
-                                    <TextField fx:id="widthField" prefWidth="60.0" promptText="Width" />
-                                    <TextField fx:id="heightField" prefWidth="60.0" promptText="Height" />
-                                    <Button mnemonicParsing="false" onAction="#handleFilterProduct" text="Filter" />
-                                    <Button mnemonicParsing="false" onAction="#handleClearFilter" text="Clear" />
+                                    <JFXTextField fx:id="lengthField" prefWidth="60.0" promptText="Length" />
+                                    <JFXTextField fx:id="widthField" prefWidth="60.0" promptText="Width" />
+                                    <JFXTextField fx:id="heightField" prefWidth="60.0" promptText="Height" />
+                                    <JFXButton buttonType="RAISED" mnemonicParsing="false" onAction="#handleFilterProduct" styleClass="button-raised" text="Filter" />
+                                    <JFXButton mnemonicParsing="false" onAction="#handleClearFilter" text="Clear" />
                                     <Label fx:id="filterErrorLabel" />
                                  </children>
                               </HBox>
                               <HBox layoutX="14.0" layoutY="28.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="50.0">
                                  <children>
-                                    <CheckBox fx:id="lessThanLimitCheckBox" mnemonicParsing="false" text="Less Than Product Warn Limit" />
+                                    <JFXCheckBox fx:id="lessThanLimitCheckBox" mnemonicParsing="false" text="Less Than Product Warn Limit" />
                                  </children>
                               </HBox>
                            </children>

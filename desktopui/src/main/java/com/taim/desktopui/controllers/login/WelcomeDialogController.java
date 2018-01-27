@@ -22,7 +22,6 @@ public class WelcomeDialogController {
             FXMLLoader fXMLLoader = new FXMLLoader();
             AnchorPane root = fXMLLoader.load(this.getClass().getResource("/fxml/login/PropertyConfiguration.fxml").openStream());
             PropertyConfigurationController controller = fXMLLoader.getController();
-            root.getStylesheets().add(WelcomeDialogController.class.getResource("/css/bootstrap3.css").toExternalForm());
             Scene scene = new Scene(root);
 
             Stage dialogStage = new Stage();

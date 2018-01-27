@@ -76,7 +76,6 @@ public class TaimDesktop extends Application {
 
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Login Dialog");
-            page.getStylesheets().add(TaimDesktop.class.getResource("/css/bootstrap3.css").toExternalForm());
             Scene scene = new Scene(page);
             dialogStage.setScene(scene);
             dialogStage.initModality(Modality.WINDOW_MODAL);

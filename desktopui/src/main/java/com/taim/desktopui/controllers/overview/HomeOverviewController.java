@@ -1,5 +1,6 @@
 package com.taim.desktopui.controllers.overview;
 
+import com.jfoenix.controls.JFXComboBox;
 import com.taim.client.TransactionClient;
 import com.taim.desktopui.util.TransactionPanelLoader;
 import com.taim.dto.PaymentDTO;
@@ -59,7 +60,7 @@ public class HomeOverviewController {
     @FXML
     private Label totalStockPaidLabel;
     @FXML
-    private ComboBox<Integer> yearComboBox;
+    private JFXComboBox<Integer> yearComboBox;
     @FXML
     private BarChart<String, Double> incomeExpenseBarChart;
     @FXML
