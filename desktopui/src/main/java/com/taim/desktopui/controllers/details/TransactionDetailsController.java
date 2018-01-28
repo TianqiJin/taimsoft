@@ -4,6 +4,7 @@ import com.jfoenix.controls.JFXComboBox;
 import com.taim.desktopui.util.AlertBuilder;
 import com.taim.desktopui.util.RestClientFactory;
 import com.taim.desktopui.util.TransactionPanelLoader;
+import com.taim.dto.DeliveryDTO;
 import com.taim.dto.PaymentDTO;
 import com.taim.dto.TransactionDTO;
 import com.taim.dto.TransactionDetailDTO;
@@ -100,6 +101,15 @@ public class TransactionDetailsController implements IDetailController<Transacti
     @FXML
     private TableColumn<PaymentDTO, String> paymentIsDepositCol;
     @FXML
+    private TableView<DeliveryDTO> deliveryRecordTableView;
+    @FXML
+    private TableColumn<DeliveryDTO, String> deliveryDateCol;
+    @FXML
+    private TableColumn<DeliveryDTO, String> deliveryProductIdCol;
+    @FXML
+    private TableColumn<DeliveryDTO, Double> deliveryAmountCol;
+
+    @FXML
     private JFXComboBox<String> actionComboBox;
     @FXML
     private ImageView finalizedImage;
@@ -116,6 +126,7 @@ public class TransactionDetailsController implements IDetailController<Transacti
     public void initialize() throws InterruptedException {
         bindTransactionDetailTable();
         bindPaymentTable();
+        bindDeliveryTable();
         actionComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue != null){
                 if(newValue.equals("EDIT")){
@@ -147,6 +158,7 @@ public class TransactionDetailsController implements IDetailController<Transacti
         bindTransactionInfoLabels();
         transactionDetaiTableView.setItems(FXCollections.observableArrayList(transactionDTO.getTransactionDetails()));
         paymentRecordTableView.setItems(FXCollections.observableArrayList(transactionDTO.getPayments()));
+        deliveryRecordTableView.setItems(FXCollections.observableArrayList(transactionDTO.getDeliveries()));
         if(transactionDTO.isFinalized()){
             actionComboBox.setItems(FXCollections.observableArrayList("PRINT"));
             finalizedImage.setVisible(true);
@@ -257,6 +269,14 @@ public class TransactionDetailsController implements IDetailController<Transacti
         paymentAmountCol.setCellValueFactory(new PropertyValueFactory<>("paymentAmount"));
         paymentIsDepositCol.setCellValueFactory(param -> param.getValue().isDeposit()? new SimpleStringProperty("Yes") : new SimpleStringProperty("No"));
     }
+
+    private void bindDeliveryTable(){
+        deliveryDateCol.setCellValueFactory(param -> new SimpleStringProperty(dtf.print(param.getValue().getDateCreated())));
+        deliveryProductIdCol.setCellValueFactory(param -> param.getValue().getProduct().skuProperty());
+        deliveryAmountCol.setCellValueFactory(new PropertyValueFactory<>("deliveryAmount"));
+    }
+
+
 
     private StringBinding initStringBinding(ObservableBooleanValue condition, String thenVal, ObservableStringValue otherwiseVal){
         return Bindings.when(condition).then(thenVal).otherwise(otherwiseVal);

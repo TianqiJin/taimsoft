@@ -50,7 +50,7 @@ public class PropertyConfigurationController {
         if(controller.getProperty().getLicense() == null){
             new AlertBuilder()
                     .alertType(Alert.AlertType.ERROR)
-                    .alertContentText("No valid is found. Please upload a valid license")
+                    .alertContentText("No valid license is found. Please upload a valid license")
                     .build()
                     .showAndWait();
         }else{

@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
+<?import com.jfoenix.controls.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-<?import com.jfoenix.controls.JFXTextField?>
-<?import com.jfoenix.controls.JFXComboBox?>
-<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.text.Font?>
 <AnchorPane id="AnchorPane" fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0" prefWidth="600.0" stylesheets="@/css/jfoneix.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taim.desktopui.controllers.edit.VendorEditDialogController">
   <children>
       <SplitPane fx:id="rootSplitPane" dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" AnchorPane.bottomAnchor="250.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="80.0">
@@ -71,7 +67,7 @@
       </SplitPane>
     <HBox prefHeight="-1.0" prefWidth="-1.0" AnchorPane.bottomAnchor="200.0" AnchorPane.rightAnchor="10.0">
       <children>
-        <JFXButton mnemonicParsing="false" onAction="#handleOk" text="Confirm" styleClass="button-raised">
+        <JFXButton mnemonicParsing="false" onAction="#handleOk" text="Confirm" styleClass="button-flat">
             <HBox.margin>
                 <Insets right="5.0" />
             </HBox.margin>

@@ -1,5 +1,6 @@
 package com.taim.desktopui.controllers.transactions;
 
+import com.jfoenix.controls.JFXTextField;
 import com.taim.desktopui.util.TransactionPanelLoader;
 import com.taim.dto.TransactionDTO;
 import com.taim.model.Transaction;
@@ -24,7 +25,7 @@ public class InvRetController {
     private Transaction.TransactionType transactionType;
 
     @FXML
-    private TextField transactionIdField;
+    private JFXTextField transactionIdField;
     @FXML
     private Button confirmButton;
     @FXML

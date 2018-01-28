@@ -1,18 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXButton?>
-<?import com.jfoenix.controls.JFXCheckBox?>
-<?import com.jfoenix.controls.JFXComboBox?>
-<?import com.jfoenix.controls.JFXDatePicker?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.text.Font?>
-
+<?import com.jfoenix.controls.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <AnchorPane id="AnchorPane" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" prefHeight="1000.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taim.desktopui.controllers.overview.TransactionOverviewController">
   <children>
       <SplitPane fx:id="summarySplitPane" dividerPositions="0.2, 0.35" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -151,7 +142,7 @@
                                     <Label text="Transaction Create Date:" />
                                     <JFXDatePicker fx:id="fromDatePicker" promptText="From Date" />
                                     <JFXDatePicker fx:id="toDatePicker" promptText="To Date" />
-                                    <JFXButton buttonType="RAISED" onAction="#handleFilterTransaction" styleClass="button-raised" text="Filter" />
+                                    <JFXButton buttonType="RAISED" onAction="#handleFilterTransaction" styleClass="button-flat" text="Filter" />
                                     <JFXButton onAction="#handleClearFilter" text="Clear" />
                                  </children>
                               </HBox>

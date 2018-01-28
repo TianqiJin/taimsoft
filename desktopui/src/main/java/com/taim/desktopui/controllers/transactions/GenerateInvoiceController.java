@@ -1,5 +1,6 @@
 package com.taim.desktopui.controllers.transactions;
 
+import com.jfoenix.controls.*;
 import com.taim.desktopui.util.*;
 import com.taim.dto.*;
 import com.taim.model.*;
@@ -116,9 +117,9 @@ public class GenerateInvoiceController {
 
     //transaction payment/delivery due Labels
     @FXML
-    private DatePicker paymentDueDatePicker;
+    private JFXDatePicker paymentDueDatePicker;
     @FXML
-    private DatePicker deliveryDueDatePicker;
+    private JFXDatePicker deliveryDueDatePicker;
     @FXML
     private Label deliveryStatusLabel;
     @FXML
@@ -152,11 +153,11 @@ public class GenerateInvoiceController {
     @FXML
     private ChoiceBox<String> paymentTypeChoiceBox;
     @FXML
-    private TextField paymentField;
+    private JFXTextField paymentField;
     @FXML
     private Label paidAmountLabel;
     @FXML
-    private CheckBox isDepositCheckBox;
+    private JFXCheckBox isDepositCheckBox;
 
     //Items Information Labels
     @FXML
@@ -166,23 +167,23 @@ public class GenerateInvoiceController {
     @FXML
     private Label paymentDiscountLabel;
     @FXML
-    private TextField pstTaxField;
+    private JFXTextField pstTaxField;
     @FXML
-    private TextField gstTaxField;
+    private JFXTextField gstTaxField;
     @FXML
     private Label totalLabel;
 
     @FXML
-    private Button addItemButton;
+    private JFXButton addItemButton;
     @FXML
-    private Button confirmButton;
+    private JFXButton confirmButton;
     @FXML
-    private Button cancelButton;
+    private JFXButton cancelButton;
 
     @FXML
-    private ComboBox<String> productComboBox;
+    private JFXComboBox<String> productComboBox;
     @FXML
-    private TextArea textArea;
+    private JFXTextArea textArea;
 
 
     @FXML

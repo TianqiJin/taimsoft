@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
 <?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.layout.*?>
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" stylesheets="@/css/jfoneix.css" fx:controller="com.taim.desktopui.controllers.login.PropertyConfigurationController">
    <children>
       <AnchorPane fx:id="settingsPane" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="80.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
       <VBox fx:id="buttonBox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.bottomAnchor="30.0">
          <children>
-            <JFXButton fx:id="finishButton" alignment="CENTER" mnemonicParsing="false" onAction="#handleFinishButton" text="Finish Configuration" styleClass="button-raised" />
+            <JFXButton fx:id="finishButton" alignment="CENTER" mnemonicParsing="false" onAction="#handleFinishButton" text="Finish Configuration" styleClass="button-flat" />
          </children>
       </VBox>
    </children>

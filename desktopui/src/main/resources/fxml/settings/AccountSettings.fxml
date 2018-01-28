@@ -1,17 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
-
-<?import com.jfoenix.controls.JFXTextField?>
-<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <AnchorPane fx:id="rootPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taim.desktopui.controllers.settings.AccountSettingsController">
     <children>
         <TitledPane animated="false" collapsible="false" text="General Information" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
@@ -80,14 +72,14 @@
                                         <Insets left="5.0" />
                                     </padding>
                                 </Label>
-                                <JFXButton mnemonicParsing="false" onAction="#handleChangePasswordButton" text="Change Password" GridPane.columnIndex="1" GridPane.rowIndex="1" styleClass="button-raised">
+                                <JFXButton mnemonicParsing="false" onAction="#handleChangePasswordButton" text="Change Password" GridPane.columnIndex="1" GridPane.rowIndex="1" styleClass="button-flat">
                                     <GridPane.margin>
                                         <Insets />
                                     </GridPane.margin></JFXButton>
                                 <Label fx:id="positionLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                             </children>
                         </GridPane>
-                        <JFXButton layoutX="868.0" layoutY="203.0" mnemonicParsing="false" onAction="#handleSaveStaffButton" text="Save" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" styleClass="button-raised"/>
+                        <JFXButton layoutX="868.0" layoutY="203.0" mnemonicParsing="false" onAction="#handleSaveStaffButton" text="Save" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" styleClass="button-flat"/>
                     </children>
                 </AnchorPane>
             </content>

@@ -33,7 +33,6 @@ public class TransactionPanelLoader {
         AnchorPane page = null;
         try {
             page = loader.load();
-            page.getStylesheets().add(TransactionPanelLoader.class.getResource("/css/bootstrap3.css").toExternalForm());
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Transaction Panel");
             dialogStage.initModality(Modality.WINDOW_MODAL);
@@ -98,7 +97,6 @@ public class TransactionPanelLoader {
         AnchorPane page = null;
         try {
             page = loader.load();
-            page.getStylesheets().add(TransactionPanelLoader.class.getResource("/css/bootstrap3.css").toExternalForm());
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Transaction Panel");
             dialogStage.initModality(Modality.WINDOW_MODAL);
@@ -166,7 +164,6 @@ public class TransactionPanelLoader {
         AnchorPane page = null;
         try {
             page = loader.load();
-            page.getStylesheets().add(TransactionPanelLoader.class.getResource("/css/bootstrap3.css").toExternalForm());
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Transaction Panel");
             dialogStage.initModality(Modality.WINDOW_MODAL);
@@ -203,7 +200,6 @@ public class TransactionPanelLoader {
         AnchorPane page = null;
         try {
             page = loader.load();
-            page.getStylesheets().add(TransactionPanelLoader.class.getResource("/css/bootstrap3.css").toExternalForm());
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Transaction Panel");
             dialogStage.initModality(Modality.WINDOW_MODAL);
@@ -394,7 +390,6 @@ public class TransactionPanelLoader {
         TitledPane page = null;
         try {
             page = loader.load();
-            page.getStylesheets().add(TransactionPanelLoader.class.getResource("/css/bootstrap3.css").toExternalForm());
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Create Transaction");
             dialogStage.initModality(Modality.WINDOW_MODAL);

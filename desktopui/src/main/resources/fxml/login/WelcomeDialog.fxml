@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.text.*?>
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
 <?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
 <AnchorPane prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" stylesheets="@/css/jfoneix.css" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taim.desktopui.controllers.login.WelcomeDialogController">
    <children>
       <Label layoutX="163.0" layoutY="149.0" text="WELCOME" AnchorPane.bottomAnchor="211.0" AnchorPane.leftAnchor="163.0" AnchorPane.rightAnchor="163.0" AnchorPane.topAnchor="149.0">
@@ -15,6 +11,6 @@
             <Font name="System Bold" size="96.0" />
          </font>
       </Label>
-      <JFXButton layoutX="337.0" layoutY="411.0" mnemonicParsing="false" onAction="#handleConfigurePropertiesButton" text="Configure Properties" AnchorPane.bottomAnchor="30.0" AnchorPane.rightAnchor="337.0" styleClass="button-raised"/>
+      <JFXButton layoutX="337.0" layoutY="411.0" mnemonicParsing="false" onAction="#handleConfigurePropertiesButton" text="Configure Properties" AnchorPane.bottomAnchor="30.0" AnchorPane.rightAnchor="337.0" styleClass="button-flat"/>
    </children>
 </AnchorPane>

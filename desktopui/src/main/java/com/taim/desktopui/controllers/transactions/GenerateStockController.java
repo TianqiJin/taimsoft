@@ -1,5 +1,6 @@
 package com.taim.desktopui.controllers.transactions;
 
+import com.jfoenix.controls.*;
 import com.taim.desktopui.util.*;
 import com.taim.dto.*;
 import com.taim.model.Payment;
@@ -8,6 +9,7 @@ import com.taim.desktopui.controllers.edit.VendorEditDialogController;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
@@ -58,7 +60,6 @@ public class GenerateStockController {
     private List<ProductDTO> productList;
     private ObservableList<TransactionDetailDTO> transactionDetailDTOObservableList;
     private TransactionDTO transaction;
-    private StringBuffer errorMsgBuilder;
     private PaymentDTO payment;
     private boolean confirmedClicked;
     private BooleanBinding confimButtonBinding;
@@ -111,9 +112,9 @@ public class GenerateStockController {
 
     //transaction payment/delivery due Labels
     @FXML
-    private DatePicker paymentDueDatePicker;
+    private JFXDatePicker paymentDueDatePicker;
     @FXML
-    private DatePicker deliveryDueDatePicker;
+    private JFXDatePicker deliveryDueDatePicker;
     @FXML
     private Label deliveryStatusLabel;
     @FXML
@@ -145,7 +146,7 @@ public class GenerateStockController {
     @FXML
     private ChoiceBox<String> paymentTypeChoiceBox;
     @FXML
-    private TextField paymentField;
+    private JFXTextField paymentField;
     @FXML
     private Label paidAmountLabel;
 
@@ -156,27 +157,27 @@ public class GenerateStockController {
     @FXML
     private Label subTotalLabel;
     @FXML
-    private TextField pstTaxField;
+    private JFXTextField pstTaxField;
     @FXML
-    private TextField gstTaxField;
+    private JFXTextField gstTaxField;
     @FXML
     private Label totalLabel;
 
     @FXML
-    private Button addItemButton;
+    private JFXButton addItemButton;
     @FXML
-    private Button confirmButton;
+    private JFXButton confirmButton;
     @FXML
-    private Button cancelButton;
+    private JFXButton cancelButton;
 
     @FXML
-    private ComboBox<String> productComboBox;
+    private JFXComboBox<String> productComboBox;
     @FXML
-    private ComboBox<String> vendorComboBox;
+    private JFXComboBox<String> vendorComboBox;
     @FXML
-    private ComboBox<String> vendorPhoneComboBox;
+    private JFXComboBox<String> vendorPhoneComboBox;
     @FXML
-    private TextArea textArea;
+    private JFXTextArea textArea;
 
 
     @FXML
@@ -260,21 +261,9 @@ public class GenerateStockController {
                 new SimpleFloatProperty(new BigDecimal(param.getValue().getSaleAmount())
                         .setScale(2, RoundingMode.HALF_EVEN).floatValue()));
         deleteCol.setCellValueFactory(
-                new Callback<TableColumn.CellDataFeatures<TransactionDetailDTO, Boolean>,
-                                        ObservableValue<Boolean>>() {
-                    @Override
-                    public ObservableValue<Boolean> call(TableColumn.CellDataFeatures<TransactionDetailDTO, Boolean> p) {
-                        return new SimpleBooleanProperty(p.getValue() != null);
-                    }
-                });
+                (Callback<TableColumn.CellDataFeatures<TransactionDetailDTO, Boolean>, ObservableValue<Boolean>>) p -> new SimpleBooleanProperty(p.getValue() != null));
         deleteCol.setCellFactory(
-                new Callback<TableColumn<TransactionDetailDTO, Boolean>, TableCell<TransactionDetailDTO, Boolean>>() {
-                    @Override
-                    public TableCell<TransactionDetailDTO, Boolean> call(TableColumn<TransactionDetailDTO, Boolean> p) {
-                        return new ButtonCell(transactionTableView,oldProductVirtualNumMap,mode==Mode.EDIT,false);
-                    }
-
-                });
+                (Callback<TableColumn<TransactionDetailDTO, Boolean>, TableCell<TransactionDetailDTO, Boolean>>) p -> new ButtonCell(transactionTableView,oldProductVirtualNumMap,mode==Mode.EDIT,false));
         deliveryStatusLabel.textProperty().addListener((observable, oldValue, newValue) -> {
             transaction.setDeliveryStatus(Transaction.DeliveryStatus.getStatus(newValue));
             //transaction.getDeliveryStatus().setDateModified(DateTime.now());
@@ -291,11 +280,17 @@ public class GenerateStockController {
         toDeliverCol.setCellFactory(TextFieldTableCell.forTableColumn(new StringConverter<Number>() {
             @Override
             public String toString(Number object) {
+                if(object == null){
+                    return "0";
+                }
                 return String.valueOf(object);
             }
 
             @Override
             public Float fromString(String string) {
+                if(string == null){
+                    return 0f;
+                }
                 return Float.valueOf(string);
             }
         }));
@@ -309,13 +304,9 @@ public class GenerateStockController {
                     deliveryStatusLabel.setText(Transaction.DeliveryStatus.DELIVERING.getValue());
                 }
             }
+            refreshTable();
         });
-        paymentField.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                showBalanceDetails();
-            }
-        });
+        paymentField.textProperty().addListener((observable, oldValue, newValue) -> showBalanceDetails());
         paymentTypeChoiceBox.getSelectionModel().selectFirst();
         paymentTypeChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -727,8 +718,8 @@ public class GenerateStockController {
                 t.setDateCreated(DateTime.now());
             }
             //t.setDateModified(DateTime.now());
-            int newDeliver = toDeliverCol.getCellObservableValue(t).getValue().intValue();
-            if (newDeliver >0){
+            double newDeliver = toDeliverCol.getCellObservableValue(t).getValue().doubleValue();
+            if (newDeliver > 0){
                 t.setDeliveredQuantity(t.getDeliveredQuantity()+newDeliver);
                 DeliveryDTO deliveryDTO = new DeliveryDTO();
                 deliveryDTO.setDeliveryAmount(newDeliver);

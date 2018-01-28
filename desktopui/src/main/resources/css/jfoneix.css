@@ -232,9 +232,22 @@
     -fx-background-color: #5DBCD2;
 }
 
+.jfx-combo-box{
+    -jfx-focus-color: #5DBCD2
+}
+
+.jfx-date-picker{
+    -jfx-default-color: #5DBCD2
+}
+
 .button-raised{
     -fx-background-color: #5DBCD2;
     -jfx-button-type: RAISED;
+}
+
+.button-flat{
+    -fx-background-color: #5DBCD2;
+    -jfx-button-type: FLAT;
 }
 /*split pane*/
 #summarySplitPane, #invoiceSplitPane, #generalSettingPane, #transactionGeneratePane, #rootSplitPane{

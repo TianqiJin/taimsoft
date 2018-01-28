@@ -156,6 +156,7 @@ public class LoginDialogController {
 
         propertyTask.setOnSucceeded(event -> {
             if(propertyTask.getValue().size() != 0){
+                signUpLink.setDisable(false);
                 VistaNavigator.setGlobalProperty(propertyTask.getValue().get(0));
                 Path tmpLicenseFile = null;
                 boolean isLicenseValid = false;
@@ -185,6 +186,7 @@ public class LoginDialogController {
                     dialogStage.close();
                 }
             }else{
+                signUpLink.setDisable(true);
                 try {
                     FXMLLoader fXMLLoader = new FXMLLoader();
                     AnchorPane root = fXMLLoader.load(this.getClass().getResource("/fxml/login/WelcomeDialog.fxml").openStream());

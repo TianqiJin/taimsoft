@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.collections.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.geometry.*?>
+<?import com.jfoenix.controls.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.text.*?>
-<?import java.lang.*?>
 <?import javafx.scene.layout.*?>
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="830.0" prefWidth="1700.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taim.desktopui.controllers.transactions.GenerateQuotationController">
+<?import javafx.scene.text.*?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="830.0" prefWidth="1700.0" stylesheets="@/css/jfoneix.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taim.desktopui.controllers.transactions.GenerateQuotationController">
     <children>
       <SplitPane fx:id="transactionGeneratePane" dividerPositions="0.8" focusTraversable="true" layoutX="10.0" layoutY="10.0" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
          <items>
@@ -95,7 +92,7 @@
                                                 <content>
                                                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                                         <children>
-                                                            <TextArea fx:id="textArea" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                            <JFXTextArea fx:id="textArea" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                                         </children>
                                                     </AnchorPane>
                                                 </content>
@@ -113,15 +110,15 @@
                               <children>
                                   <HBox layoutX="14.0" layoutY="20.0" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="20.0">
                                       <children>
-                                          <ComboBox fx:id="productComboBox" editable="true" prefHeight="25.0" prefWidth="193.0" promptText="Select Product Here" />
-                                          <Button fx:id="addItemButton" disable="true" mnemonicParsing="false" onAction="#handleAddItem" text="Add Item">
+                                          <JFXComboBox fx:id="productComboBox" editable="true" prefHeight="25.0" prefWidth="193.0" promptText="Select Product Here" />
+                                          <JFXButton fx:id="addItemButton" disable="true" mnemonicParsing="false" onAction="#handleAddItem" text="Add Item">
                                               <tooltip>
                                                   <Tooltip text="Select a customer to enable button" />
                                               </tooltip>
                                               <HBox.margin>
                                                   <Insets left="10.0" right="10.0" />
                                               </HBox.margin>
-                                          </Button>
+                                          </JFXButton>
                                       </children>
                                   </HBox>
                                   <TableView fx:id="transactionTableView" editable="true" layoutX="18.6" layoutY="86.6" prefHeight="504.0" prefWidth="1331.0" tableMenuButtonVisible="false" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="9.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="77.0">
@@ -144,8 +141,8 @@
                                   </TableView>
                                   <HBox alignment="BOTTOM_RIGHT" layoutX="1201.0" layoutY="593.0" spacing="5.0" AnchorPane.bottomAnchor="23.0" AnchorPane.rightAnchor="20.0">
                                       <children>
-                                          <Button fx:id="confirmButton" mnemonicParsing="false" onAction="#handleConfirmButton" text="Confirm" />
-                                          <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#handleCancelButton" text="Cancel" />
+                                          <JFXButton fx:id="confirmButton" mnemonicParsing="false" onAction="#handleConfirmButton" text="Confirm" styleClass="button-flat"/>
+                                          <JFXButton fx:id="cancelButton" mnemonicParsing="false" onAction="#handleCancelButton" text="Cancel" />
                                       </children>
                                   </HBox>
                                   <HBox layoutX="1267.0" layoutY="30.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="30.0" />
@@ -167,11 +164,11 @@
                                             <children>
                                                 <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                     <children>
-                                                        <Button fx:id="addNewCustomer" mnemonicParsing="false" onAction="#handleAddCustomer" text="New Customer" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                                        <ComboBox fx:id="customerComboBox" editable="true" prefWidth="150.0" GridPane.columnIndex="1" />
+                                                        <JFXButton fx:id="addNewCustomer" mnemonicParsing="false" onAction="#handleAddCustomer" text="New Customer" GridPane.columnIndex="1" GridPane.rowIndex="2" styleClass="button-flat"/>
+                                                        <JFXComboBox fx:id="customerComboBox" editable="true" prefWidth="150.0" GridPane.columnIndex="1" />
                                                         <Label text="Search By Name" />
                                                         <Label text="Search By Phone No." GridPane.rowIndex="1" />
-                                                        <ComboBox fx:id="customerPhoneComboBox" editable="true" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                        <JFXComboBox fx:id="customerPhoneComboBox" editable="true" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                                     </children>
                                                     <columnConstraints>
                                                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -266,8 +263,8 @@
                                                             </font>
                                                         </Label>
                                                         <Label text="PST Tax" GridPane.rowIndex="3" />
-                                                <TextField fx:id="gstTaxField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                                <TextField fx:id="pstTaxField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                                <JFXTextField fx:id="gstTaxField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                                <JFXTextField fx:id="pstTaxField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                                                     </children>
                                                     <columnConstraints>
                                                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />

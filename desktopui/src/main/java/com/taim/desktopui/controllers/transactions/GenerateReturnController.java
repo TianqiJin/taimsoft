@@ -1,5 +1,9 @@
 package com.taim.desktopui.controllers.transactions;
 
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXDatePicker;
+import com.jfoenix.controls.JFXTextArea;
+import com.jfoenix.controls.JFXTextField;
 import com.taim.desktopui.util.*;
 import com.taim.dto.*;
 import com.taim.model.Payment;
@@ -115,9 +119,9 @@ public class GenerateReturnController {
 
     //transaction payment/delivery due Labels
     @FXML
-    private DatePicker paymentDueDatePicker;
+    private JFXDatePicker paymentDueDatePicker;
     @FXML
-    private DatePicker deliveryDueDatePicker;
+    private JFXDatePicker deliveryDueDatePicker;
     @FXML
     private Label deliveryStatusLabel;
     @FXML
@@ -162,19 +166,19 @@ public class GenerateReturnController {
     @FXML
     private Label paymentDiscountLabel;
     @FXML
-    private TextField pstTaxField;
+    private JFXTextField pstTaxField;
     @FXML
-    private TextField gstTaxField;
+    private JFXTextField gstTaxField;
     @FXML
     private Label totalLabel;
 
     @FXML
-    private Button confirmButton;
+    private JFXButton confirmButton;
     @FXML
-    private Button cancelButton;
+    private JFXButton cancelButton;
 
     @FXML
-    private TextArea textArea;
+    private JFXTextArea textArea;
 
 
     @FXML

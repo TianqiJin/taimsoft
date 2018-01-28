@@ -1,6 +1,7 @@
 package com.taim.desktopui.controllers.settings;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import com.taim.client.LicenseClient;
 import com.taim.client.PropertyClient;
@@ -144,7 +145,7 @@ public class GeneralSettingsController implements ISettingsController{
                         if (empty) {
                             setGraphic(null);
                         } else {
-                            ComboBox<String> comboBox = new ComboBox<>();
+                            JFXComboBox<String> comboBox = new JFXComboBox<>();
                             setGraphic(comboBox);
                             comboBox.setPromptText("SET ACTION");
                             comboBox.prefWidthProperty().bind(this.widthProperty());

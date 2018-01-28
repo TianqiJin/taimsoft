@@ -1,24 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
+<?import com.jfoenix.controls.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
-
-<?import com.jfoenix.controls.JFXTextField?>
-<?import com.jfoenix.controls.JFXButton?>
 <AnchorPane fx:id="rootPane" prefHeight="800.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taim.desktopui.controllers.settings.GeneralSettingsController">
     <children>
       <ScrollPane fitToWidth="true" hbarPolicy="NEVER" pannable="true" vbarPolicy="ALWAYS" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -117,7 +102,7 @@
                                                       </Label>
                                                   </children>
                                               </GridPane>
-                                              <JFXButton fx:id="saveCompanyInfoButton" layoutX="868.0" layoutY="203.0" mnemonicParsing="false" onAction="#handleSavePropertyButton" text="Save" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" styleClass="button-raised"/>
+                                              <JFXButton fx:id="saveCompanyInfoButton" layoutX="868.0" layoutY="203.0" mnemonicParsing="false" onAction="#handleSavePropertyButton" text="Save" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" styleClass="button-flat"/>
                                           </children>
                                       </AnchorPane>
                                   </content>
@@ -140,7 +125,7 @@
                                                       <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                                   </columnResizePolicy>
                                               </TableView>
-                                              <JFXButton fx:id="saveCustomerClassInfoButton" layoutX="890.0" layoutY="152.0" mnemonicParsing="false" onAction="#handleSaveCustomerClassButton" text="Save" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" styleClass="button-raised"/>
+                                              <JFXButton fx:id="saveCustomerClassInfoButton" layoutX="890.0" layoutY="152.0" mnemonicParsing="false" onAction="#handleSaveCustomerClassButton" text="Save" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" styleClass="button-flat"/>
                                           </children>
                                       </AnchorPane>
                                   </content>
@@ -164,7 +149,7 @@
                                       </rowConstraints>
                                        <children>
                                           <Label text="Terms" />
-                                          <JFXButton mnemonicParsing="false" onAction="#handleModifyTermsButton" text="Modify Terms" GridPane.columnIndex="1" styleClass="button-raised"/>
+                                          <JFXButton mnemonicParsing="false" onAction="#handleModifyTermsButton" text="Modify Terms" GridPane.columnIndex="1" styleClass="button-flat"/>
                                        </children>
                                     </GridPane>
                                  </children>
@@ -213,7 +198,7 @@
                                                       <Label fx:id="licenseMaxUsersLabel" GridPane.columnIndex="1" GridPane.rowIndex="7" />
                                                   </children>
                                               </GridPane>
-                                              <JFXButton fx:id="uploadLicenseButton" layoutX="890.0" layoutY="232.0" mnemonicParsing="false" onAction="#handleUploadLicenseButton" text="Upload" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" styleClass="button-raised"/>
+                                              <JFXButton fx:id="uploadLicenseButton" layoutX="890.0" layoutY="232.0" mnemonicParsing="false" onAction="#handleUploadLicenseButton" text="Upload" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" styleClass="button-flat"/>
                                           </children>
                                       </AnchorPane>
                                   </content>

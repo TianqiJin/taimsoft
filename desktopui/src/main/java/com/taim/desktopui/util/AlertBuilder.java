@@ -21,7 +21,7 @@ public class AlertBuilder {
         alert.setContentText(null);
         Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
         alertStage.getIcons().add(new Image(AlertBuilder.class.getResourceAsStream(Constant.Image.appIconPath)));
-        alert.getDialogPane().getStylesheets().add(AlertBuilder.class.getResource("/css/bootstrap3.css").toExternalForm());
+        alert.getDialogPane().getStylesheets().add(AlertBuilder.class.getResource("/css/jfoneix.css").toExternalForm());
     }
 
     public AlertBuilder alertType(Alert.AlertType type){

@@ -8,19 +8,21 @@ public class TransactionDetailDTO extends BaseModelDTO{
     private ObjectProperty<ProductDTO> product;
     private DoubleProperty quantity;
     private DoubleProperty deliveredQuantity;
+    private DoubleProperty toDeliveryQuantity;
     private DoubleProperty saleAmount;
     private IntegerProperty discount;
     private StringProperty note;
     private ObjectProperty<PackageInfoDTO> packageInfo;
 
     public TransactionDetailDTO(){
-        product = new SimpleObjectProperty<ProductDTO>();
+        product = new SimpleObjectProperty<>();
         quantity = new SimpleDoubleProperty();
         deliveredQuantity = new SimpleDoubleProperty();
+        toDeliveryQuantity = new SimpleDoubleProperty();
         saleAmount = new SimpleDoubleProperty();
         discount = new SimpleIntegerProperty();
         note = new SimpleStringProperty();
-        packageInfo = new SimpleObjectProperty<PackageInfoDTO>();
+        packageInfo = new SimpleObjectProperty<>();
     }
 
     public ProductDTO getProduct() {
@@ -105,5 +107,17 @@ public class TransactionDetailDTO extends BaseModelDTO{
 
     public void setDeliveredQuantity(double deliveredQuantity) {
         this.deliveredQuantity.set(deliveredQuantity);
+    }
+
+    public double getToDeliveryQuantity() {
+        return toDeliveryQuantity.get();
+    }
+
+    public DoubleProperty toDeliveryQuantityProperty() {
+        return toDeliveryQuantity;
+    }
+
+    public void setToDeliveryQuantity(double toDeliveryQuantity) {
+        this.toDeliveryQuantity.set(toDeliveryQuantity);
     }
 }

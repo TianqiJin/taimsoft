@@ -1,5 +1,9 @@
 package com.taim.desktopui.controllers.transactions;
 
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXTextArea;
+import com.jfoenix.controls.JFXTextField;
 import com.taim.desktopui.controllers.edit.CustomerEditDialogController;
 import com.taim.desktopui.util.*;
 import com.taim.dto.*;
@@ -124,26 +128,26 @@ public class GenerateQuotationController {
     @FXML
     private Label paymentDiscountLabel;
     @FXML
-    private TextField pstTaxField;
+    private JFXTextField pstTaxField;
     @FXML
-    private TextField gstTaxField;
+    private JFXTextField gstTaxField;
     @FXML
     private Label totalLabel;
 
     @FXML
-    private Button addItemButton;
+    private JFXButton addItemButton;
     @FXML
-    private Button confirmButton;
+    private JFXButton confirmButton;
     @FXML
-    private Button cancelButton;
+    private JFXButton cancelButton;
     @FXML
-    private ComboBox<String> customerComboBox;
+    private JFXComboBox<String> customerComboBox;
     @FXML
-    private ComboBox<String> customerPhoneComboBox;
+    private JFXComboBox<String> customerPhoneComboBox;
     @FXML
-    private ComboBox<String> productComboBox;
+    private JFXComboBox<String> productComboBox;
     @FXML
-    private TextArea textArea;
+    private JFXTextArea textArea;
 
     @FXML
     private SplitPane transactionGeneratePane;

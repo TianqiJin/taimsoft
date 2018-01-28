@@ -133,6 +133,7 @@ public class ProductOverviewController extends IOverviewController<ProductDTO> {
             if(!newValue) { // we only care about loosing focus
                 try{
                     Double.parseDouble(lengthField.getText());
+                    filterErrorLabel.setText("");
                 }catch (NumberFormatException e){
                     filterErrorLabel.setText("Length must be a number!");
                     filterErrorLabel.setStyle(FX_ERROR_LABEL_COLOR);
@@ -143,6 +144,7 @@ public class ProductOverviewController extends IOverviewController<ProductDTO> {
             if(!newValue) { // we only care about loosing focus
                 try{
                     Double.parseDouble(widthField.getText());
+                    filterErrorLabel.setText("");
                 }catch (NumberFormatException e){
                     filterErrorLabel.setText("Width must be a number!");
                     filterErrorLabel.setStyle(FX_ERROR_LABEL_COLOR);
@@ -153,6 +155,7 @@ public class ProductOverviewController extends IOverviewController<ProductDTO> {
             if(!newValue) { // we only care about loosing focus
                 try{
                     Double.parseDouble(heightField.getText());
+                    filterErrorLabel.setText("");
                 }catch (NumberFormatException e){
                     filterErrorLabel.setText("Height must be a number!");
                     filterErrorLabel.setStyle(FX_ERROR_LABEL_COLOR);
