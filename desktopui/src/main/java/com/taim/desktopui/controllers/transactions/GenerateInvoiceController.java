@@ -342,18 +342,18 @@ public class GenerateInvoiceController {
         }));
         toDeliverCol.setOnEditCommit(event -> {
             int oldValue = event.getOldValue().intValue();
-            if (transaction.getTransactionDetails().stream().allMatch(t->t.getQuantity()==t.getDeliveredQuantity()+event.getNewValue().intValue())) {
+            TransactionDetailDTO p = event.getTableView().getItems().get(event.getTablePosition().getRow());
+            p.setToDeliveryQuantity(event.getNewValue().doubleValue());
+            p.getProduct().setTotalNum(p.getProduct().getTotalNum()+oldValue-event.getNewValue().intValue());
+            if (transaction.getTransactionDetails().stream().allMatch(t->t.getQuantity()==t.getDeliveredQuantity()+t.getToDeliveryQuantity())) {
                 deliveryStatusLabel.setText(Transaction.DeliveryStatus.DELIVERED.getValue());
-            }else if (transaction.getTransactionDetails().stream().allMatch(t->t.getDeliveredQuantity()+event.getNewValue().intValue()==0)){
+            }else if (transaction.getTransactionDetails().stream().allMatch(t->t.getDeliveredQuantity()+t.getToDeliveryQuantity()==0)){
                 deliveryStatusLabel.setText(Transaction.DeliveryStatus.UNDELIVERED.getValue());
             }else{
                 if(transaction.getDeliveryStatus()!= Transaction.DeliveryStatus.DELIVERING){
                     deliveryStatusLabel.setText(Transaction.DeliveryStatus.DELIVERING.getValue());
                 }
             }
-            TransactionDetailDTO p = event.getTableView().getItems().get(event.getTablePosition().getRow());
-            p.setToDeliveryQuantity(event.getNewValue().doubleValue());
-            p.getProduct().setTotalNum(p.getProduct().getTotalNum()+oldValue-event.getNewValue().intValue());
             refreshTable();
         });
 
