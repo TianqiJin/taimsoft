@@ -148,9 +148,9 @@ public class TransactionOverviewController extends IOverviewController<Transacti
                             switch (transactionDTO.getTransactionType()){
                                 case STOCK:
                                     if(transactionDTO.isFinalized()){
-                                        comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "PRINT"));
+                                        comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS"));
                                     }else{
-                                        comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "EDIT", "PRINT"));
+                                        comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "EDIT"));
                                     }
                                     break;
                                 case RETURN:

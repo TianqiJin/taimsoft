@@ -111,8 +111,6 @@ public class TransactionDetailsController implements IDetailController<Transacti
 
     @FXML
     private JFXComboBox<String> actionComboBox;
-    @FXML
-    private ImageView finalizedImage;
 
     public TransactionDetailsController(){
         executor = Executors.newCachedThreadPool(r -> {
@@ -161,7 +159,6 @@ public class TransactionDetailsController implements IDetailController<Transacti
         deliveryRecordTableView.setItems(FXCollections.observableArrayList(transactionDTO.getDeliveries()));
         if(transactionDTO.isFinalized()){
             actionComboBox.setItems(FXCollections.observableArrayList("PRINT"));
-            finalizedImage.setVisible(true);
         }else{
             actionComboBox.setItems(FXCollections.observableArrayList("EDIT", "PRINT"));
         }

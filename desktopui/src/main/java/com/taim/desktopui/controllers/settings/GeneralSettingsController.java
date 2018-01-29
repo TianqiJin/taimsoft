@@ -93,6 +93,8 @@ public class GeneralSettingsController implements ISettingsController{
     @FXML
     private JFXButton uploadLicenseButton;
     @FXML
+    private JFXButton modifyTermsButton;
+    @FXML
     private Label licenseProductLabel;
     @FXML
     private Label licenseCustomerLabel;
@@ -272,8 +274,10 @@ public class GeneralSettingsController implements ISettingsController{
         this.property = new PropertyDTO();
         this.property.setDateCreated(DateTime.now());
         this.property.setDateModified(DateTime.now());
+
         saveCompanyInfoButton.setVisible(false);
         saveCustomerClassInfoButton.setVisible(false);
+        modifyTermsButton.setDisable(true);
         initGeneralInfoTextFields();
         uploadLicenseButton.setOnAction(event -> {
             FileChooser fileChooser = new FileChooser();

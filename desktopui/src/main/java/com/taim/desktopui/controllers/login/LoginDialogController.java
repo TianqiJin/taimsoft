@@ -156,7 +156,7 @@ public class LoginDialogController {
 
         propertyTask.setOnSucceeded(event -> {
             if(propertyTask.getValue().size() != 0){
-                signUpLink.setDisable(false);
+                uploadLicenseLink.setDisable(false);
                 VistaNavigator.setGlobalProperty(propertyTask.getValue().get(0));
                 Path tmpLicenseFile = null;
                 boolean isLicenseValid = false;
@@ -186,7 +186,7 @@ public class LoginDialogController {
                     dialogStage.close();
                 }
             }else{
-                signUpLink.setDisable(true);
+                uploadLicenseLink.setDisable(true);
                 try {
                     FXMLLoader fXMLLoader = new FXMLLoader();
                     AnchorPane root = fXMLLoader.load(this.getClass().getResource("/fxml/login/WelcomeDialog.fxml").openStream());
@@ -201,8 +201,10 @@ public class LoginDialogController {
                     controller.setStage(welcomeStage);
 
                     welcomeStage.showAndWait();
-                    successful = true;
-                    dialogStage.close();
+                    if(VistaNavigator.getGlobalProperty() != null){
+                        successful = true;
+                        dialogStage.close();
+                    }
                 } catch (IOException ex) {
                     logger.error(ex.getMessage(), ex);
                 }

@@ -111,7 +111,7 @@
                                   <HBox layoutX="14.0" layoutY="20.0" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="20.0">
                                       <children>
                                           <JFXComboBox fx:id="productComboBox" editable="true" prefHeight="25.0" prefWidth="193.0" promptText="Select Product Here" />
-                                          <JFXButton fx:id="addItemButton" disable="true" mnemonicParsing="false" onAction="#handleAddItem" text="Add Item">
+                                          <JFXButton fx:id="addItemButton" styleClass="button-flat" disable="true" mnemonicParsing="false" onAction="#handleAddItem" text="Add Item">
                                               <tooltip>
                                                   <Tooltip text="Select a customer to enable button" />
                                               </tooltip>

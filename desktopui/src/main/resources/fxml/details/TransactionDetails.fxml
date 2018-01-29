@@ -8,8 +8,6 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -241,15 +239,6 @@
       <HBox layoutX="786.0" layoutY="-13.0" spacing="20.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="30.0">
          <children>
             <JFXComboBox fx:id="actionComboBox" prefWidth="150.0" promptText="SELECT ACTION" />
-         </children>
-      </HBox>
-      <HBox AnchorPane.rightAnchor="450.0" AnchorPane.topAnchor="20.0">
-         <children>
-            <ImageView fx:id="finalizedImage" fitHeight="115.0" fitWidth="180.0" pickOnBounds="true" preserveRatio="true" rotate="-32.7" visible="false">
-               <image>
-                  <Image url="/pics/finalized.jpg" />
-               </image>
-            </ImageView>
          </children>
       </HBox>
    </children>
