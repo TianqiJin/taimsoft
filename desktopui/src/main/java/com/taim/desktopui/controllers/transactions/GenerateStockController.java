@@ -187,6 +187,7 @@ public class GenerateStockController {
         productIdCol.setCellValueFactory(p->new SimpleStringProperty(p.getValue().getProduct().getSku()));
         unitPriceCol.setCellValueFactory(h->new SimpleFloatProperty(new BigDecimal(h.getValue().getProduct().getStockUnitPrice()).floatValue()));
         deliveredCol.setCellValueFactory(d->new SimpleFloatProperty(new BigDecimal(d.getValue().getDeliveredQuantity()).floatValue()));
+        toDeliverCol.setCellValueFactory(d->new SimpleFloatProperty(new BigDecimal(d.getValue().getToDeliveryQuantity()).floatValue()));
         qtyCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         qtyCol.setCellFactory(TextFieldTableCell.forTableColumn(new StringConverter<Number>() {
             @Override
@@ -266,13 +267,12 @@ public class GenerateStockController {
                 (Callback<TableColumn<TransactionDetailDTO, Boolean>, TableCell<TransactionDetailDTO, Boolean>>) p -> new ButtonCell(transactionTableView,oldProductVirtualNumMap,mode==Mode.EDIT,false));
         deliveryStatusLabel.textProperty().addListener((observable, oldValue, newValue) -> {
             transaction.setDeliveryStatus(Transaction.DeliveryStatus.getStatus(newValue));
-            //transaction.getDeliveryStatus().setDateModified(DateTime.now());
             if (Transaction.DeliveryStatus.getStatus(newValue) == Transaction.DeliveryStatus.DELIVERED && oldValue!=null){
-                transactionTableView.getItems().forEach(e->e.getProduct().setTotalNum(e.getProduct().getTotalNum()+e.getQuantity()));
+                //transactionTableView.getItems().forEach(e->e.getProduct().setTotalNum(e.getProduct().getTotalNum()+e.getQuantity()));
                 qtyCol.setEditable(false);
                 refreshTable();
             }else if (Transaction.DeliveryStatus.getStatus(oldValue) == Transaction.DeliveryStatus.DELIVERED){
-                transactionTableView.getItems().forEach(e->e.getProduct().setTotalNum(e.getProduct().getTotalNum()-e.getQuantity()));
+                //transactionTableView.getItems().forEach(e->e.getProduct().setTotalNum(e.getProduct().getTotalNum()-e.getQuantity()));
                 qtyCol.setEditable(true);
                 refreshTable();
             }
@@ -280,21 +280,16 @@ public class GenerateStockController {
         toDeliverCol.setCellFactory(TextFieldTableCell.forTableColumn(new StringConverter<Number>() {
             @Override
             public String toString(Number object) {
-                if(object == null){
-                    return "0";
-                }
                 return String.valueOf(object);
             }
 
             @Override
             public Float fromString(String string) {
-                if(string == null){
-                    return 0f;
-                }
                 return Float.valueOf(string);
             }
         }));
         toDeliverCol.setOnEditCommit(event -> {
+            int oldValue = event.getOldValue().intValue();
             if (transaction.getTransactionDetails().stream().allMatch(t->t.getQuantity()==t.getDeliveredQuantity()+event.getNewValue().intValue())) {
                 deliveryStatusLabel.setText(Transaction.DeliveryStatus.DELIVERED.getValue());
             }else if (transaction.getTransactionDetails().stream().allMatch(t->t.getDeliveredQuantity()+event.getNewValue().intValue()==0)){
@@ -304,6 +299,9 @@ public class GenerateStockController {
                     deliveryStatusLabel.setText(Transaction.DeliveryStatus.DELIVERING.getValue());
                 }
             }
+            TransactionDetailDTO p = event.getTableView().getItems().get(event.getTablePosition().getRow());
+            p.setToDeliveryQuantity(event.getNewValue().doubleValue());
+            p.getProduct().setTotalNum(p.getProduct().getTotalNum()-oldValue+event.getNewValue().intValue());
             refreshTable();
         });
         paymentField.textProperty().addListener((observable, oldValue, newValue) -> showBalanceDetails());
@@ -395,6 +393,8 @@ public class GenerateStockController {
             newProductTransaction.setProduct(selectedProduct);
             newProductTransaction.setDiscount(0);
             newProductTransaction.setQuantity(0);
+            newProductTransaction.setDeliveredQuantity(0);
+            newProductTransaction.setToDeliveryQuantity(0);
             newProductTransaction.setSaleAmount(selectedProduct.getStockUnitPrice()*newProductTransaction.getQuantity());
             newProductTransaction.setPackageInfo(initiatePkgInfo(newProductTransaction));
             transactionDetailDTOObservableList.add(newProductTransaction);
@@ -487,6 +487,7 @@ public class GenerateStockController {
         }
         this.payment = new PaymentDTO();
         updatePrevProductNum();
+        transaction.getTransactionDetails().forEach(t->t.setToDeliveryQuantity(0));
         this.transactionDetailDTOObservableList = FXCollections.observableArrayList(transaction.getTransactionDetails());
         transactionTableView.setItems(transactionDetailDTOObservableList);
         transactionDetailDTOObservableList.addListener(new ListChangeListener<TransactionDetailDTO>() {
@@ -718,8 +719,8 @@ public class GenerateStockController {
                 t.setDateCreated(DateTime.now());
             }
             //t.setDateModified(DateTime.now());
-            double newDeliver = toDeliverCol.getCellObservableValue(t).getValue().doubleValue();
-            if (newDeliver > 0){
+            double newDeliver = t.getToDeliveryQuantity();
+            if (t.getToDeliveryQuantity() > 0){
                 t.setDeliveredQuantity(t.getDeliveredQuantity()+newDeliver);
                 DeliveryDTO deliveryDTO = new DeliveryDTO();
                 deliveryDTO.setDeliveryAmount(newDeliver);
