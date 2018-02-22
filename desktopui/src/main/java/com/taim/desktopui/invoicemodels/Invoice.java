@@ -1,14 +1,9 @@
-package com.taim.desktopui.reports;
+package com.taim.desktopui.invoicemodels;
 
 
 import com.taim.dto.*;
 import com.taim.dto.basedtos.UserBaseModelDTO;
 import org.joda.time.DateTime;
-
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /**
  * Created by jiawei.liu on 2/4/16.

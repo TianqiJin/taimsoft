@@ -7,6 +7,7 @@ import com.jfoenix.controls.JFXTextField;
 import com.taim.desktopui.controllers.edit.CustomerEditDialogController;
 import com.taim.desktopui.util.*;
 import com.taim.dto.*;
+import com.taim.model.Payment;
 import com.taim.model.Transaction;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -25,7 +26,9 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.joda.time.DateTime;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -33,6 +36,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -57,7 +61,6 @@ public class GenerateQuotationController {
     private List<ProductDTO> productList;
     private ObservableList<TransactionDetailDTO> transactionDetailDTOObservableList;
     private TransactionDTO transaction;
-    private StringBuffer errorMsgBuilder;
     private boolean confirmedClicked;
     private BooleanBinding confimButtonBinding;
     private int discount;
@@ -138,8 +141,6 @@ public class GenerateQuotationController {
     private JFXButton addItemButton;
     @FXML
     private JFXButton confirmButton;
-    @FXML
-    private JFXButton cancelButton;
     @FXML
     private JFXComboBox<String> customerComboBox;
     @FXML
@@ -225,31 +226,16 @@ public class GenerateQuotationController {
                         .setScale(2, RoundingMode.HALF_EVEN).floatValue()));
 
         deleteCol.setCellValueFactory(
-                new Callback<TableColumn.CellDataFeatures<TransactionDetailDTO, Boolean>,
-                                        ObservableValue<Boolean>>() {
-                    @Override
-                    public ObservableValue<Boolean> call(TableColumn.CellDataFeatures<TransactionDetailDTO, Boolean> p) {
-                        return new SimpleBooleanProperty(p.getValue() != null);
-                    }
-                });
+                (Callback<TableColumn.CellDataFeatures<TransactionDetailDTO, Boolean>, ObservableValue<Boolean>>) p -> new SimpleBooleanProperty(p.getValue() != null));
 
         deleteCol.setCellFactory(
-                new Callback<TableColumn<TransactionDetailDTO, Boolean>, TableCell<TransactionDetailDTO, Boolean>>() {
-                    @Override
-                    public TableCell<TransactionDetailDTO, Boolean> call(TableColumn<TransactionDetailDTO, Boolean> p) {
-                        return new ButtonCell(transactionTableView,oldProductVirtualNumMap,mode==Mode.EDIT,true);
-                    }
-
-                });
+                (Callback<TableColumn<TransactionDetailDTO, Boolean>, TableCell<TransactionDetailDTO, Boolean>>) p -> new ButtonCell(transactionTableView,oldProductVirtualNumMap,mode==Mode.EDIT,true));
         executor = Executors.newCachedThreadPool(r -> {
             Thread t = new Thread(r);
             t.setDaemon(true);
             return t;
         });
     }
-
-
-
 
     @FXML
     public void handleAddItem(){
@@ -300,21 +286,10 @@ public class GenerateQuotationController {
         this.dialogStage.close();
     }
 
-//    @FXML
-//    public TransactionDTO handleConfirmButton() throws IOException, SQLException {
-//        generateTransaction();
-//        if(isConfirmedClicked()) {
-//            dialogStage.close();
-//        }
-//        return this.transaction;
-//    }
-
-
     public GenerateQuotationController(){
         confirmedClicked = false;
         discount = 100;
     }
-
 
     public void setDialogStage(Stage dialogStage){
         this.dialogStage = dialogStage;
@@ -354,13 +329,10 @@ public class GenerateQuotationController {
         updatePrevProductNum();
         this.transactionDetailDTOObservableList = FXCollections.observableArrayList(transaction.getTransactionDetails());
         transactionTableView.setItems(transactionDetailDTOObservableList);
-        transactionDetailDTOObservableList.addListener(new ListChangeListener<TransactionDetailDTO>() {
-            @Override
-            public void onChanged(Change<? extends TransactionDetailDTO> c) {
-                while(c.next()){
-                    if( c.wasAdded() || c.wasRemoved()){
-                        showPaymentDetails();
-                    }
+        transactionDetailDTOObservableList.addListener((ListChangeListener<TransactionDetailDTO>) c -> {
+            while(c.next()){
+                if( c.wasAdded() || c.wasRemoved()){
+                    showPaymentDetails();
                 }
             }
         });
@@ -396,8 +368,6 @@ public class GenerateQuotationController {
             }
             List<String> tmpCustomerList = new ArrayList<>();
             for(CustomerDTO customer: this.customerList){
-//                customer.constructCustomerInfo();
-//                tmpCustomerList.add(customer.getCustomerInfo());
                 tmpCustomerList.add(customer.getFullname());
             }
             customerComboBox.setItems(FXCollections.observableArrayList(tmpCustomerList));
@@ -412,8 +382,6 @@ public class GenerateQuotationController {
             });
             List<String> tmpCustomerPhoneList = new ArrayList<>();
             for(CustomerDTO customer: this.customerList){
-//                customer.constructCustomerPhoneInfo();
-//                tmpCustomerPhoneList.add(customer.getCustomerPhoneInfo());
                 tmpCustomerPhoneList.add(customer.getPhone());
             }
             customerPhoneComboBox.setItems(FXCollections.observableArrayList(tmpCustomerPhoneList));
@@ -554,9 +522,9 @@ public class GenerateQuotationController {
             itemsCountLabel.setText("");
             subTotalLabel.setText("");
             paymentDiscountLabel.setText("");
+            totalLabel.setText("");
             pstTaxField.setText("");
             gstTaxField.setText("");
-            totalLabel.setText("");
         }
     }
 
@@ -684,9 +652,7 @@ public class GenerateQuotationController {
 
     private void updatePrevProductNum(){
         oldProductVirtualNumMap= new HashMap<>();
-        this.transaction.getTransactionDetails().forEach(t->{
-            oldProductVirtualNumMap.put(t.getProduct().getId(),t.getProduct().getVirtualTotalNum());
-        });
+        this.transaction.getTransactionDetails().forEach(t-> oldProductVirtualNumMap.put(t.getProduct().getId(),t.getProduct().getVirtualTotalNum()));
     }
 }
 

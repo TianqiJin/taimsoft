@@ -25,7 +25,9 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.joda.time.DateTime;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -305,17 +307,11 @@ public class GenerateStockController {
             refreshTable();
         });
         paymentField.textProperty().addListener((observable, oldValue, newValue) -> showBalanceDetails());
-        paymentTypeChoiceBox.getSelectionModel().selectFirst();
-        paymentTypeChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                payment.setPaymentType(Payment.PaymentType.getValue(newValue));
-            }
-        });
 
-        paymentDueDatePicker.setOnAction(event ->{
-            this.transaction.setPaymentDueDate(DateUtils.toDateTime(paymentDueDatePicker.getValue()));
-        });
+        paymentTypeChoiceBox.getSelectionModel().selectFirst();
+        paymentTypeChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> payment.setPaymentType(Payment.PaymentType.getValue(newValue)));
+
+        paymentDueDatePicker.setOnAction(event -> this.transaction.setPaymentDueDate(DateUtils.toDateTime(paymentDueDatePicker.getValue())));
         paymentDueDatePicker.setPromptText(DATE_PATTERN.toLowerCase());
         paymentDueDatePicker.setConverter(new StringConverter<LocalDate>() {
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(DATE_PATTERN);
@@ -700,14 +696,15 @@ public class GenerateStockController {
         BigDecimal balance = new BigDecimal(totalLabel.getText()).setScale(2, BigDecimal.ROUND_HALF_EVEN);
         BigDecimal paid = new BigDecimal(BigInteger.ZERO);
         for (PaymentDTO prevPayment : transaction.getPayments()){
-            paid= paid.add(new BigDecimal(prevPayment.getPaymentAmount()));
+            paid = paid.add(new BigDecimal(prevPayment.getPaymentAmount()));
         }
         balance = balance.subtract(paid);
         paidAmountLabel.setText(paid.toString());
 
-        if(!paymentField.getText().trim().isEmpty() && isPaymentValid()){
+        if(!paymentField.getText().trim().isEmpty() && NumberUtils.isNumber(paymentField.getText())){
             balance = balance.subtract(new BigDecimal(paymentField.getText()));
         }
+
         balanceLabel.setText(balance.toString());
     }
 
@@ -860,15 +857,6 @@ public class GenerateStockController {
         return pkgInfo;
     }
 
-
-    private boolean isPaymentValid(){
-        try{
-            Double.parseDouble(paymentField.getText());
-        }catch(NumberFormatException e){
-            return false;
-        }
-        return true;
-    }
 
     private void updatePrevProductNum(){
         oldProductVirtualNumMap= new HashMap<>();

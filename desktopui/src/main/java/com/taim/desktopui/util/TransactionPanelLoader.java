@@ -5,7 +5,7 @@ import com.taim.desktopui.controllers.edit.*;
 import com.taim.desktopui.controllers.transactions.*;
 import com.taim.dto.*;
 import com.taim.model.Transaction;
-import com.taim.desktopui.controllers.pdfs.InvoiceGenerationController;
+import com.taim.desktopui.controllers.invoices.InvoiceGenerationController;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
@@ -414,7 +414,7 @@ public class TransactionPanelLoader {
     public static void showPrintTransactionDialog(TransactionDTO transactionDTO){
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(TransactionPanelLoader.class.getResource("/fxml/pdfs/InvoiceGeneration.fxml"));
+            loader.setLocation(TransactionPanelLoader.class.getResource("/fxml/invoices/InvoiceGeneration.fxml"));
             AnchorPane page = loader.load();
             Stage dialogStage = new Stage();
             //Set the dialog stage bound to the maximum of the screen

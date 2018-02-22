@@ -1,4 +1,4 @@
-package com.taim.desktopui.controllers.pdfs;
+package com.taim.desktopui.controllers.invoices;
 
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXTextField;
@@ -7,9 +7,7 @@ import com.taim.dto.OrganizationDTO;
 import com.taim.dto.StaffDTO;
 import com.taim.dto.basedtos.UserBaseModelDTO;
 import javafx.fxml.FXML;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.regex.Matcher;
@@ -46,9 +44,16 @@ public class BillingInfoController {
     @FXML
     private Label nameErrorLabel;
     @FXML
-    private Label emailErrorLabel;
+    private Label streetNumErrorLabel;
     @FXML
-    private Label phoneErrorLabel;
+    private Label streetErrorLabel;
+    @FXML
+    private Label cityErrorLabel;
+    @FXML
+    private Label countryErrorLabel;
+    @FXML
+    private Label postalCodeErrorLabel;
+
     @FXML
     private Label nameLabel;
 
@@ -64,25 +69,53 @@ public class BillingInfoController {
                 }
             }
         });
-
-        emailField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+        streetNumField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if(!newValue) { // we only care about loosing focus
-                matcher = pattern.matcher(emailField.getText());
-                if(matcher.matches()){
-                    emailErrorLabel.setText("");
+                if(StringUtils.isNotEmpty(streetNumField.getText())){
+                    streetNumErrorLabel.setText("");
                 }else{
-                    emailErrorLabel.setText("Email is invalid");
-                    emailErrorLabel.setStyle(FX_ERROR_LABEL_COLOR);
+                    streetNumErrorLabel.setText("Street Number cannot be empty");
+                    streetNumErrorLabel.setStyle(FX_ERROR_LABEL_COLOR);
                 }
             }
         });
-        phoneField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+        streetField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if(!newValue) { // we only care about loosing focus
-                if(StringUtils.isNotEmpty(phoneField.getText())){
-                    phoneErrorLabel.setText("");
+                if(StringUtils.isNotEmpty(streetField.getText())){
+                    streetErrorLabel.setText("");
                 }else{
-                    phoneErrorLabel.setText("Phone number cannot be empty");
-                    phoneErrorLabel.setStyle(FX_ERROR_LABEL_COLOR);
+                    streetErrorLabel.setText("Street cannot be empty");
+                    streetErrorLabel.setStyle(FX_ERROR_LABEL_COLOR);
+                }
+            }
+        });
+        cityField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if(!newValue) { // we only care about loosing focus
+                if(StringUtils.isNotEmpty(cityField.getText())){
+                    cityErrorLabel.setText("");
+                }else{
+                    cityErrorLabel.setText("City cannot be empty");
+                    cityErrorLabel.setStyle(FX_ERROR_LABEL_COLOR);
+                }
+            }
+        });
+        countryField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if(!newValue) { // we only care about loosing focus
+                if(StringUtils.isNotEmpty(countryField.getText())){
+                    countryErrorLabel.setText("");
+                }else{
+                    countryErrorLabel.setText("Country cannot be empty");
+                    countryErrorLabel.setStyle(FX_ERROR_LABEL_COLOR);
+                }
+            }
+        });
+        postalCodeField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if(!newValue) { // we only care about loosing focus
+                if(StringUtils.isNotEmpty(postalCodeField.getText())){
+                    postalCodeErrorLabel.setText("");
+                }else{
+                    postalCodeErrorLabel.setText("Postal Code cannot be empty");
+                    postalCodeErrorLabel.setStyle(FX_ERROR_LABEL_COLOR);
                 }
             }
         });
@@ -146,10 +179,22 @@ public class BillingInfoController {
         countryField.textProperty().bindBidirectional(this.user.getOrganization().countryProperty());
     }
 
+    public void scanRequiredFields(){
+        nameField.requestFocus();
+        streetNumField.requestFocus();
+        streetField.requestFocus();
+        cityField.requestFocus();
+        countryField.requestFocus();
+        postalCodeField.requestFocus();
+    }
+
     public boolean isReadyForInvoiceGeneration(){
-        return StringUtils.isEmpty(emailErrorLabel.getText())
+        return StringUtils.isEmpty(streetNumErrorLabel.getText())
                 && StringUtils.isEmpty(nameErrorLabel.getText())
-                && StringUtils.isEmpty(phoneErrorLabel.getText());
+                && StringUtils.isEmpty(streetErrorLabel.getText())
+                && StringUtils.isEmpty(cityErrorLabel.getText())
+                && StringUtils.isEmpty(countryErrorLabel.getText())
+                && StringUtils.isEmpty(postalCodeErrorLabel.getText());
     }
 
     public UserBaseModelDTO getUser() {

@@ -6,7 +6,7 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package com.taim.desktopui.controllers.pdfs;
+package com.taim.desktopui.controllers.invoices;
 
 import com.jfoenix.controls.JFXComboBox;
 import com.taim.dto.TransactionDTO;
@@ -14,6 +14,7 @@ import com.taim.dto.basedtos.UserBaseModelDTO;
 import com.taim.model.Transaction;
 import com.taim.desktopui.util.InvoiceGenerator;
 import com.taim.desktopui.util.VistaNavigator;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -24,7 +25,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.mockito.cglib.core.Local;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -100,7 +100,7 @@ public class InvoiceGenerationController {
     private BillingInfoController initBillingInfoPanel(UserBaseModelDTO user, TitledPane billingPane){
         try {
             FXMLLoader fXMLLoader = new FXMLLoader();
-            AnchorPane root = fXMLLoader.load(this.getClass().getResource("/fxml/pdfs/BillingInfo.fxml").openStream());
+            AnchorPane root = fXMLLoader.load(this.getClass().getResource("/fxml/invoices/BillingInfo.fxml").openStream());
             root.prefHeightProperty().bind(billingPane.heightProperty());
             root.prefWidthProperty().bind(billingPane.widthProperty());
             BillingInfoController controller = fXMLLoader.getController();
@@ -135,6 +135,8 @@ public class InvoiceGenerationController {
         }
 
         invoiceCreationComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            billFromController.scanRequiredFields();
+            billToController.scanRequiredFields();
             if(billFromController.isReadyForInvoiceGeneration() && billToController.isReadyForInvoiceGeneration() && newValue != null){
                 FileChooser fileChooser = new FileChooser();
                 FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("PDF files (*.pdf)", "*.pdf");
@@ -159,6 +161,7 @@ public class InvoiceGenerationController {
                     invoiceCreationComboBox.getSelectionModel().clearSelection();
                 }
             }
+            Platform.runLater(() -> invoiceCreationComboBox.getSelectionModel().clearSelection());
         });
     }
 

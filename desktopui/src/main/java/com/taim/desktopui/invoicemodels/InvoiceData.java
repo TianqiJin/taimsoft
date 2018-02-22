@@ -1,4 +1,4 @@
-package com.taim.desktopui.reports;
+package com.taim.desktopui.invoicemodels;
 
 import com.itextpdf.text.zugferd.checkers.basic.DateFormatCode;
 import com.itextpdf.text.zugferd.checkers.basic.DocumentTypeCode;

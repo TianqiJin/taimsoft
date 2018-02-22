@@ -26,7 +26,9 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.joda.time.DateTime;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -330,19 +332,10 @@ public class GenerateReturnController {
             }
             refreshTable();
         });
-        paymentField.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                showBalanceDetails();
-            }
-        });
+        paymentField.textProperty().addListener((observable, oldValue, newValue) -> showBalanceDetails());
+
         paymentTypeChoiceBox.getSelectionModel().selectFirst();
-        paymentTypeChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                payment.setPaymentType(Payment.PaymentType.getValue(newValue));
-            }
-        });
+        paymentTypeChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> payment.setPaymentType(Payment.PaymentType.getValue(newValue)));
         paymentDueDatePicker.setOnAction(event ->{
             this.transaction.setPaymentDueDate(DateUtils.toDateTime(paymentDueDatePicker.getValue()));
         });
@@ -586,12 +579,12 @@ public class GenerateReturnController {
             paid= paid.add(new BigDecimal(prevPayment.getPaymentAmount()));
         }
         balance = balance.subtract(paid);
-        if(!paymentField.getText().trim().isEmpty() && isPaymentValid()){
+        if(!paymentField.getText().trim().isEmpty() && NumberUtils.isNumber(paymentField.getText())){
             balance = balance.subtract(new BigDecimal(paymentField.getText()));
         }
+
         balanceLabel.setText(balance.toString());
     }
-
 
     @FXML
     public void handleConfirmButton() throws IOException, SQLException{
@@ -788,15 +781,6 @@ public class GenerateReturnController {
         return newTransaction;
     }
 
-
-    private boolean isPaymentValid(){
-        try{
-            Double.parseDouble(paymentField.getText());
-        }catch(NumberFormatException e){
-            return false;
-        }
-        return true;
-    }
 
     private void updatePrevProductNum(){
         oldProductVirtualNumMap= new HashMap<>();

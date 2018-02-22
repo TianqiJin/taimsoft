@@ -28,6 +28,7 @@ public class Transaction extends BaseModel {
      */
     public enum TransactionType{
         QUOTATION("Quotation"),
+        CONTRACT("Contract"),
         INVOICE("Invoice"),
         STOCK("Stock"),
         RETURN("Return");
@@ -141,6 +142,8 @@ public class Transaction extends BaseModel {
     private boolean finalized;
     @Column
     private String note;
+    @Column(name = "address_note ")
+    private String addressNote;
 
     public Transaction(){}
 
@@ -278,5 +281,13 @@ public class Transaction extends BaseModel {
 
     public void setDeliveries(List<Delivery> deliveries) {
         this.deliveries = deliveries;
+    }
+
+    public String getAddressNote() {
+        return addressNote;
+    }
+
+    public void setAddressNote(String addressNote) {
+        this.addressNote = addressNote;
     }
 }

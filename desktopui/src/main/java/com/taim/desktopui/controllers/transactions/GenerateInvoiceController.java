@@ -22,7 +22,9 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.joda.time.DateTime;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -55,13 +57,11 @@ public class GenerateInvoiceController {
 
     private CustomerDTO customer;
     private StaffDTO staff;
-    private List<CustomerDTO> customerList;
     private List<ProductDTO> productList;
     private ObservableList<TransactionDetailDTO> transactionDetailDTOObservableList;
     private TransactionDTO transaction;
     private TransactionDTO oldTransaction;
     private PaymentDTO payment;
-    private StringBuffer errorMsgBuilder;
     private boolean confirmedClicked;
     private BooleanBinding confimButtonBinding;
     private int discount;
@@ -199,17 +199,7 @@ public class GenerateInvoiceController {
         deliveredCol.setCellValueFactory(d->new SimpleFloatProperty(new BigDecimal(d.getValue().getDeliveredQuantity()).floatValue()));
         toDeliverCol.setCellValueFactory(d->new SimpleFloatProperty(new BigDecimal(d.getValue().getToDeliveryQuantity()).floatValue()));
         discountCol.setCellValueFactory(new PropertyValueFactory<>("discount"));
-        discountCol.setCellFactory(TextFieldTableCell.forTableColumn(new StringConverter<Number>() {
-            @Override
-            public String toString(Number object) {
-                return String.valueOf(object);
-            }
 
-            @Override
-            public Float fromString(String string) {
-                return Float.valueOf(string);
-            }
-        }));
         remarkCol.setCellValueFactory(new PropertyValueFactory<>("note"));
         remarkCol.setOnEditCommit(event ->
             (event.getTableView().getItems().get(event.getTablePosition().getRow())).setNote(event.getNewValue()));
@@ -222,26 +212,6 @@ public class GenerateInvoiceController {
         virtualNumCol.setCellValueFactory(param ->
                 new SimpleFloatProperty(new BigDecimal(param.getValue().getProduct().getVirtualTotalNum()).floatValue()));
 
-        qtyCol.setCellFactory(TextFieldTableCell.forTableColumn(new StringConverter<Number>() {
-            @Override
-            public String toString(Number object) {
-                return String.valueOf(object);
-            }
-
-            @Override
-            public Float fromString(String string) {
-                return Float.valueOf(string);
-            }
-        }));
-        qtyCol.setOnEditCommit(event -> {
-            int oldValue = event.getOldValue().intValue();
-            TransactionDetailDTO p = event.getTableView().getItems().get(event.getTablePosition().getRow());
-            p.setQuantity(event.getNewValue().floatValue());
-            p.setSaleAmount(new BigDecimal(p.getQuantity() * p.getProduct().getUnitPrice()).setScale(2, BigDecimal.ROUND_HALF_EVEN).floatValue());
-            showPaymentDetails();
-            p.getProduct().setVirtualTotalNum(p.getProduct().getVirtualTotalNum()+oldValue-event.getNewValue().intValue());
-            refreshTable();
-        });
 
         pkgBoxCol.setCellFactory(TextFieldTableCell.forTableColumn(new StringConverter<Number>() {
             @Override
@@ -280,53 +250,27 @@ public class GenerateInvoiceController {
         subTotalCol.setCellValueFactory(param ->
                 new SimpleFloatProperty(new BigDecimal(param.getValue().getSaleAmount()).floatValue()));
 
-        discountCol.setOnEditCommit(event ->{
-            int oldValue = event.getOldValue().intValue();
-            TransactionDetailDTO p = event.getTableView().getItems().get(event.getTablePosition().getRow());
-            int newDiscount=validateDiscountEntered(oldValue,event.getNewValue().intValue());
-            p.setDiscount(newDiscount);
-            showPaymentDetails();
-            refreshTable();
-
-            (event.getTableView().getItems().get(event.getTablePosition().getRow())).setDiscount(newDiscount);
-            });
-
         totalCol.setCellValueFactory(param ->
                 new SimpleFloatProperty(new BigDecimal(param.getValue().getSaleAmount()* (100 - param.getValue().getDiscount()) / 100)
                         .setScale(2, RoundingMode.HALF_EVEN).floatValue()));
 
         deleteCol.setCellValueFactory(
-                new Callback<TableColumn.CellDataFeatures<TransactionDetailDTO, Boolean>,
-                                        ObservableValue<Boolean>>() {
-                    @Override
-                    public ObservableValue<Boolean> call(TableColumn.CellDataFeatures<TransactionDetailDTO, Boolean> p) {
-                        return new SimpleBooleanProperty(p.getValue() != null);
-                    }
-                });
+                (Callback<TableColumn.CellDataFeatures<TransactionDetailDTO, Boolean>, ObservableValue<Boolean>>) p -> new SimpleBooleanProperty(p.getValue() != null));
 
         deleteCol.setCellFactory(
-                new Callback<TableColumn<TransactionDetailDTO, Boolean>, TableCell<TransactionDetailDTO, Boolean>>() {
-                    @Override
-                    public TableCell<TransactionDetailDTO, Boolean> call(TableColumn<TransactionDetailDTO, Boolean> p) {
-                        return new ButtonCell(transactionTableView,oldProductVirtualNumMap,true,true);
-                    }
-
-                });
-        deliveryStatusLabel.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,String newValue) {
-                transaction.setDeliveryStatus(Transaction.DeliveryStatus.getStatus(newValue));
-                //transaction.getDeliveryStatus().setDateModified(DateTime.now());
-                if (Transaction.DeliveryStatus.getStatus(newValue)== Transaction.DeliveryStatus.DELIVERING && Transaction.DeliveryStatus.getStatus(oldValue)== Transaction.DeliveryStatus.UNDELIVERED){
-                    //transactionTableView.getItems().forEach(e->e.getProduct().setTotalNum(e.getProduct().getTotalNum()-e.getQuantity()));
-                    qtyCol.setEditable(false);
-                    refreshTable();
-                }else if ((Transaction.DeliveryStatus.getStatus(oldValue)== Transaction.DeliveryStatus.DELIVERING || Transaction.DeliveryStatus.getStatus(oldValue)== Transaction.DeliveryStatus.DELIVERED)
-                        && Transaction.DeliveryStatus.getStatus(newValue)== Transaction.DeliveryStatus.UNDELIVERED){
-                    //transactionTableView.getItems().forEach(e->e.getProduct().setTotalNum(e.getProduct().getTotalNum()+e.getQuantity()));
-                    qtyCol.setEditable(true);
-                    refreshTable();
-                }
+                (Callback<TableColumn<TransactionDetailDTO, Boolean>, TableCell<TransactionDetailDTO, Boolean>>) p -> new ButtonCell(transactionTableView,oldProductVirtualNumMap,true,true));
+        deliveryStatusLabel.textProperty().addListener((observable, oldValue, newValue) -> {
+            transaction.setDeliveryStatus(Transaction.DeliveryStatus.getStatus(newValue));
+            //transaction.getDeliveryStatus().setDateModified(DateTime.now());
+            if (Transaction.DeliveryStatus.getStatus(newValue)== Transaction.DeliveryStatus.DELIVERING && Transaction.DeliveryStatus.getStatus(oldValue)== Transaction.DeliveryStatus.UNDELIVERED){
+                //transactionTableView.getItems().forEach(e->e.getProduct().setTotalNum(e.getProduct().getTotalNum()-e.getQuantity()));
+                qtyCol.setEditable(false);
+                refreshTable();
+            }else if ((Transaction.DeliveryStatus.getStatus(oldValue)== Transaction.DeliveryStatus.DELIVERING || Transaction.DeliveryStatus.getStatus(oldValue)== Transaction.DeliveryStatus.DELIVERED)
+                    && Transaction.DeliveryStatus.getStatus(newValue)== Transaction.DeliveryStatus.UNDELIVERED){
+                //transactionTableView.getItems().forEach(e->e.getProduct().setTotalNum(e.getProduct().getTotalNum()+e.getQuantity()));
+                qtyCol.setEditable(true);
+                refreshTable();
             }
         });
         toDeliverCol.setCellFactory(TextFieldTableCell.forTableColumn(new StringConverter<Number>() {
@@ -357,24 +301,15 @@ public class GenerateInvoiceController {
             refreshTable();
         });
 
-        paymentField.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                showBalanceDetails();
-            }
-        });
+        paymentField.textProperty().addListener((observable, oldValue, newValue) -> showBalanceDetails());
+
         paymentTypeChoiceBox.getSelectionModel().selectFirst();
-        paymentTypeChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                payment.setPaymentType(Payment.PaymentType.getValue(newValue));
-            }
-        });
+        paymentTypeChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> payment.setPaymentType(Payment.PaymentType.getValue(newValue)));
         paymentDueDatePicker.setOnAction(event ->{
             this.transaction.setPaymentDueDate(DateUtils.toDateTime(paymentDueDatePicker.getValue()));
         });
         paymentDueDatePicker.setPromptText(DATE_PATTERN.toLowerCase());
-        paymentDueDatePicker.setConverter(new StringConverter<LocalDate>() {
+        paymentDueDatePicker.setConverter(new StringConverter <LocalDate>() {
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(DATE_PATTERN);
             @Override
             public String toString(LocalDate date) {
@@ -681,19 +616,19 @@ public class GenerateInvoiceController {
         BigDecimal balance = new BigDecimal(totalLabel.getText()).setScale(2, BigDecimal.ROUND_HALF_EVEN);
         BigDecimal paid = new BigDecimal(BigInteger.ZERO);
         for (PaymentDTO prevPayment : transaction.getPayments()){
-            paid= paid.add(new BigDecimal(prevPayment.getPaymentAmount()));
+            paid = paid.add(new BigDecimal(prevPayment.getPaymentAmount()));
         }
         balance = balance.subtract(paid);
         paidAmountLabel.setText(paid.toString());
 
         if((payment.getPaymentType()== Payment.PaymentType.STORE_CREDIT && !paymentField.getText().trim().isEmpty() && isStoreCreditValidNoCustomer())){
             balance = balance.subtract(new BigDecimal(paymentField.getText()));
-        } else if(payment.getPaymentType()!= Payment.PaymentType.STORE_CREDIT && !paymentField.getText().trim().isEmpty() && isPaymentValid()){
+        } else if(payment.getPaymentType()!= Payment.PaymentType.STORE_CREDIT && !paymentField.getText().trim().isEmpty() && NumberUtils.isNumber(paymentField.getText())){
             balance = balance.subtract(new BigDecimal(paymentField.getText()));
         }
+
         balanceLabel.setText(balance.toString());
     }
-
 
     @FXML
     public void handleConfirmButton() throws IOException, SQLException{
@@ -915,15 +850,6 @@ public class GenerateInvoiceController {
             if(credit > customer.getStoreCredit()){
                 return false;
             }
-        }catch(NumberFormatException e){
-            return false;
-        }
-        return true;
-    }
-
-    private boolean isPaymentValid(){
-        try{
-            Double.parseDouble(paymentField.getText());
         }catch(NumberFormatException e){
             return false;
         }

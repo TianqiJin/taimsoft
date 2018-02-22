@@ -49,6 +49,8 @@ public class TransactionOverviewController extends IOverviewController<Transacti
     @FXML
     private TableColumn<TransactionDTO, String> idCol;
     @FXML
+    private TableColumn<TransactionDTO, String> vendorCustomerCol;
+    @FXML
     private TableColumn<TransactionDTO, Double> totalCol;
     @FXML
     private TableColumn<TransactionDTO, Double> balanceCol;
@@ -101,6 +103,13 @@ public class TransactionOverviewController extends IOverviewController<Transacti
         typeCol.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getTransactionType().getValue()));
         idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         totalCol.setCellValueFactory(new PropertyValueFactory<>("saleAmount"));
+        vendorCustomerCol.setCellValueFactory(param -> {
+            if(param.getValue().getTransactionType().equals(Transaction.TransactionType.STOCK)){
+                return param.getValue().getVendor().fullnameProperty();
+            }else{
+                return param.getValue().getCustomer().fullnameProperty();
+            }
+        });
         balanceCol.setCellValueFactory((TableColumn.CellDataFeatures<TransactionDTO, Double> param) -> {
             BigDecimal roundedBalance = new BigDecimal(param.getValue().getSaleAmount());
             for(PaymentDTO payment: param.getValue().getPayments()){

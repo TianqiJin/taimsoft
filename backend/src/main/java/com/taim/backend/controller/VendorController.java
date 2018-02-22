@@ -17,7 +17,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping(value = "/vendor")
-public class VendorController {
+public class VendorController{
     @Autowired
     private IVendorService service;
 
