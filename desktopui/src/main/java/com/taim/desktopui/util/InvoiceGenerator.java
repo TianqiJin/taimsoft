@@ -44,7 +44,7 @@ public class InvoiceGenerator {
     private static Font largeText = new Font(Font.FontFamily.TIMES_ROMAN, 13);
     private static Font tinyBold = new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.BOLD);
     private static final String CHINESE_FONT_LOCATION = "/fonts/Deng.ttf";
-    Font chineseFont = new Font(BaseFont.createFont(CHINESE_FONT_LOCATION, BaseFont.IDENTITY_H, BaseFont.EMBEDDED), 9);
+    private Font chineseFont = new Font(BaseFont.createFont(CHINESE_FONT_LOCATION, BaseFont.IDENTITY_H, BaseFont.EMBEDDED), 9);
 
     private String destination;
     private Invoice invoice;

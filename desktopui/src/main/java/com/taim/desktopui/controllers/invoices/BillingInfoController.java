@@ -16,8 +16,6 @@ import java.util.regex.Pattern;
 import static com.taim.desktopui.constants.Constant.FXStyle.FX_ERROR_LABEL_COLOR;
 
 public class BillingInfoController {
-    private Pattern pattern;
-    private Matcher matcher;
     private static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
             + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
     private UserBaseModelDTO user;
@@ -148,9 +146,7 @@ public class BillingInfoController {
         });
     }
 
-    public BillingInfoController(){
-        pattern = Pattern.compile(EMAIL_PATTERN);
-    }
+    public BillingInfoController(){}
 
     public void initData(UserBaseModelDTO inputUser){
         this.user = new UserBaseModelDTO();

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taim.desktopui.controllers.invoices.InvoiceTransactionPreviewController">
+   <children>
+      <TableView fx:id="transactionDetaiTableView" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <columns>
+            <TableColumn fx:id="productIdCol" prefWidth="75.0" text="Product ID" />
+            <TableColumn fx:id="displayNameCol" prefWidth="75.0" text="Display Name" />
+            <TableColumn fx:id="qtyCol" prefWidth="75.0" text="Quantity" />
+            <TableColumn fx:id="unitPriceCol" prefWidth="75.0" text="Unit Price" />
+            <TableColumn fx:id="discountCol" prefWidth="75.0" text="Discount" />
+            <TableColumn fx:id="subTotalCol" prefWidth="75.0" text="SubTotal" />
+            <TableColumn prefWidth="75.0" text="Delievery Info">
+               <columns>
+                  <TableColumn fx:id="boxNumCol" prefWidth="75.0" text="Box #" />
+                  <TableColumn fx:id="pieceNumCol" prefWidth="75.0" text="Piece #" />
+               </columns>
+            </TableColumn>
+            <TableColumn fx:id="remarkCol" prefWidth="75.0" text="Remark" />
+         </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
+      </TableView>
+   </children>
+</AnchorPane>

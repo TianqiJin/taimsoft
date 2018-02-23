@@ -73,6 +73,8 @@ public class InvoiceGenerationController {
     @FXML
     private TitledPane billingToPane;
     @FXML
+    private AnchorPane previewPane;
+    @FXML
     private JFXComboBox<String> invoiceCreationComboBox;
     @FXML
     private SplitPane invoiceSplitPane;
@@ -95,6 +97,7 @@ public class InvoiceGenerationController {
         initComboBox();
         billToController = initBillingInfoPanel(this.transaction.getCustomer(), billingToPane);
         billFromController = initBillingInfoPanel(this.transaction.getStaff(), billingFromPane);
+        initInvoiceTransactionPreviewPanel();
     }
 
     private BillingInfoController initBillingInfoPanel(UserBaseModelDTO user, TitledPane billingPane){
@@ -113,6 +116,20 @@ public class InvoiceGenerationController {
         }
 
         return null;
+    }
+
+    private void initInvoiceTransactionPreviewPanel(){
+        try {
+            FXMLLoader fXMLLoader = new FXMLLoader();
+            AnchorPane root = fXMLLoader.load(this.getClass().getResource("/fxml/invoices/InvoiceTransactionPreview.fxml").openStream());
+            root.prefHeightProperty().bind(previewPane.heightProperty());
+            root.prefWidthProperty().bind(previewPane.widthProperty());
+            InvoiceTransactionPreviewController controller = fXMLLoader.getController();
+            controller.initTransactionDetailsData(this.transaction.getTransactionDetails());
+            previewPane.getChildren().addAll(root);
+        } catch (IOException ex) {
+            logger.error(ex.getMessage(), ex);
+        }
     }
 
     private void initInvoiceInfo(){
