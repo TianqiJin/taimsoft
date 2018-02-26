@@ -1,10 +1,8 @@
 package com.taim.desktopui.controllers.transactions;
 
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXComboBox;
-import com.jfoenix.controls.JFXTextArea;
-import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.controls.*;
 import com.taim.desktopui.controllers.edit.CustomerEditDialogController;
+import com.taim.desktopui.uicomponents.AlertJFXDialog;
 import com.taim.desktopui.util.*;
 import com.taim.dto.*;
 import com.taim.model.Payment;
@@ -23,6 +21,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
@@ -153,7 +153,6 @@ public class GenerateQuotationController {
     @FXML
     private SplitPane transactionGeneratePane;
 
-
     @FXML
     private void initialize(){
         confimButtonBinding = Bindings.size(transactionTableView.getItems()).greaterThan(0);
@@ -248,7 +247,7 @@ public class GenerateQuotationController {
                 .map(t -> t.getProduct().getSku())
                 .collect(Collectors.toList());
         if(productIdList.contains(selectedProduct.getSku())){
-            new AlertBuilder()
+            new AlertBuilder(dialogStage)
                     .alertType(Alert.AlertType.ERROR)
                     .alertContentText("Product Add Error")
                     .alertContentText(selectedProduct.getSku() + " has already been added!")
@@ -317,7 +316,7 @@ public class GenerateQuotationController {
             this.transaction = transactionFromAbove;
             this.customer = transactionFromAbove.getCustomer();
             if(transaction.isFinalized()){
-                new AlertBuilder()
+                new AlertBuilder(dialogStage)
                         .alertType(Alert.AlertType.ERROR)
                         .alertContentText("This transaction is already finalized! You cannot edit on it anymore")
                         .build()
@@ -400,7 +399,7 @@ public class GenerateQuotationController {
 
         customersTask.setOnFailed(event -> {
             logger.error(customersTask.getException().getMessage());
-            new AlertBuilder()
+            new AlertBuilder(dialogStage)
                     .alertType(Alert.AlertType.ERROR)
                     .alertHeaderText("Database Error!")
                     .alertContentText("Unable to fetch customer information from the database!")
@@ -420,7 +419,7 @@ public class GenerateQuotationController {
         });
         productsTask.setOnFailed(event -> {
             logger.error(productsTask.getException().getMessage());
-            new AlertBuilder()
+            new AlertBuilder(dialogStage)
                     .alertType(Alert.AlertType.ERROR)
                     .alertHeaderText("Database Error!")
                     .alertContentText("Unable to fetch product information from the database!")
@@ -548,11 +547,10 @@ public class GenerateQuotationController {
 
 
 
-        Optional<ButtonType> result = new AlertBuilder()
+        Optional<ButtonType> result = new AlertBuilder(dialogStage)
                 .alertType(Alert.AlertType.CONFIRMATION)
-                .alertTitle("Transaction Confirmation")
+                .alertHeaderText("Transaction Confirmation")
                 .alertContentText("Are you sure you want to submit this transaction?\n")
-                .alertHeaderText(null)
                 .build()
                 .showAndWait();
         if(result.isPresent() && result.get() == ButtonType.OK){
@@ -580,7 +578,7 @@ public class GenerateQuotationController {
                     Exception ex = (Exception) newValue;
                     logger.error(ExceptionUtils.getRootCause(ex).getMessage());
                     JSONObject errorMsg = new JSONObject(ExceptionUtils.getRootCause(ex).getMessage());
-                    new AlertBuilder().alertType(Alert.AlertType.ERROR)
+                    new AlertBuilder(dialogStage).alertType(Alert.AlertType.ERROR)
                             .alertContentText(errorMsg.getString("taimErrorMessage"))
                             .build()
                             .showAndWait();
@@ -601,8 +599,8 @@ public class GenerateQuotationController {
                                 String newExMsg = ExceptionUtils.getRootCause(newEx).getMessage();
                                 logger.error(newExMsg);
                                 JSONObject newErrorMessage = new JSONObject(newExMsg);
-                                new AlertBuilder().alertType(Alert.AlertType.ERROR)
-                                        .alertHeaderText(newErrorMessage.getString("taimErrorMessage"))
+                                new AlertBuilder(dialogStage).alertType(Alert.AlertType.ERROR)
+                                        .alertContentText(newErrorMessage.getString("taimErrorMessage"))
                                         .build()
                                         .showAndWait();
                             }});
@@ -639,7 +637,7 @@ public class GenerateQuotationController {
             if(newValue <= this.customer.getCustomerClass().getCustomerDiscount()){
                 return newValue;
             }else{
-                new AlertBuilder()
+                new AlertBuilder(dialogStage)
                         .alertType(Alert.AlertType.ERROR)
                         .alertHeaderText("Discount Error!")
                         .alertContentText("Exceed Max discount rate for this customer!")

@@ -18,6 +18,7 @@ import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.joda.time.DateTime;
 
@@ -94,7 +95,7 @@ public class StaffOverviewController extends IOverviewController<StaffDTO> {
                                             getTableView().getItems().set(getIndex(), controller.getStaff());
                                         }
                                     }else if (newValue.endsWith("DELETE")){
-                                        DeleteEntityUtil<StaffDTO> deleteEntityUtil = new DeleteEntityUtil<>(staffDTO, staffClient);
+                                        DeleteEntityUtil<StaffDTO> deleteEntityUtil = new DeleteEntityUtil<>(staffDTO, staffClient, getStage());
                                         deleteEntityUtil.deleteEntity(getOverviewTable(),
                                                 getIndex(),
                                                 "SUCCESSFULLY DELETED STAFF",

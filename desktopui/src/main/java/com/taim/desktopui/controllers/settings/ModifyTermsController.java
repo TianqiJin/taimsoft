@@ -49,7 +49,7 @@ public class ModifyTermsController {
                 Exception ex = (Exception) newValue;
                 logger.error(ExceptionUtils.getRootCause(ex).getMessage());
                 JSONObject errorMsg = new JSONObject(ExceptionUtils.getRootCause(ex).getMessage());
-                new AlertBuilder().alertType(Alert.AlertType.ERROR)
+                new AlertBuilder(dialogStage).alertType(Alert.AlertType.ERROR)
                         .alertContentText(errorMsg.getString("taimErrorMessage"))
                         .build()
                         .showAndWait();
@@ -69,8 +69,8 @@ public class ModifyTermsController {
                             String newExMsg = ExceptionUtils.getRootCause(newEx).getMessage();
                             logger.error(newExMsg);
                             JSONObject newErrorMessage = new JSONObject(newExMsg);
-                            new AlertBuilder().alertType(Alert.AlertType.ERROR)
-                                    .alertHeaderText(newErrorMessage.getString("taimErrorMessage"))
+                            new AlertBuilder(dialogStage).alertType(Alert.AlertType.ERROR)
+                                    .alertContentText(newErrorMessage.getString("taimErrorMessage"))
                                     .build()
                                     .showAndWait();
                         }});

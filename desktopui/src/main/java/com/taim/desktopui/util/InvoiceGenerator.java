@@ -1,5 +1,7 @@
 package com.taim.desktopui.util;
 
+import com.jfoenix.controls.JFXAlert;
+import com.jfoenix.controls.JFXButton;
 import com.taim.desktopui.invoicemodels.Invoice;
 import com.taim.desktopui.invoicemodels.InvoiceData;
 import com.taim.dto.*;
@@ -8,6 +10,7 @@ import com.taim.model.Transaction;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
+import javafx.stage.Stage;
 import org.apache.log4j.Logger;
 
 import java.awt.*;
@@ -32,7 +35,7 @@ import org.joda.time.format.DateTimeFormatter;
 public class InvoiceGenerator {
     private static Logger logger = Logger.getLogger(InvoiceGenerator.class);
     private static final DateTimeFormatter dtf = DateTimeFormat.forPattern("MMM-dd-yyyy");
-
+    private Stage stage;
     private static Font catFont = new Font(Font.FontFamily.TIMES_ROMAN, 20);
     private static Font subFont = new Font(Font.FontFamily.TIMES_ROMAN, 18);
     private static Font smallBold = new Font(Font.FontFamily.TIMES_ROMAN, 14,Font.BOLD);
@@ -59,9 +62,10 @@ public class InvoiceGenerator {
         }
     }
 
-    public InvoiceGenerator(String destination) throws IOException, DocumentException{
+    public InvoiceGenerator(String destination, Stage stage) throws IOException, DocumentException{
         this.destination = destination;
         this.errorMsg = new StringBuilder();
+        this.stage = stage;
     }
 
     public void buildInvoice(TransactionDTO transaction, UserBaseModelDTO customer, UserBaseModelDTO staff, PropertyDTO property) throws Exception {
@@ -632,18 +636,14 @@ public class InvoiceGenerator {
 
     private void openPDF(String path){
         if(this.errorMsg.length() == 0){
-            ButtonType openType = new ButtonType("Open Invoice");
-            ButtonType cancelType = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
-            Alert alert = new AlertBuilder()
+            JFXAlert alert = new AlertBuilder(stage)
                     .alertType(Alert.AlertType.CONFIRMATION)
-                    .alertTitle("Invoice Generation")
                     .alertHeaderText("Invoice Generation Successful!")
                     .alertContentText("Invoice is successfully generated at\n" + path + "\n\nClick Open Invoice to open it")
-                    .alertButton(openType, cancelType)
                     .build();
 
             Optional<ButtonType> result = alert.showAndWait();
-            if(result.isPresent() && result.get() == openType){
+            if(result.isPresent() && result.get() == ButtonType.OK){
                 if(Desktop.isDesktopSupported()){
                     try {
                         Desktop.getDesktop().open(new File(path));
@@ -659,10 +659,9 @@ public class InvoiceGenerator {
                 alert.close();
             }
         }else{
-            new AlertBuilder()
+            new AlertBuilder(stage)
                     .alertType(Alert.AlertType.ERROR)
-                    .alertTitle("Invoice Generation")
-                    .alertHeaderText("Invoice generation is failed!")
+                    .alertHeaderText("Invoice Generation Failed!")
                     .alertContentText(errorMsg.toString())
                     .build()
                     .showAndWait();

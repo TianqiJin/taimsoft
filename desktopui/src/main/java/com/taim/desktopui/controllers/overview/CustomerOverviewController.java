@@ -127,7 +127,7 @@ public class CustomerOverviewController extends IOverviewController<CustomerDTO>
                                             getTableView().getItems().set(getIndex(), controller.getCustomer());
                                         }
                                     }else if(newValue.equals("DELETE")){
-                                        DeleteEntityUtil<CustomerDTO> deleteEntityUtil = new DeleteEntityUtil<>(customerDTO, customerClient);
+                                        DeleteEntityUtil<CustomerDTO> deleteEntityUtil = new DeleteEntityUtil<>(customerDTO, customerClient, getStage());
                                         deleteEntityUtil.deleteEntity(getOverviewTable(),
                                                 getIndex(),
                                                 "SUCCESSFULLY DELETED CUSTOMER",

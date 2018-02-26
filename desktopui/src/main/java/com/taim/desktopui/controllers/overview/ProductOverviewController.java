@@ -113,7 +113,7 @@ public class ProductOverviewController extends IOverviewController<ProductDTO> {
 //                                        initOverviewData(productClient);
                                         }
                                     }else if(newValue.equals("DELETE")){
-                                        DeleteEntityUtil<ProductDTO> deleteEntityUtil = new DeleteEntityUtil<>(productDTO, productClient);
+                                        DeleteEntityUtil<ProductDTO> deleteEntityUtil = new DeleteEntityUtil<>(productDTO, productClient, getStage());
                                         deleteEntityUtil.deleteEntity(getOverviewTable(),
                                                 getIndex(),
                                                 "SUCCESSFULLY DELETED PRODUCT",

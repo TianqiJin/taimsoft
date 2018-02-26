@@ -50,6 +50,7 @@ public class VistaNavigator {
         try {
             rootLayoutController.setVista(loader.load());
             IOverviewController controller = loader.getController();
+            controller.setStage(rootLayoutController.getStage());
             controller.setFetchTransactions(fetchTransactionsForSummary);
             controller.initOverviewData(controller.getOverviewClient());
         } catch (IOException e) {
@@ -64,6 +65,7 @@ public class VistaNavigator {
         try {
             rootLayoutController.setVista(loader.load());
             IDetailController controller = loader.getController();
+            controller.setStage(rootLayoutController.getStage());
             controller.initDetailData(obj);
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
@@ -76,6 +78,7 @@ public class VistaNavigator {
         try {
             rootLayoutController.setVista(loader.load());
             SettingsOverviewController controller = loader.getController();
+            controller.setStage(rootLayoutController.getStage());
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
         }

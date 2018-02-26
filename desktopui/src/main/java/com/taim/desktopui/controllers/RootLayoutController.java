@@ -22,6 +22,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.util.concurrent.Executor;
@@ -34,6 +35,7 @@ public class RootLayoutController {
     private PropertyClient propertyClient;
     private Executor executor;
     private PropertyDTO property;
+    private Stage stage;
 
     @FXML
     private JFXHamburger menu;
@@ -119,21 +121,16 @@ public class RootLayoutController {
         vistaPane.getChildren().setAll(tmpPane);
     }
 
+    public Stage getStage() {
+        return stage;
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
     public TextField getSearchField() {
         return searchField;
     }
 
-//    private void prepareSlideMenuAnimation() {
-//        TranslateTransition openNav = new TranslateTransition(new Duration(350), menuList);
-//        openNav.setToX(0);
-//        TranslateTransition closeNav=new TranslateTransition(new Duration(350), menuList);
-//        menu.setOnAction((ActionEvent evt)->{
-//            if(menuList.getTranslateX()!=0){
-//                openNav.play();
-//            }else{
-//                closeNav.setToX(-(menuList.getWidth()));
-//                closeNav.play();
-//            }
-//        });
-//    }
 }

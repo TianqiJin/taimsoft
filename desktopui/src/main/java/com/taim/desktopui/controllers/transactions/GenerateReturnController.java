@@ -637,11 +637,10 @@ public class GenerateReturnController {
         }
 
 
-        Optional<ButtonType> result = new AlertBuilder()
+        Optional<ButtonType> result = new AlertBuilder(dialogStage)
                 .alertType(Alert.AlertType.CONFIRMATION)
-                .alertTitle("Transaction Confirmation")
+                .alertHeaderText("Transaction Confirmation")
                 .alertContentText("Are you sure you want to submit this transaction?\n")
-                .alertHeaderText(null)
                 .build()
                 .showAndWait();
         if(result.isPresent() && result.get() == ButtonType.OK){
@@ -684,7 +683,7 @@ public class GenerateReturnController {
                     Exception ex = (Exception) newValue;
                     logger.error(ExceptionUtils.getRootCause(ex).getMessage());
                     JSONObject errorMsg = new JSONObject(ExceptionUtils.getRootCause(ex).getMessage());
-                    new AlertBuilder().alertType(Alert.AlertType.ERROR)
+                    new AlertBuilder(dialogStage).alertType(Alert.AlertType.ERROR)
                             .alertContentText(errorMsg.getString("taimErrorMessage"))
                             .build()
                             .showAndWait();
@@ -705,8 +704,8 @@ public class GenerateReturnController {
                                 String newExMsg = ExceptionUtils.getRootCause(newEx).getMessage();
                                 logger.error(newExMsg);
                                 JSONObject newErrorMessage = new JSONObject(newExMsg);
-                                new AlertBuilder().alertType(Alert.AlertType.ERROR)
-                                        .alertHeaderText(newErrorMessage.getString("taimErrorMessage"))
+                                new AlertBuilder(dialogStage).alertType(Alert.AlertType.ERROR)
+                                        .alertContentText(newErrorMessage.getString("taimErrorMessage"))
                                         .build()
                                         .showAndWait();
                             }});

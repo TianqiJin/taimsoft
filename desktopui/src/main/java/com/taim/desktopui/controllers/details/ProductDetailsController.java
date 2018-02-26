@@ -22,6 +22,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -41,6 +42,7 @@ public class ProductDetailsController implements IDetailController<ProductDTO> {
     private List<TransactionDTO> invoiceList;
     private List<TransactionDTO> stockList;
     private List<TransactionDTO> returnList;
+    private Stage stage;
 
     @FXML
     private Label skuLabel;
@@ -120,6 +122,11 @@ public class ProductDetailsController implements IDetailController<ProductDTO> {
         });
 
         executor.execute(listTask);
+    }
+
+    @Override
+    public void setStage(Stage stage){
+        this.stage = stage;
     }
 
     private void initTransactionTabPane(){

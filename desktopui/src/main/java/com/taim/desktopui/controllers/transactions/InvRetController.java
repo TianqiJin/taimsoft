@@ -53,10 +53,9 @@ public class InvRetController {
             dialogStage.close();
 
         }else {
-            new AlertBuilder()
+            new AlertBuilder(dialogStage)
                     .alertType(Alert.AlertType.WARNING)
-                    .alertHeaderText("Please correct the invalid fields")
-                    .alertTitle("Invalid Fields")
+                    .alertContentText("Please correct the invalid fields")
                     .build()
                     .showAndWait();
         }

@@ -9,6 +9,7 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +27,7 @@ public abstract class IOverviewController<T>{
     private List<T> overviewDTOList;
     private boolean fetchTransactions;
     private List<TransactionDTO> transactionList;
+    private Stage stage;
 
     @FXML
     private TableView<T> overviewTable;
@@ -93,6 +95,14 @@ public abstract class IOverviewController<T>{
         }else{
             executor.execute(overviewTask);
         }
+    }
+
+    public void setStage(Stage stage){
+        this.stage = stage;
+    }
+
+    public Stage getStage() {
+        return stage;
     }
 
     public List<T> getOverviewDTOList() {

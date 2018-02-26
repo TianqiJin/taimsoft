@@ -65,7 +65,7 @@ public class TransactionPanelLoader {
 
     public static TransactionDTO loadInvoice(TransactionDTO transaction){
         if(transaction==null){
-            new AlertBuilder()
+            new AlertBuilder(VistaNavigator.getRootLayoutController().getStage())
                     .alertType(Alert.AlertType.ERROR)
                     .alertHeaderText("Transaction Error!")
                     .alertContentText("Please select a valid transaction!")
@@ -74,7 +74,7 @@ public class TransactionPanelLoader {
             return transaction;
         }
         if(transaction.getTransactionType()!= Transaction.TransactionType.INVOICE && transaction.getTransactionType()!= Transaction.TransactionType.QUOTATION){
-            new AlertBuilder()
+            new AlertBuilder(VistaNavigator.getRootLayoutController().getStage())
                     .alertType(Alert.AlertType.ERROR)
                     .alertHeaderText("Transaction Error!")
                     .alertContentText("Please either select an invoice to edit or select quotation to generate invoice!!")
@@ -83,7 +83,7 @@ public class TransactionPanelLoader {
             return transaction;
         }
         if (transaction.getTransactionType()== Transaction.TransactionType.QUOTATION && transaction.isFinalized()){
-            new AlertBuilder()
+            new AlertBuilder(VistaNavigator.getRootLayoutController().getStage())
                     .alertType(Alert.AlertType.ERROR)
                     .alertHeaderText("Transaction Error!")
                     .alertContentText("Quotation already finalized!")
@@ -131,7 +131,7 @@ public class TransactionPanelLoader {
 
     public static TransactionDTO loadReturn(TransactionDTO transaction){
         if(transaction==null){
-            new AlertBuilder()
+            new AlertBuilder(VistaNavigator.getRootLayoutController().getStage())
                     .alertType(Alert.AlertType.ERROR)
                     .alertHeaderText("Transaction Error!")
                     .alertContentText("Please select a valid transaction!")
@@ -141,7 +141,7 @@ public class TransactionPanelLoader {
         }
 
         if(transaction.getTransactionType()!= Transaction.TransactionType.RETURN && transaction.getTransactionType()!= Transaction.TransactionType.INVOICE){
-            new AlertBuilder()
+            new AlertBuilder(VistaNavigator.getRootLayoutController().getStage())
                     .alertType(Alert.AlertType.ERROR)
                     .alertHeaderText("Transaction Error!")
                     .alertContentText("Please either select an Invoice to return or select Return to Edit!!")
@@ -150,7 +150,7 @@ public class TransactionPanelLoader {
             return transaction;
         }
         if (transaction.getTransactionType()== Transaction.TransactionType.INVOICE && !transaction.isFinalized()){
-            new AlertBuilder()
+            new AlertBuilder(VistaNavigator.getRootLayoutController().getStage())
                     .alertType(Alert.AlertType.ERROR)
                     .alertHeaderText("Transaction Error!")
                     .alertContentText("Please select a finalized invoice transaction to generate return transaction!!")

@@ -1,6 +1,7 @@
 package com.taim.desktopui;
 
 import com.taim.desktopui.constants.Constant;
+import com.taim.desktopui.controllers.RootLayoutController;
 import com.taim.desktopui.controllers.login.LoginDialogController;
 import com.taim.desktopui.util.VistaNavigator;
 import javafx.application.Application;
@@ -51,6 +52,8 @@ public class TaimDesktop extends Application {
         loader.setLocation(getClass().getResource("/fxml/RootLayout.fxml"));
         try {
             BorderPane rootLayout = loader.load();
+            RootLayoutController rootLayoutController = loader.getController();
+            rootLayoutController.setStage(primaryStage);
             VistaNavigator.setRootLayoutController(loader.getController());
             return rootLayout;
         } catch (IOException e) {

@@ -39,6 +39,8 @@ public class AccountSettingsController implements ISettingsController {
     private static final Logger logger = LoggerFactory.getLogger(AccountSettingsController.class);
     private static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
                     + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+    private Stage stage;
+
     @FXML
     private JFXTextField userNameField;
     @FXML
@@ -89,6 +91,11 @@ public class AccountSettingsController implements ISettingsController {
             t.setDaemon(true);
             return t;
         });
+    }
+
+    @Override
+    public void setStage(Stage stage){
+        this.stage = stage;
     }
 
     @Override

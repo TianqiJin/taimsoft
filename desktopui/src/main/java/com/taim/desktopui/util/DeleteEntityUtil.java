@@ -7,6 +7,7 @@ import javafx.concurrent.Task;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,10 +19,12 @@ public class DeleteEntityUtil<T extends BaseModelDTO> {
     private IClient<T> entityClient;
     private Executor executor;
     private static final Logger logger = LoggerFactory.getLogger(DeleteEntityUtil.class);
+    private Stage stage;
 
-    public DeleteEntityUtil(T entity, IClient<T> client){
+    public DeleteEntityUtil(T entity, IClient<T> client, Stage stage){
         this.entity = entity;
         this.entityClient = client;
+        this.stage = stage;
         this.executor = Executors.newCachedThreadPool(r -> {
             Thread t = new Thread(r);
             t.setDaemon(true);
@@ -53,7 +56,7 @@ public class DeleteEntityUtil<T extends BaseModelDTO> {
                     FadingStatusMessage.flash(successfulMessage, rootPane);
                 });
                 updateEntityTask.setOnFailed(event1 -> {
-                    new AlertBuilder()
+                    new AlertBuilder(stage)
                             .alertType(Alert.AlertType.ERROR)
                             .alertContentText("Failed to delete object. Please refresh this page and try again")
                             .build()
@@ -69,7 +72,7 @@ public class DeleteEntityUtil<T extends BaseModelDTO> {
 
         getEntityTask.setOnFailed(event -> {
             logger.error(getEntityTask.getException().getMessage());
-            new AlertBuilder()
+            new AlertBuilder(stage)
                     .alertType(Alert.AlertType.ERROR)
                     .alertContentText("Failed to retrieve the object to delete. Please refresh this page and try again later")
                     .build()

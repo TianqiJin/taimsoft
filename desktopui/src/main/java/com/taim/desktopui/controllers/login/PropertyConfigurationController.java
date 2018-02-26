@@ -48,7 +48,7 @@ public class PropertyConfigurationController {
     private void handleFinishButton(){
         controller.scanCompanyInfoFields();
         if(controller.getProperty().getLicense() == null){
-            new AlertBuilder()
+            new AlertBuilder(stage)
                     .alertType(Alert.AlertType.ERROR)
                     .alertContentText("No valid license is found. Please upload a valid license")
                     .build()

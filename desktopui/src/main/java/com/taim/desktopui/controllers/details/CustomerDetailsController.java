@@ -23,6 +23,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
@@ -44,6 +45,7 @@ public class CustomerDetailsController implements IDetailController<CustomerDTO>
     private List<TransactionDTO> invoiceList;
     private List<TransactionDTO> returnList;
     private Executor executor;
+    private Stage stage;
 
     @FXML
     private Label storeCreditLabel;
@@ -111,6 +113,11 @@ public class CustomerDetailsController implements IDetailController<CustomerDTO>
         bindCustomerInfoLabels();
     }
 
+    @Override
+    public void setStage(Stage stage){
+        this.stage = stage;
+    }
+
     public void initDataFromDB(int id){
         Task<List<TransactionDTO>> transactionTask = new Task<List<TransactionDTO>>() {
             @Override
@@ -131,7 +138,7 @@ public class CustomerDetailsController implements IDetailController<CustomerDTO>
         });
         transactionTask.setOnFailed(event -> {
             logger.error(transactionTask.getException().getMessage());
-            new AlertBuilder()
+            new AlertBuilder(stage)
                     .alertType(Alert.AlertType.ERROR)
                     .alertHeaderText("Database Error!")
                     .alertContentText("Unable to fetch transaction information from the database!")

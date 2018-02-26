@@ -4,10 +4,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 
 public class SettingsOverviewController {
+    private Stage stage;
     @FXML
     private TabPane settingsTabPane;
 
@@ -27,6 +29,7 @@ public class SettingsOverviewController {
                 root.prefWidthProperty().bind(settingsTabPane.widthProperty());
                 newValue.setContent(root);
                 ISettingsController controller = fXMLLoader.getController();
+                controller.setStage(stage);
                 controller.initData();
             } catch (IOException ex) {
                 ex.printStackTrace();
@@ -36,4 +39,12 @@ public class SettingsOverviewController {
     }
 
     public SettingsOverviewController(){}
+
+    public Stage getStage() {
+        return stage;
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
 }

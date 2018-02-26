@@ -57,6 +57,7 @@ public class GeneralSettingsController implements ISettingsController{
     private PropertyClient propertyClient;
     private LicenseClient licenseClient;
     private PropertyDTO property;
+    private Stage stage;
 
     @FXML
     private TableView<PropertyDTO.CustomerClassDTO> customerClassTable;
@@ -239,6 +240,12 @@ public class GeneralSettingsController implements ISettingsController{
         });
     }
 
+    @Override
+    public void setStage(Stage stage){
+        this.stage = stage;
+    }
+
+    @Override
     public void initData(){
         Task<List<PropertyDTO>> getPropertyTask = new Task<List<PropertyDTO>>() {
             @Override
@@ -292,7 +299,7 @@ public class GeneralSettingsController implements ISettingsController{
                 isLicenseValid = true;
             } catch (GenerateLicense.GenerateLicenseException e) {
                 logger.error(e.getMessage(), e);
-                new AlertBuilder()
+                new AlertBuilder(stage)
                         .alertType(Alert.AlertType.ERROR)
                         .alertContentText(e.getMessage())
                         .build()
@@ -375,7 +382,7 @@ public class GeneralSettingsController implements ISettingsController{
             isLicenseValid = true;
         }catch (GenerateLicense.GenerateLicenseException e){
             logger.error(e.getMessage(), e);
-            new AlertBuilder()
+            new AlertBuilder(stage)
                     .alertType(Alert.AlertType.ERROR)
                     .alertContentText(e.getMessage())
                     .build()
@@ -484,7 +491,7 @@ public class GeneralSettingsController implements ISettingsController{
             });
         }catch (LicenseFile.LicenseException e){
             logger.error(e.getMessage(), e);
-            new AlertBuilder()
+            new AlertBuilder(stage)
                     .alertType(Alert.AlertType.ERROR)
                     .alertContentText("Unable to read license information. The license might be malformed. Please upload the license again.")
                     .build()
@@ -510,7 +517,7 @@ public class GeneralSettingsController implements ISettingsController{
                 Exception ex = (Exception) newValue;
                 logger.error(ExceptionUtils.getRootCause(ex).getMessage());
                 JSONObject errorMsg = new JSONObject(ExceptionUtils.getRootCause(ex).getMessage());
-                new AlertBuilder().alertType(Alert.AlertType.ERROR)
+                new AlertBuilder(stage).alertType(Alert.AlertType.ERROR)
                         .alertContentText(errorMsg.getString("taimErrorMessage"))
                         .build()
                         .showAndWait();
@@ -530,8 +537,8 @@ public class GeneralSettingsController implements ISettingsController{
                             String newExMsg = ExceptionUtils.getRootCause(newEx).getMessage();
                             logger.error(newExMsg);
                             JSONObject newErrorMessage = new JSONObject(newExMsg);
-                            new AlertBuilder().alertType(Alert.AlertType.ERROR)
-                                    .alertHeaderText(newErrorMessage.getString("taimErrorMessage"))
+                            new AlertBuilder(stage).alertType(Alert.AlertType.ERROR)
+                                    .alertContentText(newErrorMessage.getString("taimErrorMessage"))
                                     .build()
                                     .showAndWait();
                         }});

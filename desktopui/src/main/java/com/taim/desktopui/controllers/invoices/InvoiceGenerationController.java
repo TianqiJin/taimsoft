@@ -161,7 +161,7 @@ public class InvoiceGenerationController {
                 fileChooser.setTitle("Create New Invoice");
                 newInvoice = fileChooser.showSaveDialog(dialogStage);
                 try{
-                    InvoiceGenerator generator = new InvoiceGenerator(newInvoice.getAbsolutePath());
+                    InvoiceGenerator generator = new InvoiceGenerator(newInvoice.getAbsolutePath(), dialogStage);
                     if(newValue.equals(InvoiceType.QUOTATION.getValue())){
                         generator.buildQuotation(transaction, billToController.getUser(), billFromController.getUser(), VistaNavigator.getGlobalProperty());
                     }else if(newValue.equals(InvoiceType.INVOICE.getValue())){

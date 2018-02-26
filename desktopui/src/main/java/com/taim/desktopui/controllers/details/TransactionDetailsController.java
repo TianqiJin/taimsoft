@@ -21,6 +21,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
@@ -35,6 +36,7 @@ public class TransactionDetailsController implements IDetailController<Transacti
     private static final DateTimeFormatter dtf = DateTimeFormat.forPattern("MMM-dd-yyyy");
     private static final Logger logger = LoggerFactory.getLogger(TransactionDetailsController.class);
     private Executor executor;
+    private Stage stage;
 
     @FXML
     private Label transactionIdLabel;
@@ -178,7 +180,7 @@ public class TransactionDetailsController implements IDetailController<Transacti
 
                 getRefTransactionTask.setOnFailed(event1 -> {
                     logger.error(getRefTransactionTask.getException().getMessage());
-                    new AlertBuilder()
+                    new AlertBuilder(stage)
                             .alertType(Alert.AlertType.ERROR)
                             .alertContentText("Unable to fetch reference transaction from the database")
                             .build()
@@ -188,6 +190,11 @@ public class TransactionDetailsController implements IDetailController<Transacti
             }
         });
 
+    }
+
+    @Override
+    public void setStage(Stage stage){
+        this.stage = stage;
     }
 
     private void bindTransactionInfoLabels(){

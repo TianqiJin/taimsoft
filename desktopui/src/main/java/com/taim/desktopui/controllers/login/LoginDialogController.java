@@ -168,7 +168,7 @@ public class LoginDialogController {
                         generateLicense.verifyLicense(tmpLicenseFile.toFile(), "Taim Desktop");
                         isLicenseValid = true;
                     } catch (GenerateLicense.GenerateLicenseException e) {
-                        new AlertBuilder().alertType(Alert.AlertType.ERROR)
+                        new AlertBuilder(dialogStage).alertType(Alert.AlertType.ERROR)
                                 .alertContentText("Please upload a new license!\n\n" + e.getMessage())
                                 .build()
                                 .showAndWait();
@@ -216,7 +216,7 @@ public class LoginDialogController {
                 Exception ex = (Exception) newValue;
                 logger.error(ExceptionUtils.getRootCause(ex).getMessage());
                 JSONObject errorMsg = new JSONObject(ExceptionUtils.getRootCause(ex).getMessage());
-                new AlertBuilder().alertType(Alert.AlertType.ERROR)
+                new AlertBuilder(dialogStage).alertType(Alert.AlertType.ERROR)
                         .alertContentText(errorMsg.getString("taimErrorMessage"))
                         .build()
                         .showAndWait();
@@ -250,7 +250,7 @@ public class LoginDialogController {
 
     public void handleUploadLicenseLink(){
         if(VistaNavigator.getGlobalProperty() == null){
-            new AlertBuilder()
+            new AlertBuilder(dialogStage)
                     .alertType(Alert.AlertType.WARNING)
                     .alertContentText("Please login first to obtain original license information")
                     .build()
@@ -269,7 +269,7 @@ public class LoginDialogController {
                 isLicenseValid = true;
             }catch (GenerateLicense.GenerateLicenseException e){
                 logger.error(e.getMessage(), e);
-                new AlertBuilder()
+                new AlertBuilder(dialogStage)
                         .alertType(Alert.AlertType.ERROR)
                         .alertContentText(e.getMessage())
                         .build()
@@ -290,7 +290,7 @@ public class LoginDialogController {
 
                     savePropertyTask.setOnFailed(event -> {
                         logger.error(savePropertyTask.getException().getMessage());
-                        new AlertBuilder()
+                        new AlertBuilder(dialogStage)
                                 .alertType(Alert.AlertType.ERROR)
                                 .alertContentText("Failed to upload license. Please try again later")
                                 .build()

@@ -106,7 +106,7 @@ public class VendorOverviewController extends IOverviewController<VendorDTO> {
                                             getTableView().getItems().set(getIndex(), controller.getVendor());
                                         }
                                     }else if(newValue.equals("DELETE")){
-                                        DeleteEntityUtil<VendorDTO> deleteEntityUtil = new DeleteEntityUtil<>(vendorDTO, vendorClient);
+                                        DeleteEntityUtil<VendorDTO> deleteEntityUtil = new DeleteEntityUtil<>(vendorDTO, vendorClient, getStage());
                                         deleteEntityUtil.deleteEntity(getOverviewTable(),
                                                 getIndex(),
                                                 "SUCCESSFULLY DELETED VENDOR",

@@ -364,9 +364,6 @@ public class GenerateStockController {
         });
     }
 
-
-
-
     @FXML
     public void handleAddItem(){
         ProductDTO selectedProduct = productList
@@ -378,9 +375,9 @@ public class GenerateStockController {
                 .map(t -> t.getProduct().getSku())
                 .collect(Collectors.toList());
         if(productIdList.contains(selectedProduct.getSku())){
-            new AlertBuilder()
+            new AlertBuilder(dialogStage)
                     .alertType(Alert.AlertType.ERROR)
-                    .alertContentText("Product Add Error")
+                    .alertHeaderText("Product Add Error")
                     .alertContentText(selectedProduct.getSku() + " has already been added!")
                     .build()
                     .showAndWait();
@@ -561,7 +558,7 @@ public class GenerateStockController {
 
         vendorsTask.setOnFailed(event -> {
             logger.error(vendorsTask.getException().getMessage());
-            new AlertBuilder()
+            new AlertBuilder(dialogStage)
                     .alertType(Alert.AlertType.ERROR)
                     .alertHeaderText("Database Error!")
                     .alertContentText("Unable to fetch vendor information from the database!")
@@ -582,7 +579,7 @@ public class GenerateStockController {
         });
         productsTask.setOnFailed(event -> {
             logger.error(productsTask.getException().getMessage());
-            new AlertBuilder()
+            new AlertBuilder(dialogStage)
                     .alertType(Alert.AlertType.ERROR)
                     .alertHeaderText("Database Error!")
                     .alertContentText("Unable to fetch product information from the database!")
@@ -755,11 +752,10 @@ public class GenerateStockController {
                 transaction.setPaymentStatus(Transaction.PaymentStatus.PARTIALLY_PAID);
             }
         }
-        Optional<ButtonType> result = new AlertBuilder()
+        Optional<ButtonType> result = new AlertBuilder(dialogStage)
                 .alertType(Alert.AlertType.CONFIRMATION)
-                .alertTitle("Transaction Confirmation")
+                .alertHeaderText("Transaction Confirmation")
                 .alertContentText("Are you sure you want to submit this transaction?\n")
-                .alertHeaderText(null)
                 .build()
                 .showAndWait();
         if(result.isPresent() && result.get() == ButtonType.OK){
@@ -792,7 +788,7 @@ public class GenerateStockController {
                     Exception ex = (Exception) newValue;
                     logger.error(ExceptionUtils.getRootCause(ex).getMessage());
                     JSONObject errorMsg = new JSONObject(ExceptionUtils.getRootCause(ex).getMessage());
-                    new AlertBuilder().alertType(Alert.AlertType.ERROR)
+                    new AlertBuilder(dialogStage).alertType(Alert.AlertType.ERROR)
                             .alertContentText(errorMsg.getString("taimErrorMessage"))
                             .build()
                             .showAndWait();
@@ -813,8 +809,8 @@ public class GenerateStockController {
                                 String newExMsg = ExceptionUtils.getRootCause(newEx).getMessage();
                                 logger.error(newExMsg);
                                 JSONObject newErrorMessage = new JSONObject(newExMsg);
-                                new AlertBuilder().alertType(Alert.AlertType.ERROR)
-                                        .alertHeaderText(newErrorMessage.getString("taimErrorMessage"))
+                                new AlertBuilder(dialogStage).alertType(Alert.AlertType.ERROR)
+                                        .alertContentText(newErrorMessage.getString("taimErrorMessage"))
                                         .build()
                                         .showAndWait();
                             }});
