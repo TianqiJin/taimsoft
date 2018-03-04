@@ -21,7 +21,7 @@ public class TransactionDTO extends BaseModelDTO {
     private ObjectProperty<Transaction.DeliveryStatus> deliveryStatus;
     private ObjectProperty<DateTime> deliveryDueDate;
     private List<TransactionDetailDTO> transactionDetails;
-    private List<PaymentDTO> payments;
+    private List<PaymentRecordDTO> paymentRecords;
     private List<DeliveryDTO> deliveries;
     private IntegerProperty refId;
     private BooleanProperty finalized;
@@ -40,7 +40,7 @@ public class TransactionDTO extends BaseModelDTO {
         paymentStatus = new SimpleObjectProperty<>();
         deliveryStatus = new SimpleObjectProperty<>();
         transactionDetails = new ArrayList<>();
-        payments = new ArrayList<>();
+        paymentRecords = new ArrayList<>();
         deliveries = new ArrayList<>();
         refId = new SimpleIntegerProperty();
         finalized = new SimpleBooleanProperty();
@@ -179,12 +179,12 @@ public class TransactionDTO extends BaseModelDTO {
         this.deliveryStatus.set(deliveryStatus);
     }
 
-    public List<PaymentDTO> getPayments() {
-        return payments;
+    public List<PaymentRecordDTO> getPaymentRecords() {
+        return paymentRecords;
     }
 
-    public void setPayments(List<PaymentDTO> payments) {
-        this.payments = payments;
+    public void setPaymentRecords(List<PaymentRecordDTO> paymentRecords) {
+        this.paymentRecords = paymentRecords;
     }
 
     public int getRefId() {

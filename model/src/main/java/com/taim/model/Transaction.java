@@ -131,7 +131,7 @@ public class Transaction extends BaseModel {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @Fetch(FetchMode.SUBSELECT)
     @JoinColumn(name = "transaction_id")
-    private List<Payment> payments;
+    private List<PaymentRecord> paymentRecords;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @Fetch(FetchMode.SUBSELECT)
     @JoinColumn(name = "transaction_id")
@@ -195,12 +195,12 @@ public class Transaction extends BaseModel {
         this.transactionDetails = transactionDetails;
     }
 
-    public List<Payment> getPayments() {
-        return payments;
+    public List<PaymentRecord> getPaymentRecords() {
+        return paymentRecords;
     }
 
-    public void setPayments(List<Payment> payments) {
-        this.payments = payments;
+    public void setPaymentRecords(List<PaymentRecord> paymentRecords) {
+        this.paymentRecords = paymentRecords;
     }
 
     public PaymentStatus getPaymentStatus() {
