@@ -5,10 +5,12 @@ import com.taim.backend.dao.IDao;
 import com.taim.model.Payment;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
 import org.yaml.snakeyaml.events.Event;
 
 import java.util.List;
 
+@Repository
 public class PaymentDaoImpl extends AbstractDao implements IDao<Payment> {
     @Override
     public Payment save(Payment object) {
