@@ -29,9 +29,7 @@ public class Transaction extends BaseModel {
     public enum TransactionType{
         QUOTATION("Quotation"),
         CONTRACT("Contract"),
-        INVOICE("Invoice"),
-        STOCK("Stock"),
-        RETURN("Return");
+        INVOICE("Invoice");
 
         TransactionType(String vvalue){
             this.value = vvalue;
@@ -88,9 +86,34 @@ public class Transaction extends BaseModel {
         }
 
         public static DeliveryStatus getStatus(String value){
-            for (DeliveryStatus ps : DeliveryStatus.values()){
-                if (value.equalsIgnoreCase(ps.name())){
-                    return ps;
+            for (DeliveryStatus ds : DeliveryStatus.values()){
+                if (value.equalsIgnoreCase(ds.name())){
+                    return ds;
+                }
+            }
+            return null;
+        }
+    }
+
+    public enum TransactionCategory{
+        OUT("Out"),
+        STOCK("Stock"),
+        RETURN("Return");
+
+        private String value;
+
+        TransactionCategory(String vvalue){
+            this.value = vvalue;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public static TransactionCategory getCategory(String value){
+            for (TransactionCategory tc : TransactionCategory.values()){
+                if (value.equalsIgnoreCase(tc.name())){
+                    return tc;
                 }
             }
             return null;
@@ -114,6 +137,8 @@ public class Transaction extends BaseModel {
     private Vendor vendor;
     @Column(name = "transaction_type", nullable = false)
     private TransactionType transactionType;
+    @Column(name = "transaction_category", nullable = false)
+    private TransactionCategory transactionCategory;
     @Column(name = "payment_status")
     private PaymentStatus paymentStatus;
     @Column(name = "delivery_status")
@@ -289,5 +314,13 @@ public class Transaction extends BaseModel {
 
     public void setAddressNote(String addressNote) {
         this.addressNote = addressNote;
+    }
+
+    public TransactionCategory getTransactionCategory() {
+        return transactionCategory;
+    }
+
+    public void setTransactionCategory(TransactionCategory transactionCategory) {
+        this.transactionCategory = transactionCategory;
     }
 }

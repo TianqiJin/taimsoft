@@ -19,6 +19,7 @@ public class TransactionDTO extends BaseModelDTO {
     private ObjectProperty<Transaction.PaymentStatus> paymentStatus;
     private ObjectProperty<DateTime> paymentDueDate;
     private ObjectProperty<Transaction.DeliveryStatus> deliveryStatus;
+    private ObjectProperty<Transaction.TransactionCategory> transactionCategory;
     private ObjectProperty<DateTime> deliveryDueDate;
     private List<TransactionDetailDTO> transactionDetails;
     private List<PaymentRecordDTO> paymentRecords;
@@ -39,6 +40,7 @@ public class TransactionDTO extends BaseModelDTO {
         transactionType = new SimpleObjectProperty<>();
         paymentStatus = new SimpleObjectProperty<>();
         deliveryStatus = new SimpleObjectProperty<>();
+        transactionCategory = new SimpleObjectProperty<>();
         transactionDetails = new ArrayList<>();
         paymentRecords = new ArrayList<>();
         deliveries = new ArrayList<>();
@@ -265,5 +267,17 @@ public class TransactionDTO extends BaseModelDTO {
 
     public void setAddressNote(String addressNote) {
         this.addressNote.set(addressNote);
+    }
+
+    public Transaction.TransactionCategory getTransactionCategory() {
+        return transactionCategory.get();
+    }
+
+    public ObjectProperty<Transaction.TransactionCategory> transactionCategoryProperty() {
+        return transactionCategory;
+    }
+
+    public void setTransactionCategory(Transaction.TransactionCategory transactionCategory) {
+        this.transactionCategory.set(transactionCategory);
     }
 }
