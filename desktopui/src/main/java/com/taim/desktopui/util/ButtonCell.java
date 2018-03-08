@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * Created by jiawei.liu on 9/18/17.
  */
-public  class ButtonCell extends TableCell<TransactionDetailDTO, Boolean> {
+public class ButtonCell extends TableCell<TransactionDetailDTO, Boolean> {
     Image image = new Image(getClass().getResourceAsStream("/pics/delete.png"));
     Button cellButton = new Button();
     public ButtonCell(TableView<TransactionDetailDTO> tableView, Map<Integer, Double> map, boolean edit,boolean add){

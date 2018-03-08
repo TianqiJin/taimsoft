@@ -9,7 +9,7 @@ public class PaymentDTO extends BaseModelDTO {
     private DoubleProperty paymentAmount;
     private ObjectProperty<Payment.PaymentType> paymentType;
     private BooleanProperty deposit;
-    private ObjectProperty<Staff> staff;
+    private ObjectProperty<StaffDTO> staff;
     private ObjectProperty<CustomerDTO> customer;
     private ObjectProperty<VendorDTO> vendor;
     private StringProperty note;
@@ -60,15 +60,15 @@ public class PaymentDTO extends BaseModelDTO {
         this.deposit.set(deposit);
     }
 
-    public Staff getStaff() {
+    public StaffDTO getStaff() {
         return staff.get();
     }
 
-    public ObjectProperty<Staff> staffProperty() {
+    public ObjectProperty<StaffDTO> staffProperty() {
         return staff;
     }
 
-    public void setStaff(Staff staff) {
+    public void setStaff(StaffDTO staff) {
         this.staff.set(staff);
     }
 

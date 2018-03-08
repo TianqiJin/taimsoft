@@ -56,6 +56,11 @@
             <version>8.0.1</version>
         </dependency>
         <dependency>
+            <groupId>org.fxmisc.easybind</groupId>
+            <artifactId>easybind</artifactId>
+            <version>1.0.3</version>
+        </dependency>
+        <dependency>
             <groupId>com.taim</groupId>
             <artifactId>model</artifactId>
             <version>1.0-SNAPSHOT</version>
