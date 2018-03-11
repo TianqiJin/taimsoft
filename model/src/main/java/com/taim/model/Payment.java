@@ -13,40 +13,34 @@ import javax.persistence.*;
 @Table(name = "payment")
 public class Payment extends BaseModel {
     public enum PaymentType{
-        CASH("Cash"),
-        CREDIT("Credit"),
-        DEBIT("Debit"),
-        CHEQUE("Cheque"),
-        VOID("Void"),
-        STORE_CREDIT("Store Credit");
+        CUSTOMER_PAYMENT("Customer Payment"),
+        VENDOR_PAYMENT("Vendor Payment");
 
         private String value;
-        PaymentType(String vvalue){
-            this.value = vvalue;
+
+        PaymentType(String vvalue){ this.value = vvalue; }
+
+        public static PaymentType getType(String value){
+            for (PaymentType pt : PaymentType.values()){
+                if (value.equalsIgnoreCase(pt.name())){
+                    return pt;
+                }
+            }
+            return null;
         }
 
         public String getValue() {
             return value;
         }
-
-        public void setValue(String value) {
-            this.value = value;
-        }
-        public static PaymentType getValue(String value){
-            for (PaymentType p: PaymentType.values()){
-                if (p.name().equalsIgnoreCase(value)){
-                    return p;
-                }
-            }
-            return null;
-        }
     }
+
     @Column(name = "payment_amount", nullable = false)
     private double paymentAmount;
-    @Column(name = "payment_type", nullable = false)
+    @Column
     private PaymentType paymentType;
-    @Column(name = "is_deposit", nullable = false)
-    private boolean deposit;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "payment_method_id")
+    private PaymentMethod paymentMethod;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "staff_id")
     private Staff staff;
@@ -69,24 +63,12 @@ public class Payment extends BaseModel {
         this.paymentAmount = paymentAmount;
     }
 
-    public PaymentType getPaymentType() {
-        return paymentType;
+    public PaymentMethod getPaymentMethod() {
+        return paymentMethod;
     }
 
-    public void setPaymentType(PaymentType paymentType) {
-        this.paymentType = paymentType;
-    }
-
-    public boolean isDeposit() {
-        return deposit;
-    }
-
-    public void setDeposit(boolean deposit) {
-        this.deposit = deposit;
-    }
-
-    public Staff getStaff() {
-        return staff;
+    public void setPaymentMethod(PaymentMethod paymentMethod) {
+        this.paymentMethod = paymentMethod;
     }
 
     public void setStaff(Staff staff) {
@@ -115,5 +97,17 @@ public class Payment extends BaseModel {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public PaymentType getPaymentType() {
+        return paymentType;
+    }
+
+    public void setPaymentType(PaymentType paymentType) {
+        this.paymentType = paymentType;
+    }
+
+    public Staff getStaff() {
+        return staff;
     }
 }

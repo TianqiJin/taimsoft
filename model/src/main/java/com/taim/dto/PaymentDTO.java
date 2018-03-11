@@ -2,13 +2,12 @@ package com.taim.dto;
 
 import com.taim.dto.basedtos.BaseModelDTO;
 import com.taim.model.Payment;
-import com.taim.model.Staff;
 import javafx.beans.property.*;
 
 public class PaymentDTO extends BaseModelDTO {
     private DoubleProperty paymentAmount;
     private ObjectProperty<Payment.PaymentType> paymentType;
-    private BooleanProperty deposit;
+    private ObjectProperty<PaymentMethodDTO> paymentMethod;
     private ObjectProperty<StaffDTO> staff;
     private ObjectProperty<CustomerDTO> customer;
     private ObjectProperty<VendorDTO> vendor;
@@ -17,7 +16,7 @@ public class PaymentDTO extends BaseModelDTO {
     public PaymentDTO(){
         paymentAmount = new SimpleDoubleProperty();
         paymentType = new SimpleObjectProperty<>();
-        deposit = new SimpleBooleanProperty();
+        paymentMethod = new SimpleObjectProperty<>();
         staff = new SimpleObjectProperty<>();
         customer = new SimpleObjectProperty<>();
         vendor = new SimpleObjectProperty<>();
@@ -48,16 +47,16 @@ public class PaymentDTO extends BaseModelDTO {
         this.paymentType.set(paymentType);
     }
 
-    public boolean isDeposit() {
-        return deposit.get();
+    public PaymentMethodDTO getPaymentMethod() {
+        return paymentMethod.get();
     }
 
-    public BooleanProperty depositProperty() {
-        return deposit;
+    public ObjectProperty<PaymentMethodDTO> paymentMethodProperty() {
+        return paymentMethod;
     }
 
-    public void setDeposit(boolean deposit) {
-        this.deposit.set(deposit);
+    public void setPaymentMethod(PaymentMethodDTO paymentMethod) {
+        this.paymentMethod.set(paymentMethod);
     }
 
     public StaffDTO getStaff() {

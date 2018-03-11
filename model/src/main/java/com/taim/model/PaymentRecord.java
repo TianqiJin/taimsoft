@@ -12,6 +12,8 @@ public class PaymentRecord extends BaseModel {
     private Payment payment;
     @Column
     private double amount;
+    @Column(name = "is_deposit", nullable = false)
+    private boolean deposit;
 
     public PaymentRecord(){}
 
@@ -29,5 +31,13 @@ public class PaymentRecord extends BaseModel {
 
     public void setAmount(double amount) {
         this.amount = amount;
+    }
+
+    public boolean isDeposit() {
+        return deposit;
+    }
+
+    public void setDeposit(boolean deposit) {
+        this.deposit = deposit;
     }
 }

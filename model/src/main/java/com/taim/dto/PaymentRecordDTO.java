@@ -1,18 +1,17 @@
 package com.taim.dto;
 
 import com.taim.dto.basedtos.BaseModelDTO;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 
 public class PaymentRecordDTO extends BaseModelDTO {
     private ObjectProperty<PaymentDTO> payment;
     private DoubleProperty amount;
+    private BooleanProperty deposit;
 
     public PaymentRecordDTO(){
         this.payment = new SimpleObjectProperty<>();
         this.amount = new SimpleDoubleProperty();
+        deposit = new SimpleBooleanProperty();
     }
 
     public PaymentDTO getPayment() {
@@ -37,5 +36,17 @@ public class PaymentRecordDTO extends BaseModelDTO {
 
     public void setAmount(double amount) {
         this.amount.set(amount);
+    }
+
+    public boolean isDeposit() {
+        return deposit.get();
+    }
+
+    public BooleanProperty depositProperty() {
+        return deposit;
+    }
+
+    public void setDeposit(boolean deposit) {
+        this.deposit.set(deposit);
     }
 }

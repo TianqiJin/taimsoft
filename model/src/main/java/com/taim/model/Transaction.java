@@ -29,7 +29,8 @@ public class Transaction extends BaseModel {
     public enum TransactionType{
         QUOTATION("Quotation"),
         CONTRACT("Contract"),
-        INVOICE("Invoice");
+        INVOICE("Invoice"),
+        BILL("Bill");
 
         TransactionType(String vvalue){
             this.value = vvalue;
