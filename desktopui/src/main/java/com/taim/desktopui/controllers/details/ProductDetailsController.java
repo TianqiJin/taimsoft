@@ -114,9 +114,9 @@ public class ProductDetailsController implements IDetailController<ProductDTO> {
         listTask.setOnSucceeded(event -> {
             List<TransactionDTO> list = listTask.getValue();
             invoiceList = list.stream().filter(t -> t.getTransactionType().equals(Transaction.TransactionType.INVOICE)).collect(Collectors.toList());
-            stockList = list.stream().filter(t -> t.getTransactionType().equals(Transaction.TransactionType.STOCK)).collect(Collectors.toList());
+//            stockList = list.stream().filter(t -> t.getTransactionType().equals(Transaction.TransactionType.STOCK)).collect(Collectors.toList());
             quotationList = list.stream().filter(t -> t.getTransactionType().equals(Transaction.TransactionType.QUOTATION)).collect(Collectors.toList());
-            returnList = list.stream().filter(t -> t.getTransactionType().equals(Transaction.TransactionType.RETURN)).collect(Collectors.toList());
+//            returnList = list.stream().filter(t -> t.getTransactionType().equals(Transaction.TransactionType.RETURN)).collect(Collectors.toList());
             initTransactionTabPane();
             bindProductInfoLabels();
         });

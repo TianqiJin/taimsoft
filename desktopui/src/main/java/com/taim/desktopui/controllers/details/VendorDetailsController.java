@@ -117,12 +117,12 @@ public class VendorDetailsController implements IDetailController<VendorDTO> {
         };
 
         transactionTask.setOnSucceeded(event ->{
-            try {
-                this.stockList = transactionTask.get().stream().filter(t -> t.getTransactionType().equals(Transaction.TransactionType.STOCK)).collect(Collectors.toList());
-                initTransactionTabPane();
-            } catch (InterruptedException | ExecutionException e) {
-                logger.error(e.getMessage(), e);
-            }
+//            try {
+//                this.stockList = transactionTask.get().stream().filter(t -> t.getTransactionType().equals(Transaction.TransactionType.STOCK)).collect(Collectors.toList());
+//                initTransactionTabPane();
+//            } catch (InterruptedException | ExecutionException e) {
+//                logger.error(e.getMessage(), e);
+//            }
         });
         transactionTask.setOnFailed(event -> {
             new AlertBuilder(stage)

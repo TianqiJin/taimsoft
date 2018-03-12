@@ -4,7 +4,9 @@ import com.jfoenix.controls.JFXComboBox;
 import com.taim.client.TransactionClient;
 import com.taim.desktopui.util.TransactionPanelLoader;
 import com.taim.dto.PaymentDTO;
+import com.taim.dto.PaymentRecordDTO;
 import com.taim.dto.TransactionDTO;
+import com.taim.model.PaymentRecord;
 import com.taim.model.Transaction;
 import com.taim.desktopui.util.RestClientFactory;
 import com.taim.desktopui.util.VistaNavigator;
@@ -31,7 +33,6 @@ import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 import static com.taim.desktopui.controllers.overview.IOverviewController.SummaryLabelMode.*;
-import static com.taim.desktopui.controllers.overview.IOverviewController.SummaryLabelMode.STOCK_UNPAID;
 
 public class HomeOverviewController {
     private static final int YEAR_RANGE = 20;
@@ -169,8 +170,8 @@ public class HomeOverviewController {
         bindSummaryLabel(totalQuotedLabel, QUOTED);
         bindSummaryLabel(totalInvoicePaidLabel, INVOICE_PAID);
         bindSummaryLabel(totalInvoiceUnpaidLabel, INVOICE_UNPAID);
-        bindSummaryLabel(totalStockPaidLabel, STOCK_PAID);
-        bindSummaryLabel(totalStockUnpaidLabel, STOCK_UNPAID);
+        bindSummaryLabel(totalStockPaidLabel, BILL_PAID);
+        bindSummaryLabel(totalStockUnpaidLabel, BILL_UNPAID);
     }
 
     private void bindSummaryLabel(Label label, IOverviewController.SummaryLabelMode mode){
@@ -191,8 +192,8 @@ public class HomeOverviewController {
                                     totalValue = totalValue + item.getSaleAmount();
                                 }else if(item.getTransactionType().equals(Transaction.TransactionType.INVOICE) &&
                                         item.getPaymentStatus().equals(Transaction.PaymentStatus.PARTIALLY_PAID)){
-                                    for(PaymentDTO payment: item.getPayments()){
-                                        totalValue += payment.getPaymentAmount();
+                                    for(PaymentRecordDTO payment: item.getPaymentRecords()){
+                                        totalValue += payment.getAmount();
                                     }
                                 }
                             }
@@ -205,36 +206,36 @@ public class HomeOverviewController {
                                 }else if(item.getTransactionType().equals(Transaction.TransactionType.INVOICE) &&
                                         item.getPaymentStatus().equals(Transaction.PaymentStatus.PARTIALLY_PAID)){
                                     double unpaid = 0;
-                                    for(PaymentDTO payment: item.getPayments()){
-                                        unpaid += payment.getPaymentAmount();
+                                    for(PaymentRecordDTO payment: item.getPaymentRecords()){
+                                        unpaid += payment.getAmount();
                                     }
                                     totalValue += unpaid;
                                 }
                             }
                             break;
-                        case STOCK_PAID:
+                        case BILL_PAID:
                             for (TransactionDTO item : yearlyTransactions) {
-                                if(item.getTransactionType().equals(Transaction.TransactionType.STOCK) &&
+                                if(item.getTransactionType().equals(Transaction.TransactionType.BILL) &&
                                         item.getPaymentStatus().equals(Transaction.PaymentStatus.PAID)){
                                     totalValue = totalValue + item.getSaleAmount();
-                                }else if(item.getTransactionType().equals(Transaction.TransactionType.STOCK) &&
+                                }else if(item.getTransactionType().equals(Transaction.TransactionType.BILL) &&
                                         item.getPaymentStatus().equals(Transaction.PaymentStatus.PARTIALLY_PAID)){
-                                    for(PaymentDTO payment: item.getPayments()){
-                                        totalValue += payment.getPaymentAmount();
+                                    for(PaymentRecordDTO payment: item.getPaymentRecords()){
+                                        totalValue += payment.getAmount();
                                     }
                                 }
                             }
                             break;
-                        case STOCK_UNPAID:
+                        case BILL_UNPAID:
                             for (TransactionDTO item : yearlyTransactions) {
-                                if(item.getTransactionType().equals(Transaction.TransactionType.STOCK) &&
+                                if(item.getTransactionType().equals(Transaction.TransactionType.BILL) &&
                                         item.getPaymentStatus().equals(Transaction.PaymentStatus.UNPAID)){
                                     totalValue = totalValue + item.getSaleAmount();
-                                }else if(item.getTransactionType().equals(Transaction.TransactionType.STOCK) &&
+                                }else if(item.getTransactionType().equals(Transaction.TransactionType.BILL) &&
                                         item.getPaymentStatus().equals(Transaction.PaymentStatus.PARTIALLY_PAID)){
                                     double unpaid = 0;
-                                    for(PaymentDTO payment: item.getPayments()){
-                                        unpaid += payment.getPaymentAmount();
+                                    for(PaymentRecordDTO payment: item.getPaymentRecords()){
+                                        unpaid += payment.getAmount();
                                     }
                                     totalValue += unpaid;
                                 }
@@ -264,15 +265,15 @@ public class HomeOverviewController {
             double income = monthTransactions.stream()
                     .filter(transactionDTO -> transactionDTO.getTransactionType().equals(Transaction.TransactionType.INVOICE))
                     .mapToDouble(TransactionDTO::getSaleAmount).sum();
-            double expense = monthTransactions.stream()
-                    .filter(transactionDTO -> transactionDTO.getTransactionType().equals(Transaction.TransactionType.STOCK))
-                    .mapToDouble(TransactionDTO::getSaleAmount).sum();
+//            double expense = monthTransactions.stream()
+//                    .filter(transactionDTO -> transactionDTO.getTransactionType().equals(Transaction.TransactionType.STOCK))
+//                    .mapToDouble(TransactionDTO::getSaleAmount).sum();
             double quotation = monthTransactions.stream()
                     .filter(transactionDTO -> transactionDTO.getTransactionType().equals(Transaction.TransactionType.QUOTATION) && !transactionDTO.isFinalized())
                     .mapToDouble(TransactionDTO::getSaleAmount).sum();
 
             incomeSeries.getData().add(new XYChart.Data<>(month, income));
-            expenseSeries.getData().add(new XYChart.Data<>(month, expense));
+//            expenseSeries.getData().add(new XYChart.Data<>(month, expense));
             quoteSeries.getData().add(new XYChart.Data<>(month, quotation));
         }
         incomeExpenseBarChart.getData().clear();
@@ -295,11 +296,12 @@ public class HomeOverviewController {
             double income = monthTransactions.stream()
                     .filter(transactionDTO -> transactionDTO.getTransactionType().equals(Transaction.TransactionType.INVOICE))
                     .mapToDouble(TransactionDTO::getSaleAmount).sum();
-            double expense = monthTransactions.stream()
-                    .filter(transactionDTO -> transactionDTO.getTransactionType().equals(Transaction.TransactionType.STOCK))
-                    .mapToDouble(TransactionDTO::getSaleAmount).sum();
+//            double expense = monthTransactions.stream()
+//                    .filter(transactionDTO -> transactionDTO.getTransactionType().equals(Transaction.TransactionType.STOCK))
+//                    .mapToDouble(TransactionDTO::getSaleAmount).sum();
 
-            revenueSeries.getData().add(new XYChart.Data<>(month, (income - expense)));
+//            revenueSeries.getData().add(new XYChart.Data<>(month, (income - expense)));
+
         }
 
         revenueLineChart.getData().clear();
@@ -357,10 +359,10 @@ public class HomeOverviewController {
                             switch(transactionDTO.getTransactionType()) {
                                 case INVOICE:
                                     TransactionPanelLoader.loadInvoice(transactionDTO);
-                                case RETURN:
-                                    TransactionPanelLoader.loadQuotation(transactionDTO);
-                                case STOCK:
-                                    TransactionPanelLoader.loadStock(transactionDTO);
+//                                case CONTRACT:
+//                                    TransactionPanelLoader.loadQuotation(transactionDTO);
+//                                case STOCK:
+//                                    TransactionPanelLoader.loadStock(transactionDTO);
                                 default:
                                     break;
                             }

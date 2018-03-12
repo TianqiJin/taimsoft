@@ -62,6 +62,7 @@ public class CustomerDetailsController implements IDetailController<CustomerDTO>
     @FXML
     private Label orgNameLabel;
     @FXML
+
     private Label streetNumLabel;
     @FXML
     private Label streetLabel;
@@ -130,7 +131,7 @@ public class CustomerDetailsController implements IDetailController<CustomerDTO>
             try {
                 this.invoiceList = transactionTask.get().stream().filter(t -> t.getTransactionType().equals(Transaction.TransactionType.INVOICE)).collect(Collectors.toList());
                 this.quotationList = transactionTask.get().stream().filter(t -> t.getTransactionType().equals(Transaction.TransactionType.QUOTATION)).collect(Collectors.toList());
-                this.returnList = transactionTask.get().stream().filter(t -> t.getTransactionType().equals(Transaction.TransactionType.RETURN)).collect(Collectors.toList());
+//                this.returnList = transactionTask.get().stream().filter(t -> t.getTransactionType().equals(Transaction.TransactionType.RETURN)).collect(Collectors.toList());
                 initTransactionTabPane();
             } catch (InterruptedException | ExecutionException e) {
                 logger.error(e.getMessage(), e);

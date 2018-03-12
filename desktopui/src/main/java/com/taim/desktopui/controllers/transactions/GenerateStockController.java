@@ -309,7 +309,7 @@ public class GenerateStockController {
         paymentField.textProperty().addListener((observable, oldValue, newValue) -> showBalanceDetails());
 
         paymentTypeChoiceBox.getSelectionModel().selectFirst();
-        paymentTypeChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> payment.setPaymentType(Payment.PaymentType.getValue(newValue)));
+//        paymentTypeChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> payment.setPaymentType(Payment.PaymentType.getValue(newValue)));
 
         paymentDueDatePicker.setOnAction(event -> this.transaction.setPaymentDueDate(DateUtils.toDateTime(paymentDueDatePicker.getValue())));
         paymentDueDatePicker.setPromptText(DATE_PATTERN.toLowerCase());
@@ -453,7 +453,7 @@ public class GenerateStockController {
             this.staff = VistaNavigator.getGlobalStaff();
             this.mode= Mode.CREATE;
             this.transaction = new TransactionDTO();
-            transaction.setTransactionType(Transaction.TransactionType.STOCK);
+//            transaction.setTransactionType(Transaction.TransactionType.STOCK);
             transaction.setFinalized(false);
             transaction.setStaff(staff);
             transaction.setDateCreated(DateTime.now());
@@ -692,9 +692,9 @@ public class GenerateStockController {
     private void showBalanceDetails(){
         BigDecimal balance = new BigDecimal(totalLabel.getText()).setScale(2, BigDecimal.ROUND_HALF_EVEN);
         BigDecimal paid = new BigDecimal(BigInteger.ZERO);
-        for (PaymentDTO prevPayment : transaction.getPayments()){
-            paid = paid.add(new BigDecimal(prevPayment.getPaymentAmount()));
-        }
+//        for (PaymentDTO prevPayment : transaction.getPayments()){
+//            paid = paid.add(new BigDecimal(prevPayment.getPaymentAmount()));
+//        }
         balance = balance.subtract(paid);
         paidAmountLabel.setText(paid.toString());
 
@@ -728,8 +728,8 @@ public class GenerateStockController {
             payment.setDateCreated(DateTime.now());
             payment.setDateModified(DateTime.now());
             payment.setPaymentAmount(new BigDecimal(paymentField.getText()).doubleValue());
-            payment.setPaymentType(Payment.PaymentType.getValue(paymentTypeChoiceBox.getValue()));
-            payment.setDeposit(false);
+//            payment.setPaymentType(Payment.PaymentType.getValue(paymentTypeChoiceBox.getValue()));
+//            payment.setDeposit(false);
         }
         transaction.getTransactionDetails().addAll(transactionDetailDTOObservableList);
         transaction.setSaleAmount(Double.valueOf(totalLabel.getText()));
@@ -740,18 +740,18 @@ public class GenerateStockController {
         transaction.setStaff(staff);
         //transaction.setDateModified(DateTime.now());
 
-        if (this.payment.getPaymentAmount()!=0){
-            transaction.getPayments().add(payment);
-            double paid = 0.0;
-            for (PaymentDTO p : transaction.getPayments()){
-                paid+=p.getPaymentAmount();
-            }
-            if (paid >= transaction.getSaleAmount()){
-                transaction.setPaymentStatus(Transaction.PaymentStatus.PAID);
-            }else if (paid >0){
-                transaction.setPaymentStatus(Transaction.PaymentStatus.PARTIALLY_PAID);
-            }
-        }
+//        if (this.payment.getPaymentAmount()!=0){
+//            transaction.getPayments().add(payment);
+//            double paid = 0.0;
+//            for (PaymentDTO p : transaction.getPayments()){
+//                paid+=p.getPaymentAmount();
+//            }
+//            if (paid >= transaction.getSaleAmount()){
+//                transaction.setPaymentStatus(Transaction.PaymentStatus.PAID);
+//            }else if (paid >0){
+//                transaction.setPaymentStatus(Transaction.PaymentStatus.PARTIALLY_PAID);
+//            }
+//        }
         Optional<ButtonType> result = new AlertBuilder(dialogStage)
                 .alertType(Alert.AlertType.CONFIRMATION)
                 .alertHeaderText("Transaction Confirmation")

@@ -30,18 +30,6 @@ public class PropertyConfigurationController {
     @FXML
     private void initialize(){
         buttonBox.prefWidthProperty().bind(settingsPane.widthProperty());
-
-        try {
-            FXMLLoader fXMLLoader = new FXMLLoader();
-            AnchorPane root = fXMLLoader.load(this.getClass().getResource("/fxml/settings/GeneralSettings.fxml").openStream());
-            controller = fXMLLoader.getController();
-            controller.initWelcomeData();
-            root.prefHeightProperty().bind(settingsPane.heightProperty());
-            root.prefWidthProperty().bind(settingsPane.widthProperty());
-            settingsPane.getChildren().setAll(root);
-        } catch (IOException ex) {
-            logger.error(ex.getMessage(), ex);
-        }
     }
 
     @FXML
@@ -77,6 +65,21 @@ public class PropertyConfigurationController {
             }
         }
 
+    }
+
+    public void initSettingsPanel(){
+        try {
+            FXMLLoader fXMLLoader = new FXMLLoader();
+            AnchorPane root = fXMLLoader.load(this.getClass().getResource("/fxml/settings/GeneralSettings.fxml").openStream());
+            controller = fXMLLoader.getController();
+            controller.setStage(stage);
+            controller.initWelcomeData();
+            root.prefHeightProperty().bind(settingsPane.heightProperty());
+            root.prefWidthProperty().bind(settingsPane.widthProperty());
+            settingsPane.getChildren().setAll(root);
+        } catch (IOException ex) {
+            logger.error(ex.getMessage(), ex);
+        }
     }
 
     public void setStage(Stage stage) {

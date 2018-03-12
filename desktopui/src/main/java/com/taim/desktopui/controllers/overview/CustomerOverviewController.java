@@ -198,7 +198,6 @@ public class CustomerOverviewController extends IOverviewController<CustomerDTO>
     public void initSummaryLabel() {
         bindSummaryLabel(totalPaidLabel, SummaryLabelMode.INVOICE_PAID);
         bindSummaryLabel(totalUnpaidLabel, SummaryLabelMode.INVOICE_UNPAID);
-        bindSummaryLabel(totalQuotedLabel, SummaryLabelMode.QUOTED);
     }
 
     @FXML
@@ -270,17 +269,10 @@ public class CustomerOverviewController extends IOverviewController<CustomerDTO>
     }
 
 
-    private void bindSummaryLabel(Label label, SummaryLabelMode mode){
+    private void  bindSummaryLabel(Label label, SummaryLabelMode mode){
         DoubleBinding numberBinding = Bindings.createDoubleBinding(() -> {
                     double totalValue = 0 ;
                     switch(mode){
-                        case QUOTED:
-                            for (TransactionDTO item : getTransactionList()) {
-                                if(item.getTransactionType().equals(Transaction.TransactionType.QUOTATION) && !item.isFinalized()){
-                                    totalValue = totalValue + item.getSaleAmount();
-                                }
-                            }
-                            break;
                         case INVOICE_PAID:
                             for (TransactionDTO item : getTransactionList()) {
                                 if(item.getTransactionType().equals(Transaction.TransactionType.INVOICE) &&

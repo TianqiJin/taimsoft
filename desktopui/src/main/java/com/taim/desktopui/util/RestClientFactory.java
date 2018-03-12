@@ -14,6 +14,7 @@ public class RestClientFactory {
     private static PropertyClient propertyClient;
     private static OrganizationClient organizationClient;
     private static LicenseClient licenseClient;
+    private static PaymentClient paymentClient;
 
     public static TransactionClient getTransactionClient(){
         if(transactionClient == null){
@@ -101,6 +102,17 @@ public class RestClientFactory {
             }
         }
         return organizationClient;
+    }
+
+    public static PaymentClient getPaymentClient(){
+        if(paymentClient == null){
+            synchronized (RestClientFactory.class){
+                if(paymentClient == null){
+                    paymentClient = new PaymentClient();
+                }
+            }
+        }
+        return paymentClient;
     }
 
 }

@@ -20,6 +20,7 @@ public class VistaNavigator {
     private static final Logger logger = LoggerFactory.getLogger(VistaNavigator.class);
     public static final String VISTA_HOME = "overview/HomeOverview.fxml";
     public static final String VISTA_TRANSACTION = "overview/TransactionOverview.fxml";
+    public static final String VISTA_PAYMENT = "overview/PaymentOverview.fxml";
     public static final String VISTA_PRODUCT = "overview/ProductOverview.fxml";
     public static final String VISTA_CUSTOMER = "overview/CustomerOverview.fxml";
     public static final String VISTA_STAFF = "overview/StaffOverview.fxml";

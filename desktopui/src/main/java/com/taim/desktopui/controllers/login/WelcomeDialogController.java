@@ -34,6 +34,7 @@ public class WelcomeDialogController {
             dialogStage.setWidth(bounds.getWidth());
             dialogStage.setHeight(bounds.getHeight());
             controller.setStage(dialogStage);
+            controller.initSettingsPanel();
 
             dialogStage.showAndWait();
             welcomeStage.close();

@@ -235,37 +235,37 @@ public class VendorOverviewController extends IOverviewController<VendorDTO> {
 
     @Override
     public void initSummaryLabel() {
-        bindSummaryLabel(totalUnpaidLabel, STOCK_UNPAID);
-        bindSummaryLabel(totalPaidLabel, STOCK_PAID);
+//        bindSummaryLabel(totalUnpaidLabel, STOCK_UNPAID);
+//        bindSummaryLabel(totalPaidLabel, STOCK_PAID);
     }
 
     private void bindSummaryLabel(Label label, SummaryLabelMode mode){
-        DoubleBinding numberBinding = Bindings.createDoubleBinding(() -> {
-                    double totalValue = 0 ;
-                    switch(mode){
-                        case STOCK_PAID:
-                            for (TransactionDTO item : getTransactionList()) {
-                                if(item.getTransactionType().equals(Transaction.TransactionType.STOCK) &&
-                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.PAID)){
-                                    totalValue = totalValue + item.getSaleAmount();
-                                }
-                            }
-                            break;
-                        case STOCK_UNPAID:
-                            for (TransactionDTO item : getTransactionList()) {
-                                if(item.getTransactionType().equals(Transaction.TransactionType.STOCK) &&
-                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.UNPAID)){
-                                    totalValue = totalValue + item.getSaleAmount();
-                                }
-                            }
-                            break;
-                        default:
-                            break;
-                    }
-
-                    return totalValue ;
-                },
-                getOverviewTable().getItems());
-        label.textProperty().bind(Bindings.format("%s%.2f", "$", numberBinding));
+//        DoubleBinding numberBinding = Bindings.createDoubleBinding(() -> {
+//                    double totalValue = 0 ;
+//                    switch(mode){
+//                        case STOCK_PAID:
+//                            for (TransactionDTO item : getTransactionList()) {
+//                                if(item.getTransactionType().equals(Transaction.TransactionType.STOCK) &&
+//                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.PAID)){
+//                                    totalValue = totalValue + item.getSaleAmount();
+//                                }
+//                            }
+//                            break;
+//                        case STOCK_UNPAID:
+//                            for (TransactionDTO item : getTransactionList()) {
+//                                if(item.getTransactionType().equals(Transaction.TransactionType.STOCK) &&
+//                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.UNPAID)){
+//                                    totalValue = totalValue + item.getSaleAmount();
+//                                }
+//                            }
+//                            break;
+//                        default:
+//                            break;
+//                    }
+//
+//                    return totalValue ;
+//                },
+//                getOverviewTable().getItems());
+//        label.textProperty().bind(Bindings.format("%s%.2f", "$", numberBinding));
     }
 }

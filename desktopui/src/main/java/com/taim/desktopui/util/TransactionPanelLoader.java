@@ -140,15 +140,15 @@ public class TransactionPanelLoader {
             return transaction;
         }
 
-        if(transaction.getTransactionType()!= Transaction.TransactionType.RETURN && transaction.getTransactionType()!= Transaction.TransactionType.INVOICE){
-            new AlertBuilder(VistaNavigator.getRootLayoutController().getStage())
-                    .alertType(Alert.AlertType.ERROR)
-                    .alertHeaderText("Transaction Error!")
-                    .alertContentText("Please either select an Invoice to return or select Return to Edit!!")
-                    .build()
-                    .showAndWait();
-            return transaction;
-        }
+//        if(transaction.getTransactionType()!= Transaction.TransactionType.RETURN && transaction.getTransactionType()!= Transaction.TransactionType.INVOICE){
+//            new AlertBuilder(VistaNavigator.getRootLayoutController().getStage())
+//                    .alertType(Alert.AlertType.ERROR)
+//                    .alertHeaderText("Transaction Error!")
+//                    .alertContentText("Please either select an Invoice to return or select Return to Edit!!")
+//                    .build()
+//                    .showAndWait();
+//            return transaction;
+//        }
         if (transaction.getTransactionType()== Transaction.TransactionType.INVOICE && !transaction.isFinalized()){
             new AlertBuilder(VistaNavigator.getRootLayoutController().getStage())
                     .alertType(Alert.AlertType.ERROR)

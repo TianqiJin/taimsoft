@@ -325,9 +325,10 @@ public class InvoiceGenerator {
         }else if(type.equals(InvoiceType.INVOICE)){
             if(this.invoice.getTransaction().getTransactionType().equals(Transaction.TransactionType.INVOICE)){
                 typeString = profileImp.getName();
-            }else if(this.invoice.getTransaction().getTransactionType().equals(Transaction.TransactionType.RETURN)){
-                typeString = "RETURN";
             }
+//            else if(this.invoice.getTransaction().getTransactionType().equals(Transaction.TransactionType.RETURN)){
+//                typeString = "RETURN";
+//            }
         }
 
         //Generate invoice Id
@@ -440,9 +441,9 @@ public class InvoiceGenerator {
         paymentTable.addCell(getCellTop("$CAD  " + invoice.getTotal(), Element.ALIGN_JUSTIFIED_ALL, totalFont));
 
         double paid = 0;
-        for (PaymentDTO paymentRecord : invoice.getTransaction().getPayments()){
-            paid+=paymentRecord.getPaymentAmount();
-        }
+//        for (PaymentDTO paymentRecord : invoice.getTransaction().getPayments()){
+//            paid+=paymentRecord.getPaymentAmount();
+//        }
         BigDecimal paidRoundEven = new BigDecimal(paid).setScale(2, BigDecimal.ROUND_HALF_EVEN);
         getEmptyCellHolder(paymentTable, 5);
         paymentTable.addCell(getCellUnder("Paid:", Element.ALIGN_LEFT, totalFont));
@@ -480,126 +481,126 @@ public class InvoiceGenerator {
         PdfPCell seller;
         String buyerWho;
         String sellerWho;
-        if(this.invoice.getTransaction().getTransactionType().equals(Transaction.TransactionType.RETURN)){
-            buyerWho = "From:";
-            sellerWho = "To:";
-        }else{
-            buyerWho = "To:";
-            sellerWho = "From:";
-        }
-        buyer = getPartyAddress(buyerWho,
-                basic.getBuyerName(),
-                basic.getBuyerLineOne(),
-                basic.getBuyerLineTwo(),
-                basic.getBuyerCountryID(),
-                basic.getBuyerPostcode(),
-                basic.getBuyerCityName(),
-                basic.getBuyerCompanyName(),
-                basic.getBuyerPhoneNumber(),
-                basic.getBuyerEmail());
-        seller = getPartyAddress(sellerWho,
-                basic.getSellerName(),
-                basic.getSellerLineOne(),
-                basic.getSellerLineTwo(),
-                basic.getSellerCountryID(),
-                basic.getSellerPostcode(),
-                basic.getSellerCityName(),
-                basic.getSellerCompanyName(),
-                basic.getSellerPhoneNumber(),
-                basic.getSellerEmail());
-        if(this.invoice.getTransaction().getTransactionType().equals(Transaction.TransactionType.RETURN)){
-            table.addCell(buyer);
-            table.addCell(seller);
-        }else{
-            table.addCell(seller);
-            table.addCell(buyer);
-        }
-        try {
-            document.add(table);
-        } catch (DocumentException e) {
-            logger.error(e.getMessage() + "\nThe full stack trace is: ", e);
-            errorMsg.append(e.getMessage()).append("\n");
-        }
+//        if(this.invoice.getTransaction().getTransactionType().equals(Transaction.TransactionType.RETURN)){
+//            buyerWho = "From:";
+//            sellerWho = "To:";
+//        }else{
+//            buyerWho = "To:";
+//            sellerWho = "From:";
+//        }
+//        buyer = getPartyAddress(buyerWho,
+//                basic.getBuyerName(),
+//                basic.getBuyerLineOne(),
+//                basic.getBuyerLineTwo(),
+//                basic.getBuyerCountryID(),
+//                basic.getBuyerPostcode(),
+//                basic.getBuyerCityName(),
+//                basic.getBuyerCompanyName(),
+//                basic.getBuyerPhoneNumber(),
+//                basic.getBuyerEmail());
+//        seller = getPartyAddress(sellerWho,
+//                basic.getSellerName(),
+//                basic.getSellerLineOne(),
+//                basic.getSellerLineTwo(),
+//                basic.getSellerCountryID(),
+//                basic.getSellerPostcode(),
+//                basic.getSellerCityName(),
+//                basic.getSellerCompanyName(),
+//                basic.getSellerPhoneNumber(),
+//                basic.getSellerEmail());
+//        if(this.invoice.getTransaction().getTransactionType().equals(Transaction.TransactionType.RETURN)){
+//            table.addCell(buyer);
+//            table.addCell(seller);
+//        }else{
+//            table.addCell(seller);
+//            table.addCell(buyer);
+//        }
+//        try {
+//            document.add(table);
+//        } catch (DocumentException e) {
+//            logger.error(e.getMessage() + "\nThe full stack trace is: ", e);
+//            errorMsg.append(e.getMessage()).append("\n");
+//        }
 
     }
 
     private void createPaymentInfo(Document document, InvoiceType type){
-        Paragraph p = new Paragraph("Payment Information:",addressFont);
-        PdfPTable table = null;
-        int row = 0;
-        p.setAlignment(Element.ALIGN_LEFT);
-        if(type.equals(InvoiceType.DELIVERY)){
-            table = new PdfPTable(2);
-            table.setWidthPercentage(50);
-            table.setHorizontalAlignment(0);
-            table.setSpacingBefore(10);
-            try {
-                table.setWidths(new int[]{5,5});
-            } catch (DocumentException e) {
-                logger.error(e.getMessage() + "\nThe full stack trace is: ", e);
-                errorMsg.append(e.getMessage()).append("\n");
-            }
-            table.addCell(getCellTitle("Date", Element.ALIGN_CENTER, tableTitle,BaseColor.BLACK));
-            table.addCell(getCellTitle("Type", Element.ALIGN_CENTER, tableTitle,BaseColor.BLACK));
-            row = 0;
-            for (PaymentDTO paymentRecord : invoice.getTransaction().getPayments()){
-                table.addCell(getCellwithBackground(dtf.print(paymentRecord.getDateCreated()), Element.ALIGN_LEFT, totalFont, row));
-                table.addCell(getCellwithBackground(paymentRecord.getPaymentType().getValue(), Element.ALIGN_LEFT, totalFont, row));
-                row++;
-            }
-            p.add(table);
-        }else if(type.equals(InvoiceType.INVOICE)){
-            if(this.invoice.getTransaction().getTransactionType().equals(Transaction.TransactionType.INVOICE)){
-                table = new PdfPTable(4);
-                table.setWidthPercentage(50);
-                table.setHorizontalAlignment(0);
-                table.setSpacingBefore(10);
-                try {
-                    table.setWidths(new int[]{3, 2, 2, 4});
-                } catch (DocumentException e) {
-                    logger.error(e.getMessage() + "\nThe full stack trace is: ", e);
-                    errorMsg.append(e.getMessage()).append("\n");
-                }
-                table.addCell(getCellTitle("Date", Element.ALIGN_CENTER, tableTitle,BaseColor.BLACK));
-                table.addCell(getCellTitle("Amount", Element.ALIGN_CENTER, tableTitle,BaseColor.BLACK));
-                table.addCell(getCellTitle("Type", Element.ALIGN_CENTER, tableTitle,BaseColor.BLACK));
-                table.addCell(getCellTitle("Deposit", Element.ALIGN_CENTER, tableTitle,BaseColor.BLACK));
-                for (PaymentDTO paymentRecord : invoice.getTransaction().getPayments()){
-                    table.addCell(getCellwithBackground(dtf.print(paymentRecord.getDateCreated()), Element.ALIGN_LEFT, totalFont, row));
-                    table.addCell(getCellwithBackground(InvoiceData.format2dec(InvoiceData.round(paymentRecord.getPaymentAmount())), Element.ALIGN_LEFT, totalFont, row));
-                    table.addCell(getCellwithBackground(paymentRecord.getPaymentType().getValue(), Element.ALIGN_LEFT, totalFont, row));
-                    table.addCell(getCellwithBackground(paymentRecord.isDeposit()? "YES" : "NO", Element.ALIGN_LEFT, totalFont, row));
-                    row++;
-                }
-            }else if (this.invoice.getTransaction().getTransactionType().equals(Transaction.TransactionType.RETURN)){
-                table = new PdfPTable(3);
-                table.setWidthPercentage(50);
-                table.setHorizontalAlignment(0);
-                table.setSpacingBefore(10);
-                try {
-                    table.setWidths(new int[]{3, 3, 3});
-                } catch (DocumentException e) {
-                    logger.error(e.getMessage() + "\nThe full stack trace is: ", e);
-                    errorMsg.append(e.getMessage()).append("\n");
-                }
-                table.addCell(getCellTitle("Date", Element.ALIGN_CENTER, tableTitle,BaseColor.BLACK));
-                table.addCell(getCellTitle("Amount", Element.ALIGN_CENTER, tableTitle,BaseColor.BLACK));
-                table.addCell(getCellTitle("Type", Element.ALIGN_CENTER, tableTitle,BaseColor.BLACK));
-                for (PaymentDTO paymentRecord : invoice.getTransaction().getPayments()){
-                    table.addCell(getCellwithBackground(dtf.print(paymentRecord.getDateCreated()), Element.ALIGN_LEFT, totalFont, row));
-                    table.addCell(getCellwithBackground(InvoiceData.format2dec(InvoiceData.round(paymentRecord.getPaymentAmount())), Element.ALIGN_LEFT, totalFont, row));
-                    table.addCell(getCellwithBackground(paymentRecord.getPaymentType().getValue(), Element.ALIGN_LEFT, totalFont, row));
-                    row++;
-                }
-            }
-            p.add(table);
-        }
-        try {
-            document.add(p);
-        } catch (DocumentException e) {
-            logger.error(e.getMessage() + "\nThe full stack trace is: ", e);
-            errorMsg.append(e.getMessage()).append("\n");
-        }
+//        Paragraph p = new Paragraph("Payment Information:",addressFont);
+//        PdfPTable table = null;
+//        int row = 0;
+//        p.setAlignment(Element.ALIGN_LEFT);
+//        if(type.equals(InvoiceType.DELIVERY)){
+//            table = new PdfPTable(2);
+//            table.setWidthPercentage(50);
+//            table.setHorizontalAlignment(0);
+//            table.setSpacingBefore(10);
+//            try {
+//                table.setWidths(new int[]{5,5});
+//            } catch (DocumentException e) {
+//                logger.error(e.getMessage() + "\nThe full stack trace is: ", e);
+//                errorMsg.append(e.getMessage()).append("\n");
+//            }
+//            table.addCell(getCellTitle("Date", Element.ALIGN_CENTER, tableTitle,BaseColor.BLACK));
+//            table.addCell(getCellTitle("Type", Element.ALIGN_CENTER, tableTitle,BaseColor.BLACK));
+//            row = 0;
+//            for (PaymentDTO paymentRecord : invoice.getTransaction().getPayments()){
+//                table.addCell(getCellwithBackground(dtf.print(paymentRecord.getDateCreated()), Element.ALIGN_LEFT, totalFont, row));
+//                table.addCell(getCellwithBackground(paymentRecord.getPaymentType().getValue(), Element.ALIGN_LEFT, totalFont, row));
+//                row++;
+//            }
+//            p.add(table);
+//        }else if(type.equals(InvoiceType.INVOICE)){
+//            if(this.invoice.getTransaction().getTransactionType().equals(Transaction.TransactionType.INVOICE)){
+//                table = new PdfPTable(4);
+//                table.setWidthPercentage(50);
+//                table.setHorizontalAlignment(0);
+//                table.setSpacingBefore(10);
+//                try {
+//                    table.setWidths(new int[]{3, 2, 2, 4});
+//                } catch (DocumentException e) {
+//                    logger.error(e.getMessage() + "\nThe full stack trace is: ", e);
+//                    errorMsg.append(e.getMessage()).append("\n");
+//                }
+//                table.addCell(getCellTitle("Date", Element.ALIGN_CENTER, tableTitle,BaseColor.BLACK));
+//                table.addCell(getCellTitle("Amount", Element.ALIGN_CENTER, tableTitle,BaseColor.BLACK));
+//                table.addCell(getCellTitle("Type", Element.ALIGN_CENTER, tableTitle,BaseColor.BLACK));
+//                table.addCell(getCellTitle("Deposit", Element.ALIGN_CENTER, tableTitle,BaseColor.BLACK));
+//                for (PaymentDTO paymentRecord : invoice.getTransaction().getPayments()){
+//                    table.addCell(getCellwithBackground(dtf.print(paymentRecord.getDateCreated()), Element.ALIGN_LEFT, totalFont, row));
+//                    table.addCell(getCellwithBackground(InvoiceData.format2dec(InvoiceData.round(paymentRecord.getPaymentAmount())), Element.ALIGN_LEFT, totalFont, row));
+//                    table.addCell(getCellwithBackground(paymentRecord.getPaymentType().getValue(), Element.ALIGN_LEFT, totalFont, row));
+//                    table.addCell(getCellwithBackground(paymentRecord.isDeposit()? "YES" : "NO", Element.ALIGN_LEFT, totalFont, row));
+//                    row++;
+//                }
+//            }else if (this.invoice.getTransaction().getTransactionType().equals(Transaction.TransactionType.RETURN)){
+//                table = new PdfPTable(3);
+//                table.setWidthPercentage(50);
+//                table.setHorizontalAlignment(0);
+//                table.setSpacingBefore(10);
+//                try {
+//                    table.setWidths(new int[]{3, 3, 3});
+//                } catch (DocumentException e) {
+//                    logger.error(e.getMessage() + "\nThe full stack trace is: ", e);
+//                    errorMsg.append(e.getMessage()).append("\n");
+//                }
+//                table.addCell(getCellTitle("Date", Element.ALIGN_CENTER, tableTitle,BaseColor.BLACK));
+//                table.addCell(getCellTitle("Amount", Element.ALIGN_CENTER, tableTitle,BaseColor.BLACK));
+//                table.addCell(getCellTitle("Type", Element.ALIGN_CENTER, tableTitle,BaseColor.BLACK));
+//                for (PaymentDTO paymentRecord : invoice.getTransaction().getPayments()){
+//                    table.addCell(getCellwithBackground(dtf.print(paymentRecord.getDateCreated()), Element.ALIGN_LEFT, totalFont, row));
+//                    table.addCell(getCellwithBackground(InvoiceData.format2dec(InvoiceData.round(paymentRecord.getPaymentAmount())), Element.ALIGN_LEFT, totalFont, row));
+//                    table.addCell(getCellwithBackground(paymentRecord.getPaymentType().getValue(), Element.ALIGN_LEFT, totalFont, row));
+//                    row++;
+//                }
+//            }
+//            p.add(table);
+//        }
+//        try {
+//            document.add(p);
+//        } catch (DocumentException e) {
+//            logger.error(e.getMessage() + "\nThe full stack trace is: ", e);
+//            errorMsg.append(e.getMessage()).append("\n");
+//        }
     }
 
     private void createCompanyClaims(Document document){

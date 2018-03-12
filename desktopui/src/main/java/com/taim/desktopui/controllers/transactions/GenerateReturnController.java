@@ -335,7 +335,7 @@ public class GenerateReturnController {
         paymentField.textProperty().addListener((observable, oldValue, newValue) -> showBalanceDetails());
 
         paymentTypeChoiceBox.getSelectionModel().selectFirst();
-        paymentTypeChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> payment.setPaymentType(Payment.PaymentType.getValue(newValue)));
+//        paymentTypeChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> payment.setPaymentType(Payment.PaymentType.getValue(newValue)));
         paymentDueDatePicker.setOnAction(event ->{
             this.transaction.setPaymentDueDate(DateUtils.toDateTime(paymentDueDatePicker.getValue()));
         });
@@ -431,7 +431,7 @@ public class GenerateReturnController {
             this.transaction.setDeliveryStatus(Transaction.DeliveryStatus.UNDELIVERED);
             this.transaction.setPaymentDueDate(transaction.getDateCreated());
             this.transaction.setDeliveryDueDate(transaction.getDateCreated());
-            this.transaction.setPayments(new ArrayList<>());
+//            this.transaction.setPayments(new ArrayList<>());
             this.transaction.setDeliveries(new ArrayList<>());
             this.transaction.setPaymentStatus(Transaction.PaymentStatus.UNPAID);
 
@@ -575,9 +575,9 @@ public class GenerateReturnController {
     private void showBalanceDetails(){
         BigDecimal balance = new BigDecimal(totalLabel.getText()).setScale(2, BigDecimal.ROUND_HALF_EVEN);
         BigDecimal paid = new BigDecimal(BigInteger.ZERO);
-        for (PaymentDTO prevPayment : transaction.getPayments()){
-            paid= paid.add(new BigDecimal(prevPayment.getPaymentAmount()));
-        }
+//        for (PaymentDTO prevPayment : transaction.getPayments()){
+//            paid= paid.add(new BigDecimal(prevPayment.getPaymentAmount()));
+//        }
         balance = balance.subtract(paid);
         if(!paymentField.getText().trim().isEmpty() && NumberUtils.isNumber(paymentField.getText())){
             balance = balance.subtract(new BigDecimal(paymentField.getText()));
@@ -605,16 +605,16 @@ public class GenerateReturnController {
             }
         });
 
-        if(!paymentField.getText().trim().isEmpty()){
-            if(payment.getPaymentType()== Payment.PaymentType.STORE_CREDIT){
-                customer.setStoreCredit(new BigDecimal(customer.getStoreCredit()).setScale(2,BigDecimal.ROUND_HALF_EVEN).add(new BigDecimal(paymentField.getText())).doubleValue());
-            }
-            payment.setDateCreated(DateTime.now());
-            payment.setDateModified(DateTime.now());
-            payment.setPaymentAmount(new BigDecimal(paymentField.getText()).doubleValue());
-            payment.setPaymentType(Payment.PaymentType.getValue(paymentTypeChoiceBox.getValue()));
-
-        }
+//        if(!paymentField.getText().trim().isEmpty()){
+//            if(payment.getPaymentType()== Payment.PaymentType.STORE_CREDIT){
+//                customer.setStoreCredit(new BigDecimal(customer.getStoreCredit()).setScale(2,BigDecimal.ROUND_HALF_EVEN).add(new BigDecimal(paymentField.getText())).doubleValue());
+//            }
+//            payment.setDateCreated(DateTime.now());
+//            payment.setDateModified(DateTime.now());
+//            payment.setPaymentAmount(new BigDecimal(paymentField.getText()).doubleValue());
+//            payment.setPaymentType(Payment.PaymentType.getValue(paymentTypeChoiceBox.getValue()));
+//
+//        }
         transaction.getTransactionDetails().addAll(transactionDetailDTOObservableList);
         transaction.setSaleAmount(Double.valueOf(totalLabel.getText()));
         transaction.setGst(Double.valueOf(gstTaxField.getText()));
@@ -623,18 +623,18 @@ public class GenerateReturnController {
         transaction.setCustomer(customer);
         transaction.setStaff(staff);
         //transaction.setDateModified(DateTime.now());
-        if (this.payment.getPaymentAmount()!=0){
-            transaction.getPayments().add(payment);
-            double paid = 0.0;
-            for (PaymentDTO p : transaction.getPayments()){
-                paid+=p.getPaymentAmount();
-            }
-            if (paid >= transaction.getSaleAmount()){
-                transaction.setPaymentStatus(Transaction.PaymentStatus.PAID);
-            }else if (paid >0){
-                transaction.setPaymentStatus(Transaction.PaymentStatus.PARTIALLY_PAID);
-            }
-        }
+//        if (this.payment.getPaymentAmount()!=0){
+//            transaction.getPayments().add(payment);
+//            double paid = 0.0;
+//            for (PaymentDTO p : transaction.getPayments()){
+//                paid+=p.getPaymentAmount();
+//            }
+//            if (paid >= transaction.getSaleAmount()){
+//                transaction.setPaymentStatus(Transaction.PaymentStatus.PAID);
+//            }else if (paid >0){
+//                transaction.setPaymentStatus(Transaction.PaymentStatus.PARTIALLY_PAID);
+//            }
+//        }
 
 
         Optional<ButtonType> result = new AlertBuilder(dialogStage)
@@ -766,7 +766,7 @@ public class GenerateReturnController {
     private TransactionDTO copyTransaction(TransactionDTO oldTransaction){
         TransactionDTO newTransaction = new TransactionDTO();
         newTransaction.setDateCreated(DateTime.now());
-        newTransaction.setTransactionType(Transaction.TransactionType.RETURN);
+//        newTransaction.setTransactionType(Transaction.TransactionType.RETURN);
         newTransaction.setCustomer(oldTransaction.getCustomer());
         newTransaction.setFinalized(false);
         newTransaction.setTransactionDetails(oldTransaction.getTransactionDetails().stream().map(d->copyDetails(d)).collect(Collectors.toList()));

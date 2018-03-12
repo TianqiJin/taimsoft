@@ -147,9 +147,10 @@ public class InvoiceGenerationController {
                     InvoiceType.QUOTATION.getValue(),
                     InvoiceType.INVOICE.getValue(),
                     InvoiceType.DELIVERY_NOTICE.getValue()));
-        }else if(this.transaction.getTransactionType().equals(Transaction.TransactionType.RETURN)){
-            this.invoiceCreationComboBox.setItems(FXCollections.observableArrayList(InvoiceType.RETURN.getValue()));
         }
+//        else if(this.transaction.getTransactionType().equals(Transaction.TransactionType.RETURN)){
+//            this.invoiceCreationComboBox.setItems(FXCollections.observableArrayList(InvoiceType.RETURN.getValue()));
+//        }
 
         invoiceCreationComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             billFromController.scanRequiredFields();

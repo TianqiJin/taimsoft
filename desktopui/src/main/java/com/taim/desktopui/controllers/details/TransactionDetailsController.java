@@ -137,12 +137,12 @@ public class TransactionDetailsController implements IDetailController<Transacti
                         case INVOICE:
                             initDetailData(TransactionPanelLoader.loadInvoice(transactionDTO));
                             break;
-                        case RETURN:
-                            initDetailData(TransactionPanelLoader.loadReturn(transactionDTO));
-                            break;
-                        case STOCK:
-                            initDetailData(TransactionPanelLoader.loadStock(transactionDTO));
-                            break;
+//                        case RETURN:
+//                            initDetailData(TransactionPanelLoader.loadReturn(transactionDTO));
+//                            break;
+//                        case STOCK:
+//                            initDetailData(TransactionPanelLoader.loadStock(transactionDTO));
+//                            break;
                     }
                 }else if(newValue.equals("PRINT")){
                     TransactionPanelLoader.showPrintTransactionDialog(transactionDTO);
@@ -157,7 +157,7 @@ public class TransactionDetailsController implements IDetailController<Transacti
         this.transactionDTO = transactionDTO;
         bindTransactionInfoLabels();
         transactionDetaiTableView.setItems(FXCollections.observableArrayList(transactionDTO.getTransactionDetails()));
-        paymentRecordTableView.setItems(FXCollections.observableArrayList(transactionDTO.getPayments()));
+//        paymentRecordTableView.setItems(FXCollections.observableArrayList(transactionDTO.getPayments()));
         deliveryRecordTableView.setItems(FXCollections.observableArrayList(transactionDTO.getDeliveries()));
         if(transactionDTO.isFinalized()){
             actionComboBox.setItems(FXCollections.observableArrayList("PRINT"));
@@ -237,9 +237,9 @@ public class TransactionDetailsController implements IDetailController<Transacti
                         "", transactionDTO.getVendor().fullnameProperty()));
             }
             BigDecimal paid = new BigDecimal(0);
-            for(PaymentDTO paymentDTO: transactionDTO.getPayments()){
-                paid = paid.add(new BigDecimal(paymentDTO.getPaymentAmount()));
-            }
+//            for(PaymentDTO paymentDTO: transactionDTO.getPayments()){
+//                paid = paid.add(new BigDecimal(paymentDTO.getPaymentAmount()));
+//            }
             paymentLabel.textProperty().bind(new SimpleStringProperty(paid.setScale(2, BigDecimal.ROUND_HALF_EVEN).toEngineeringString()));
         }
 
@@ -271,7 +271,7 @@ public class TransactionDetailsController implements IDetailController<Transacti
         paymentDateCol.setCellValueFactory(param -> new SimpleStringProperty(dtf.print(param.getValue().getDateCreated())));
         paymentTypeCol.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getPaymentType().getValue()));
         paymentAmountCol.setCellValueFactory(new PropertyValueFactory<>("paymentAmount"));
-        paymentIsDepositCol.setCellValueFactory(param -> param.getValue().isDeposit()? new SimpleStringProperty("Yes") : new SimpleStringProperty("No"));
+//        paymentIsDepositCol.setCellValueFactory(param -> param.getValue().isDeposit()? new SimpleStringProperty("Yes") : new SimpleStringProperty("No"));
     }
 
     private void bindDeliveryTable(){

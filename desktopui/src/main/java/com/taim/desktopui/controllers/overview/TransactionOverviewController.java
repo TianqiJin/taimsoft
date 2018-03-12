@@ -7,6 +7,7 @@ import com.taim.client.IClient;
 import com.taim.client.TransactionClient;
 import com.taim.desktopui.util.TransactionPanelLoader;
 import com.taim.dto.PaymentDTO;
+import com.taim.dto.PaymentRecordDTO;
 import com.taim.dto.TransactionDTO;
 import com.taim.model.Transaction;
 import com.taim.desktopui.util.DateUtils;
@@ -104,7 +105,7 @@ public class TransactionOverviewController extends IOverviewController<Transacti
         idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         totalCol.setCellValueFactory(new PropertyValueFactory<>("saleAmount"));
         vendorCustomerCol.setCellValueFactory(param -> {
-            if(param.getValue().getTransactionType().equals(Transaction.TransactionType.STOCK)){
+            if(param.getValue().getTransactionCategory().equals(Transaction.TransactionCategory.STOCK)){
                 return param.getValue().getVendor().fullnameProperty();
             }else{
                 return param.getValue().getCustomer().fullnameProperty();
@@ -112,8 +113,8 @@ public class TransactionOverviewController extends IOverviewController<Transacti
         });
         balanceCol.setCellValueFactory((TableColumn.CellDataFeatures<TransactionDTO, Double> param) -> {
             BigDecimal roundedBalance = new BigDecimal(param.getValue().getSaleAmount());
-            for(PaymentDTO payment: param.getValue().getPayments()){
-                roundedBalance = roundedBalance.subtract(new BigDecimal(payment.getPaymentAmount()));
+            for(PaymentRecordDTO payment: param.getValue().getPaymentRecords()){
+                roundedBalance = roundedBalance.subtract(new BigDecimal(payment.getAmount()));
             }
             return new SimpleDoubleProperty(roundedBalance.setScale(2, BigDecimal.ROUND_HALF_EVEN).doubleValue()).asObject();
         });
@@ -155,14 +156,14 @@ public class TransactionOverviewController extends IOverviewController<Transacti
                             comboBox.prefWidthProperty().bind(this.widthProperty());
                             TransactionDTO transactionDTO = getTableView().getItems().get(getIndex());
                             switch (transactionDTO.getTransactionType()){
-                                case STOCK:
+                                case QUOTATION:
                                     if(transactionDTO.isFinalized()){
                                         comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS"));
                                     }else{
                                         comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "EDIT"));
                                     }
                                     break;
-                                case RETURN:
+                                case CONTRACT:
                                     if(transactionDTO.isFinalized()){
                                         comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "PRINT"));
                                     }else{
@@ -176,7 +177,7 @@ public class TransactionOverviewController extends IOverviewController<Transacti
                                         comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "EDIT", "FILE RETURN","PRINT"));
                                     }
                                     break;
-                                case QUOTATION:
+                                case BILL:
                                     if(transactionDTO.isFinalized()){
                                         comboBox.setItems(FXCollections.observableArrayList("VIEW DETAILS", "PRINT"));
                                     }else{
@@ -202,12 +203,12 @@ public class TransactionOverviewController extends IOverviewController<Transacti
                                             case INVOICE:
                                                 getOverviewTable().getItems().add(TransactionPanelLoader.loadInvoice(transactionDTO));
                                                 break;
-                                            case RETURN:
-                                                getOverviewTable().getItems().add(TransactionPanelLoader.loadReturn(transactionDTO));
-                                                break;
-                                            case STOCK:
-                                                getOverviewTable().getItems().add(TransactionPanelLoader.loadStock(transactionDTO));
-                                                break;
+//                                            case RETURN:
+//                                                getOverviewTable().getItems().add(TransactionPanelLoader.loadReturn(transactionDTO));
+//                                                break;
+//                                            case STOCK:
+//                                                getOverviewTable().getItems().add(TransactionPanelLoader.loadStock(transactionDTO));
+//                                                break;
                                         }
                                     }else if(newValue.equalsIgnoreCase("CONVERT TO INVOICE") && transactionDTO.getTransactionType()== Transaction.TransactionType.QUOTATION){
                                         getOverviewTable().getItems().remove(getIndex());
@@ -244,18 +245,18 @@ public class TransactionOverviewController extends IOverviewController<Transacti
                             getOverviewTable().getItems().add(newInvo);
                         }
                         break;
-                    case STOCK:
-                        TransactionDTO newStok = TransactionPanelLoader.loadStock(null);
-                        if (newStok!=null){
-                            getOverviewTable().getItems().add(newStok);
-                        }
-                        break;
-                    case RETURN:
-                        TransactionDTO newRet = TransactionPanelLoader.showNewTransactionDialog(Transaction.TransactionType.RETURN);
-                        if (newRet!=null){
-                            getOverviewTable().getItems().add(newRet);
-                        }
-                        break;
+//                    case STOCK:
+//                        TransactionDTO newStok = TransactionPanelLoader.loadStock(null);
+//                        if (newStok!=null){
+//                            getOverviewTable().getItems().add(newStok);
+//                        }
+//                        break;
+//                    case RETURN:
+//                        TransactionDTO newRet = TransactionPanelLoader.showNewTransactionDialog(Transaction.TransactionType.RETURN);
+//                        if (newRet!=null){
+//                            getOverviewTable().getItems().add(newRet);
+//                        }
+//                        break;
                 }
             }
             Platform.runLater(() -> createNewTransactionComboBox.getSelectionModel().clearSelection());
@@ -349,13 +350,13 @@ public class TransactionOverviewController extends IOverviewController<Transacti
                         transactionDTO.getPaymentStatus().getValue().toLowerCase().contains(lowerCase)){
                     return true;
                 }else{
-                    BigDecimal roundedBalance = new BigDecimal(transactionDTO.getSaleAmount());
-                    for(PaymentDTO payment: transactionDTO.getPayments()){
-                        roundedBalance = roundedBalance.subtract(new BigDecimal(payment.getPaymentAmount()));
-                    }
-                    if(roundedBalance.setScale(2, BigDecimal.ROUND_HALF_EVEN).toString().contains(lowerCase)){
-                        return true;
-                    }
+//                    BigDecimal roundedBalance = new BigDecimal(transactionDTO.getSaleAmount());
+//                    for(PaymentDTO payment: transactionDTO.getPayments()){
+//                        roundedBalance = roundedBalance.subtract(new BigDecimal(payment.getPaymentAmount()));
+//                    }
+//                    if(roundedBalance.setScale(2, BigDecimal.ROUND_HALF_EVEN).toString().contains(lowerCase)){
+//                        return true;
+//                    }
                 }
 
                 return false;
@@ -374,8 +375,8 @@ public class TransactionOverviewController extends IOverviewController<Transacti
         bindSummaryLabel(totalQuotedLabel, QUOTED);
         bindSummaryLabel(totalInvoicePaidLabel, INVOICE_PAID);
         bindSummaryLabel(totalInvoiceUnpaidLabel, INVOICE_UNPAID);
-        bindSummaryLabel(totalStockPaidLabel, STOCK_PAID);
-        bindSummaryLabel(totalStockUnpaidLabel, STOCK_UNPAID);
+//        bindSummaryLabel(totalStockPaidLabel, STOCK_PAID);
+//        bindSummaryLabel(totalStockUnpaidLabel, STOCK_UNPAID);
     }
 
     private void bindSummaryLabel(Label label, SummaryLabelMode mode){
@@ -389,62 +390,62 @@ public class TransactionOverviewController extends IOverviewController<Transacti
                                 }
                             }
                             break;
-                        case INVOICE_PAID:
-                            for (TransactionDTO item : getOverviewDTOList()) {
-                                if(item.getTransactionType().equals(Transaction.TransactionType.INVOICE) &&
-                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.PAID)){
-                                    totalValue = totalValue + item.getSaleAmount();
-                                }else if(item.getTransactionType().equals(Transaction.TransactionType.INVOICE) &&
-                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.PARTIALLY_PAID)){
-                                    for(PaymentDTO payment: item.getPayments()){
-                                        totalValue += payment.getPaymentAmount();
-                                    }
-                                }
-                            }
-                            break;
-                        case INVOICE_UNPAID:
-                            for (TransactionDTO item : getOverviewDTOList()) {
-                                if(item.getTransactionType().equals(Transaction.TransactionType.INVOICE) &&
-                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.UNPAID)){
-                                    totalValue = totalValue + item.getSaleAmount();
-                                }else if(item.getTransactionType().equals(Transaction.TransactionType.INVOICE) &&
-                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.PARTIALLY_PAID)){
-                                    double unpaid = 0;
-                                    for(PaymentDTO payment: item.getPayments()){
-                                        unpaid += payment.getPaymentAmount();
-                                    }
-                                    totalValue += unpaid;
-                                }
-                            }
-                            break;
-                        case STOCK_PAID:
-                            for (TransactionDTO item : getOverviewDTOList()) {
-                                if(item.getTransactionType().equals(Transaction.TransactionType.STOCK) &&
-                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.PAID)){
-                                    totalValue = totalValue + item.getSaleAmount();
-                                }else if(item.getTransactionType().equals(Transaction.TransactionType.STOCK) &&
-                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.PARTIALLY_PAID)){
-                                    for(PaymentDTO payment: item.getPayments()){
-                                        totalValue += payment.getPaymentAmount();
-                                    }
-                                }
-                            }
-                            break;
-                        case STOCK_UNPAID:
-                            for (TransactionDTO item : getOverviewDTOList()) {
-                                if(item.getTransactionType().equals(Transaction.TransactionType.STOCK) &&
-                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.UNPAID)){
-                                    totalValue = totalValue + item.getSaleAmount();
-                                }else if(item.getTransactionType().equals(Transaction.TransactionType.STOCK) &&
-                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.PARTIALLY_PAID)){
-                                    double unpaid = 0;
-                                    for(PaymentDTO payment: item.getPayments()){
-                                        unpaid += payment.getPaymentAmount();
-                                    }
-                                    totalValue += unpaid;
-                                }
-                            }
-                            break;
+//                        case INVOICE_PAID:
+//                            for (TransactionDTO item : getOverviewDTOList()) {
+//                                if(item.getTransactionType().equals(Transaction.TransactionType.INVOICE) &&
+//                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.PAID)){
+//                                    totalValue = totalValue + item.getSaleAmount();
+//                                }else if(item.getTransactionType().equals(Transaction.TransactionType.INVOICE) &&
+//                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.PARTIALLY_PAID)){
+//                                    for(PaymentDTO payment: item.getPayments()){
+//                                        totalValue += payment.getPaymentAmount();
+//                                    }
+//                                }
+//                            }
+//                            break;
+//                        case INVOICE_UNPAID:
+//                            for (TransactionDTO item : getOverviewDTOList()) {
+//                                if(item.getTransactionType().equals(Transaction.TransactionType.INVOICE) &&
+//                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.UNPAID)){
+//                                    totalValue = totalValue + item.getSaleAmount();
+//                                }else if(item.getTransactionType().equals(Transaction.TransactionType.INVOICE) &&
+//                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.PARTIALLY_PAID)){
+//                                    double unpaid = 0;
+//                                    for(PaymentDTO payment: item.getPayments()){
+//                                        unpaid += payment.getPaymentAmount();
+//                                    }
+//                                    totalValue += unpaid;
+//                                }
+//                            }
+//                            break;
+//                        case STOCK_PAID:
+//                            for (TransactionDTO item : getOverviewDTOList()) {
+//                                if(item.getTransactionType().equals(Transaction.TransactionType.STOCK) &&
+//                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.PAID)){
+//                                    totalValue = totalValue + item.getSaleAmount();
+//                                }else if(item.getTransactionType().equals(Transaction.TransactionType.STOCK) &&
+//                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.PARTIALLY_PAID)){
+//                                    for(PaymentDTO payment: item.getPayments()){
+//                                        totalValue += payment.getPaymentAmount();
+//                                    }
+//                                }
+//                            }
+//                            break;
+//                        case STOCK_UNPAID:
+//                            for (TransactionDTO item : getOverviewDTOList()) {
+//                                if(item.getTransactionType().equals(Transaction.TransactionType.STOCK) &&
+//                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.UNPAID)){
+//                                    totalValue = totalValue + item.getSaleAmount();
+//                                }else if(item.getTransactionType().equals(Transaction.TransactionType.STOCK) &&
+//                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.PARTIALLY_PAID)){
+//                                    double unpaid = 0;
+//                                    for(PaymentDTO payment: item.getPayments()){
+//                                        unpaid += payment.getPaymentAmount();
+//                                    }
+//                                    totalValue += unpaid;
+//                                }
+//                            }
+//                            break;
                         default:
                             break;
                     }

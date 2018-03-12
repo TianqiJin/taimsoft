@@ -91,6 +91,9 @@ public class RootLayoutController {
     }
 
     @FXML
+    public void handlePaymentButton(){VistaNavigator.loadVista(VistaNavigator.VISTA_PAYMENT, false);}
+
+    @FXML
     public void handleProductButton(){ VistaNavigator.loadVista(VistaNavigator.VISTA_PRODUCT, false); }
 
     @FXML

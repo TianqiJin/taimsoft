@@ -38,10 +38,8 @@ public abstract class IOverviewController<T>{
         QUOTED,
         INVOICE_UNPAID,
         INVOICE_PAID,
-        STOCK_UNPAID,
-        STOCK_PAID,
-        RETURN_UNPAID,
-        RETURN_PAID;
+        BILL_UNPAID,
+        BILL_PAID
     }
 
     public IOverviewController(){

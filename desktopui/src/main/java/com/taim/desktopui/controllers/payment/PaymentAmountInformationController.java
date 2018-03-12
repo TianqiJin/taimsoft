@@ -68,7 +68,7 @@ public class PaymentAmountInformationController implements Initializable{
         this.customer = customer;
     }
 
-    public Payment.PaymentType getPaymentType(){
-        return Payment.PaymentType.getValue(paymentTypeComboBox.getValue());
-    }
+//    public Payment.PaymentType getPaymentType(){
+//        return Payment.PaymentType.getValue(paymentTypeComboBox.getValue());
+//    }
 }
