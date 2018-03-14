@@ -5,7 +5,10 @@ import com.taim.client.IClient;
 import com.taim.client.PaymentClient;
 import com.taim.desktopui.util.RestClientFactory;
 import com.taim.dto.PaymentDTO;
+import com.taim.dto.PaymentRecordDTO;
+import com.taim.dto.TransactionDTO;
 import com.taim.model.Payment;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -63,9 +66,30 @@ public class PaymentOverviewController extends IOverviewController<PaymentDTO> i
                 return param.getValue().getVendor().fullnameProperty();
             }
         });
+        balanceCol.setCellValueFactory(param -> {
+            PaymentDTO payment = param.getValue();
+            double balance = payment.getPaymentAmount();
+            for(TransactionDTO transaction: this.getTransactionList()){
+                for(PaymentRecordDTO paymentRecordDTO: transaction.getPaymentRecords()){
+                    if(paymentRecordDTO.getId() == payment.getId()){
+                        balance -= paymentRecordDTO.getAmount();
+                    }
+                }
+            }
+            return new SimpleDoubleProperty(balance);
+        });
         actionCol.setCellValueFactory(new PropertyValueFactory<>("action"));
         List<String> paymentTypeList = Arrays.stream(Payment.PaymentType.values()).map(Payment.PaymentType::getValue).collect(Collectors.toList());
         createNewPaymentComboBox.setItems(FXCollections.observableArrayList(paymentTypeList));
+        createNewPaymentComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue != null && Payment.PaymentType.getType(newValue) != null){
+                if(Payment.PaymentType.getType(newValue).equals(Payment.PaymentType.CUSTOMER_PAYMENT)){
+
+                }else{
+
+                }
+            }
+        });
     }
 
     @Override
@@ -78,4 +102,6 @@ public class PaymentOverviewController extends IOverviewController<PaymentDTO> i
 
     @Override
     public void initSummaryLabel() {}
+
+    private void
 }
