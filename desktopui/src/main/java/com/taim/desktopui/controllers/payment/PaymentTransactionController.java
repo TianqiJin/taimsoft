@@ -20,6 +20,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
+import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -32,6 +33,7 @@ import java.util.concurrent.ThreadFactory;
 
 public class PaymentTransactionController implements Initializable{
     private static final DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd");
+    private PaymentDTO payment;
     private Executor executor;
     private ObservableList<TransactionDTO> transactionList;
 
@@ -91,6 +93,21 @@ public class PaymentTransactionController implements Initializable{
         }));
         paymentCol.setOnEditCommit(event -> {
             TransactionDTO transaction = event.getTableView().getItems().get(event.getTablePosition().getRow());
+            PaymentRecordDTO paymentRecordDTO = new PaymentRecordDTO();
+            paymentRecordDTO.setDateCreated(DateTime.now());
+            paymentRecordDTO.setDateModified(DateTime.now());
+            paymentRecordDTO.setPayment(this.payment);
+            paymentRecordDTO.setAmount((Double)event.getNewValue());
+
+            transaction.getPaymentRecords().add(paymentRecordDTO);
         });
+    }
+
+    public PaymentDTO getPayment() {
+        return payment;
+    }
+
+    public void setPayment(PaymentDTO payment) {
+        this.payment = payment;
     }
 }

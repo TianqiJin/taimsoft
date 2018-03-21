@@ -113,10 +113,18 @@ public class TransactionController {
         Transaction transaction = service.getTransactionById(id);
         if (transaction !=null){
             service.deleteTransaction(transaction);
-            return new ResponseEntity<String>("Deleted!", HttpStatus.OK);
+            return new ResponseEntity<>("Deleted!", HttpStatus.OK);
 
         }else {
-            return new ResponseEntity<String>("No such transaction found!", HttpStatus.OK);
+            return new ResponseEntity<>("No such transaction found!", HttpStatus.OK);
         }
+    }
+
+    @RequestMapping(value = "/filter",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<List<Transaction>> getFilteredTransactions(){
+
     }
 }

@@ -18,6 +18,7 @@ public interface ITransactionService {
     List<Transaction> getAllTransactionsByCustomerId(Integer id);
     List<Transaction> getAllTransactionsByVendorId(Integer id);
     List<Transaction> getAllTransactionsByStaffId(Integer id);
+    List<Transaction> getFilteredTransaction();
     Transaction saveOrUpdateTransaction(Transaction transaction);
     Transaction saveOrUpdateAll(Transaction transaction);
 }

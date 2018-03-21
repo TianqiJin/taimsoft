@@ -8,6 +8,7 @@ import com.taim.dto.StaffDTO;
 import com.taim.model.Staff;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -43,6 +44,7 @@ public class PaymentBasicInformationController implements Initializable{
     public void initialize(URL location, ResourceBundle resources) {
         typeLabel.setText(TYPE);
         staffNameLabel.textProperty().bindBidirectional(EasyBind.monadic(payment.get().staffProperty()).selectProperty(StaffDTO::fullnameProperty));
+
         paymentDatePicker.setOnAction(event ->{
             this.payment.get().setDateCreated(DateUtils.toDateTime(paymentDatePicker.getValue()));
         });

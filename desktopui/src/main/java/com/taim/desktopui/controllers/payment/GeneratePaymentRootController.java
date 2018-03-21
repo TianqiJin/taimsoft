@@ -21,7 +21,7 @@ import java.util.concurrent.Executors;
 
 public class GeneratePaymentRootController implements Initializable{
 
-    enum PaymentMode{
+    public enum PaymentMode{
         VENDOR("Vendor"),
         CUSTOMER("Customer");
 
