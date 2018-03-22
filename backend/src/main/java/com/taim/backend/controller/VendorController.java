@@ -26,7 +26,7 @@ public class VendorController{
     @ResponseBody
     public ResponseEntity<List<Vendor>> getAllVendors() {
         List<Vendor> list = service.getAllVendors();
-        return new ResponseEntity<List<Vendor>>(list, HttpStatus.OK);
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/getByName",
@@ -34,7 +34,7 @@ public class VendorController{
     @ResponseBody
     public ResponseEntity<Vendor> getVendorByName(@RequestParam String name) {
         Vendor vendor = service.getVendorByName(name);
-        return new ResponseEntity<Vendor>(vendor, HttpStatus.OK);
+        return new ResponseEntity<>(vendor, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/getById",
@@ -42,7 +42,7 @@ public class VendorController{
     @ResponseBody
     public ResponseEntity<Vendor> getVendorByName(@RequestParam Integer id) {
         Vendor vendor = service.getVendorById(id);
-        return new ResponseEntity<Vendor>(vendor, HttpStatus.OK);
+        return new ResponseEntity<>(vendor, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/add",
@@ -52,7 +52,7 @@ public class VendorController{
     @ResponseBody
     public ResponseEntity<Vendor> create(@RequestBody Vendor vendor) {
         Vendor vendor1 = service.saveVendor(vendor);
-        return new ResponseEntity<Vendor>(vendor1, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(vendor1, HttpStatus.ACCEPTED);
     }
 
     @RequestMapping(value = "/update",
@@ -62,7 +62,7 @@ public class VendorController{
     @ResponseBody
     public ResponseEntity<Vendor> update(@RequestBody Vendor vendor) {
         Vendor vendor1 = service.updateVendor(vendor);
-        return new ResponseEntity<Vendor>(vendor1, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(vendor1, HttpStatus.ACCEPTED);
     }
 
     @RequestMapping(value = "/saveOrUpdate",
@@ -72,7 +72,7 @@ public class VendorController{
     @ResponseBody
     public ResponseEntity<Vendor> saveOrUpdate(@RequestBody Vendor vendor) {
         Vendor vendor1 = service.saveOrUpdateVendor(vendor);
-        return new ResponseEntity<Vendor>(vendor1, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(vendor1, HttpStatus.ACCEPTED);
     }
 
     @RequestMapping(value = "/deleteObject")
@@ -81,10 +81,10 @@ public class VendorController{
         Vendor vendor = service.getVendorByName(name);
         if (vendor !=null){
             service.deleteVendor(vendor);
-            return new ResponseEntity<String>("Deleted!", HttpStatus.OK);
+            return new ResponseEntity<>("Deleted!", HttpStatus.OK);
 
         }else {
-            return new ResponseEntity<String>("No such vendor found!", HttpStatus.OK);
+            return new ResponseEntity<>("No such vendor found!", HttpStatus.OK);
         }
     }
 }

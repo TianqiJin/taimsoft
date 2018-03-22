@@ -51,6 +51,7 @@ public class Staff extends UserBaseModel {
     @Column(name = "picture_url")
     private String picUrl;
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Position position;
 
     public Staff(){}

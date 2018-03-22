@@ -137,12 +137,16 @@ public class Transaction extends BaseModel {
     @JoinColumn(name = "vendor_id")
     private Vendor vendor;
     @Column(name = "transaction_type", nullable = false)
+    @Enumerated(EnumType.STRING)
     private TransactionType transactionType;
     @Column(name = "transaction_category", nullable = false)
+    @Enumerated(EnumType.STRING)
     private TransactionCategory transactionCategory;
     @Column(name = "payment_status")
+    @Enumerated(EnumType.STRING)
     private PaymentStatus paymentStatus;
     @Column(name = "delivery_status")
+    @Enumerated(EnumType.STRING)
     private DeliveryStatus deliveryStatus;
     @Column(name = "payment_due_date")
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")

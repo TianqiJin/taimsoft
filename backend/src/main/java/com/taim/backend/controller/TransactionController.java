@@ -120,11 +120,4 @@ public class TransactionController {
         }
     }
 
-    @RequestMapping(value = "/filter",
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    public ResponseEntity<List<Transaction>> getFilteredTransactions(){
-
-    }
 }

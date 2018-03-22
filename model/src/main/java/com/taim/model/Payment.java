@@ -36,7 +36,8 @@ public class Payment extends BaseModel {
 
     @Column(name = "payment_amount", nullable = false)
     private double paymentAmount;
-    @Column
+    @Column(name = "payment_type", nullable = false)
+    @Enumerated(EnumType.STRING)
     private PaymentType paymentType;
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "payment_method_id")

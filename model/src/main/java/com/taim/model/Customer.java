@@ -27,6 +27,7 @@ public class Customer extends UserBaseModel {
     @JoinColumn(name = "customer_class_id", nullable = false)
     private Property.CustomerClass customerClass;
     @Column(name = "user_type", nullable = false)
+    @Enumerated(EnumType.STRING)
     private UserType userType;
     @Column(name = "pst_num")
     private String pstNumber;
