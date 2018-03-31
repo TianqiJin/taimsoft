@@ -1,6 +1,7 @@
 package com.taim.backend.dao.transaction;
 
 
+import com.taim.backend.controller.model.TransactionSearchQueryParam;
 import com.taim.backend.dao.AbstractDao;
 import com.taim.backend.dao.IDao;
 import com.taim.model.Transaction;
@@ -54,6 +55,16 @@ public class TransactionDaoImpl extends AbstractDao implements IDao<Transaction>
 
     @Override
     public Transaction findByName(String name) {
+        return null;
+    }
+
+    public List<Transaction> findByFilter(TransactionSearchQueryParam transactionSearchQueryParam){
+//        Criteria criteria = getSession().createCriteria(Transaction.class);
+//        if(transactionSearchQueryParam.getCategory() != null){
+//            criteria.add(Restrictions.eq(""))
+//        }
+//        criteria.add(Restrictions.eq("deleted",false));
+
         return null;
     }
 

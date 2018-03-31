@@ -2,7 +2,6 @@ package com.taim.desktopui.controllers.transactions;
 
 import com.jfoenix.controls.*;
 import com.taim.desktopui.controllers.edit.CustomerEditDialogController;
-import com.taim.desktopui.uicomponents.AlertJFXDialog;
 import com.taim.desktopui.util.*;
 import com.taim.dto.*;
 import com.taim.model.Payment;

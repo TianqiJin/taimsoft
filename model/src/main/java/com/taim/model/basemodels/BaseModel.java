@@ -60,14 +60,4 @@ public class BaseModel {
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
     }
-
-//    @Override
-//    public String toString() {
-//        return "{\"BaseModel\":{"
-//                + "\"id\":\"" + id + "\""
-//                + ", \"dateCreated\":" + dateCreated
-//                + ", \"dateModified\":" + dateModified
-//                + ", \"deleted\":\"" + deleted + "\""
-//                + "}}";
-//    }
 }

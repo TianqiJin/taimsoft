@@ -1,6 +1,7 @@
 package com.taim.backend.service.transaction;
 
 
+import com.taim.backend.controller.model.TransactionSearchQueryParam;
 import com.taim.backend.dao.IDao;
 import com.taim.backend.dao.customer.CustomerDaoImpl;
 import com.taim.backend.dao.product.ProductDaoImpl;
@@ -79,6 +80,11 @@ public class TransactionServiceImpl implements ITransactionService{
         transactionDao.flush();
         transactionDao.refresh(transaction);
         return transaction;
+    }
+
+    @Override
+    public List<Transaction> getFilteredTransactions(TransactionSearchQueryParam transactionSearchQueryParam) {
+        return null;
     }
 
     @Override

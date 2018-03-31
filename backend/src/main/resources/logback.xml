@@ -1,20 +1,20 @@
 <configuration>
-    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>/usr/local/taimsoft-backend/logs/TaimBackendServer.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- daily rollover -->
-            <fileNamePattern>/usr/local/taimsoft-backend/logs/TaimBackendServer.%d{yyyy-MM-dd}.log</fileNamePattern>
+    <!--<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+        <!--<file>/usr/local/taimsoft-backend/logs/TaimBackendServer.log</file>-->
+        <!--<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+            <!--&lt;!&ndash; daily rollover &ndash;&gt;-->
+            <!--<fileNamePattern>/usr/local/taimsoft-backend/logs/TaimBackendServer.%d{yyyy-MM-dd}.log</fileNamePattern>-->
 
-            <!-- keep 30 days' worth of history capped at 3GB total size -->
-            <maxHistory>360</maxHistory>
-            <totalSizeCap>3GB</totalSizeCap>
+            <!--&lt;!&ndash; keep 30 days' worth of history capped at 3GB total size &ndash;&gt;-->
+            <!--<maxHistory>360</maxHistory>-->
+            <!--<totalSizeCap>3GB</totalSizeCap>-->
 
-        </rollingPolicy>
+        <!--</rollingPolicy>-->
 
-        <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-        </encoder>
-    </appender>
+        <!--<encoder>-->
+            <!--<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>-->
+        <!--</encoder>-->
+    <!--</appender>-->
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>

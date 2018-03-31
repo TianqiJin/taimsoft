@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.taim.model.basemodels.BaseModel;
+import com.taim.model.basemodels.TransactionBaseModel;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Type;
@@ -21,7 +22,7 @@ import java.util.List;
 @JsonIdentityInfo(scope = Transaction.class,
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id")
-public class Transaction extends BaseModel {
+public class Transaction extends TransactionBaseModel {
     /**
      *
      * Indicate the transaction type

@@ -24,4 +24,9 @@ public class PaymentMemoController {
     public void setPayment(PaymentDTO paymentDTO){
         this.payment.setValue(paymentDTO);
     }
+
+    public PaymentDTO getPayment() {
+        return payment.get();
+    }
+
 }

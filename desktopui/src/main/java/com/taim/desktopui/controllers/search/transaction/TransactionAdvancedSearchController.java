@@ -1,4 +1,4 @@
-package com.taim.desktopui.controllers.search;
+package com.taim.desktopui.controllers.search.transaction;
 
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXComboBox;
@@ -22,7 +22,7 @@ import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class TransactionSearchController implements Initializable {
+public class TransactionAdvancedSearchController implements Initializable {
     private Stage dialogStage;
     private Executor executor;
     private TransactionClient transactionClient;
@@ -58,7 +58,7 @@ public class TransactionSearchController implements Initializable {
     @FXML
     private JFXCheckBox finalizedCheckBox;
 
-    public TransactionSearchController(){
+    public TransactionAdvancedSearchController(){
         this.executor = Executors.newCachedThreadPool(r -> {
             Thread thread = new Thread(r);
             thread.setDaemon(true);
@@ -81,19 +81,5 @@ public class TransactionSearchController implements Initializable {
                 Stream.of(Transaction.TransactionCategory.values()).map(Transaction.TransactionCategory::name).collect(Collectors.toList())));
     }
 
-    @FXML
-    private void handleFilterButton(){}
 
-    @FXML
-    private void handleClearButton(){
-        
-    }
-
-    @FXML
-    private void handleCanelButton(){
-        dialogStage.close();
-    }
-
-    @FXML
-    private void handleAddButton(){}
 }

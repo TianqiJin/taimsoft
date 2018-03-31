@@ -1,5 +1,6 @@
 package com.taim.desktopui.util;
 
+import com.jfoenix.controls.JFXComboBox;
 import com.sun.javafx.scene.control.skin.ComboBoxListViewSkin;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
@@ -12,11 +13,11 @@ import javafx.scene.input.KeyEvent;
  * Created by jiawei.liu on 9/18/17.
  */
 public class AutoCompleteComboBoxListener<T> {
-    private ComboBox<T> comboBox;
+    private JFXComboBox<T> comboBox;
     private StringBuilder sb;
     private int lastLength;
 
-    public AutoCompleteComboBoxListener(ComboBox<T> comboBox) {
+    public AutoCompleteComboBoxListener(JFXComboBox<T> comboBox) {
         this.comboBox = comboBox;
         sb = new StringBuilder();
 

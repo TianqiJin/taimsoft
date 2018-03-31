@@ -1,6 +1,7 @@
 package com.taim.dto;
 
 import com.taim.dto.basedtos.BaseModelDTO;
+import com.taim.dto.basedtos.TransactionBaseModelDTO;
 import com.taim.model.*;
 import javafx.beans.property.*;
 import org.joda.time.DateTime;
@@ -8,7 +9,7 @@ import org.joda.time.DateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TransactionDTO extends BaseModelDTO {
+public class TransactionDTO extends TransactionBaseModelDTO {
     private DoubleProperty saleAmount;
     private DoubleProperty gst;
     private DoubleProperty pst;

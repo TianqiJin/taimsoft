@@ -1,10 +1,11 @@
 package com.taim.dto;
 
 import com.taim.dto.basedtos.BaseModelDTO;
+import com.taim.dto.basedtos.TransactionBaseModelDTO;
 import com.taim.model.Payment;
 import javafx.beans.property.*;
 
-public class PaymentDTO extends BaseModelDTO {
+public class PaymentDTO extends TransactionBaseModelDTO {
     private DoubleProperty paymentAmount;
     private ObjectProperty<Payment.PaymentType> paymentType;
     private ObjectProperty<PaymentMethodDTO> paymentMethod;

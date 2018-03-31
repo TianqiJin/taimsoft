@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="830.0" prefWidth="1700.0" stylesheets="@/css/jfoneix.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taim.desktopui.controllers.transactions.GenerateInvoiceController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="830.0" prefWidth="1700.0" stylesheets="@/css/jfoneix.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taim.desktopui.controllers.payment.GeneratePaymentRootController">
     <children>
       <HBox AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="20.0">
          <children>
@@ -17,18 +17,13 @@
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <Label text="Payment">
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font>
-            </Label>
          </children>
       </HBox>
-            <SplitPane dividerPositions="0.3, 0.7" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="60.0">
+            <SplitPane dividerPositions="0.35, 0.75" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="60.0">
                 <items>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" SplitPane.resizableWithParent="false">
                         <children>
-                            <SplitPane dividerPositions="0.4, 0.7" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="300.0" AnchorPane.topAnchor="0.0">
+                            <SplitPane dividerPositions="0.4, 0.8" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="300.0" AnchorPane.topAnchor="0.0">
                                 <items>
                         <AnchorPane prefHeight="200.0" prefWidth="200.0">
                            <children>

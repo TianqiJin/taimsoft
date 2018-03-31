@@ -3,6 +3,7 @@ package com.taim.model;
 
 
 import com.taim.model.basemodels.BaseModel;
+import com.taim.model.basemodels.TransactionBaseModel;
 
 import javax.persistence.*;
 
@@ -11,7 +12,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "payment")
-public class Payment extends BaseModel {
+public class Payment extends TransactionBaseModel {
     public enum PaymentType{
         CUSTOMER_PAYMENT("Customer Payment"),
         VENDOR_PAYMENT("Vendor Payment");
@@ -22,7 +23,7 @@ public class Payment extends BaseModel {
 
         public static PaymentType getType(String value){
             for (PaymentType pt : PaymentType.values()){
-                if (value.equalsIgnoreCase(pt.name())){
+                if (value.equalsIgnoreCase(pt.getValue())){
                     return pt;
                 }
             }

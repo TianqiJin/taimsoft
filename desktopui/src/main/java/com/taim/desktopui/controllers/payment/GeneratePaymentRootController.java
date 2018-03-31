@@ -1,7 +1,9 @@
 package com.taim.desktopui.controllers.payment;
 
+import com.taim.desktopui.util.IDGenerator;
 import com.taim.desktopui.util.VistaNavigator;
 import com.taim.dto.PaymentDTO;
+import com.taim.model.Payment;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -20,32 +22,6 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 public class GeneratePaymentRootController implements Initializable{
-
-    public enum PaymentMode{
-        VENDOR("Vendor"),
-        CUSTOMER("Customer");
-
-        String value;
-
-        PaymentMode(String vvalue){this.value = vvalue;}
-
-        public String getValue() {
-            return value;
-        }
-
-        public void setValue(String value) {
-            this.value = value;
-        }
-
-        public static PaymentMode getValue(String value){
-            for (PaymentMode p: PaymentMode.values()){
-                if (p.name().equalsIgnoreCase(value)){
-                    return p;
-                }
-            }
-            return null;
-        }
-    }
 
     private static final Logger logger = LoggerFactory.getLogger(GeneratePaymentRootController.class);
     private Executor executor;
@@ -89,12 +65,14 @@ public class GeneratePaymentRootController implements Initializable{
     @FXML
     private void handleConfirmButton(){}
 
-    private void initPayment(PaymentDTO payment){
+    private void initPayment(PaymentDTO payment, Payment.PaymentType paymentType){
         if(payment == null){
             this.payment = new PaymentDTO();
-            payment.setDateCreated(DateTime.now());
-            payment.setDateModified(DateTime.now());
-            payment.setStaff(VistaNavigator.getGlobalStaff());
+            this.payment.setPresentId(IDGenerator.createPaymentID());
+            this.payment.setDateCreated(DateTime.now());
+            this.payment.setDateModified(DateTime.now());
+            this.payment.setStaff(VistaNavigator.getGlobalStaff());
+            this.payment.setPaymentType(paymentType);
         }else{
             this.payment = payment;
         }
@@ -104,9 +82,10 @@ public class GeneratePaymentRootController implements Initializable{
         try {
             FXMLLoader fXMLLoader = new FXMLLoader();
             AnchorPane root = fXMLLoader.load(this.getClass().getResource("/fxml/payment/PaymentTransaction.fxml").openStream());
-            root.prefHeightProperty().bind(memoPane.heightProperty());
-            root.prefWidthProperty().bind(memoPane.widthProperty());
+            root.prefHeightProperty().bind(transactionPane.heightProperty());
+            root.prefWidthProperty().bind(transactionPane.widthProperty());
             this.paymentTransactionController = fXMLLoader.getController();
+            this.paymentTransactionController.setPayment(payment);
             transactionPane.getChildren().addAll(root);
         } catch (IOException ex) {
             logger.error(ex.getMessage(), ex);
@@ -117,9 +96,10 @@ public class GeneratePaymentRootController implements Initializable{
         try {
             FXMLLoader fXMLLoader = new FXMLLoader();
             AnchorPane root = fXMLLoader.load(this.getClass().getResource("/fxml/payment/PaymentAmountInformation.fxml").openStream());
-            root.prefHeightProperty().bind(memoPane.heightProperty());
-            root.prefWidthProperty().bind(memoPane.widthProperty());
+            root.prefHeightProperty().bind(paymentInfoPane.heightProperty());
+            root.prefWidthProperty().bind(paymentInfoPane.widthProperty());
             this.paymentAmountInformationController = fXMLLoader.getController();
+            this.paymentAmountInformationController.setPayment(payment);
             paymentInfoPane.setContent(root);
 
         } catch (IOException ex) {
@@ -131,9 +111,10 @@ public class GeneratePaymentRootController implements Initializable{
         try {
             FXMLLoader fXMLLoader = new FXMLLoader();
             AnchorPane root = fXMLLoader.load(this.getClass().getResource("/fxml/payment/PaymentBasicInformation.fxml").openStream());
-            root.prefHeightProperty().bind(memoPane.heightProperty());
-            root.prefWidthProperty().bind(memoPane.widthProperty());
+            root.prefHeightProperty().bind(basicInfoPane.heightProperty());
+            root.prefWidthProperty().bind(basicInfoPane.widthProperty());
             this.paymentBasicInformationController = fXMLLoader.getController();
+            this.paymentBasicInformationController.setPayment(payment);
             basicInfoPane.setContent(root);
 
         } catch (IOException ex) {
@@ -148,6 +129,7 @@ public class GeneratePaymentRootController implements Initializable{
             root.prefHeightProperty().bind(memoPane.heightProperty());
             root.prefWidthProperty().bind(memoPane.widthProperty());
             this.paymentMemoController = fXMLLoader.getController();
+            this.paymentMemoController.setPayment(payment);
             memoPane.setContent(root);
         } catch (IOException ex) {
             logger.error(ex.getMessage(), ex);
@@ -161,6 +143,7 @@ public class GeneratePaymentRootController implements Initializable{
             root.prefHeightProperty().bind(memoPane.heightProperty());
             root.prefWidthProperty().bind(memoPane.widthProperty());
             this.paymentSummaryController = fXMLLoader.getController();
+//            this.paymentSummaryController
             summaryPane.setContent(root);
 
         } catch (IOException ex) {
@@ -168,15 +151,15 @@ public class GeneratePaymentRootController implements Initializable{
         }
     }
 
-    private void initModeLabel(PaymentMode mode){
-        titleLabel.setText(mode.getValue());
+    private void initModeLabel(Payment.PaymentType type){
+        titleLabel.setText(type.getValue());
     }
 
-    public void init(PaymentMode mode, PaymentDTO payment){
+    public void init(Payment.PaymentType type, PaymentDTO payment){
         //initialize PaymentDTO
-        initPayment(payment);
+        initPayment(payment, type);
         //initialize mode label
-        initModeLabel(mode);
+        initModeLabel(type);
         initBasicInformationPanel();
         initMemoPanel();
         initPaymentAmountInformationPanel();
@@ -190,5 +173,13 @@ public class GeneratePaymentRootController implements Initializable{
 
     public void setDialogStage(Stage dialogStage) {
         this.dialogStage = dialogStage;
+    }
+
+    public PaymentDTO getPayment() {
+        return payment;
+    }
+
+    public void setPayment(PaymentDTO payment) {
+        this.payment = payment;
     }
 }

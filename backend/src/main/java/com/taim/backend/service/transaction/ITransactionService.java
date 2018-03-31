@@ -1,5 +1,6 @@
 package com.taim.backend.service.transaction;
 
+import com.taim.backend.controller.model.TransactionSearchQueryParam;
 import com.taim.model.Product;
 import com.taim.model.Transaction;
 import com.taim.model.basemodels.UserBaseModel;
@@ -19,5 +20,6 @@ public interface ITransactionService {
     List<Transaction> getAllTransactionsByVendorId(Integer id);
     List<Transaction> getAllTransactionsByStaffId(Integer id);
     Transaction saveOrUpdateTransaction(Transaction transaction);
+    List<Transaction> getFilteredTransactions(TransactionSearchQueryParam transactionSearchQueryParam);
     Transaction saveOrUpdateAll(Transaction transaction);
 }

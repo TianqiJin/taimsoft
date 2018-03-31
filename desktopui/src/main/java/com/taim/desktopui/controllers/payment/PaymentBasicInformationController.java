@@ -3,6 +3,7 @@ package com.taim.desktopui.controllers.payment;
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTextField;
 import com.taim.desktopui.util.DateUtils;
+import com.taim.desktopui.util.VistaNavigator;
 import com.taim.dto.PaymentDTO;
 import com.taim.dto.StaffDTO;
 import com.taim.model.Staff;
@@ -43,8 +44,8 @@ public class PaymentBasicInformationController implements Initializable{
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         typeLabel.setText(TYPE);
-        staffNameLabel.textProperty().bindBidirectional(EasyBind.monadic(payment.get().staffProperty()).selectProperty(StaffDTO::fullnameProperty));
-
+        staffNameLabel.textProperty().bindBidirectional(VistaNavigator.getGlobalStaff().userNameProperty());
+        paymentIDTextField.textProperty().bindBidirectional(EasyBind.monadic(payment).selectProperty(PaymentDTO::presentIdProperty));
         paymentDatePicker.setOnAction(event ->{
             this.payment.get().setDateCreated(DateUtils.toDateTime(paymentDatePicker.getValue()));
         });
@@ -73,5 +74,13 @@ public class PaymentBasicInformationController implements Initializable{
     public void setPayment(PaymentDTO paymentDTO){
         this.payment.set(paymentDTO);
         paymentDatePicker.setValue(DateUtils.toLocalDate(this.payment.get().getDateCreated()));
+    }
+
+    public PaymentDTO getPayment() {
+        return payment.get();
+    }
+
+    public PaymentDTO paymentProperty() {
+        return payment.get();
     }
 }

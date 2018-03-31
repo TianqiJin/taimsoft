@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXCheckBox?>
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXDatePicker?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxml.search.transaction.TransactionAdvancedSearch">
+   <children>
+      <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+         <children>
+            <JFXComboBox fx:id="transactionTypeComboBox" editable="true" promptText="All Transactions" />
+            <JFXComboBox fx:id="transactionCategoryComboBox" promptText="Category" />
+         </children>
+      </HBox>
+      <HBox AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="60.0">
+         <children>
+            <JFXDatePicker fx:id="fromdDatePicker" promptText="From Date" />
+            <JFXDatePicker fx:id="toDatePicker" promptText="To Date" />
+         </children>
+      </HBox>
+      <HBox spacing="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="110.0">
+         <children>
+            <JFXTextField fx:id="customerNameTextField" text="Customer Name" />
+            <JFXTextField fx:id="vendorNameTextField" text="Vendor Name" />
+            <JFXTextField fx:id="staffNameTextField" text="Staff Name" />
+         </children>
+      </HBox>
+      <HBox spacing="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="160.0">
+         <children>
+            <JFXComboBox fx:id="paymentStatusComboBox" promptText="Payment Status" />
+            <JFXComboBox fx:id="deliveryStatusComboBox" promptText="Delivery Status" />
+         </children>
+      </HBox>
+      <HBox AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="210.0">
+         <children>
+            <JFXTextField fx:id="notesTextField" text="Transaction Notes" />
+         </children>
+      </HBox>
+      <HBox spacing="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="260.0">
+         <children>
+            <JFXCheckBox fx:id="paymentOverDueCheckBox" text="Payment Overdue" />
+            <JFXCheckBox fx:id="deliveryOverDueCheckBox" text="Delivery Overdue" />
+            <JFXCheckBox fx:id="finalizedCheckBox" text="Finalized" />
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

@@ -3,6 +3,8 @@ package com.taim.desktopui.controllers.overview;
 import com.jfoenix.controls.JFXComboBox;
 import com.taim.client.IClient;
 import com.taim.client.PaymentClient;
+import com.taim.desktopui.controllers.payment.GeneratePaymentRootController;
+import com.taim.desktopui.util.PaymentPaneLoader;
 import com.taim.desktopui.util.RestClientFactory;
 import com.taim.dto.PaymentDTO;
 import com.taim.dto.PaymentRecordDTO;
@@ -84,9 +86,9 @@ public class PaymentOverviewController extends IOverviewController<PaymentDTO> i
         createNewPaymentComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue != null && Payment.PaymentType.getType(newValue) != null){
                 if(Payment.PaymentType.getType(newValue).equals(Payment.PaymentType.CUSTOMER_PAYMENT)){
-
+                    PaymentPaneLoader.loadCustomerPayment(null, Payment.PaymentType.CUSTOMER_PAYMENT);
                 }else{
-
+                    PaymentPaneLoader.loadCustomerPayment(null, Payment.PaymentType.VENDOR_PAYMENT);
                 }
             }
         });
@@ -102,6 +104,4 @@ public class PaymentOverviewController extends IOverviewController<PaymentDTO> i
 
     @Override
     public void initSummaryLabel() {}
-
-    private void
 }

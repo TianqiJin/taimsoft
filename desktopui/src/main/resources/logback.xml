@@ -27,7 +27,7 @@
     <logger name="org.apache.commons.beanutils.converters" level="warn" />
 
     <root level="INFO">
-        <appender-ref ref="FILE" />
+        <!--<appender-ref ref="FILE" />-->
         <appender-ref ref="STDOUT" />
     </root>
 

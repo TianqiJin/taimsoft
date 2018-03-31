@@ -1,5 +1,6 @@
 package com.taim.backend.controller;
 
+import com.taim.backend.controller.model.TransactionSearchQueryParam;
 import com.taim.model.*;
 import com.taim.backend.service.transaction.ITransactionService;
 import com.taim.model.basemodels.UserBaseModel;
@@ -30,7 +31,7 @@ public class TransactionController {
     @ResponseBody
     public ResponseEntity<List<Transaction>> getAllTransactions() {
         List<Transaction> list = service.getAllTransactions();
-        return new ResponseEntity<List<Transaction>>(list, HttpStatus.OK);
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
 
@@ -39,7 +40,7 @@ public class TransactionController {
     @ResponseBody
     public ResponseEntity<Transaction> getTransactionById(@RequestParam Integer id) {
         Transaction transaction = service.getTransactionById(id);
-        return new ResponseEntity<Transaction>(transaction, HttpStatus.OK);
+        return new ResponseEntity<>(transaction, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/getByProductId",
@@ -49,7 +50,7 @@ public class TransactionController {
         List<Transaction> list = service.getAllTransactions();
         List<Transaction> realList = list.stream().filter(t -> t.getTransactionDetails().stream()
                 .anyMatch(td -> td.getProduct().getId() == id)).collect(Collectors.toList());
-        return new ResponseEntity<List<Transaction>>(realList, HttpStatus.OK);
+        return new ResponseEntity<>(realList, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/getByCustomerId",
@@ -57,7 +58,7 @@ public class TransactionController {
     @ResponseBody
     public ResponseEntity<List<Transaction>> getTransactionByCustomerId(@RequestParam Integer id) {
         List<Transaction> list = service.getAllTransactionsByCustomerId(id);
-        return new ResponseEntity<List<Transaction>>(list, HttpStatus.OK);
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/getByVendorId",
@@ -65,7 +66,7 @@ public class TransactionController {
     @ResponseBody
     public ResponseEntity<List<Transaction>> getTransactionByVendorId(@RequestParam Integer id) {
         List<Transaction> list = service.getAllTransactionsByVendorId(id);
-        return new ResponseEntity<List<Transaction>>(list, HttpStatus.OK);
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/getByStaffId",
@@ -73,7 +74,7 @@ public class TransactionController {
     @ResponseBody
     public ResponseEntity<List<Transaction>> getTransactionByStaffId(@RequestParam Integer id) {
         List<Transaction> list = service.getAllTransactionsByStaffId(id);
-        return new ResponseEntity<List<Transaction>>(list, HttpStatus.OK);
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
 
@@ -84,7 +85,7 @@ public class TransactionController {
     @ResponseBody
     public ResponseEntity<Transaction> create(@RequestBody Transaction transaction) {
         Transaction transaction1 = service.saveTransaction(transaction);
-        return new ResponseEntity<Transaction>(transaction1, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(transaction1, HttpStatus.ACCEPTED);
     }
 
     @RequestMapping(value = "/update",
@@ -94,7 +95,7 @@ public class TransactionController {
     @ResponseBody
     public ResponseEntity<Transaction> update(@RequestBody Transaction transaction) {
         Transaction transaction1 = service.updateTransaction(transaction);
-        return new ResponseEntity<Transaction>(transaction1, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(transaction1, HttpStatus.ACCEPTED);
     }
 
     @RequestMapping(value = "/saveOrUpdateAll",
@@ -104,7 +105,7 @@ public class TransactionController {
     @ResponseBody
     public ResponseEntity<Transaction> updateAll(@RequestBody Transaction transaction) {
         Transaction transaction1 = service.saveOrUpdateAll(transaction);
-        return new ResponseEntity<Transaction>(transaction1, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(transaction1, HttpStatus.ACCEPTED);
     }
 
     @RequestMapping(value = "/deleteObject")
@@ -119,5 +120,13 @@ public class TransactionController {
             return new ResponseEntity<>("No such transaction found!", HttpStatus.OK);
         }
     }
+
+    @RequestMapping(value = "filter")
+    @ResponseBody
+    public ResponseEntity<List<Transaction>> getFilteredTransaction(@RequestParam TransactionSearchQueryParam transactionSearchQueryParam){
+        return null;
+    }
+
+
 
 }
