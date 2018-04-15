@@ -1,12 +1,12 @@
 package com.taim.backend.dao.transaction;
 
 
-import com.taim.backend.controller.model.TransactionSearchQueryParam;
 import com.taim.backend.dao.AbstractDao;
 import com.taim.backend.dao.IDao;
 import com.taim.model.Transaction;
+import com.taim.model.search.TransactionSearch;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Criteria;
-import org.hibernate.SQLQuery;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -34,9 +34,16 @@ public class TransactionDaoImpl extends AbstractDao implements IDao<Transaction>
     }
 
     @Override
-    public Transaction findByID(Integer id) {
+    public Transaction findByID(Long id) {
         Criteria criteria = getSession().createCriteria(Transaction.class);
         criteria.add(Restrictions.eq("id", id));
+        criteria.add(Restrictions.eq("deleted",false));
+        return (Transaction) criteria.uniqueResult();
+    }
+
+    public Transaction findByPresentID(String id){
+        Criteria criteria = getSession().createCriteria(Transaction.class);
+        criteria.add(Restrictions.eq("present_id", id));
         criteria.add(Restrictions.eq("deleted",false));
         return (Transaction) criteria.uniqueResult();
     }
@@ -58,14 +65,45 @@ public class TransactionDaoImpl extends AbstractDao implements IDao<Transaction>
         return null;
     }
 
-    public List<Transaction> findByFilter(TransactionSearchQueryParam transactionSearchQueryParam){
-//        Criteria criteria = getSession().createCriteria(Transaction.class);
-//        if(transactionSearchQueryParam.getCategory() != null){
-//            criteria.add(Restrictions.eq(""))
-//        }
-//        criteria.add(Restrictions.eq("deleted",false));
+    @SuppressWarnings("unchecked")
+    public List<Transaction> findByFilter(TransactionSearch transactionSearch){
+        Criteria criteria = getSession().createCriteria(Transaction.class);
+        if(StringUtils.isNotEmpty(transactionSearch.getTransactionID())){
+            criteria.add(Restrictions.eq("present_id", transactionSearch.getTransactionID()));
+        }else{
+            if(transactionSearch.getTransactionType() != null){
+                criteria.add(Restrictions.eq("transaction_type", transactionSearch.getTransactionType().name()));
+            }
+            if(transactionSearch.getTransactionCategory() != null){
+                criteria.add(Restrictions.eq("transaction_category", transactionSearch.getTransactionCategory().name()));
+            }
+            if(transactionSearch.getPaymentStatus() != null){
+                criteria.add(Restrictions.eq("transaction_category", transactionSearch.getTransactionCategory().name()));
+            }
+            if(transactionSearch.getPaymentStatus() != null){
+                criteria.add(Restrictions.eq("payment_status", transactionSearch.getPaymentStatus().name()));
+            }
+            if(transactionSearch.getDeliveryStatus() != null){
+                criteria.add(Restrictions.eq("delivery_status", transactionSearch.getDeliveryStatus().name()));
+            }
+            if(transactionSearch.getVendorID() != 0){
+                criteria.add(Restrictions.eq("vendor_id", transactionSearch.getVendorID()));
+            }
+            if(transactionSearch.getStaffID() != 0){
+                criteria.add(Restrictions.eq("staff_id", transactionSearch.getStaffID()));
+            }
+            if(transactionSearch.getFromDate() != null){
+                criteria.add(Restrictions.ge("date_created", transactionSearch.getFromDate()));
+            }
+            if(transactionSearch.getToDate() != null){
+                criteria.add(Restrictions.le("date_created", transactionSearch.getToDate()));
+            }
+        }
 
-        return null;
+        criteria.add(Restrictions.eq("is_finalized",transactionSearch.isFinalized()));
+        criteria.add(Restrictions.eq("deleted",false));
+
+        return criteria.list();
     }
 
     @Override
@@ -73,22 +111,27 @@ public class TransactionDaoImpl extends AbstractDao implements IDao<Transaction>
         delete(object);
     }
 
-    public List<Transaction> getByCustomerId(Integer id){
+    @SuppressWarnings("unchecked")
+    public List<Transaction> getByCustomerId(Long id){
         Criteria criteria = getSession().createCriteria(Transaction.class);
         criteria.add(Restrictions.eq("customer.id",id));
         criteria.add(Restrictions.eq("deleted",false));
-        return (List<Transaction>) criteria.list();
+        return criteria.list();
     }
-    public List<Transaction> getByStaffId(Integer id){
+
+    @SuppressWarnings("unchecked")
+    public List<Transaction> getByStaffId(Long id){
         Criteria criteria = getSession().createCriteria(Transaction.class);
         criteria.add(Restrictions.eq("deleted",false));
         criteria.add(Restrictions.eq("staff.id",id));
-        return (List<Transaction>) criteria.list();
+        return criteria.list();
     }
-    public List<Transaction> getByVendorId(Integer id){
+
+    @SuppressWarnings("unchecked")
+    public List<Transaction> getByVendorId(Long id){
         Criteria criteria = getSession().createCriteria(Transaction.class);
         criteria.add(Restrictions.eq("deleted",false));
         criteria.add(Restrictions.eq("vendor.id",id));
-        return (List<Transaction>) criteria.list();
+        return criteria.list();
     }
 }

@@ -31,7 +31,7 @@ public class ProductDaoImpl extends AbstractDao implements IDao<Product> {
     }
 
     @Override
-    public Product findByID(Integer id) {
+    public Product findByID(Long id) {
         Criteria criteria = getSession().createCriteria(Product.class);
         criteria.add(Restrictions.eq("id", id));
         criteria.add(Restrictions.eq("deleted",false));

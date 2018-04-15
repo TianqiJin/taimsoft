@@ -13,6 +13,7 @@ public class TransactionDTO extends TransactionBaseModelDTO {
     private DoubleProperty saleAmount;
     private DoubleProperty gst;
     private DoubleProperty pst;
+    private DoubleProperty balance;
     private ObjectProperty<StaffDTO> staff;
     private ObjectProperty<CustomerDTO> customer;
     private ObjectProperty<VendorDTO> vendor;
@@ -23,7 +24,6 @@ public class TransactionDTO extends TransactionBaseModelDTO {
     private ObjectProperty<Transaction.TransactionCategory> transactionCategory;
     private ObjectProperty<DateTime> deliveryDueDate;
     private List<TransactionDetailDTO> transactionDetails;
-    private List<PaymentRecordDTO> paymentRecords;
     private List<DeliveryDTO> deliveries;
     private IntegerProperty refId;
     private BooleanProperty finalized;
@@ -35,6 +35,7 @@ public class TransactionDTO extends TransactionBaseModelDTO {
         saleAmount = new SimpleDoubleProperty();
         gst = new SimpleDoubleProperty();
         pst = new SimpleDoubleProperty();
+        balance = new SimpleDoubleProperty();
         staff = new SimpleObjectProperty<>();
         customer = new SimpleObjectProperty<>();
         vendor = new SimpleObjectProperty<>();
@@ -43,7 +44,6 @@ public class TransactionDTO extends TransactionBaseModelDTO {
         deliveryStatus = new SimpleObjectProperty<>();
         transactionCategory = new SimpleObjectProperty<>();
         transactionDetails = new ArrayList<>();
-        paymentRecords = new ArrayList<>();
         deliveries = new ArrayList<>();
         refId = new SimpleIntegerProperty();
         finalized = new SimpleBooleanProperty();
@@ -182,14 +182,6 @@ public class TransactionDTO extends TransactionBaseModelDTO {
         this.deliveryStatus.set(deliveryStatus);
     }
 
-    public List<PaymentRecordDTO> getPaymentRecords() {
-        return paymentRecords;
-    }
-
-    public void setPaymentRecords(List<PaymentRecordDTO> paymentRecords) {
-        this.paymentRecords = paymentRecords;
-    }
-
     public int getRefId() {
         return refId.get();
     }
@@ -280,5 +272,17 @@ public class TransactionDTO extends TransactionBaseModelDTO {
 
     public void setTransactionCategory(Transaction.TransactionCategory transactionCategory) {
         this.transactionCategory.set(transactionCategory);
+    }
+
+    public double getBalance() {
+        return balance.get();
+    }
+
+    public DoubleProperty balanceProperty() {
+        return balance;
+    }
+
+    public void setBalance(double balance) {
+        this.balance.set(balance);
     }
 }

@@ -25,7 +25,7 @@ public class LicenseDaoImpl extends AbstractDao implements IDao<License> {
     }
 
     @Override
-    public License findByID(Integer id) {
+    public License findByID(Long id) {
         Criteria criteria = getSession().createCriteria(License.class);
         criteria.add(Restrictions.eq("id", id));
         return (License) criteria.uniqueResult();

@@ -36,7 +36,7 @@ public class CustomerServiceImpl implements ICustomerService{
     }
 
     @Override
-    public Customer getCustomerById(Integer id) {
+    public Customer getCustomerById(Long id) {
         return dao.findByID(id);
     }
 

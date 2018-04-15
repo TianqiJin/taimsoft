@@ -41,7 +41,7 @@ public class StaffServiceImpl implements IStaffService {
     }
 
     @Override
-    public Staff getStaffById(Integer id) {
+    public Staff getStaffById(Long id) {
         return dao.findByID(id);
     }
 

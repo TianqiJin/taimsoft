@@ -5,23 +5,34 @@ import com.taim.dto.basedtos.TransactionBaseModelDTO;
 import com.taim.model.Payment;
 import javafx.beans.property.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PaymentDTO extends TransactionBaseModelDTO {
     private DoubleProperty paymentAmount;
     private ObjectProperty<Payment.PaymentType> paymentType;
     private ObjectProperty<PaymentMethodDTO> paymentMethod;
-    private ObjectProperty<StaffDTO> staff;
-    private ObjectProperty<CustomerDTO> customer;
-    private ObjectProperty<VendorDTO> vendor;
+    private LongProperty staffID;
+    private LongProperty userID;
+    private List<PaymentDetailDTO> paymentDetails;
     private StringProperty note;
 
     public PaymentDTO(){
         paymentAmount = new SimpleDoubleProperty();
         paymentType = new SimpleObjectProperty<>();
         paymentMethod = new SimpleObjectProperty<>();
-        staff = new SimpleObjectProperty<>();
-        customer = new SimpleObjectProperty<>();
-        vendor = new SimpleObjectProperty<>();
+        staffID = new SimpleLongProperty();
+        userID = new SimpleLongProperty();
+        paymentDetails = new ArrayList<>();
         note = new SimpleStringProperty();
+    }
+
+    public List<PaymentDetailDTO> getPaymentDetails() {
+        return paymentDetails;
+    }
+
+    public void setPaymentDetails(List<PaymentDetailDTO> paymentDetails) {
+        this.paymentDetails = paymentDetails;
     }
 
     public double getPaymentAmount() {
@@ -60,40 +71,28 @@ public class PaymentDTO extends TransactionBaseModelDTO {
         this.paymentMethod.set(paymentMethod);
     }
 
-    public StaffDTO getStaff() {
-        return staff.get();
+    public long getStaffID() {
+        return staffID.get();
     }
 
-    public ObjectProperty<StaffDTO> staffProperty() {
-        return staff;
+    public LongProperty staffIDProperty() {
+        return staffID;
     }
 
-    public void setStaff(StaffDTO staff) {
-        this.staff.set(staff);
+    public void setStaffID(long staffID) {
+        this.staffID.set(staffID);
     }
 
-    public CustomerDTO getCustomer() {
-        return customer.get();
+    public long getUserID() {
+        return userID.get();
     }
 
-    public ObjectProperty<CustomerDTO> customerProperty() {
-        return customer;
+    public LongProperty userIDProperty() {
+        return userID;
     }
 
-    public void setCustomer(CustomerDTO customer) {
-        this.customer.set(customer);
-    }
-
-    public VendorDTO getVendor() {
-        return vendor.get();
-    }
-
-    public ObjectProperty<VendorDTO> vendorProperty() {
-        return vendor;
-    }
-
-    public void setVendor(VendorDTO vendor) {
-        this.vendor.set(vendor);
+    public void setUserID(long userID) {
+        this.userID.set(userID);
     }
 
     public String getNote() {

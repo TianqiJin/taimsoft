@@ -32,7 +32,7 @@ public class VendorDaoImpl extends AbstractDao implements IDao<Vendor> {
     }
 
     @Override
-    public Vendor findByID(Integer id) {
+    public Vendor findByID(Long id) {
         Criteria criteria = getSession().createCriteria(Vendor.class);
         criteria.add(Restrictions.eq("id", id));
         criteria.add(Restrictions.eq("deleted",false));

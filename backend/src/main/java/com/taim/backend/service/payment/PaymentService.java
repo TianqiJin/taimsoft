@@ -26,7 +26,7 @@ public class PaymentService implements IPaymentService {
     }
 
     @Override
-    public Payment getPaymentById(Integer id) {
+    public Payment getPaymentById(Long id) {
         return paymentDao.findByID(id);
     }
 

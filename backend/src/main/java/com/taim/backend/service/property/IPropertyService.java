@@ -7,7 +7,7 @@ import java.util.List;
 public interface IPropertyService {
     List<Property> getAllProperties();
     Property saveProperty(Property property);
-    Property getPropertyById(Integer id);
+    Property getPropertyById(Long id);
     void deleteProperty(Property property);
     Property updateProperty(Property property);
     Property saveOrUpdateProperty(Property property);

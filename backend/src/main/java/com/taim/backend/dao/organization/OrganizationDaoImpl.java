@@ -29,7 +29,7 @@ public class OrganizationDaoImpl extends AbstractDao implements IDao<Organizatio
     }
 
     @Override
-    public Organization findByID(Integer organizationID) {
+    public Organization findByID(Long organizationID) {
         return null;
     }
 

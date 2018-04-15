@@ -124,6 +124,7 @@ public class Transaction extends TransactionBaseModel {
 
     @Column(name = "sale_amount", nullable = false)
     private double saleAmount;
+    private double balance;
     @Column
     private double gst;
     @Column
@@ -162,10 +163,6 @@ public class Transaction extends TransactionBaseModel {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @Fetch(FetchMode.SUBSELECT)
     @JoinColumn(name = "transaction_id")
-    private List<PaymentRecord> paymentRecords;
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @Fetch(FetchMode.SUBSELECT)
-    @JoinColumn(name = "transaction_id")
     private List<Delivery> deliveries;
     @Column(name = "ref_id")
     private int refId;
@@ -184,6 +181,14 @@ public class Transaction extends TransactionBaseModel {
 
     public void setSaleAmount(double saleAmount) {
         this.saleAmount = saleAmount;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(double balance) {
+        this.balance = balance;
     }
 
     public Staff getStaff() {
@@ -224,14 +229,6 @@ public class Transaction extends TransactionBaseModel {
 
     public void setTransactionDetails(List<TransactionDetail> transactionDetails) {
         this.transactionDetails = transactionDetails;
-    }
-
-    public List<PaymentRecord> getPaymentRecords() {
-        return paymentRecords;
-    }
-
-    public void setPaymentRecords(List<PaymentRecord> paymentRecords) {
-        this.paymentRecords = paymentRecords;
     }
 
     public PaymentStatus getPaymentStatus() {

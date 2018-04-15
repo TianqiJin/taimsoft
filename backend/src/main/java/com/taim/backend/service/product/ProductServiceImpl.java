@@ -35,7 +35,7 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public Product getProductById(Integer id) {
+    public Product getProductById(Long id) {
         return dao.findByID(id);
     }
 

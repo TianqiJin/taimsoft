@@ -40,7 +40,7 @@ public class VendorController{
     @RequestMapping(value = "/getById",
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<Vendor> getVendorByName(@RequestParam Integer id) {
+    public ResponseEntity<Vendor> getVendorByName(@RequestParam Long    id) {
         Vendor vendor = service.getVendorById(id);
         return new ResponseEntity<>(vendor, HttpStatus.OK);
     }

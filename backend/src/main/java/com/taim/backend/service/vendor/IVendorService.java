@@ -11,7 +11,7 @@ public interface IVendorService {
     List<Vendor> getAllVendors();
     Vendor saveVendor(Vendor vendor);
     Vendor getVendorByName(String name);
-    Vendor getVendorById(Integer id);
+    Vendor getVendorById(Long id);
     void deleteVendor(Vendor vendor);
     Vendor updateVendor(Vendor vendor);
     Vendor saveOrUpdateVendor(Vendor vendor);

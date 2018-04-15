@@ -25,7 +25,7 @@ public class PropertyDaoImpl extends AbstractDao implements IDao<Property> {
     }
 
     @Override
-    public Property findByID(Integer id) {
+    public Property findByID(Long id) {
         Criteria criteria = getSession().createCriteria(Property.class);
         criteria.add(Restrictions.eq("id", id));
         return (Property) criteria.uniqueResult();

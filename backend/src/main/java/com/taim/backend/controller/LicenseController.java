@@ -28,7 +28,7 @@ public class LicenseController {
     @RequestMapping(value = "/getById",
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<License> getLicenseById(@RequestParam Integer id) {
+    public ResponseEntity<License> getLicenseById(@RequestParam Long id) {
         License License = service.getLicenseById(id);
         return new ResponseEntity<>(License, HttpStatus.OK);
     }

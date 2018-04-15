@@ -25,7 +25,7 @@ public class CustomerController {
     @ResponseBody
     public ResponseEntity<List<Customer>> getAllCustomers() {
         List<Customer> list = service.getAllCustomers();
-        return new ResponseEntity<List<Customer>>(list, HttpStatus.OK);
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/getByName",
@@ -33,13 +33,13 @@ public class CustomerController {
     @ResponseBody
     public ResponseEntity<Customer> getCustomerByName(@RequestParam String name) {
         Customer customer = service.getCustomerByName(name);
-        return new ResponseEntity<Customer>(customer, HttpStatus.OK);
+        return new ResponseEntity<>(customer, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/getById",
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<Customer> getCustomerById(@RequestParam Integer id) {
+    public ResponseEntity<Customer> getCustomerById(@RequestParam Long id) {
         Customer customer = service.getCustomerById(id);
         return new ResponseEntity<>(customer, HttpStatus.OK);
     }
@@ -51,7 +51,7 @@ public class CustomerController {
     @ResponseBody
     public ResponseEntity<Customer> create(@RequestBody Customer customer) {
         Customer customer1 = service.saveCustomer(customer);
-        return new ResponseEntity<Customer>(customer1, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(customer1, HttpStatus.ACCEPTED);
     }
 
     @RequestMapping(value = "/update",
@@ -61,7 +61,7 @@ public class CustomerController {
     @ResponseBody
     public ResponseEntity<Customer> update(@RequestBody Customer customer) {
         Customer customer1 = service.updateCustomer(customer);
-        return new ResponseEntity<Customer>(customer1, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(customer1, HttpStatus.ACCEPTED);
     }
 
     @RequestMapping(value = "/saveOrUpdate",
@@ -80,10 +80,10 @@ public class CustomerController {
         Customer customer = service.getCustomerByName(name);
         if (customer !=null){
             service.deleteCustomer(customer);
-            return new ResponseEntity<String>("Deleted!", HttpStatus.OK);
+            return new ResponseEntity<>("Deleted!", HttpStatus.OK);
 
         }else {
-            return new ResponseEntity<String>("No such customer found!", HttpStatus.OK);
+            return new ResponseEntity<>("No such customer found!", HttpStatus.OK);
         }
     }
 

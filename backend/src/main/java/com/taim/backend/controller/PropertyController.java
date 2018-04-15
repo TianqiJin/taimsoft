@@ -29,7 +29,7 @@ public class PropertyController {
     @RequestMapping(value = "/getById",
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<Property> getPropertyById(@RequestParam Integer id) {
+    public ResponseEntity<Property> getPropertyById(@RequestParam Long id) {
         Property Property = service.getPropertyById(id);
         return new ResponseEntity<>(Property, HttpStatus.OK);
     }
@@ -66,7 +66,7 @@ public class PropertyController {
 
     @RequestMapping(value = "/deleteObject")
     @ResponseBody
-    public ResponseEntity<String> deletePropertyById(@RequestParam Integer id) {
+    public ResponseEntity<String> deletePropertyById(@RequestParam Long id) {
         Property Property = service.getPropertyById(id);
         if (Property !=null){
             service.deleteProperty(Property);

@@ -2,16 +2,24 @@ package com.taim.model;
 
 
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.taim.model.basemodels.BaseModel;
 import com.taim.model.basemodels.TransactionBaseModel;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created by tjin on 2017-08-01.
  */
 @Entity
 @Table(name = "payment")
+@JsonIdentityInfo(scope = Payment.class,
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Payment extends TransactionBaseModel {
     public enum PaymentType{
         CUSTOMER_PAYMENT("Customer Payment"),
@@ -43,15 +51,14 @@ public class Payment extends TransactionBaseModel {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "payment_method_id")
     private PaymentMethod paymentMethod;
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "staff_id")
-    private Staff staff;
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "customer_id")
-    private Customer customer;
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "vendor_id")
-    private Vendor vendor;
+    @Column(name = "staff_id")
+    private Long staffID;
+    @Column(name = "user_id")
+    private Long userID;
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @Fetch(FetchMode.SUBSELECT)
+    @JoinColumn(name = "payment_id")
+    private List<PaymentDetail> paymentDetails;
     @Column
     private String note;
 
@@ -73,24 +80,20 @@ public class Payment extends TransactionBaseModel {
         this.paymentMethod = paymentMethod;
     }
 
-    public void setStaff(Staff staff) {
-        this.staff = staff;
+    public Long getStaffID() {
+        return staffID;
     }
 
-    public Customer getCustomer() {
-        return customer;
+    public void setStaffID(Long staffID) {
+        this.staffID = staffID;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
+    public Long getUserID() {
+        return userID;
     }
 
-    public Vendor getVendor() {
-        return vendor;
-    }
-
-    public void setVendor(Vendor vendor) {
-        this.vendor = vendor;
+    public void setUserID(Long userID) {
+        this.userID = userID;
     }
 
     public String getNote() {
@@ -109,7 +112,11 @@ public class Payment extends TransactionBaseModel {
         this.paymentType = paymentType;
     }
 
-    public Staff getStaff() {
-        return staff;
+    public List<PaymentDetail> getPaymentDetails() {
+        return paymentDetails;
+    }
+
+    public void setPaymentDetails(List<PaymentDetail> paymentDetails) {
+        this.paymentDetails = paymentDetails;
     }
 }

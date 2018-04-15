@@ -39,7 +39,7 @@ public class StaffController {
     @RequestMapping(value = "/getById",
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<Staff> getStaffById(@RequestParam Integer id) {
+    public ResponseEntity<Staff> getStaffById(@RequestParam Long id) {
         Staff staff = service.getStaffById(id);
         return new ResponseEntity<>(staff, HttpStatus.OK);
     }

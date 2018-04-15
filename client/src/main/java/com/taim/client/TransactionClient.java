@@ -3,12 +3,14 @@ package com.taim.client;
 import com.taim.client.configuration.LoggingRequestInterceptor;
 import com.taim.client.util.BeanMapper;
 import com.taim.client.util.PropertiesProcessor;
+import com.taim.client.util.SearchUrlGenerator;
 import com.taim.dto.CustomerDTO;
 import com.taim.dto.ProductDTO;
 import com.taim.dto.TransactionDTO;
 import com.taim.dto.VendorDTO;
 import com.taim.dto.basedtos.UserBaseModelDTO;
 import com.taim.model.*;
+import com.taim.model.search.TransactionSearch;
 import org.springframework.http.*;
 import org.springframework.http.client.BufferingClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
@@ -132,6 +134,18 @@ public class TransactionClient implements IClient<TransactionDTO>{
         HttpEntity<Transaction> requestEntity = new HttpEntity<>(BeanMapper.map(transactionDTO,Transaction.class), headers);
         ResponseEntity<Transaction> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Transaction.class);
         return BeanMapper.map(responseEntity.getBody(), TransactionDTO.class);
+    }
+
+    public List<TransactionDTO> getFilteredList(TransactionSearch transactionSearch){
+        String url = TRANSACTION_PATH + "/filter?" + SearchUrlGenerator.generate(transactionSearch);
+        HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
+
+        ResponseEntity<Transaction[]> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity,Transaction[].class);
+        Transaction[] transactions = responseEntity.getBody();
+        List<TransactionDTO> transactionList = new ArrayList<>();
+        Arrays.stream(transactions).forEach(p->transactionList.add(BeanMapper.map(p, TransactionDTO.class)));
+
+        return transactionList;
     }
 
 }

@@ -11,7 +11,7 @@ public interface IProductService {
     List<Product> getAllProducts();
     Product saveProduct(Product Product);
     Product getProductByTexture(String texture);
-    Product getProductById(Integer id);
+    Product getProductById(Long id);
     void deleteProduct(Product product);
     Product updateProduct(Product product);
     Product saveOrUpdateProduct(Product product);

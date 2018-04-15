@@ -7,7 +7,7 @@ import java.util.List;
 public interface ILicenseService {
     List<License> getAllLicenses();
     License saveLicense(License license);
-    License getLicenseById(Integer id);
+    License getLicenseById(Long id);
     void deleteLicense(License license);
     License saveOrUpdateLicense(License license);
 }

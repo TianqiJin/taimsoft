@@ -26,7 +26,7 @@ public class PaymentDaoImpl extends AbstractDao implements IDao<Payment> {
     }
 
     @Override
-    public Payment findByID(Integer id) {
+    public Payment findByID(Long id) {
         Criteria criteria = getSession().createCriteria(Payment.class);
         criteria.add(Restrictions.eq("id", id));
         criteria.add(Restrictions.eq("deleted", false));

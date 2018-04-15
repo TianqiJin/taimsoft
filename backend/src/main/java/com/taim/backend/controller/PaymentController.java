@@ -30,7 +30,7 @@ public class PaymentController {
     @RequestMapping(value = "/getById",
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<Payment> getPaymentById(@RequestParam Integer id) {
+    public ResponseEntity<Payment> getPaymentById(@RequestParam Long id) {
         Payment Payment = service.getPaymentById(id);
         return new ResponseEntity<>(Payment, HttpStatus.OK);
     }
@@ -41,6 +41,7 @@ public class PaymentController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Payment> create(@RequestBody Payment Payment) {
+        System.out.println(Payment);
         Payment Payment1 = service.savePayment(Payment);
         return new ResponseEntity<>(Payment1, HttpStatus.ACCEPTED);
     }
@@ -58,7 +59,7 @@ public class PaymentController {
 
     @RequestMapping(value = "/deleteObject")
     @ResponseBody
-    public ResponseEntity<String> deletePaymentById(@RequestParam Integer id) {
+    public ResponseEntity<String> deletePaymentById(@RequestParam Long id) {
         Payment Payment = service.getPaymentById(id);
         if (Payment !=null){
             service.deletePayment(Payment);

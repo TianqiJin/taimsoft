@@ -25,7 +25,7 @@ public class LicenseServiceImpl implements ILicenseService{
     }
 
     @Override
-    public License getLicenseById(Integer id) {
+    public License getLicenseById(Long id) {
         return dao.findByID(id);
     }
 

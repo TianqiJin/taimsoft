@@ -10,7 +10,7 @@ public interface IDao<T> {
 
     List<T> getAll();
 
-    T findByID(Integer id);
+    T findByID(Long id);
 
     T updateObject(T object);
 

@@ -31,7 +31,7 @@ public class CustomerDaoImpl extends AbstractDao implements IDao<Customer> {
     }
 
     @Override
-    public Customer findByID(Integer id) {
+    public Customer findByID(Long id) {
         Criteria criteria = getSession().createCriteria(Customer.class);
         criteria.add(Restrictions.eq("id", id));
         criteria.add(Restrictions.eq("deleted",false));

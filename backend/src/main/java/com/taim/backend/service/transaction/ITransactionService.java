@@ -1,9 +1,7 @@
 package com.taim.backend.service.transaction;
 
-import com.taim.backend.controller.model.TransactionSearchQueryParam;
-import com.taim.model.Product;
 import com.taim.model.Transaction;
-import com.taim.model.basemodels.UserBaseModel;
+import com.taim.model.search.TransactionSearch;
 
 import java.util.List;
 
@@ -13,13 +11,13 @@ import java.util.List;
 public interface ITransactionService {
     List<Transaction> getAllTransactions();
     Transaction saveTransaction(Transaction transaction);
-    Transaction getTransactionById(Integer id);
+    Transaction getTransactionById(Long id);
     void deleteTransaction(Transaction transaction);
     Transaction updateTransaction(Transaction transaction);
-    List<Transaction> getAllTransactionsByCustomerId(Integer id);
-    List<Transaction> getAllTransactionsByVendorId(Integer id);
-    List<Transaction> getAllTransactionsByStaffId(Integer id);
+    List<Transaction> getAllTransactionsByCustomerId(Long id);
+    List<Transaction> getAllTransactionsByVendorId(Long id);
+    List<Transaction> getAllTransactionsByStaffId(Long id);
     Transaction saveOrUpdateTransaction(Transaction transaction);
-    List<Transaction> getFilteredTransactions(TransactionSearchQueryParam transactionSearchQueryParam);
+    List<Transaction> getFilteredTransactions(TransactionSearch transactionSearch);
     Transaction saveOrUpdateAll(Transaction transaction);
 }

@@ -1,21 +1,18 @@
 package com.taim.backend.service.transaction;
 
 
-import com.taim.backend.controller.model.TransactionSearchQueryParam;
-import com.taim.backend.dao.IDao;
 import com.taim.backend.dao.customer.CustomerDaoImpl;
 import com.taim.backend.dao.product.ProductDaoImpl;
 import com.taim.backend.dao.transaction.TransactionDaoImpl;
 import com.taim.backend.dao.vendor.VendorDaoImpl;
-import com.taim.model.Customer;
-import com.taim.model.Product;
 import com.taim.model.Transaction;
-import com.taim.model.Vendor;
-import com.taim.model.basemodels.UserBaseModel;
+import com.taim.model.search.TransactionSearch;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,7 +42,7 @@ public class TransactionServiceImpl implements ITransactionService{
     }
 
     @Override
-    public Transaction getTransactionById(Integer id) {
+    public Transaction getTransactionById(Long id) {
        return transactionDao.findByID(id);
     }
 
@@ -61,17 +58,17 @@ public class TransactionServiceImpl implements ITransactionService{
     }
 
     @Override
-    public List<Transaction> getAllTransactionsByCustomerId(Integer id) {
+    public List<Transaction> getAllTransactionsByCustomerId(Long id) {
         return transactionDao.getByCustomerId(id);
     }
 
     @Override
-    public List<Transaction> getAllTransactionsByVendorId(Integer id) {
+    public List<Transaction> getAllTransactionsByVendorId(Long id) {
         return transactionDao.getByVendorId(id);
     }
 
     @Override
-    public List<Transaction> getAllTransactionsByStaffId(Integer id) {
+    public List<Transaction> getAllTransactionsByStaffId(Long id) {
         return transactionDao.getByStaffId(id);
     }
     @Override
@@ -83,8 +80,8 @@ public class TransactionServiceImpl implements ITransactionService{
     }
 
     @Override
-    public List<Transaction> getFilteredTransactions(TransactionSearchQueryParam transactionSearchQueryParam) {
-        return null;
+    public List<Transaction> getFilteredTransactions(TransactionSearch transactionSearch) {
+        return transactionDao.findByFilter(transactionSearch);
     }
 
     @Override

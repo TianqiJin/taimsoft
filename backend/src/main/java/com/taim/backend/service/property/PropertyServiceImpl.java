@@ -25,7 +25,7 @@ public class PropertyServiceImpl implements IPropertyService {
     }
 
     @Override
-    public Property getPropertyById(Integer id) {
+    public Property getPropertyById(Long id) {
         return dao.findByID(id);
     }
 

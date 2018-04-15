@@ -35,7 +35,7 @@ public class VendorServiceImpl implements IVendorService{
     }
 
     @Override
-    public Vendor getVendorById(Integer id) {
+    public Vendor getVendorById(Long id) {
         return dao.findByID(id);
     }
 

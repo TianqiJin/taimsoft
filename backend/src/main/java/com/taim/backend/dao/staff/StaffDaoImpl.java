@@ -31,7 +31,7 @@ public class StaffDaoImpl extends AbstractDao implements IDao<Staff> {
     }
 
     @Override
-    public Staff findByID(Integer staffID) {
+    public Staff findByID(Long staffID) {
         Criteria criteria = getSession().createCriteria(Staff.class);
         criteria.add(Restrictions.eq("id", staffID));
         criteria.add(Restrictions.eq("deleted",false));
