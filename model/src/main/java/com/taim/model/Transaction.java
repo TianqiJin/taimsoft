@@ -124,6 +124,7 @@ public class Transaction extends TransactionBaseModel {
 
     @Column(name = "sale_amount", nullable = false)
     private double saleAmount;
+    @Column
     private double balance;
     @Column
     private double gst;
