@@ -15,12 +15,21 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Lazy;
 
 import java.io.IOException;
 
 /**
  * Created by Tjin on 8/23/2017.
  */
+
+@SpringBootApplication
 public class TaimDesktop extends Application {
     private static final String APPLICATION_TITLE = "TAIM SOFTWARE DESKTOP";
     private static final Logger logger = LoggerFactory.getLogger(TaimDesktop.class);
@@ -83,13 +92,13 @@ public class TaimDesktop extends Application {
             dialogStage.setScene(scene);
             dialogStage.initModality(Modality.WINDOW_MODAL);
 
-            LoginDialogController controller = loader.getController();
-            controller.setDialogStage(dialogStage);
+            LoginDialogController loginDialogController = loader.getController();
+            loginDialogController.setDialogStage(dialogStage);
             dialogStage.setResizable(false);
             dialogStage.getIcons().add(new Image(TaimDesktop.class.getResourceAsStream(Constant.Image.appIconPath)));
             dialogStage.showAndWait();
 
-            return controller.isSuccessful();
+            return loginDialogController.isSuccessful();
 
         }catch(IOException e){
             logger.error(e.getMessage(), e);

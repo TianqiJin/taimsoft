@@ -6,6 +6,7 @@ import com.taim.dto.*;
 import com.taim.model.Payment;
 import com.taim.model.Transaction;
 import com.taim.desktopui.controllers.edit.VendorEditDialogController;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -71,8 +72,8 @@ public class GenerateStockController {
     private ObservableList<String> paymentDue;
     private ObservableList<String> deliveryDue;
     private Transaction.DeliveryStatus prevStats;
-    private Map<Integer, Double> oldProductVirtualNumMap;
-    private Map<Integer, Double> oldProductActualNumMap;
+    private Map<Long, Double> oldProductVirtualNumMap;
+    private Map<Long, Double> oldProductActualNumMap;
 
     private static final String DATE_PATTERN = "yyyy-MM-dd";
 

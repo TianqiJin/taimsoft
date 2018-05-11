@@ -116,7 +116,7 @@ public class StaffDetailsController implements IDetailController<StaffDTO> {
         this.stage = stage;
     }
 
-    public void initDataFromDB(int id){
+    public void initDataFromDB(long id){
         Task<List<TransactionDTO>> transactionTask = new Task<List<TransactionDTO>>() {
             @Override
             protected List<TransactionDTO> call() throws Exception {

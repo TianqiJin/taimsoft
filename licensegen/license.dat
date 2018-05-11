@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--DO NOT MODIFY THE CONTENTS OF THIS FILE-->
+<!--The information contained in this file is the proprietary and confidential
+information of Taim Software. and its licensors, and is supplied subject to,
+and may be used only by Taim Software customers in accordance with the terms and
+conditions of a previously executed license agreement between Taim Software and that
+customer.  Customer acknowledges that the use of Taim Software Licensed Product is
+enabled by authorization keys supplied by Taim Software for a limited licensed period.
+At the end of this period, the authorization key will expire.  You agree not to
+take any action to work around or override these license restrictions or use
+the Licensed Product beyond the licensed period.  Any attempt to do so will be
+considered an infringement of intellectual property rights that may be subject
+to legal action.-->
+
+<!--A trial license for LV CHENG Company-->
+<!DOCTYPE taim SYSTEM "license.dtd">
+<taim>
+    <license>
+        <version>1</version>
+        <product>Taim Desktop</product>
+        <valid-until>2019-02-28 08:00:00 UTC</valid-until>
+        <customer>LV CHENG</customer>
+        <project>LV CHENG</project>
+        <taim-0>440668800</taim-0>
+        <options>
+            <option>
+                <name>max-transactions</name>
+                <value>1000</value>
+            </option>
+            <option>
+                <name>record-id</name>
+                <value>123abc</value>
+            </option>
+            <option>
+                <name>user-count</name>
+                <value>5</value>
+            </option>
+            <option>
+                <name>valid-from</name>
+                <value>20171201</value>
+            </option>
+        </options>
+        <taim-1>S2cXdmmUHV5gowjvCVcL/MM0LsqN1u2LeS6wSmc0FeJ6cPDIvFjA0xFdgeuM75BBkhz9hzDw/PJSzznTgh3qiNKguIJDfIDNYftTeCuqOxhdOfWK0QpC9WWfcSFMr2gja8wMQR10WFgu4jQYXZKiCzxZxOaQj80pK+hVYZCMxQXpOwjiD/YBSqMs5IuTz8FuWKG1ROgQ6TWZv6ScGFRWz145NmAG5V6Oklzw8PWeuhgwk1AHEhblQg2fke6iXezKWdyX/gESmPUx1CRKq01j7rwqKRjCyX92XN7i4ca8qGFffYYagLXc2cgCS+GFj8Fsifsx9OoKy7IQxwQ6DKRtQw==</taim-1>
+    </license>
+</taim>

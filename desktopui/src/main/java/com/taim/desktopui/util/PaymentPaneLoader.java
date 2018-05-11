@@ -1,7 +1,7 @@
 package com.taim.desktopui.util;
 
 import com.taim.desktopui.constants.Constant;
-import com.taim.desktopui.controllers.payment.GeneratePaymentRootController;
+import com.taim.desktopui.controllers.payment.PaymentGenerationController;
 import com.taim.dto.PaymentDTO;
 import com.taim.model.Payment;
 import javafx.fxml.FXMLLoader;
@@ -22,7 +22,7 @@ public class PaymentPaneLoader {
 
     public static PaymentDTO loadCustomerPayment(PaymentDTO paymentDTO, Payment.PaymentType paymentType){
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(PaymentPaneLoader.class.getResource("/fxml/payment/GeneratePaymentRoot.fxml"));
+        loader.setLocation(PaymentPaneLoader.class.getResource("/fxml/payment/PaymentGenerationRoot.fxml"));
         try {
             AnchorPane page = loader.load();
             Stage dialogStage = new Stage();
@@ -38,13 +38,12 @@ public class PaymentPaneLoader {
             dialogStage.setScene(scene);
             dialogStage.getIcons().add(new Image(PaymentPaneLoader.class.getResourceAsStream(Constant.Image.appIconPath)));
 
-            GeneratePaymentRootController controller = loader.getController();
+            PaymentGenerationController controller = loader.getController();
             controller.init(paymentType, paymentDTO);
             controller.setDialogStage(dialogStage);
             dialogStage.showAndWait();
 
             return controller.getPayment();
-
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
         }

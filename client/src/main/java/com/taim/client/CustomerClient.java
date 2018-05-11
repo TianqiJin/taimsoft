@@ -51,7 +51,7 @@ public class CustomerClient implements IClient<CustomerDTO> {
         return BeanMapper.map(responseEntity.getBody(), CustomerDTO.class);
     }
 
-    public CustomerDTO getById(Integer id){
+    public CustomerDTO getById(Long id){
         String url = CUSTOMER_PATH+"/getById"+"?id="+id;
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 

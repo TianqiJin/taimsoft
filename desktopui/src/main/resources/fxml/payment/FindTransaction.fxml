@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+
+<AnchorPane prefHeight="400.0" prefWidth="800.0" stylesheets="@/css/jfoneix.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taim.desktopui.controllers.payment.FindTransactionController">
+   <children>
+      <HBox AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
+         <children>
+            <JFXTextField promptText="Filter" />
+         </children>
+      </HBox>
+      <TableView fx:id="transactionTableView" editable="true" layoutX="10.0" layoutY="10.0" prefHeight="504.0" prefWidth="1331.0" tableMenuButtonVisible="false" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="50.0">
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
+         <columns>
+            <TableColumn fx:id="checkedCol" maxWidth="5000.0" minWidth="10.0" prefWidth="45.0" sortable="false" />
+            <TableColumn fx:id="idCol" editable="true" prefWidth="65.0" text="Transaction ID" />
+            <TableColumn fx:id="dateCol" maxWidth="5000.0" minWidth="10.0" prefWidth="65.0" text="Date" />
+            <TableColumn fx:id="typeCol" prefWidth="75.0" text="Type" />
+            <TableColumn fx:id="categoryCol" prefWidth="75.0" text="Category" />
+            <TableColumn fx:id="nameCol" prefWidth="75.0" text="Name" />
+            <TableColumn fx:id="amountCol" prefWidth="75.0" text="Amount" />
+            <TableColumn fx:id="balanceCol" maxWidth="5000.0" minWidth="10.0" prefWidth="65.0" text="Balance" />
+         </columns>
+      </TableView>
+      <HBox spacing="10.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0">
+         <children>
+            <JFXButton onAction="#handleAddButton" styleClass="button-flat" text="Add" />
+            <JFXButton onAction="#handleCancelButton" text="Cancel" />
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

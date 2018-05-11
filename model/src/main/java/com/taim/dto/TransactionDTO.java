@@ -25,7 +25,7 @@ public class TransactionDTO extends TransactionBaseModelDTO {
     private ObjectProperty<DateTime> deliveryDueDate;
     private List<TransactionDetailDTO> transactionDetails;
     private List<DeliveryDTO> deliveries;
-    private IntegerProperty refId;
+    private LongProperty refId;
     private BooleanProperty finalized;
     private StringProperty note;
     private StringProperty addressNote;
@@ -45,7 +45,7 @@ public class TransactionDTO extends TransactionBaseModelDTO {
         transactionCategory = new SimpleObjectProperty<>();
         transactionDetails = new ArrayList<>();
         deliveries = new ArrayList<>();
-        refId = new SimpleIntegerProperty();
+        refId = new SimpleLongProperty();
         finalized = new SimpleBooleanProperty();
         note = new SimpleStringProperty();
         addressNote = new SimpleStringProperty();
@@ -182,12 +182,16 @@ public class TransactionDTO extends TransactionBaseModelDTO {
         this.deliveryStatus.set(deliveryStatus);
     }
 
-    public int getRefId() {
+    public long getRefId() {
         return refId.get();
     }
 
-    public IntegerProperty refIdProperty() {
+    public LongProperty refIdProperty() {
         return refId;
+    }
+
+    public void setRefId(long refId) {
+        this.refId.set(refId);
     }
 
     public void setRefId(int refId) {

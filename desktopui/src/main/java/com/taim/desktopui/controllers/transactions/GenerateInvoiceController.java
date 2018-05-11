@@ -67,8 +67,8 @@ public class GenerateInvoiceController {
     private int discount;
     private Executor executor;
     private Mode mode;
-    private Map<Integer, Double> oldProductVirtualNumMap;
-    private Map<Integer, Double> oldProductActualNumMap;
+    private Map<Long, Double> oldProductVirtualNumMap;
+    private Map<Long, Double> oldProductActualNumMap;
     private double oldStoreCredit;
 
     private Transaction.DeliveryStatus prevStats;
@@ -719,7 +719,7 @@ public class GenerateInvoiceController {
             saveUpdateTransactionTask.setOnSucceeded(event -> {
                 this.transaction = saveUpdateTransactionTask.getValue();
                 if(mode== Mode.CREATE) {
-                    int refNum = transaction.getId();
+                    long refNum = transaction.getId();
                     oldTransaction.setRefId(refNum);
                     oldTransaction.setFinalized(true);
                     RestClientFactory.getTransactionClient().update(oldTransaction);

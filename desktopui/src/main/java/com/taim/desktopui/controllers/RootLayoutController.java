@@ -4,6 +4,7 @@ import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
+import com.jfoenix.transitions.hamburger.HamburgerNextArrowBasicTransition;
 import com.jfoenix.transitions.hamburger.HamburgerSlideCloseTransition;
 import com.taim.client.PropertyClient;
 import com.taim.desktopui.TaimDesktop;
@@ -55,20 +56,23 @@ public class RootLayoutController {
     @FXML
     public void initialize() {
         menuList.setSidePane(menulListVbox);
-        borderPane.setLeft(null);
-        HamburgerBackArrowBasicTransition transition = new HamburgerBackArrowBasicTransition(menu);
+        menuList.open();
+        menuList.setOnDrawerOpened(event -> borderPane.setLeft(menuList));
+
+        HamburgerNextArrowBasicTransition transition = new HamburgerNextArrowBasicTransition(menu);
         transition.setRate(-1);
         menu.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
             transition.setRate(transition.getRate() * -1);
             transition.play();
             if(menuList.isHidden() || menuList.isHiding()){
-                borderPane.setLeft(menuList);
-                Platform.runLater(() -> menuList.open());
+                menuList.open();
+                Platform.runLater(() -> borderPane.setLeft(menuList));
             }else if(menuList.isShowing() || menuList.isShown()){
                 menuList.close();
-                Platform.runLater(() -> borderPane.setLeft(null));
+                menuList.setOnDrawerClosed(closedEvent -> borderPane.setLeft(null));
             }
         });
+
 
     }
 

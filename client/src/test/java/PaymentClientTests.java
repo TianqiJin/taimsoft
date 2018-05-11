@@ -1,7 +1,9 @@
-package com.taim.client;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.taim.client.PaymentClient;
+import com.taim.client.StaffClient;
+import com.taim.client.TransactionClient;
+import com.taim.client.VendorClient;
 import com.taim.dto.*;
 import com.taim.model.Payment;
 import com.taim.model.Staff;
@@ -36,9 +38,9 @@ public class PaymentClientTests {
 //
 //        staff.setDateCreated(DateTime.now());
 //        staff.setDateModified(DateTime.now());
-//        staff.setUserName("admin" + RandomStringUtils.random(3));
+//        staff.setUserName("admin");
 //        staff.setPosition(Staff.Position.MANAGER);
-//        staff.setPassword("password");
+//        staff.setPassword("admin");
 
         transaction.setDateCreated(DateTime.now());
         transaction.setDateModified(DateTime.now());
@@ -51,12 +53,12 @@ public class PaymentClientTests {
 
     @Test
     public void testAddPayment() throws IOException {
-        VendorDTO vendorDTO = vendorClient.getById(1);
-        StaffDTO staffDTO = staffClient.getById(1);
-//        transaction.setStaff(staffDTO);
-//        transaction.setVendor(vendorDTO);
-//        transactionClient.add(transaction);
-        TransactionDTO transactionDTO = transactionClient.getById(1);
+        VendorDTO vendorDTO = vendorClient.getById(1L);
+        StaffDTO staffDTO = staffClient.getById(1L);
+        transaction.setStaff(staffDTO);
+        transaction.setVendor(vendorDTO);
+        transactionClient.add(transaction);
+        TransactionDTO transactionDTO = transactionClient.getById(1L);
 
         PaymentDTO paymentDTO = new PaymentDTO();
         paymentDTO.setUserID(vendorDTO.getId());
@@ -75,6 +77,7 @@ public class PaymentClientTests {
 //        objectMapper.readValue(objectMapper.writeValueAsString(paymentDTO), PaymentDTO.class);
 
         paymentClient.add(paymentDTO);
+        System.out.println("HERE");
 
     }
 }

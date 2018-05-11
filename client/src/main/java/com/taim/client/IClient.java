@@ -16,5 +16,5 @@ public interface IClient<T> {
     T add(T obj);
     List<T> getList();
     T update(T obj);
-    T getById(Integer id);
+    T getById(Long id);
 }

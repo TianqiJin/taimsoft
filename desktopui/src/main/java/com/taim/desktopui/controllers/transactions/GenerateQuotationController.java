@@ -65,7 +65,7 @@ public class GenerateQuotationController {
     private int discount;
     private Executor executor;
     private Mode mode;
-    private Map<Integer, Double> oldProductVirtualNumMap;
+    private Map<Long, Double> oldProductVirtualNumMap;
 
 
     @FXML

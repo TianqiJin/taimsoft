@@ -70,7 +70,7 @@ public class OrganizationClient implements IClient<OrganizationDTO> {
     }
 
     @Override
-    public OrganizationDTO getById(Integer id) {
+    public OrganizationDTO getById(Long id) {
         return null;
     }
 }

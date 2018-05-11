@@ -8,6 +8,7 @@ import com.taim.client.TransactionClient;
 import com.taim.desktopui.util.RestClientFactory;
 import com.taim.dto.TransactionDTO;
 import com.taim.model.Transaction;
+import com.taim.model.search.TransactionSearch;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -24,11 +25,10 @@ import java.util.stream.Stream;
 
 public class TransactionAdvancedSearchController implements Initializable {
     private Stage dialogStage;
-    private Executor executor;
-    private TransactionClient transactionClient;
+    private TransactionSearch transactionSearch;
 
     @FXML
-    private Label transactionNumLabel;
+    private JFXTextField idTextField;
     @FXML
     private TableView<TransactionDTO> transactionTableView;
     @FXML
@@ -58,19 +58,10 @@ public class TransactionAdvancedSearchController implements Initializable {
     @FXML
     private JFXCheckBox finalizedCheckBox;
 
-    public TransactionAdvancedSearchController(){
-        this.executor = Executors.newCachedThreadPool(r -> {
-            Thread thread = new Thread(r);
-            thread.setDaemon(true);
-            return thread;
-        });
-
-        transactionClient = RestClientFactory.getTransactionClient();
-    }
+    public TransactionAdvancedSearchController(){}
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        transactionNumLabel.setText("0");
         paymentStatusComboBox.setItems(FXCollections.observableArrayList(
                 Stream.of(Transaction.PaymentStatus.values()).map(Transaction.PaymentStatus::name).collect(Collectors.toList())));
         deliveryStatusComboBox.setItems(FXCollections.observableArrayList(
@@ -80,6 +71,4 @@ public class TransactionAdvancedSearchController implements Initializable {
         transactionCategoryComboBox.setItems(FXCollections.observableArrayList(
                 Stream.of(Transaction.TransactionCategory.values()).map(Transaction.TransactionCategory::name).collect(Collectors.toList())));
     }
-
-
 }

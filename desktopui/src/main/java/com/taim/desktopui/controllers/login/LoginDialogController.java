@@ -34,6 +34,7 @@ import org.joda.time.DateTime;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
 
 import java.awt.*;
 import java.io.File;
@@ -66,7 +67,7 @@ public class LoginDialogController {
     @FXML
     private Hyperlink uploadLicenseLink;
     @FXML
-    private AnchorPane logingRoot;
+    private AnchorPane loginRoot;
 
     @FXML
     private void initialize(){
@@ -260,7 +261,7 @@ public class LoginDialogController {
             FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("DAT files (*.dat)", "*.dat");
             fileChooser.getExtensionFilters().add(extFilter);
             fileChooser.setTitle("Upload New License");
-            File licenseFile = fileChooser.showOpenDialog(logingRoot.getScene().getWindow());
+            File licenseFile = fileChooser.showOpenDialog(loginRoot.getScene().getWindow());
 
             boolean isLicenseValid = false;
             GenerateLicense generateLicense = new GenerateLicense();
@@ -286,7 +287,7 @@ public class LoginDialogController {
                         }
                     };
 
-                    savePropertyTask.setOnSucceeded(event -> {FadingStatusMessage.flash("SUCCESSFULLY UPLOADED LICENSE", logingRoot);});
+                    savePropertyTask.setOnSucceeded(event -> {FadingStatusMessage.flash("SUCCESSFULLY UPLOADED LICENSE", loginRoot);});
 
                     savePropertyTask.setOnFailed(event -> {
                         logger.error(savePropertyTask.getException().getMessage());

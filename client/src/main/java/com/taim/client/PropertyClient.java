@@ -44,7 +44,7 @@ public class PropertyClient implements IClient<PropertyDTO> {
         return BeanMapper.map(responseEntity.getBody(), PropertyDTO.class);
     }
     
-    public PropertyDTO getById(Integer id){
+    public PropertyDTO getById(Long id){
         String url = PROPERTY_PATH+"/getById"+"?id="+id;
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
@@ -52,7 +52,7 @@ public class PropertyClient implements IClient<PropertyDTO> {
         return BeanMapper.map(responseEntity.getBody(), PropertyDTO.class);
     }
 
-    public String deleteById(Integer id){
+    public String deleteById(Long id){
         String url = PROPERTY_PATH+"/deleteObject"+"?id="+id;
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 

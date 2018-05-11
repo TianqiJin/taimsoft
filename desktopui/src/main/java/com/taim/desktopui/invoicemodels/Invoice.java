@@ -9,7 +9,7 @@ import org.joda.time.DateTime;
  * Created by jiawei.liu on 2/4/16.
  */
 public class Invoice {
-    protected int id;
+    protected long id;
     protected UserBaseModelDTO customer;
     protected TransactionDTO transaction;
     protected double total;
@@ -28,7 +28,7 @@ public class Invoice {
     }
 
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

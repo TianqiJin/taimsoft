@@ -166,7 +166,7 @@ public class Transaction extends TransactionBaseModel {
     @JoinColumn(name = "transaction_id")
     private List<Delivery> deliveries;
     @Column(name = "ref_id")
-    private int refId;
+    private long refId;
     @Column(name = "is_finalized", nullable = false)
     private boolean finalized;
     @Column
@@ -272,11 +272,11 @@ public class Transaction extends TransactionBaseModel {
         this.pst = pst;
     }
 
-    public int getRefId() {
+    public long getRefId() {
         return refId;
     }
 
-    public void setRefId(int refId) {
+    public void setRefId(long refId) {
         this.refId = refId;
     }
 

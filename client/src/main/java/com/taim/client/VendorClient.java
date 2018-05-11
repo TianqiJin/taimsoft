@@ -52,7 +52,7 @@ public class VendorClient implements IClient<VendorDTO>{
         return BeanMapper.map(responseEntity.getBody(), VendorDTO.class);
     }
 
-    public VendorDTO getById(Integer id){
+    public VendorDTO getById(Long id){
         String url = VENDOR_PATH+"/getById"+"?id="+id;
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 

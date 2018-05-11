@@ -69,11 +69,11 @@ public class GenerateReturnController {
     private int discount;
     private Executor executor;
     private Mode mode;
-    private Map<Integer, Double> oldProductVirtualNumMap;
-    private Map<Integer, Double> oldProductActualNumMap;
+    private Map<Long, Double> oldProductVirtualNumMap;
+    private Map<Long, Double> oldProductActualNumMap;
     private double oldStoreCredit;
     private Transaction.DeliveryStatus prevStats;
-    private Map<Integer, Integer> purchasedValueMap;
+    private Map<Long, Integer> purchasedValueMap;
 
     private static final String DATE_PATTERN = "yyyy-MM-dd";
 

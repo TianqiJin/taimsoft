@@ -40,7 +40,7 @@ public class PaymentClient implements IClient<PaymentDTO>{
         return BeanMapper.map(responseEntity.getBody(), PaymentDTO.class);
     }
 
-    public PaymentDTO getById(Integer id){
+    public PaymentDTO getById(Long id){
         String url = PAYMENT_PATH + "/getById"+"?id="+id;
         HttpEntity<String> requestEntity = new HttpEntity<>(headers);
 

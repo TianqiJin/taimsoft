@@ -6,8 +6,7 @@ import com.jfoenix.controls.JFXDatePicker;
 import com.taim.client.IClient;
 import com.taim.client.TransactionClient;
 import com.taim.desktopui.util.TransactionPanelLoader;
-import com.taim.dto.PaymentDTO;
-import com.taim.dto.PaymentRecordDTO;
+import com.taim.dto.PaymentDetailDTO;
 import com.taim.dto.TransactionDTO;
 import com.taim.model.Transaction;
 import com.taim.desktopui.util.DateUtils;
@@ -104,19 +103,13 @@ public class TransactionOverviewController extends IOverviewController<Transacti
         typeCol.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getTransactionType().getValue()));
         idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         totalCol.setCellValueFactory(new PropertyValueFactory<>("saleAmount"));
+        balanceCol.setCellValueFactory(new PropertyValueFactory<>("balance"));
         vendorCustomerCol.setCellValueFactory(param -> {
             if(param.getValue().getTransactionCategory().equals(Transaction.TransactionCategory.STOCK)){
                 return param.getValue().getVendor().fullnameProperty();
             }else{
                 return param.getValue().getCustomer().fullnameProperty();
             }
-        });
-        balanceCol.setCellValueFactory((TableColumn.CellDataFeatures<TransactionDTO, Double> param) -> {
-            BigDecimal roundedBalance = new BigDecimal(param.getValue().getSaleAmount());
-            for(PaymentRecordDTO payment: param.getValue().getPaymentRecords()){
-                roundedBalance = roundedBalance.subtract(new BigDecimal(payment.getAmount()));
-            }
-            return new SimpleDoubleProperty(roundedBalance.setScale(2, BigDecimal.ROUND_HALF_EVEN).doubleValue()).asObject();
         });
         paymentStatusCol.setCellValueFactory(param -> {
             if(param.getValue().getPaymentStatus() != null){

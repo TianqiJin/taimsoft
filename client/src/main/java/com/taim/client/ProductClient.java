@@ -53,7 +53,7 @@ public class ProductClient implements IClient<ProductDTO>{
         return BeanMapper.map(responseEntity.getBody(), ProductDTO.class);
     }
 
-    public ProductDTO getById(Integer id){
+    public ProductDTO getById(Long id){
         String url = PRODUCT_PATH+"/getById"+"?id="+id;
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
@@ -61,7 +61,7 @@ public class ProductClient implements IClient<ProductDTO>{
         return BeanMapper.map(responseEntity.getBody(), ProductDTO.class);
     }
 
-    public String deleteById(Integer id){
+    public String deleteById(Long id){
         String url = PRODUCT_PATH+"/deleteObject"+"?id="+id;
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 

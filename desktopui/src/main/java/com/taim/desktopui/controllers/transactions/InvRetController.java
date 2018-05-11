@@ -43,7 +43,7 @@ public class InvRetController {
     @FXML
     public void handleConfirmButton() throws IOException, SQLException {
         if (isIdtValid()){
-            transactionDTO = RestClientFactory.getTransactionClient().getById(Integer.parseInt(transactionIdField.getText()));
+            transactionDTO = RestClientFactory.getTransactionClient().getById(Long.parseLong(transactionIdField.getText()));
             if (transactionDTO.getTransactionType()== Transaction.TransactionType.QUOTATION && transactionType == Transaction.TransactionType.INVOICE){
                 transactionDTO = TransactionPanelLoader.loadInvoice(transactionDTO);
             }

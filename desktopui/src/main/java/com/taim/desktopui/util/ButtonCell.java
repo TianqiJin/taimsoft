@@ -18,7 +18,7 @@ import java.util.Map;
 public class ButtonCell extends TableCell<TransactionDetailDTO, Boolean> {
     Image image = new Image(getClass().getResourceAsStream("/pics/delete.png"));
     Button cellButton = new Button();
-    public ButtonCell(TableView<TransactionDetailDTO> tableView, Map<Integer, Double> map, boolean edit,boolean add){
+    public ButtonCell(TableView<TransactionDetailDTO> tableView, Map<Long, Double> map, boolean edit,boolean add){
         setAlignment(Pos.CENTER_LEFT);
         cellButton.setGraphic(new ImageView(image));
         cellButton.setPadding(Insets.EMPTY);

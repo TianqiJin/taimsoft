@@ -52,7 +52,7 @@ public class StaffClient implements IClient<StaffDTO>{
         return BeanMapper.map(responseEntity.getBody(), StaffDTO.class);
     }
 
-    public StaffDTO getById(Integer id){
+    public StaffDTO getById(Long id){
         String url = STAFF_PATH+"/getById"+"?id="+id;
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 

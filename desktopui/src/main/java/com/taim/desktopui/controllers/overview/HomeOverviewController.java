@@ -3,10 +3,8 @@ package com.taim.desktopui.controllers.overview;
 import com.jfoenix.controls.JFXComboBox;
 import com.taim.client.TransactionClient;
 import com.taim.desktopui.util.TransactionPanelLoader;
-import com.taim.dto.PaymentDTO;
-import com.taim.dto.PaymentRecordDTO;
+import com.taim.dto.PaymentDetailDTO;
 import com.taim.dto.TransactionDTO;
-import com.taim.model.PaymentRecord;
 import com.taim.model.Transaction;
 import com.taim.desktopui.util.RestClientFactory;
 import com.taim.desktopui.util.VistaNavigator;
@@ -186,60 +184,60 @@ public class HomeOverviewController {
                             }
                             break;
                         case INVOICE_PAID:
-                            for (TransactionDTO item : yearlyTransactions) {
-                                if(item.getTransactionType().equals(Transaction.TransactionType.INVOICE) &&
-                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.PAID)){
-                                    totalValue = totalValue + item.getSaleAmount();
-                                }else if(item.getTransactionType().equals(Transaction.TransactionType.INVOICE) &&
-                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.PARTIALLY_PAID)){
-                                    for(PaymentRecordDTO payment: item.getPaymentRecords()){
-                                        totalValue += payment.getAmount();
-                                    }
-                                }
-                            }
+//                            for (TransactionDTO item : yearlyTransactions) {
+//                                if(item.getTransactionType().equals(Transaction.TransactionType.INVOICE) &&
+//                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.PAID)){
+//                                    totalValue = totalValue + item.getSaleAmount();
+//                                }else if(item.getTransactionType().equals(Transaction.TransactionType.INVOICE) &&
+//                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.PARTIALLY_PAID)){
+//                                    for(PaymentDetailDTO payment: item.getPaymentRecords()){
+//                                        totalValue += payment.getAmount();
+//                                    }
+//                                }
+//                            }
                             break;
                         case INVOICE_UNPAID:
-                            for (TransactionDTO item : yearlyTransactions) {
-                                if(item.getTransactionType().equals(Transaction.TransactionType.INVOICE) &&
-                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.UNPAID)){
-                                    totalValue = totalValue + item.getSaleAmount();
-                                }else if(item.getTransactionType().equals(Transaction.TransactionType.INVOICE) &&
-                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.PARTIALLY_PAID)){
-                                    double unpaid = 0;
-                                    for(PaymentRecordDTO payment: item.getPaymentRecords()){
-                                        unpaid += payment.getAmount();
-                                    }
-                                    totalValue += unpaid;
-                                }
-                            }
+//                            for (TransactionDTO item : yearlyTransactions) {
+//                                if(item.getTransactionType().equals(Transaction.TransactionType.INVOICE) &&
+//                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.UNPAID)){
+//                                    totalValue = totalValue + item.getSaleAmount();
+//                                }else if(item.getTransactionType().equals(Transaction.TransactionType.INVOICE) &&
+//                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.PARTIALLY_PAID)){
+//                                    double unpaid = 0;
+//                                    for(PaymentDetailDTO payment: item.getPaymentRecords()){
+//                                        unpaid += payment.getAmount();
+//                                    }
+//                                    totalValue += unpaid;
+//                                }
+//                            }
                             break;
                         case BILL_PAID:
-                            for (TransactionDTO item : yearlyTransactions) {
-                                if(item.getTransactionType().equals(Transaction.TransactionType.BILL) &&
-                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.PAID)){
-                                    totalValue = totalValue + item.getSaleAmount();
-                                }else if(item.getTransactionType().equals(Transaction.TransactionType.BILL) &&
-                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.PARTIALLY_PAID)){
-                                    for(PaymentRecordDTO payment: item.getPaymentRecords()){
-                                        totalValue += payment.getAmount();
-                                    }
-                                }
-                            }
+//                            for (TransactionDTO item : yearlyTransactions) {
+//                                if(item.getTransactionType().equals(Transaction.TransactionType.BILL) &&
+//                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.PAID)){
+//                                    totalValue = totalValue + item.getSaleAmount();
+//                                }else if(item.getTransactionType().equals(Transaction.TransactionType.BILL) &&
+//                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.PARTIALLY_PAID)){
+//                                    for(PaymentDetailDTO payment: item.getPaymentRecords()){
+//                                        totalValue += payment.getAmount();
+//                                    }
+//                                }
+//                            }
                             break;
                         case BILL_UNPAID:
-                            for (TransactionDTO item : yearlyTransactions) {
-                                if(item.getTransactionType().equals(Transaction.TransactionType.BILL) &&
-                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.UNPAID)){
-                                    totalValue = totalValue + item.getSaleAmount();
-                                }else if(item.getTransactionType().equals(Transaction.TransactionType.BILL) &&
-                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.PARTIALLY_PAID)){
-                                    double unpaid = 0;
-                                    for(PaymentRecordDTO payment: item.getPaymentRecords()){
-                                        unpaid += payment.getAmount();
-                                    }
-                                    totalValue += unpaid;
-                                }
-                            }
+//                            for (TransactionDTO item : yearlyTransactions) {
+//                                if(item.getTransactionType().equals(Transaction.TransactionType.BILL) &&
+//                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.UNPAID)){
+//                                    totalValue = totalValue + item.getSaleAmount();
+//                                }else if(item.getTransactionType().equals(Transaction.TransactionType.BILL) &&
+//                                        item.getPaymentStatus().equals(Transaction.PaymentStatus.PARTIALLY_PAID)){
+//                                    double unpaid = 0;
+//                                    for(PaymentDetailDTO payment: item.getPaymentRecords()){
+//                                        unpaid += payment.getAmount();
+//                                    }
+//                                    totalValue += unpaid;
+//                                }
+//                            }
                             break;
                         default:
                             break;

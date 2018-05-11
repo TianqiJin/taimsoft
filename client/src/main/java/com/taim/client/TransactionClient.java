@@ -58,7 +58,7 @@ public class TransactionClient implements IClient<TransactionDTO>{
         return BeanMapper.map(responseEntity.getBody(), TransactionDTO.class);
     }
 
-    public TransactionDTO getById(Integer id){
+    public TransactionDTO getById(Long id){
         String url = TRANSACTION_PATH+"/getById"+"?id="+id;
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
@@ -66,7 +66,7 @@ public class TransactionClient implements IClient<TransactionDTO>{
         return BeanMapper.map(responseEntity.getBody(), TransactionDTO.class);
     }
 
-    public List<TransactionDTO> getListByProductID(Integer id){
+    public List<TransactionDTO> getListByProductID(Long id){
         String url = TRANSACTION_PATH+"/getByProductId"+"?id="+id;
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
@@ -78,7 +78,7 @@ public class TransactionClient implements IClient<TransactionDTO>{
         return transactionList;
     }
 
-    public String deleteById(Integer id){
+    public String deleteById(Long id){
         String url = TRANSACTION_PATH+"/deleteObject"+"?id="+id;
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
@@ -93,7 +93,7 @@ public class TransactionClient implements IClient<TransactionDTO>{
         return BeanMapper.map(responseEntity.getBody(), TransactionDTO.class);
     }
 
-    public List<TransactionDTO> getListByCustomerID(Integer id){
+    public List<TransactionDTO> getListByCustomerID(Long id){
         String url = TRANSACTION_PATH+"/getByCustomerId"+"?id="+id;
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
@@ -105,7 +105,7 @@ public class TransactionClient implements IClient<TransactionDTO>{
         return transactionList;
     }
 
-    public List<TransactionDTO> getListByVendorID(Integer id){
+    public List<TransactionDTO> getListByVendorID(Long id){
         String url = TRANSACTION_PATH+"/getByVendorId"+"?id="+id;
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
@@ -117,7 +117,7 @@ public class TransactionClient implements IClient<TransactionDTO>{
         return transactionList;
     }
 
-    public List<TransactionDTO> getListByStaffID(Integer id){
+    public List<TransactionDTO> getListByStaffID(Long id){
         String url = TRANSACTION_PATH+"/getByStaffId"+"?id="+id;
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 

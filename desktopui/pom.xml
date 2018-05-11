@@ -9,6 +9,13 @@
     <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
 
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.5.4.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
     <dependencies>
         <dependency>
             <groupId>ch.qos.logback</groupId>
@@ -59,6 +66,11 @@
             <groupId>org.fxmisc.easybind</groupId>
             <artifactId>easybind</artifactId>
             <version>1.0.3</version>
+        </dependency>
+        <dependency>
+            <groupId>de.jensd</groupId>
+            <artifactId>fontawesomefx</artifactId>
+            <version>8.9</version>
         </dependency>
         <dependency>
             <groupId>com.taim</groupId>
